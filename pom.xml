@@ -12,7 +12,7 @@
     <groupId>com.light</groupId>
     <artifactId>hexo-boot</artifactId>
     <version>1.0.0</version>
-    <!-- 打 war 包时，排除内置 tomcat，需要放开下边的注释 -->
+    <!-- 打 war 包时，放开下边的注释 -->
 <!--    <packaging>war</packaging>-->
     <name>hexo-boot</name>
     <description>Hexo Boot 博客系统</description>

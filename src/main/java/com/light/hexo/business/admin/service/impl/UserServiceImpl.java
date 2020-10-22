@@ -101,6 +101,12 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
     }
 
     @Override
+    public int getUserNum() throws GlobalException {
+        Example example = new Example(User.class);
+        return this.getBaseMapper().selectCountByExample(example);
+    }
+
+    @Override
     public User checkUser(String nickname, String email, String avatar) throws GlobalException {
 
         Example example = new Example(User.class);

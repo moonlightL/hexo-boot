@@ -20,6 +20,7 @@ public enum HexoExceptionEnum implements GlobalExceptionMap {
     ERROR_NOT_PERMISSION_OPERATE(1006, "没有权限操作"),
     ERROR_CAN_NOT_REMOVE_SELF(1007, "不能删除自己的账户"),
     ERROR_CAN_NOT_CLOSE_ADMIN(1008, "不能关闭博主账户"),
+    ERROR_HAVE_INSTALLED(1009, "用户已创建"),
 
     // 2xxx -->  文章
     ERROR_POST_NOT_EXIST(2001, "该文章不存在"),

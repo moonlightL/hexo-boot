@@ -1,5 +1,6 @@
 package com.light.hexo.business.admin.component;
 
+import com.light.hexo.business.admin.constant.HexoExceptionEnum;
 import com.light.hexo.business.admin.model.*;
 import com.light.hexo.business.admin.service.*;
 import com.light.hexo.common.constant.HexoConstant;
@@ -58,7 +59,7 @@ public class InstallService {
     private ThemeService themeService;
 
     @Transactional(rollbackFor = Exception.class)
-    public void installApplication(InstallRequest request, String browserName, String ipAddr) throws Exception{
+    public void installApplication(InstallRequest request, String browserName, String ipAddr) throws Exception {
 
         // 1. 创建管理员(博主)
         User user = this.createBlogger(request.getUsername(), request.getPassword(), request.getNickname(), request.getEmail());
@@ -86,6 +87,11 @@ public class InstallService {
     }
 
     private User createBlogger(String username, String password, String nickname, String email) {
+
+        int userNum = this.userService.getUserNum();
+        if (userNum > 0) {
+            ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_HAVE_INSTALLED);
+        }
 
         User user = new User();
         user.setUsername(username)

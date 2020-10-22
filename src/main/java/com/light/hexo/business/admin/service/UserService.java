@@ -53,6 +53,13 @@ public interface UserService extends BaseService<User> {
      */
     void updateState(User user) throws GlobalException;
 
+    /**
+     *
+     * @return
+     * @throws GlobalException
+     */
+    int getUserNum() throws GlobalException;
+
     // ================================= 以下为前端页面请求 ===============================
 
     /**
