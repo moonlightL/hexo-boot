@@ -67,6 +67,7 @@ public class SpringMvcConfig implements WebMvcConfigurer {
                 .addPathPatterns("/admin")
                 .addPathPatterns("/admin/login.html")
                 .addPathPatterns("/admin/login.json")
+                .addPathPatterns("/admin/install.html")
                 .excludePathPatterns("/error");
 
         registry.addInterceptor(visitInterceptor)
