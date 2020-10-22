@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" layout:decorate="~{theme/default/layout}">
+
+<head>
+    <title th:text="${#servletContext.getAttribute('configMap')['blog_name']} + ' | ' + ${post.title}"></title>
+    <link rel="stylesheet" th:href="@{'/admin/assets/custom/jquery-comment/jquery-comment.css'}">
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="ml-content">
+            <div id="postContainer" class="postContainer" aos="fade-up">
+                <header class="post-header text-center">
+                    <h1 class="post-title">[[${post.title}]]</h1>
+                    <span style="color:#6b6969;display: block;padding: 10px;">
+                <i class="fa fa-calendar-o"></i> <span class="hidden-xs">发表于</span> [[${post.year} + '-' + ${post.month} + '-' + ${post.day}]] &nbsp;
+                |&nbsp; <i class="fa fa-folder-o"></i> <span class="hidden-xs">分类于</span> [[${post.categoryName}]] <span>&nbsp;
+                |&nbsp; <i class="fa fa-eye"></i> <span class="hidden-xs">阅读数:</span> <span class="leancloud-visitors-count">[[${post.readNum}]]</span></span>&nbsp;
+                |&nbsp; <i class="fa fa-comments-o"></i> <span class="hidden-xs">评论数:</span> <span class="leancloud-visitors-count">[[${post.commentNum}]]</span></span>&nbsp;
+                </header>
+                <div class="alert alert-danger" th:if="${post.reprint == true}">
+                    <ul class="post-copyright">
+                        <li>
+                            <strong>原作者:</strong> <b>[[${post.author}]]</b>
+                        </li>
+                        <li>
+                            <strong>原文链接:</strong> <a class="alert-link" th:href="@{${post.reprintLink}}" target="_blank" th:text="${post.reprintLink}"></a>
+                        </li>
+                    </ul>
+                </div>
+                <div id="post-content" class="post-content" th:utext="${md.md2html(post.id, post.content, 2)}"></div>
+
+                <div id="share" class="shareContainer">
+                    <div class="btns">
+                        <button type="button" class="btn btn-default" id="priseBtn"><i class="fa fa-thumbs-o-up"></i> <span id="prizeCount">[[${post.praiseNum}]]</span></button>
+                        <button type="button" class="btn btn-default" id="shareOpenBtn"><i class="fa fa-share-square-o"></i> 分享</button>
+                    </div>
+                    <div id="shareBtns" class="social-share" data-initialized="true">
+                        <a href="#" class="social-share-icon icon-weibo"></a>
+                        <a href="#" class="social-share-icon icon-qq"></a>
+                        <a href="#" class="social-share-icon icon-qzone"></a>
+                    </div>
+                </div>
+
+                <div id="reward" class="reward  text-center">
+                    <p><b th:text="${#servletContext.getAttribute('configMap')['reward_comment']}"></b></p>
+                    <button id="showRewardImg" type="button" class="btn btn-primary">打赏</button>
+                    <div id="rewardImgArea" class="reward-img-area hide">
+                       <span th:if="${#strings.isEmpty(#servletContext.getAttribute('configMap')['reward_by_ali_pay']) != true}">
+                            <a href="javascript:void(0)" class="reward-img">
+                                <img th:src="@{${#servletContext.getAttribute('configMap')['reward_by_ali_pay']}}" width="164" height="164" alt="支付宝">
+                                <div class="reward-desc">支付宝</div>
+                            </a>
+                       </span>
+                        <span th:if="${#strings.isEmpty(#servletContext.getAttribute('configMap')['reward_by_we_chat_pay']) != true}">
+                            <a href="javascript:void(0)" class="reward-img">
+                                <img th:src="@{${#servletContext.getAttribute('configMap')['reward_by_we_chat_pay']}}" width="164" height="164" alt="微信">
+                                <div class="reward-desc">微信</div>
+                            </a>
+                        </span>
+                    </div>
+                </div>
+
+                <div id="prizeMsg"></div>
+                <div class="alert alert-info" role="alert">
+                    <ul class="post-copyright">
+                        <li>
+                            <strong>本文作者:</strong> <b>[[${#servletContext.getAttribute('configMap')['blog_author']}]]</b>
+                        </li>
+                        <li>
+                            <strong>本文链接:</strong> <a id="shareUrl" class="alert-link" th:href="@{${#servletContext.getAttribute('configMap')['home_page']} + '/'+${post.link}}" target="_blank" th:text="${#servletContext.getAttribute('configMap')['home_page']+'/'+ post.link}"></a>
+                        </li>
+                        <li>
+                            <strong>版权声明:</strong>  本博客所有文章除特别声明外均为原创，采用 <a th:href="@{${#servletContext.getAttribute('configMap')['license_url']}}" class="alert-link" target="_blank" th:text="${#servletContext.getAttribute('configMap')['license']}"></a> 许可协议。转载请在文章开头明显位置注明原文链接和作者等相关信息，明确指出修改（如有），并通过 E-mail 等方式告知，谢谢合作！
+                        </li>
+                    </ul>
+                </div>
+                <footer class="post-other-info">
+                    <a th:href="${'/' + previousPost.link}" class="prev pull-left" th:if="${#objects.nullSafe(previousPost, null)}">上一篇<span class="hidden-xs">：《[[${previousPost.title}]]》</span></a>
+                    <a th:href="${'/' + nextPost.link}" class="next pull-right" th:if="${#objects.nullSafe(nextPost, null)}">下一篇<span class="hidden-xs">：《[[${nextPost.title}]]》</span></a>
+                </footer>
+                <!-- 目录 -->
+                <div class="tocContainer hidden-xs" id="tocContainer"></div>
+            </div>
+        </div>
+
+        <!-- 评论 -->
+        <div id="comment-container" class="comment-container"></div>
+
+        <script th:src="@{${prefix} + '/source/js/jquery.min.js'}"></script>
+        <script th:src="@{'/admin/assets/custom/jquery-comment/jquery.cookie.js'}"></script>
+        <script th:src="@{'/admin/assets/custom/jquery-comment/jquery-comment.js'}"></script>
+        <script th:src="@{${prefix} + '/source/js/detail.js'}"></script>
+        <script type="text/javascript" th:inline="javascript">
+            let nickname = [[${#servletContext.getAttribute('configMap')['blog_author']}]];
+            let postId= [[${post.id}]];
+            CommentManager.init(nickname, postId);
+
+        </script>
+    </div>
+</body>
+</html>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.light.hexo.business.admin.mapper.TagMapper">
+
+    <insert id="insertBatch" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO t_tag(`name`, create_time, update_time) VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.name}, #{item.createTime}, #{item.updateTime})
+        </foreach>
+    </insert>
+
+    <select id="selectListByTags" resultType="com.light.hexo.business.admin.model.Tag">
+        SELECT id, `name` FROM t_tag WHERE `name` IN 
+        <foreach collection="tagNames" item="tagName" open="(" separator="," close=")">
+            #{tagName}
+        </foreach>
+    </select>
+
+    <select id="selectOneByName" parameterType="java.lang.String" resultType="com.light.hexo.business.admin.model.Tag">
+        SELECT id, `name` FROM t_tag WHERE `name` = #{name} LIMIT 1
+    </select>
+</mapper>

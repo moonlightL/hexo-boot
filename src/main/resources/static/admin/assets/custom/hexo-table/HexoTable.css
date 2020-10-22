@@ -1,0 +1,64 @@
+table{
+    width:100%;
+}
+
+.hexo-table-container {
+    overflow-y:auto;
+    overflow-x:hidden;
+}
+
+.page-info {
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    padding: 25px 0;
+}
+
+.page-info>.page-info-num {
+    position: absolute;
+    right: 30px;
+    bottom: 16px;
+}
+
+.page-info>.page-info-num button {
+    display: inline-block;
+    padding: 0 10px;
+    width: 32px;
+    height: 32px;
+    line-height: 30px;
+    text-align: center;
+    color: #444;
+    border-radius: 2px;
+    font-size: 0.2rem;
+    cursor: pointer;
+}
+
+.page-info>.page-info-num button:hover {
+    background-color: #F0F0F0;
+}
+
+.page-info>.page-info-num button.active {
+    background-color: #3f9ce8;
+    color: #fff;
+}
+
+.page-info>.page-info-record {
+    font-size: 13px !important;
+}
+
+::-webkit-scrollbar{
+    width: 5px;
+    height: 3px;
+}
+
+/*定义滚动条轨道 内阴影+圆角*/
+::-webkit-scrollbar-track{
+    border-radius: 10px;
+    background-color: white;
+}
+
+/*定义滑块 内阴影+圆角*/
+::-webkit-scrollbar-thumb{
+    border-radius: 10px;
+    background-color: #e1e1e1;
+}

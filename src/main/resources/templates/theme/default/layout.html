@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title th:text="${#servletContext.getAttribute('configMap')['blog_name']}">个人博客</title>
+    <meta name="author" th:content="${#servletContext.getAttribute('configMap')['blog_author']}">
+    <meta name="keywords" th:content="${#servletContext.getAttribute('configMap')['keywords']}" />
+    <link rel="shortcut icon" th:href="@{${#servletContext.getAttribute('configMap')['favicon_url']}}"/>
+    <link rel="stylesheet" th:href="@{${prefix} + '/source/js/bootstrap-3.3.7/css/bootstrap.min.css'}">
+    <link rel="stylesheet" th:href="@{${prefix} + '/source/fonts/font-awesome/css/font-awesome.min.css'}" />
+    <link rel="stylesheet" th:href="@{${prefix} + '/source/js/jqueryAos.js/dist/aos.css'}">
+    <link rel="stylesheet" th:href="@{'/admin/assets/custom/jquery-search/jquery.search.css'}"/>
+    <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/highlightjs/styles/github-gist.css'}"/>
+    <link rel="stylesheet" th:href="@{${prefix} + '/source/js/autoToc/jquery.autoToc.css'}"/>
+    <link rel="stylesheet" th:href="@{${prefix} + '/source/js/lightbox/css/lightbox.css'}"/>
+    <link rel="stylesheet" th:href="@{${prefix} + '/source/js/overshare/css/share.min.css'}"/>
+    <link rel="stylesheet" th:href="@{${prefix} + '/source/css/animate.css'}"/>
+    <link rel="stylesheet" th:href="@{${prefix} + '/source/css/style.css'}"/>
+</head>
+<body>
+    <!-- Preloader -->
+    <div class="preloader">
+        <div class="preloader__wrap">
+            <div class="circle-pulse">
+                <div class="circle-pulse__1"></div>
+                <div class="circle-pulse__2"></div>
+            </div>
+            <div class="preloader__progress"><span></span></div>
+        </div>
+    </div>
+
+    <div class="ml-container" id="pageContainer">
+        <div class="container">
+            <!-- 首部 -->
+            <header class="row">
+                <div class="col-md-12">
+                    <nav class="navbar navbar-default">
+                        <div class="container-fluid">
+                            <div class="navbar-header">
+                                <a class="navbar-brand" href="#">
+                                    <img alt="Brand" th:src="@{${#strings.isEmpty(#servletContext.getAttribute('configMap')['logo_url']) != true ? #strings.isEmpty(#servletContext.getAttribute('configMap')['logo_url']) : prefix + '/source/images/logo.png'}}">
+                                </a>
+                                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                                    <span class="sr-only">Toggle navigation</span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                </button>
+                                <a class="navbar-brand" href="#">[[${#servletContext.getAttribute('configMap')['blog_name']}]]</a>
+                            </div>
+                            <div id="navbar" class="navbar-collapse collapse">
+                                <ul class="nav navbar-nav navbar-right">
+                                    <li th:class="${menu eq 'index' ? 'active' : ''}"><a th:href="@{/}">主页</a></li>
+                                    <li th:class="${menu eq 'archives' ? 'active' : ''}"><a th:href="@{/archives/}">归档</a></li>
+                                    <li th:class="${menu eq 'categories' ? 'active' : ''}"><a th:href="@{/categories/}">分类</a></li>
+                                    <li th:class="${menu eq 'friendLinks' ? 'active' : ''}"><a th:href="@{/friendLinks/}">友链</a></li>
+                                    <li th:class="${menu eq 'about' ? 'active' : ''}"><a th:href="@{/about/}">关于</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </nav>
+                </div>
+            </header>
+
+            <!-- 图片 -->
+            <div class="image-show" style="color: #fff">
+                <a href="#"><img th:src="@{${prefix} + '/source/images/index.png'}" class="img-responsive" ></a>
+                <div class="descr" aos="fade-left" aos-delay="400">
+                    <h2>人生何处似樽前</h2>
+                </div>
+            </div>
+
+            <!-- 公告 -->
+            <!--<div class="ml-content">
+                <marquee  direction="left" scrollamount="100" scrolldelay="1000" width="100%" onmouseover="this.stop();" onmouseout="this.start();"  style="width: 100%;"><i class="fa fa-bullhorn"></i>&nbsp;充值公告：首充100送1元</marquee>
+            </div>-->
+
+            <!-- 内容 -->
+            <div layout:fragment="content" ></div>
+            <!-- 尾部 -->
+            <div class="ml-content" style="padding: 1.5rem; margin-bottom: 0">
+                <footer class="footer-copyright">
+                    <div class="row">
+                        <div class="col-md-4 col-sm-6">
+                            <span class="pull-left">[[${#servletContext.getAttribute('configMap')['power_by']}]]</span>
+                        </div>
+                        <div class="col-md-4 hidden-sm hidden-xs" style="text-align: center">
+                            <ul class="contract-info">
+                                <li class="wechat" th:if="${#strings.isEmpty(#servletContext.getAttribute('configMap')['wx_account']) != true}">
+                                    <a th:title="${#servletContext.getAttribute('configMap')['wx_account']}" class="socialicon" href="javascript:void(0)" target="_blank"><i class="fa fa-weixin fa-lg" aria-hidden="true"></i></a>
+                                </li>
+                                <li th:if="${#strings.isEmpty(#servletContext.getAttribute('configMap')['qq_account']) != true}">
+                                    <a th:title="${#servletContext.getAttribute('configMap')['qq_account']}" class="socialicon" href="javascript:void(0)" target="_blank"><i class="fa fa-qq fa-lg" aria-hidden="true"></i></a>
+                                </li>
+                                <li th:if="${#strings.isEmpty(#servletContext.getAttribute('configMap')['git_hub_account']) != true}">
+                                    <a title="github" class="socialicon" th:href="@{${#servletContext.getAttribute('configMap')['git_hub_account']}}" target="_blank"><i class="fa fa-github-alt fa-lg" aria-hidden="true"></i></a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-4 col-sm-6 hidden-xs">
+                            <a class="pull-right" href="http://www.miitbeian.gov.cn/" target="_blank">[[${#servletContext.getAttribute('configMap')['record']}]]</a>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+        </div>
+        <!-- /container -->
+        <div class="real-time-search-container" id="real-time-search-container"></div>
+        <div class="to-top to-hide" id="toTop"><i class="fa fa-arrow-up"></i></div>
+    </div>
+    <script type='text/javascript' th:src="@{${prefix} + '/source/js/jquery.min.js'}"></script>
+    <script type='text/javascript' th:src="@{${prefix} + '/source/js/bootstrap-3.3.7/js/bootstrap.min.js'}"></script>
+    <script type='text/javascript' th:src="@{${prefix} + '/source/js/jqueryAos.js/dist/aos.js'}" ></script>
+    <script type='text/javascript' th:src="@{'/admin/assets/custom/jquery-search/jquery.hideseek.min.js'}" ></script>
+    <script type='text/javascript' th:src="@{'/admin/assets/custom/jquery-search/jquery.search.js'}" ></script>
+    <script type='text/javascript' th:src="@{${prefix} + '/source/js/autoToc/jquery.autoToc.js'}"></script>
+    <script type='text/javascript' th:src="@{${prefix} + '/source/js/overshare/js/social-share.min.js'}"></script>
+    <script type='text/javascript' th:src="@{'/admin/assets/js/plugins/highlightjs/highlight.pack.js'}"></script>
+    <script type='text/javascript' th:src="@{${prefix} + '/source/js/anime.min.js'}"></script>
+    <script type='text/javascript' th:src="@{${prefix} + '/source/js/main.js'}"></script>
+    <span th:if="${isDetail == false}">
+        <script type='text/javascript' th:src="@{${prefix} + '/source/js/jqueryLazyload/jquery.lazyload.min.js'}"></script>
+        <script type="text/javascript" charset="utf-8">
+           ;(function () {
+               $("img.lazy").lazyload({effect: "fadeIn"});
+           })(jQuery);
+       </script>
+    </span>
+    <span th:if="${isDetail == true}">
+        <script type='text/javascript' th:src="@{${prefix} + '/source/js/lightbox/js/lightbox.min.js'}"></script>
+        <script type='text/javascript' th:src="@{${prefix} + '/source/js/autoToc/jquery.autoToc.js'}"></script>
+        <script type='text/javascript'>
+
+            if (window.location.href.split("/").length > 6) {
+                // 文章目录
+                $("#tocContainer").autoToc({offsetTop: 520});
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                document.querySelectorAll('figure span').forEach(function(block) {
+                    hljs.highlightBlock(block);
+                });
+            });
+
+        </script>
+    </span>
+</body>
+</html>

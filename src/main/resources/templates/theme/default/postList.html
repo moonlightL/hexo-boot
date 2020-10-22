@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" layout:decorate="~{theme/default/layout}">
+
+<head></head>
+<body>
+<div layout:fragment="content">
+    <div class="ml-content">
+        <div class="ml-content-title">
+            <h3>[[${name}]] (<small><a th:href="@{/categories/}" style="color:#807f83">[[${type}]]</a></small>)</h3>
+        </div>
+        <div class="ml-content-body">
+            <div class="archive-body" id="archives">
+                <div th:if="${pageInfo.total > 0}">
+                    <div class='archive-content' aos="fade-up" aos-once="true" th:each="post,iterStat : ${pageInfo.list}">
+                        <div class='archives'>
+                            <a th:href="@{'/'+${post.link}}"><span class="time">[[${post.year} + '-' + ${post.month} + '-' + ${post.day}]]</span>[[${post.title}]]</a>
+                        </div>
+                    </div>
+                </div>
+                <div class='archive-title' th:if="${pageInfo.total == 0}">
+                    <div style="text-align:center;">
+                        ~~找不到数据~~
+                    </div>
+                </div>
+            </div>
+        </div>
+        <nav class="pagination-bar">
+            <span th:if="${pageInfo.hasPreviousPage}">
+                <a class="prev page-numbers" th:href="@{${pageInfo.pageNum-1} == 1 ? '/categories/' + ${name} + '/': '/categories/' + ${name} + '/page/' + ${pageInfo.pageNum-1}+'/'}" ><i class="fa fa-angle-left"></i></a>
+            </span>
+            <span th:each="pageNum : ${pageInfo.navigatepageNums}">
+            <span th:if="${pageNum == pageInfo.pageNum}">
+                <a href="javascript:void(0)" th:text="${pageNum}" class="page-numbers current"></a>
+            </span>
+            <span th:if="${pageNum != pageInfo.pageNum}">
+                <a th:href="@{${pageNum} == 1 ? '/categories/' + ${name} + '/': '/categories/' + ${name} + '/page/' + ${pageNum}+'/'}" th:text="${pageNum}" class="page-numbers hidden-xs"></a>
+            </span>
+            </span>
+            <span th:if="${pageInfo.hasNextPage}">
+                <a class="next page-numbers" th:href="@{'/categories/' + ${name} + '/page/' +  ${pageInfo.pageNum+1}+'/'}" ><i class="fa fa-angle-right"></i></a>
+            </span>
+        </nav>
+    </div>
+</div>
+</body>
+</html>

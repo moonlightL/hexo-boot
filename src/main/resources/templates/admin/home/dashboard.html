@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<!-- 此页面暂时不用 -->
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" href="favicon.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,400i,600,700&display=swap">
+    <link rel="stylesheet" id="css-main" th:href="@{'/admin/assets/css/codebase.min.css'}">
+    <style>
+        ::-webkit-scrollbar{
+            width: 5px;
+            height: 3px;
+        }
+
+        /*定义滚动条轨道 内阴影+圆角*/
+        ::-webkit-scrollbar-track{
+            border-radius: 10px;
+            background-color: white;
+        }
+
+        /*定义滑块 内阴影+圆角*/
+        ::-webkit-scrollbar-thumb{
+            border-radius: 10px;
+            background-color: #e1e1e1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Page Content -->
+    <div class="content">
+    <div class="row invisible" data-toggle="appear">
+        <!-- Row #1 -->
+        <div class="col-6 col-xl-3">
+            <a class="block block-link-shadow text-right" href="javascript:void(0)">
+                <div class="block-content block-content-full clearfix">
+                    <div class="float-left mt-10 d-none d-sm-block">
+                        <i class="fa fa-edit fa-3x text-body-bg-dark"></i>
+                    </div>
+                    <div class="font-size-h3 font-w600" data-toggle="countTo" data-speed="1000" th:data-to="${postNum}">0</div>
+                    <div class="font-size-sm font-w600 text-uppercase text-muted">文章数</div>
+                </div>
+            </a>
+        </div>
+        <div class="col-6 col-xl-3">
+            <a class="block block-link-shadow text-right" href="javascript:void(0)">
+                <div class="block-content block-content-full clearfix">
+                    <div class="float-left mt-10 d-none d-sm-block">
+                        <i class="fa fa-bars fa-3x text-body-bg-dark"></i>
+                    </div>
+                    <div class="font-size-h3 font-w600" data-toggle="countTo" data-speed="1000" th:data-to="${categoryNum}">0</div>
+                    <div class="font-size-sm font-w600 text-uppercase text-muted">分类数</div>
+                </div>
+            </a>
+        </div>
+        <div class="col-6 col-xl-3">
+            <a class="block block-link-shadow text-right" href="javascript:void(0)">
+                <div class="block-content block-content-full clearfix">
+                    <div class="float-left mt-10 d-none d-sm-block">
+                        <i class="fa fa-comments-o fa-3x text-body-bg-dark"></i>
+                    </div>
+                    <div class="font-size-h3 font-w600" data-toggle="countTo" data-speed="1000" th:data-to="${postCommentNum}">0</div>
+                    <div class="font-size-sm font-w600 text-uppercase text-muted">评论数</div>
+                </div>
+            </a>
+        </div>
+        <div class="col-6 col-xl-3">
+            <a class="block block-link-shadow text-right" href="javascript:void(0)">
+                <div class="block-content block-content-full clearfix">
+                    <div class="float-left mt-10 d-none d-sm-block">
+                        <i class="fa fa-comment-o fa-3x text-body-bg-dark"></i>
+                    </div>
+                    <div class="font-size-h3 font-w600" data-toggle="countTo" data-speed="1000" th:data-to="${guestBookNum}">0</div>
+                    <div class="font-size-sm font-w600 text-uppercase text-muted">留言数</div>
+                </div>
+            </a>
+        </div>
+        <!-- END Row #1 -->
+    </div>
+    <div class="row invisible" data-toggle="appear">
+        <!-- Row #2 -->
+        <div class="col-md-6">
+            <div class="block">
+                <div class="block-header">
+                    <h3 class="block-title">
+                        访问人数 <small>（近7日）</small>
+                    </h3>
+                </div>
+                <div class="block-content block-content-full">
+                    <div class="pull-all">
+                        <div id="visitLine" style="height:355px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="block">
+                <div class="block-header">
+                    <h3 class="block-title">
+                        热门文章 <small>（Top 5）</small>
+                    </h3>
+                </div>
+                <div class="block-content block-content-full" style="height: 355px">
+                    <table class="table table-hover table-vcenter" id="postTable">
+                        <thead>
+                        <tr>
+                            <th class="text-center" style="width: 50px;">#</th>
+                            <th>标题名</th>
+                            <th class="d-none d-sm-table-cell" style="width: 15%;">浏览数</th>
+                        </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- END Row #2 -->
+    </div>
+    <div class="row invisible" data-toggle="appear">
+        <!-- Row #5 -->
+        <div class="col-6 col-md-4 col-xl-2">
+            <a class="block block-link-shadow text-center" href="javascript:void(0)" data-url="/admin/post/listUI.html">
+                <div class="block-content">
+                    <p class="mt-5">
+                        <i class="fa fa-edit fa-3x"></i>
+                    </p>
+                    <p class="font-w600">创建文章</p>
+                </div>
+            </a>
+        </div>
+        <div class="col-6 col-md-4 col-xl-2">
+            <a class="block block-link-shadow text-center" href="javascript:void(0)" data-url="/admin/postComment/listUI.html">
+                <div class="block-content ribbon ribbon-bookmark ribbon-success ribbon-left">
+                    <div class="ribbon-box">3</div>
+                    <p class="mt-5">
+                        <i class="fa fa-comments-o fa-3x"></i>
+                    </p>
+                    <p class="font-w600">当日评论</p>
+                </div>
+            </a>
+        </div>
+        <div class="col-6 col-md-4 col-xl-2">
+            <a class="block block-link-shadow text-center" href="javascript:void(0)" data-url="/admin/guestBook/listUI.html">
+                <div class="block-content ribbon ribbon-bookmark ribbon-primary ribbon-left">
+                    <div class="ribbon-box">135</div>
+                    <p class="mt-5">
+                        <i class="fa fa-comment-o fa-3x"></i>
+                    </p>
+                    <p class="font-w600">当日留言</p>
+                </div>
+            </a>
+        </div>
+        <div class="col-6 col-md-4 col-xl-2">
+            <a class="block block-link-shadow text-center" href="javascript:void(0)" data-url="/admin/user/profileUI.html">
+                <div class="block-content">
+                    <p class="mt-5">
+                        <i class="fa fa-user-o fa-3x"></i>
+                    </p>
+                    <p class="font-w600">个人详情</p>
+                </div>
+            </a>
+        </div>
+        <div class="col-6 col-md-4 col-xl-2">
+            <a class="block block-link-shadow text-center" href="javascript:void(0)" data-url="/admin/blacklist/listUI.html">
+                <div class="block-content">
+                    <p class="mt-5">
+                        <i class="fa fa-lock fa-3x"></i>
+                    </p>
+                    <p class="font-w600">查看黑名单</p>
+                </div>
+            </a>
+        </div>
+        <div class="col-6 col-md-4 col-xl-2">
+            <a class="block block-link-shadow text-center" href="javascript:void(0)" data-url="/admin/attachment/listUI.html">
+                <div class="block-content ribbon ribbon-bookmark ribbon-info ribbon-left">
+                    <div class="ribbon-box">135</div>
+                    <p class="mt-5">
+                        <i class="fa fa-files-o fa-3x"></i>
+                    </p>
+                    <p class="font-w600">查看附件</p>
+                </div>
+            </a>
+        </div>
+        <!-- END Row #5 -->
+    </div>
+</div>
+    <!-- END Page Content -->
+    <script th:src="@{'/admin/assets/js/codebase.core.min.js'}"></script>
+    <script th:src="@{'/admin/assets/js/codebase.app.min.js'}"></script>
+    <!-- Page JS Plugins -->
+    <script th:src="@{'/admin/assets/js/plugins/echarts/dist/echarts.min.js'}"></script>
+    <script th:src="@{'/admin/assets/js/plugins/echarts/dist/macarons.js'}"></script>
+    <script>
+
+        let DashboardManager = {
+            init: function () {
+                DashboardManager.createVisitLine();
+                DashboardManager.queryPostList();
+            },
+            createVisitLine: function () {
+                let myChart = echarts.init(document.getElementById("visitLine"), "macarons");
+                myChart.setOption({
+                    title: {
+                        text: '近七天访问人数',
+                        show: false
+                    },
+                    tooltip: {},
+                    legend: {
+                        data: ['人数']
+                    },
+                    xAxis: {
+                        type: 'category',
+                        name: "日期",
+                        boundaryGap: false,
+                        data: []
+                    },
+                    yAxis: {
+                        type: 'value',
+                        name: '人数(个)'
+                    },
+                    series: [{
+                        areaStyle: {},
+                        name: "人数",
+                        type: 'line',
+                        data: []
+                    }]
+                });
+                myChart.showLoading();
+
+                $.getJSON("/admin/home/visitData.json", function (resp) {
+                    myChart.hideLoading();
+                    if (resp.success) {
+                        myChart.setOption({
+                            xAxis: {
+                                data: resp.data.dates
+                            },
+                            series: [{
+                                data: resp.data.values
+                            }]
+                        });
+                    }
+                })
+            },
+            queryPostList: function () {
+                $.getJSON("/admin/home/top5PostList.json", function (resp) {
+                    if (resp.success) {
+                        let data = resp.data;
+                        let htmlArr = [];
+                        for (let i = 0; i < data.length; i++) {
+                            let post = data[i];
+                            htmlArr.push('<tr>');
+                            htmlArr.push('<th class="text-center" scope="row">1</th>');
+                            htmlArr.push('<td><a href="' + post.link +'" target="_blank">' + post.title + '</a></td>');
+                            htmlArr.push('<td class="d-none d-sm-table-cell">' + post.readNum + '</td>');
+                            htmlArr.push('</tr>');
+                        }
+
+                        $("#postTable").find("tbody").html(htmlArr.join(""));
+                    }
+                });
+            }
+        };
+
+        DashboardManager.init();
+    </script>
+</body>

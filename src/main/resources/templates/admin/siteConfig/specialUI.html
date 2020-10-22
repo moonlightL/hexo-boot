@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, initial-scale=1, shrink-to-fit=no">
+    <div th:replace="~{admin/common :: common-link}"></div>
+</head>
+<body>
+
+<div class="content animated fadeIn">
+    <h2 class="content-heading"><i class="fa fa-cogs"></i> 个性配置</h2>
+    <div class="block block-fx-shadow">
+        <ul class="nav nav-tabs nav-tabs-block" data-toggle="tabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" href="#photoArea">图床配置</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#pushArea">文章推送</a>
+            </li>
+        </ul>
+        <div class="block-content tab-content overflow-hidden">
+            <div class="tab-pane fade fade-left show active" id="photoArea" role="tabpanel">
+                <div class="content content-full">
+                    <div class="row justify-content-center py-30">
+                        <div class="col-lg-8 col-xl-6">
+                            <form class="js-validation-be-contact" id="photoForm" method="post">
+                                <div class="form-group row">
+                                    <label for="qn_domain">&nbsp;&nbsp;&nbsp;图床管理类型</label>
+                                    <div class="col-12">
+                                        <label class="css-control css-control-primary css-radio">
+                                            <input type="radio" class="css-control-input" name="manage_mode" th:value="1" th:checked="${configMap['manage_mode'] == '1'}">
+                                            <span class="css-control-indicator"></span> 本地
+                                        </label>
+                                        <label class="css-control css-control-primary css-radio">
+                                            <input type="radio" class="css-control-input" name="manage_mode" th:value="2" th:checked="${configMap['manage_mode'] == '2'}">
+                                            <span class="css-control-indicator"></span> 七牛云
+                                        </label>
+                                        <label class="css-control css-control-primary css-radio">
+                                            <input type="radio" class="css-control-input" name="manage_mode" th:value="3" th:checked="${configMap['manage_mode'] == '3'}">
+                                            <span class="css-control-indicator"></span> OSS
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <label for="local_file_path">本地图床路径</label>
+                                        <input class="form-control form-control-lg" id="local_file_path" name="local_file_path" type="text" th:value="${configMap['local_file_path']}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <label for="qn_domain">七牛云域名</label>
+                                        <input class="form-control form-control-lg" id="qn_domain" name="qn_domain" type="text" th:value="${configMap['qn_domain']}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <label for="qn_access_key">七牛云 KEY</label>
+                                        <input class="form-control form-control-lg" id="qn_access_key" name="qn_access_key" type="text" th:value="${configMap['qn_access_key']}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <label for="qn_secret_key">七牛云密钥</label>
+                                        <input class="form-control form-control-lg" id="qn_secret_key" name="qn_secret_key" type="text"  th:value="${configMap['qn_secret_key']}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <label for="qn_bucket">七牛云桶</label>
+                                        <input class="form-control form-control-lg" id="qn_bucket" name="qn_bucket" type="text"  th:value="${configMap['qn_bucket']}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <label for="oss_endpoint">OSS域名</label>
+                                        <input class="form-control form-control-lg" id="oss_endpoint" name="oss_endpoint" type="text"  th:value="${configMap['oss_endpoint']}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <label for="oss_access_key">OSS KEY</label>
+                                        <input class="form-control form-control-lg" id="oss_access_key" name="oss_access_key" type="text"  th:value="${configMap['oss_access_key']}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <label for="oss_secret_key">OSS 密钥</label>
+                                        <input class="form-control form-control-lg" id="oss_secret_key" name="oss_secret_key" type="text"  th:value="${configMap['oss_secret_key']}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <label for="oss_bucket">OSS 桶</label>
+                                        <input class="form-control form-control-lg" id="oss_bucket" name="oss_bucket" type="text" th:value="${configMap['oss_bucket']}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12 text-center">
+                                        <button type="button" class="btn btn-hero btn-alt-primary min-width-175 submit-btn">
+                                            <i class="fa fa-send mr-5"></i> 修改
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade fade-left" id="pushArea" role="tabpanel">
+                <div class="content content-full">
+                    <div class="row justify-content-center py-30">
+                        <div class="col-lg-8 col-xl-6">
+                            <form class="js-validation-be-contact" id="pushForm" method="post">
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <label for="bai_du_push_token">百度推送 Token</label>
+                                        <input class="form-control form-control-lg" id="bai_du_push_token" name="bai_du_push_token" type="text"  th:value="${configMap['bai_du_push_token']}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12 text-center">
+                                        <button type="button" class="btn btn-hero btn-alt-primary min-width-175 submit-btn">
+                                            <i class="fa fa-send mr-5"></i> 修改
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="~{admin/common :: common-script}"></div>
+<script type="text/javascript" th:inline="javascript">
+    $(function () {
+        $(".submit-btn").on("click", function() {
+            $.hexo.action.sendRequest({
+                url: BASE_URL + "/save.json",
+                params: $(this).parents("form").serialize(),
+                callback: function () {
+                    $.hexo.modal.tip("修改成功", "success");
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

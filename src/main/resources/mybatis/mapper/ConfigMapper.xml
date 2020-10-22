@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.light.hexo.business.admin.mapper.ConfigMapper">
+
+    <insert id="updateByConfigKey" parameterType="java.util.List">
+        INSERT INTO t_config(config_key, config_value, remark, create_time, update_time)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.configKey}, #{item.configValue}, #{item.remark}, #{item.createTime}, #{item.updateTime})
+        </foreach>
+        ON DUPLICATE KEY UPDATE config_value = VALUES(config_value), update_time = now()
+    </insert>
+
+</mapper>

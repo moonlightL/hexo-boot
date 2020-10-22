@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd">
+
+    <!-- 磁盘缓存位置 -->
+    <diskStore path="java.io.tmpdir/ehcache"/>
+
+    <!-- 默认缓存 -->
+    <defaultCache
+            maxEntriesLocalHeap="10000"
+            eternal="false"
+            timeToIdleSeconds="120"
+            timeToLiveSeconds="120"
+            maxEntriesLocalDisk="10000000"
+            diskExpiryThreadIntervalSeconds="120"
+            memoryStoreEvictionPolicy="LRU">
+        <persistence strategy="localTempSwap"/>
+    </defaultCache>
+
+    <!-- 文章缓存 -->
+    <cache name="postCache"
+           maxElementsInMemory="1000"
+           eternal="false"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="300"
+           overflowToDisk="false"
+           memoryStoreEvictionPolicy="LRU"/>
+
+    <!-- 分类缓存 -->
+    <cache name="categoryCache"
+           maxElementsInMemory="1000"
+           eternal="true"
+           timeToIdleSeconds="0"
+           timeToLiveSeconds="0"
+           overflowToDisk="false"
+           memoryStoreEvictionPolicy="LRU"/>
+
+    <!-- 文章评论缓存 -->
+    <cache name="postCommentCache"
+           maxElementsInMemory="1000"
+           eternal="false"
+           timeToIdleSeconds="120"
+           timeToLiveSeconds="120"
+           overflowToDisk="false"
+           memoryStoreEvictionPolicy="LRU"/>
+
+    <!-- 留言缓存 -->
+    <cache name="guestBookCache"
+           maxElementsInMemory="1000"
+           eternal="false"
+           timeToIdleSeconds="120"
+           timeToLiveSeconds="120"
+           overflowToDisk="false"
+           memoryStoreEvictionPolicy="LRU"/>
+</ehcache>

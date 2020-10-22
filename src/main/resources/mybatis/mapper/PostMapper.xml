@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.light.hexo.business.admin.mapper.PostMapper">
+
+    <select id="selectPreviousInfo" parameterType="java.lang.Integer" resultType="com.light.hexo.business.admin.model.Post">
+        SELECT
+            p.id,
+            p.link,
+            p.title,
+            p.cover_url,
+            p.create_time
+        FROM
+          t_post p
+        WHERE
+            p.is_publish = 1
+        AND
+            p.is_delete = 0
+        AND p.create_time &lt; (
+            SELECT
+              create_time
+            FROM
+              t_post
+            WHERE
+              id = #{id}
+            )
+        ORDER BY
+          p.create_time DESC
+        LIMIT 1
+    </select>
+
+    <select id="selectNextInfo" parameterType="java.lang.Integer" resultType="com.light.hexo.business.admin.model.Post">
+        SELECT
+            p.id,
+            p.link,
+            p.title,
+            p.cover_url,
+            p.create_time
+        FROM
+            t_post p
+        WHERE
+            p.is_publish = 1
+        AND
+            p.is_delete = 0
+        AND p.create_time &gt; (
+            SELECT
+                create_time
+            FROM
+                t_post
+            WHERE
+                id = #{id}
+        )
+        ORDER BY
+            p.create_time ASC
+        LIMIT 1
+    </select>
+
+    <select id="selectListByTagId" parameterType="java.lang.Integer" resultType="com.light.hexo.business.admin.model.Post">
+        SELECT
+            p.id,
+            p.title,
+            p.content,
+            p.author,
+            p.cover_url,
+            p.link,
+            p.publish_date,
+            p.year,
+            p.month,
+            p.day,
+            p.read_num,
+            p.praise_num,
+            p.is_comment AS comment,
+            p.is_top AS top,
+            p.is_delete AS `delete`,
+            p.tags
+        FROM
+            t_post p
+        INNER JOIN
+            t_post_tag pt ON p.id = pt.post_id
+        WHERE
+            pt.tag_id = #{tagId}
+        AND
+            p.is_publish = 1
+        AND
+            p.is_delete = 0
+    </select>
+
+    <insert id="checkInsert" parameterType="com.light.hexo.business.admin.model.Post" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO t_post(title, summary, content, author, read_num, praise_num, publish_date, year, month, day, cover_url, is_publish, is_comment ,is_top, is_reprint, category_id, tags, link, create_time, update_time)
+        SELECT #{title},#{summary},#{content},#{author},#{readNum},#{praiseNum},#{publishDate},#{year},#{month},#{day},#{coverUrl},#{publish},#{comment},#{top},#{reprint},#{categoryId},#{tags},#{link}, #{createTime},#{updateTime}
+        FROM dual
+        WHERE NOT EXISTS(
+              SELECT id
+              FROM t_post
+              WHERE title = #{title}
+        )
+    </insert>
+</mapper>

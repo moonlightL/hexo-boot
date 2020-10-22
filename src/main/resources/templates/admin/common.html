@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="common-link">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <!-- VENDOR CSS -->
+    <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/bootstrap-validator/bootstrapvalidator.min.css'}">
+
+    <!-- MAIN CSS -->
+    <link rel="stylesheet" id="css-main" th:href="@{'/admin/assets/css/codebase.min.css'}">
+    <link rel="stylesheet" th:href="@{'/admin/assets/custom/hexo-table/HexoTable.css'}">
+    <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/iziModal/css/iziModal.min.css'}">
+    <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/sweetalert2/sweetalert2.css'}">
+    <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/layer/theme/default/layer.css'}">
+    <style>
+        .table {
+            margin-bottom: 0;
+        }
+        .hide {
+            display: none;
+        }
+    </style>
+</div>
+
+<div th:fragment="common-script">
+    <div id="modal-iframe" class="iziModal light"></div>
+    <script th:inline="javascript">let BASE_URL = [[${baseUrl}]];</script>
+    <script th:src="@{'/admin/assets/js/codebase.core.min.js'}"></script>
+    <script th:src="@{'/admin/assets/js/codebase.app.min.js'}"></script>
+    <script th:src="@{'/admin/assets/custom/hexo-table/HexoTable.js'}"></script>
+    <script th:src="@{'/admin/assets/js/plugins/bootstrap-validator/bootstrapvalidator.min.js'}"></script>
+    <script th:src="@{'/admin/assets/js/plugins/iziModal/js/iziModal.min.js'}"></script>
+    <script th:src="@{'/admin/assets/js/plugins/sweetalert2/sweetalert2.min.js'}"></script>
+    <script th:src="@{'/admin/assets/js/plugins/layer/layer.js'}"></script>
+    <script th:src="@{'/admin/assets/js/plugins/jquery.fileDownload.js'}"></script>
+    <script th:src="@{'/admin/assets/custom/hexo-boot.js'}"></script>
+</div>

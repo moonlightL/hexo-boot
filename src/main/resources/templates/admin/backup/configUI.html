@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, initial-scale=1, shrink-to-fit=no">
+    <div th:replace="~{admin/common :: common-link}"></div>
+</head>
+<body>
+
+<div class="content">
+    <div class="block">
+        <div class="block-content">
+            <div class="row justify-content-center py-20">
+                <div class="col-xl-6">
+                    <form id="saveForm" th:action="@{${baseUrl} + '/saveConfig.json'}" >
+                        <div class="form-group row">
+                            <label class="col-lg-4 col-form-label" for="backup_dir">备份目录 <span class="text-danger">*</span></label>
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="backup_dir" name="backup_dir" th:value="${configMap['backup_dir']}" data-bv-notempty="true" data-bv-notempty-message="标签名不能为空">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-4 col-form-label" for="backup_auto">是否自动备份（每周一0点执行） <span class="text-danger">*</span></label>
+                            <div class="col-lg-8">
+                                <select class="js-select2 form-control" id="backup_auto" name="backup_auto" style="width: 100%;" data-placeholder="请选择状态" >
+                                    <option value="1" th:attr="selected=${configMap['backup_auto'] == '1'}">开启</option>
+                                    <option value="0" th:attr="selected=${configMap['backup_auto'] == '0'}">关闭</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-lg-8 text-center">
+                                <button type="button" class="btn btn-primary" id="submitBtn">提交</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div th:replace="~{admin/common :: common-script}"></div>
+    <script type="text/javascript" th:inline="javascript">
+        $(function(){
+            $("#submitBtn").on("click", function () {
+                let $form = $("#saveForm");
+                $.hexo.action.sendRequest({
+                    url: $form.attr("action"),
+                    params: $form.serialize(),
+                    callback: function (resp) {
+                        $.hexo.modal.tip("操作成功", "success", function () {
+                            window.parent.$.hexo.modal.close();
+                            window.parent.$.hexo.table.refreshData();
+                        });
+                    }
+                })
+            });
+        });
+    </script>
+</body>
+</html>

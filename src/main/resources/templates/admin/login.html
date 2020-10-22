@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="zh" class="no-focus" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Hexo Boot 后台管理 | 登录</title>
+    <!-- Icons -->
+    <!-- The following icons can be replaced with your own, they are used by desktop and mobile browsers -->
+    <link rel="shortcut icon" th:href="@{${#servletContext.getAttribute('configMap')['favicon_url']}}">
+    <!-- END Icons -->
+    <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/sweetalert2/sweetalert2.css'}">
+    <!-- Fonts and Codebase framework -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,400i,600,700&display=swap">
+    <link rel="stylesheet" id="css-main" th:href="@{'/admin/assets/css/codebase.min.css'}">
+    <!-- END Stylesheets -->
+</head>
+<body>
+<div id="page-container" class="main-content-boxed">
+
+    <!-- Main Container -->
+    <main id="main-container">
+
+        <!-- Page Content -->
+        <div class="bg-image" style="background-image: url('/admin/assets/custom/images/login.jpg');">
+            <div class="row mx-0 bg-black-op">
+                <div class="hero-static col-md-6 col-xl-8 d-none d-md-flex align-items-md-end">
+                    <div class="p-30 invisible" data-toggle="appear">
+                        <p class="font-size-h3 font-w600 text-white">
+                            [[${#servletContext.getAttribute('configMap')['blog_name']}]]
+                        </p>
+                        <p class="font-italic text-white-op">
+                            [[${#servletContext.getAttribute('configMap')['power_by']}]]
+                        </p>
+                    </div>
+                </div>
+                <div class="hero-static col-md-6 col-xl-4 d-flex align-items-center bg-white invisible" data-toggle="appear" data-class="animated fadeInRight">
+                    <div class="content content-full">
+                        <!-- Header -->
+                        <div class="px-30 py-10">
+                            <a class="link-effect font-w700" href="index.html">
+                                <i class="si si-fire"></i>
+                                <span class="font-size-xl text-primary-dark">Hexo</span><span class="font-size-xl">Boot</span>
+                            </a>
+                            <h1 class="h3 font-w700 mt-30 mb-10">欢迎登录 Hexo Boot 博客系统</h1>
+                        </div>
+                        <!-- END Header -->
+
+                        <!-- Sign In Form -->
+                        <form class="js-validation-signin px-30"  method="post" id="loginForm">
+                            <div class="form-group row">
+                                <div class="col-12">
+                                    <div class="form-material floating form-material-primary">
+                                        <input type="text" class="form-control" id="login-username" name="login-username">
+                                        <label for="login-username">用户名</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-12">
+                                    <div class="form-material floating form-material-primary">
+                                        <input type="password" class="form-control" id="login-password" name="login-password">
+                                        <label for="login-password">密  码</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-8">
+                                    <div class="form-material floating form-material-primary">
+                                        <input type="text" class="form-control" id="login-verifyCode" name="login-verifyCode">
+                                        <label for="login-verifyCode">验证码</label>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <img src="/admin/captcha.jpg" alt="换一张" id="verify-code-img" style="cursor: pointer;margin-top: 24px;">
+                                </div>
+                            </div>
+                            <!--<div class="form-group row">
+                                <div class="col-12">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="login-remember-me" name="login-remember-me">
+                                        <label class="custom-control-label" for="login-remember-me">记住我</label>
+                                    </div>
+                                </div>
+                            </div>-->
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-sm btn-hero btn-alt-primary">
+                                    <i class="si si-login mr-10"></i> 登录
+                                </button>
+<!--                                <div class="mt-30">-->
+<!--                                    <a class="link-effect text-muted mr-10 mb-5 d-inline-block" th:href="op_auth_reminder2.html">-->
+<!--                                        <i class="fa fa-warning mr-5"></i> 忘记密码-->
+<!--                                    </a>-->
+<!--                                </div>-->
+                            </div>
+                        </form>
+                        <!-- END Sign In Form -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END Page Content -->
+
+    </main>
+    <!-- END Main Container -->
+</div>
+<!-- END Page Container -->
+
+<script th:src="@{'/admin/assets/js/codebase.core.min.js'}"></script>
+<script th:src="@{'/admin/assets/js/codebase.app.min.js'}"></script>
+<script th:src="@{'/admin/assets/js/plugins/sweetalert2/sweetalert2.min.js'}"></script>
+<!-- Page JS Plugins -->
+<script th:src="@{'/admin/assets/js/plugins/jquery-validation/jquery.validate.min.js'}"></script>
+<script th:src="@{'/admin/assets/custom/login.js'}"></script>
+</body>
+</html>

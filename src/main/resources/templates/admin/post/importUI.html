@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, initial-scale=1, shrink-to-fit=no">
+    <div th:replace="~{admin/common :: common-link}"></div>
+    <style>
+        .demo ul {
+            list-style-type: none;
+        }
+        .demo ul li {
+            list-style: decimal-leading-zero;
+            margin: 0 !important;
+            white-space: pre;
+        }
+    </style>
+</head>
+<body>
+<div class="content">
+
+    <div class="block block-fx-shadow">
+        <ul class="nav nav-tabs nav-tabs-block" data-toggle="tabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" href="#mdArea">导入 md 文件</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#jsonArea">导入 json 文件</a>
+            </li>
+        </ul>
+        <div class="block-content tab-content overflow-hidden">
+            <div class="tab-pane fade fade-left show active" id="mdArea" role="tabpanel">
+                <div class="content content-full">
+                    <div class="row justify-content-center py-30">
+                        <div class="col-lg-8 col-xl-6">
+                            <form class="js-validation-be-contact" id="mdForm" method="post">
+                                <input type="hidden" name="type" value="md">
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="path" title="目录为存放.md文件的文件路径"><i class="fa fa-info-circle"></i> 文件目录 <span class="text-danger">*</span></label>
+                                    <div class="col-lg-8">
+                                        <input type="text" class="form-control" id="path" name="path" placeholder="如：/user/xxx/yyy">
+                                    </div>
+                                </div>
+                                <div class="row hide demo">
+                                    <hr>
+                                    <div class="col-md-12">
+                                        <div> md 文件内容格式案例：</div>
+                                        <code>
+                                            <ul>
+                                                <li>---</li>
+                                                <li>title: Java 入门</li>
+                                                <li>date: 2017-10-13 09:46:40</li>
+                                                <li>tags: java</li>
+                                                <li>categories: 后端</li>
+                                                <li>---</li>
+                                                <li>Java 是一款面向对象的编程语言...</li>
+                                            </ul>
+                                        </code>
+                                        <div>注意：此功能主要用于迁移 hexo 项目的文章数据，title、date、tags、categories 顺序固定</div>
+                                    </div>
+                                    <hr>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12 text-center">
+                                        <button type="button" class="btn btn-secondary demo-btn">案例</button>
+                                        <button type="button" class="btn btn-alt-primary submit-btn">
+                                            <i class="fa fa-send mr-5"></i> 确定
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade fade-left" id="jsonArea" role="tabpanel">
+                <div class="content content-full">
+                    <div class="row justify-content-center py-30">
+                        <div class="col-lg-8 col-xl-6">
+                            <form class="js-validation-be-contact" id="jsonForm" method="post">
+                                <input type="hidden" name="type" value="json">
+                                <div class="form-group row">
+                                    <label class="col-lg-4 col-form-label" for="filePath" title="json文件的绝对路径"><i class="fa fa-info-circle"></i> 文件路径 <span class="text-danger">*</span></label>
+                                    <div class="col-lg-8">
+                                        <input type="text" class="form-control" id="filePath" name="path" placeholder="如：/user/xxx/yyy/zzz.json">
+                                    </div>
+                                </div>
+                                <div class="row hide demo">
+                                    <hr>
+                                    <div class="col-md-12">
+                                        <div> json 文件内容格式案例：</div>
+                                        <code>
+                                            <ul>
+                                                <li>{</li>
+                                                <li>    "RECORDS": [</li>
+                                                <li>        {</li>
+                                                <li>            "id": "1",</li>
+                                                <li>            "title": "MySQL 5.7 安全操作",</li>
+                                                <li>            "keyword": "",</li>
+                                                <li>            "keyword": "",</li>
+                                                <li>            "sub_content": "",</li>
+                                                <li>            "content": "markdown 正文",</li>
+                                                <li>            "read_count": "100",</li>
+                                                <li>            "prize_count": "0",</li>
+                                                <li>            "status": "1",</li>
+                                                <li>            "category_id": "1",</li>
+                                                <li>            "category_name": "数据库",</li>
+                                                <li>            "tags": "MySQL,安全",</li>
+                                                <li>            "img_url": "pic-27.jpg",</li>
+                                                <li>            "year": "2017",</li>
+                                                <li>            "month": "12",</li>
+                                                <li>            "day": "05",</li>
+                                                <li>            "post_url": "2017/12/05/MySQL-5.7-安全操作/",</li>
+                                                <li>            "publish_date": "2017-12-05",</li>
+                                                <li>            "create_time": "2017-12-05 16:05:40",</li>
+                                                <li>            "update_time": "2020-09-30 10:19:12"</li>
+                                                <li>        }</li>
+                                                <li>    ]</li>
+                                                <li>}</li>
+                                            </ul>
+                                        </code>
+                                        <div>注意：此功能主要用于迁移 ml-blog 项目的文章数据</div>
+                                    </div>
+                                    <hr>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12 text-center">
+                                        <button type="button" class="btn btn-secondary demo-btn">案例</button>
+                                        <button type="button" class="btn btn-alt-primary submit-btn">
+                                            <i class="fa fa-send mr-5"></i> 确定
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+    <div th:replace="~{admin/common :: common-script}"></div>
+    <script type="text/javascript" th:inline="javascript">
+        $(function () {
+            $(".submit-btn").on("click", function() {
+                $.hexo.action.sendRequest({
+                    url: BASE_URL + "/importPosts.json",
+                    params: $(this).parents("form").serialize(),
+                    callback: function () {
+                        $.hexo.modal.tip("导入成功", "success", function () {
+                            window.parent.$.hexo.modal.close();
+                            window.parent.$.hexo.table.refreshData();
+                        });
+                    }
+                });
+            });
+
+            $(".demo-btn").on("click", function () {
+                let $demo = $(this).parents("form").find(".demo");
+                if ($demo.hasClass("hide")) {
+                    $demo.slideDown("slow").removeClass("hide");
+                } else {
+                    $demo.slideUp("slow").addClass("hide");
+                }
+            })
+        });
+    </script>
+</body>
+</html>

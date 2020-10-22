@@ -1,0 +1,121 @@
+.real-time-search-container .real-time-search-btn {
+    position: fixed;
+    right:15px;
+    top:150px;
+    width: 48px;
+    height: 48px;
+    text-align: center;
+    line-height: 48px;
+    background-color: #fff;
+    cursor: pointer;
+    transition: all .3s;
+    box-shadow: 0 0 10px 1px #d4d2d2;
+    z-index: 999;
+}
+
+.real-time-search-container a {
+    text-decoration: none !important;
+    border-bottom: none !important;
+}
+
+.real-time-search-container .real-time-search-btn:hover {
+    background-color: #cacdd0;
+    color: #fff;
+}
+
+.real-time-search-container .real-time-search-body {
+    position: fixed;
+    top:-300px;
+    left:50%;
+    margin-left:-240px;
+    width:480px;
+    height: 48px;
+    box-shadow: 0 1px 10px 1px #d4d2d2;
+    background-color: #eee;
+    transition: all .3s;
+    opacity: 0;
+}
+
+.real-time-search-container .real-time-search-body .real-time-search-mask {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.4);
+    z-index: 1;
+}
+
+.real-time-search-container .real-time-search-body input {
+    clear: both;
+    position: relative;
+    height: 48px;
+    width: 480px;
+    border: 0;
+    outline: none;
+    background-color: #eee;
+    padding-left: 10px;
+    z-index: 2;
+}
+
+.real-time-search-container .real-time-search-body .highlight_list {
+    clear: both;
+    position: relative;
+    list-style-type: none;
+    padding-left: 0;
+    background-color: #fff;
+    box-shadow: 0 0 10px 1px #d4d2d2;
+    overflow: auto;
+    height: 248px;
+    z-index: 2;
+}
+
+.real-time-search-container .real-time-search-body .highlight_list::-webkit-scrollbar {
+    width: 5px;
+    background-color: #ccc;
+}
+
+.real-time-search-container .real-time-search-body .highlight_list::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background: #aaa;
+}
+
+.real-time-search-container .real-time-search-body .highlight_list li {
+    padding: 10px;
+    border-bottom: 1px dashed #e1e1e1;
+}
+
+.real-time-search-container .real-time-search-body .highlight_list li {
+    color: #7a7f7b;
+    transition: all .3s;
+}
+
+.real-time-search-container .real-time-search-body .highlight_list li:hover {
+    background-color: #cacdd0;
+    color: #fff;
+}
+
+.real-time-search-container .real-time-search-body .highlight_list li:hover a {
+    display: block;
+    color: #fff;
+    text-decoration: none;
+}
+
+.real-time-search-container .real-time-search-body-show {
+    top: 150px;
+    opacity: 1;
+}
+
+@media screen and (max-width: 768px) {
+    .real-time-search-container .real-time-search-body {
+        width:320px;
+        margin-left:-160px;
+    }
+
+    .real-time-search-container .real-time-search-body input {
+        width:320px;
+    }
+}

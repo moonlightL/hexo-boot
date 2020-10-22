@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, initial-scale=1, shrink-to-fit=no">
+    <div th:replace="~{admin/common :: common-link}"></div>
+    <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/editor.md/css/editormd.min.css'}">
+</head>
+<body>
+<div class="content">
+    <h2 class="content-heading" id="toolbar">
+        <button type="button" class="btn btn-sm btn-secondary float-right mr-5" id="submitBtn"><i class="fa fa-plus-square text-primary mr-5"></i> 保存</button>
+        <a href="/about/" class="btn btn-sm btn-secondary float-right mr-5" target="_blank"><i class="fa fa-plane text-success mr-5"></i> 浏览</a>
+        <i class="fa fa-user"></i> 自我介绍
+    </h2>
+    <div class="block block-fx-shadow">
+        <div class="block-content">
+            <div class="row">
+                <div class="col-lg-12 col-md-12">
+                    <form id="saveForm">
+                        <input id="content" type="hidden" name="content" />
+                        <div id="postEditor"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="~{admin/common :: common-script}"></div>
+<script th:src="@{'/admin/assets/js/plugins/editor.md/editormd.min.js'}"></script>
+<script th:inline="javascript">
+    let info = [[${userExtend}]];
+    let MyEditor = editormd("postEditor", {
+        width   : "100%",
+        height  :  $(window.parent).height(),
+        syncScrolling : "single",
+        path    : "/admin/assets/js/plugins/editor.md/lib/",
+        placeholder: "写点内容吧~~",
+        toolbarIcons : function() {
+            return ["undo","redo","bold","del","italic","quote","ucwords","uppercase","lowercase","h1","h2","h3","h4","h5","h6","list-ul","list-ol","hr","link","reference-link","image","code","preformatted-text","code-block","table","datetime","pagebreak","watch","unwatch","preview","clear","search"]
+        },
+        codeFold : true,
+        imageUpload : true,
+        imageFormats : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+        imageUploadURL : "/admin/file/mdUploadFile.json",
+        onload: function () {
+            $("#postEditor").height($(window.parent).height() - 370);
+            MyEditor.setMarkdown(info.descr);
+        },
+        onchange : function() {
+            $("#content").val(MyEditor.getMarkdown());
+        }
+    });
+
+    $("#submitBtn").off("click").on("click", function () {
+        $.hexo.action.sendRequest({
+            url: BASE_URL + "/saveUserExtend.json",
+            params: {"descr": $("#content").val()},
+            callback: function (resp) {
+                $.hexo.modal.tip("保存成功", "success");
+            }
+        })
+    });
+
+</script>
+</body>
+</html>

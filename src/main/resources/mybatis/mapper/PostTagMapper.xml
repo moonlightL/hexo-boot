@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.light.hexo.business.admin.mapper.PostTagMapper">
+
+    <select id="selectTagNameByPostId" parameterType="java.lang.Integer" resultType="java.lang.String">
+        SELECT t.name FROM t_post_tag pt INNER JOIN t_tag t ON pt.tag_id = t.id WHERE pt.post_id = #{postId}
+    </select>
+
+    <insert id="insertPostTagBatch">
+        INSERT INTO t_post_tag(post_id, tag_id) VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.postId}, #{item.tagId})
+        </foreach>
+    </insert>
+
+    <delete id="deleteByPostId" parameterType="java.lang.Integer">
+        DELETE FROM t_post_tag WHERE post_id = #{postId}
+    </delete>
+</mapper>

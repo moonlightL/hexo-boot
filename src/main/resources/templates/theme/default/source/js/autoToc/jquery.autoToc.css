@@ -1,0 +1,53 @@
+
+.toc-nav {
+   position: relative;
+   border-left: 1px solid #ddd;
+}
+
+.toc-nav,.toc-nav li {
+    position: relative;
+    margin: 0;
+    padding:3px 0px;;
+    list-style: none;
+    white-space: nowrap;
+}
+
+.toc-nav li:before {
+    position: absolute;
+    top: 6px;
+    left: -5px;
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    content: '';
+    border-radius: 50%;
+    background-color: #fff;
+}
+
+.toc-nav li:hover:before{
+  background-color: #1abc9c;
+}
+
+.toc-nav {
+  position: absolute;
+  top:0;
+}
+
+.toc-nav li a {
+    display: inline-table;
+    margin-left: 20px;
+    white-space: nowrap;
+    color: #333;
+    text-decoration: none;
+}
+
+
+.toc-nav li.active:before {
+    background-color: #1abc9c;
+    width: 18px;
+    height: 18px;
+    border: 4px solid #daf9f5;
+    position: absolute;
+    left: -9px;
+    top: 6px;
+}

@@ -1,0 +1,846 @@
+<!doctype html>
+<html lang="zh" class="no-focus" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Hexo Boot 博客系统</title>
+    <!-- Icons -->
+    <!-- The following icons can be replaced with your own, they are used by desktop and mobile browsers -->
+    <link rel="shortcut icon" th:href="@{${#servletContext.getAttribute('configMap')['favicon_url']}}">
+    <!-- END Icons -->
+    <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/sweetalert2/sweetalert2.css'}">
+    <!-- Fonts and Codebase framework -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,400i,600,700&display=swap">
+    <link rel="stylesheet" id="css-main" th:href="@{'/admin/assets/css/codebase.min.css'}">
+    <link rel="stylesheet"  th:href="@{'/admin/assets/custom/jquery-tab/css/jquery-tab.css'}">
+    <!-- END Stylesheets -->
+    <style>
+        ::-webkit-scrollbar{
+            width: 5px;
+            height: 3px;
+        }
+
+        /*定义滚动条轨道 内阴影+圆角*/
+        ::-webkit-scrollbar-track{
+            border-radius: 10px;
+            background-color: white;
+        }
+
+        /*定义滑块 内阴影+圆角*/
+        ::-webkit-scrollbar-thumb{
+            border-radius: 10px;
+            background-color: #e1e1e1;
+        }
+
+        .message-btn {
+            padding: 10px;
+            width: 49%;
+            display: inline-block;
+            color: #3a3939;
+        }
+    </style>
+</head>
+<body>
+
+<div id="page-container" class="sidebar-o enable-page-overlay side-scroll page-header-modern main-content-narrow">
+
+    <aside id="side-overlay">
+        <!-- Side Header -->
+        <div class="content-header content-header-fullrow">
+            <div class="content-header-section align-parent">
+                <!-- Close Side Overlay -->
+                <!-- Layout API, functionality initialized in Template._uiApiLayout() -->
+                <button type="button" class="btn btn-circle btn-dual-secondary align-v-r" data-toggle="layout" data-action="side_overlay_close">
+                    <i class="fa fa-times text-danger"></i>
+                </button>
+                <!-- END Close Side Overlay -->
+
+                <!-- User Info -->
+                <div class="content-header-item">
+                    <a class="img-link mr-5" href="javascript:void(0)">
+                        <img class="img-avatar img-avatar32" th:src="@{${#httpSession.getAttribute('currentUser')['avatar']}}" alt="">
+                    </a>
+                    <a class="align-middle link-effect text-primary-dark font-w600" href="javascript:void(0)" data-url="/admin/user/profileUI.html" data-name="个人详情" th:text="${#httpSession.getAttribute('currentUser')['username']+ '(' + #httpSession.getAttribute('currentUser')['nickname']}+ ')'"></a>
+                </div>
+                <!-- END User Info -->
+            </div>
+        </div>
+        <!-- END Side Header -->
+
+        <!-- Side Content -->
+        <div class="content-side">
+
+            <!-- BLOG INFO -->
+            <div class="block pull-r-l">
+                <div class="block-header bg-body-light">
+                    <h3 class="block-title"><i class="fa fa-fw fa-info font-size-default mr-5"></i>系统信息</h3>
+                    <button type="button" class="btn-block-option" data-url="/admin/siteConfig/basicUI.html" data-name="基础配置">
+                        <i class="fa fa-pencil"></i>
+                    </button>
+                    <div class="block-options">
+                        <button type="button" class="btn-block-option" data-toggle="block-option" data-action="content_toggle"></button>
+                    </div>
+                </div>
+                <div class="block-content">
+                    <ul class="nav-users push">
+                        <li>
+                            <a href="javascript:void(0)">
+                                <div class="font-w400 font-size-xs text-muted">博客名称：[[${#servletContext.getAttribute('configMap')['blog_name']}]]</div>
+                            </a>
+                        </li>
+                        <li>
+                            <a th:href="@{${#servletContext.getAttribute('configMap')['home_page']}}" target="_blank">
+                                <div class="font-w400 font-size-xs text-muted">博客主页：[[${#servletContext.getAttribute('configMap')['home_page']}]]</div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)">
+                                <div class="font-w400 font-size-xs text-muted">安装日期：[[${#servletContext.getAttribute('configMap')['install_time']}]]</div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)">
+                                <div class="font-w400 font-size-xs text-muted">运行天数：<span id="runDay"></span></div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- END INFO -->
+
+            <!-- BLOG PROFILE -->
+            <div class="block pull-r-l">
+                <div class="block-header bg-body-light">
+                    <h3 class="block-title"><i class="fa fa-fw fa-user-o font-size-default mr-5"></i>博主信息</h3>
+                    <button type="button" class="btn-block-option" data-url="/admin/siteConfig/basicUI.html" data-name="基础配置">
+                        <i class="fa fa-pencil"></i>
+                    </button>
+                    <div class="block-options">
+                        <button type="button" class="btn-block-option" data-toggle="block-option" data-action="content_toggle"></button>
+                    </div>
+                </div>
+                <div class="block-content">
+                    <ul class="nav-users push">
+                        <li>
+                            <a href="javascript:void(0)">
+                                <div class="font-w400 font-size-xs text-muted">博主名称：[[${#servletContext.getAttribute('configMap')['blog_author']}]]</div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)">
+                                <div class="font-w400 font-size-xs text-muted">邮箱地址：[[${#servletContext.getAttribute('configMap')['email']}]]</div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)">
+                                <div class="font-w400 font-size-xs text-muted">GitHub地址：[[${#servletContext.getAttribute('configMap')['git_hub_account']}]]</div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)">
+                                <div class="font-w400 font-size-xs text-muted">QQ 号：[[${#servletContext.getAttribute('configMap')['qq_account']}]]</div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)">
+                                <div class="font-w400 font-size-xs text-muted">微信号：[[${#servletContext.getAttribute('configMap')['wx_account']}]]</div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- END PROFILE -->
+
+            <!-- JVM -->
+            <div class="block pull-r-l">
+                <div class="block-header bg-body-light">
+                    <h3 class="block-title">
+                        <i class="fa fa-fw fa-bars font-size-default mr-5"></i>JVM 信息
+                    </h3>
+                    <button type="button" class="btn-block-option" id="refreshJvmInfo">
+                        <i class="fa fa-refresh"></i>
+                    </button>
+                    <div class="block-options">
+                        <button type="button" class="btn-block-option" data-toggle="block-option" data-action="content_toggle"></button>
+                    </div>
+                </div>
+                <div class="block-content">
+                    <ul class="nav-users push">
+                        <li>
+                            <a href="javascript:void(0)">
+                                <div class="font-w400 font-size-xs text-muted">JVM 总内存：<span id="totalMemory">正在加载...</span></div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)">
+                                <div class="font-w400 font-size-xs text-muted">JVM 已用内存：<span id="runTimeMemory">正在加载...</span></div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)">
+                                <div class="font-w400 font-size-xs text-muted">JVM 剩余内存：<span id="freeMemory">正在加载...</span></div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)">
+                                <div class="font-w400 font-size-xs text-muted">JDK 目录：<span id="home">正在加载...</span></div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- END JVM -->
+
+        </div>
+        <!-- END Side Content -->
+    </aside>
+    <nav id="sidebar">
+        <!-- Sidebar Content -->
+        <div class="sidebar-content">
+            <!-- Side Header -->
+            <div class="content-header content-header-fullrow px-15">
+                <!-- Mini Mode -->
+                <div class="content-header-section sidebar-mini-visible-b">
+                    <!-- Logo -->
+                    <span class="content-header-item font-w700 font-size-xl float-left animated fadeIn">
+                                <span class="text-dual-primary-dark">c</span><span class="text-primary">b</span>
+                            </span>
+                    <!-- END Logo -->
+                </div>
+                <!-- END Mini Mode -->
+
+                <!-- Normal Mode -->
+                <div class="content-header-section text-center align-parent sidebar-mini-hidden">
+                    <!-- Close Sidebar, Visible only on mobile screens -->
+                    <!-- Layout API, functionality initialized in Template._uiApiLayout() -->
+                    <button type="button" class="btn btn-circle btn-dual-secondary d-lg-none align-v-r" data-toggle="layout" data-action="sidebar_close">
+                        <i class="fa fa-times text-danger"></i>
+                    </button>
+                    <!-- END Close Sidebar -->
+
+                    <!-- Logo -->
+                    <div class="content-header-item">
+                        <a class="link-effect font-w700" href="index.html">
+                            <i class="si si-fire text-primary"></i>
+                            <span class="font-size-xl text-dual-primary-dark">Hexo</span><span class="font-size-xl text-primary">Boot</span>
+                        </a>
+                    </div>
+                    <!-- END Logo -->
+                </div>
+                <!-- END Normal Mode -->
+            </div>
+            <!-- END Side Header -->
+
+            <!-- Side User -->
+            <div class="content-side content-side-full content-side-user px-10 align-parent">
+                <div class="sidebar-mini-visible-b align-v animated fadeIn">
+                    <img class="img-avatar img-avatar32" th:src="@{${#httpSession.getAttribute('currentUser')['avatar']}}" alt="">
+                </div>
+
+                <!-- Visible only in normal mode -->
+                <div class="sidebar-mini-hidden-b text-center">
+                    <a class="img-link" href="javascript:;">
+                        <img class="img-avatar" th:src="@{${#httpSession.getAttribute('currentUser')['avatar']}}" alt="">
+                    </a>
+                    <ul class="list-inline mt-10">
+                        <li class="list-inline-item">
+                            <a class="link-effect text-dual-primary-dark font-size-xs font-w600 text-uppercase" href="javascript:;" data-url="/admin/user/profileUI.html" data-name="个人详情" th:text="${#httpSession.getAttribute('currentUser')['username'] + '(' + #httpSession.getAttribute('currentUser')['nickname']} + ')'">MoonlightL</a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a class="link-effect text-dual-primary-dark" data-toggle="layout" data-action="sidebar_style_inverse_toggle" href="javascript:void(0)">
+                                <i class="si si-drop"></i>
+                            </a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a class="link-effect text-dual-primary-dark logout-btn" href="javascript:void(0)">
+                                <i class="si si-logout"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- END Visible only in normal mode -->
+            </div>
+            <!-- END Side User -->
+
+            <!-- Side Navigation -->
+            <div class="content-side content-side-full">
+                <ul class="nav-main">
+                    <li>
+                        <a href="javascript:;" data-url="/admin/home/dashboard.html" data-name="仪表盘"><i class="si si-cup"></i><span class="sidebar-mini-hide">仪表盘</span></a>
+                    </li>
+                    <li class="nav-main-heading"><span class="sidebar-mini-visible">UI</span><span class="sidebar-mini-hidden">博客管理</span></li>
+                    <li>
+                        <a href="javascript:;" data-url="/admin/post/listUI.html" data-name="博客列表"><i class="fa fa-pencil-square-o"></i><span class="sidebar-mini-hide">博客列表</span></a>
+                    </li>
+                    <li>
+                        <a href="javascript:;" data-url="/admin/category/listUI.html" data-name="分类列表"><i class="fa fa-bars"></i><span class="sidebar-mini-hide">分类列表</span></a>
+                    </li>
+                    <li>
+                        <a href="javascript:;" data-url="/admin/tag/listUI.html" data-name="标签列表"><i class="fa fa-tags"></i><span class="sidebar-mini-hide">标签列表</span></a>
+                    </li>
+                    <li>
+                        <a href="javascript:;" data-url="/admin/postComment/listUI.html" data-name="评论列表"><i class="fa fa-comments-o"></i><span class="sidebar-mini-hide">评论列表</span></a>
+                    </li>
+                    <li>
+                        <a href="javascript:;" data-url="/admin/guestBook/listUI.html" data-name="留言列表"><i class="fa fa-comment-o"></i><span class="sidebar-mini-hide">留言列表</span></a>
+                    </li>
+                    <li class="nav-main-heading"><span class="sidebar-mini-visible">BD</span><span class="sidebar-mini-hidden">网站管理</span></li>
+                    <li>
+                        <a class="nav-submenu" data-toggle="nav-submenu" href="#"><i class="si si-vector"></i><span class="sidebar-mini-hide">系统配置</span></a>
+                        <ul>
+                            <li>
+                                <a href="javascript:;" data-url="/admin/siteConfig/basicUI.html" data-name="基础配置">基础配置</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;" data-url="/admin/siteConfig/specialUI.html" data-name="个性配置">个性配置</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a class="nav-submenu" data-toggle="nav-submenu" href="#"><i class="fa fa-user-o"></i><span class="sidebar-mini-hide">用户管理</span></a>
+                        <ul>
+                            <li>
+                                <a href="javascript:;" data-url="/admin/user/aboutUI.html" data-name="自我介绍">自我介绍</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;" data-url="/admin/user/profileUI.html" data-name="个人详情">个人详情</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;" data-url="/admin/user/listUI.html" data-name="用户列表">用户列表</a>
+                            </li>
+                        </ul>
+                    </li>
+<!--                    <li>-->
+<!--                        <a href="javascript:;" data-url="/admin/blacklist/listUI.html" data-name="黑名单列表"><i class="fa fa-lock"></i><span class="sidebar-mini-hide">黑名单列表</span></a>-->
+<!--                    </li>-->
+<!--                    <li>-->
+<!--                        <a href="javascript:;" data-url="/admin/attachment/listUI.html" data-name="附件列表"><i class="fa fa-files-o"></i><span class="sidebar-mini-hide">附件列表</span></a>-->
+<!--                    </li>-->
+<!--                    <li>-->
+<!--                        <a href="javascript:;" data-url="/admin/friendLink/listUI.html" data-name="友链列表"><i class="fa fa-anchor"></i><span class="sidebar-mini-hide">友链列表</span></a>-->
+<!--                    </li>-->
+<!--                    <li>-->
+<!--                        <a href="javascript:;" data-url="/admin/theme/listUI.html" data-name="主题列表"><i class="fa fa-css3"></i><span class="sidebar-mini-hide">主题列表</span></a>-->
+<!--                    </li>-->
+                    <li class="nav-main-heading"><span class="sidebar-mini-visible">PG</span><span class="sidebar-mini-hidden">系统管理</span></li>
+                    <li>
+                        <a href="javascript:;" data-url="/admin/backup/listUI.html" data-name="数据备份"><i class="fa fa-database"></i><span class="sidebar-mini-hide">数据备份</span></a>
+                    </li>
+                    <li>
+                        <a href="javascript:;" data-url="/druid/index.html" data-name="SQL监控"><i class="fa fa-eye"></i><span class="sidebar-mini-hide">SQL监控</span></a>
+                    </li>
+                </ul>
+            </div>
+            <!-- END Side Navigation -->
+        </div>
+        <!-- Sidebar Content -->
+    </nav>
+    <!-- END Sidebar -->
+
+    <!-- Header -->
+    <header id="page-header">
+        <!-- Header Content -->
+        <div class="content-header">
+            <!-- Left Section -->
+            <div class="content-header-section">
+                <!-- Toggle Sidebar -->
+                <button type="button" class="btn btn-circle btn-dual-secondary" data-toggle="layout" data-action="sidebar_toggle">
+                    <i class="fa fa-navicon"></i>
+                </button>
+                <!-- END Toggle Sidebar -->
+            </div>
+            <!-- END Left Section -->
+
+            <!-- Right Section -->
+            <div class="content-header-section">
+                <!-- User Dropdown -->
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-rounded btn-dual-secondary admin-info-container" id="adminBtn" title="个人信息">
+                        <i class="fa fa-user d-sm-none"></i>
+                        <span class="d-none d-sm-inline-block" th:text="${#httpSession.getAttribute('currentUser')['username']}">管理员</span>
+                        <i class="fa fa-angle-down ml-5"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right min-width-200 animated fadeIn admin-info-content" id="adminItem">
+                        <h5 class="h6 text-center py-10 mb-5 border-b text-uppercase">用户</h5>
+                        <a class="dropdown-item" href="javascript:;" data-url="/admin/user/profileUI.html">
+                            <i class="si si-user mr-5"></i> 个人详情
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item logout-btn" href="javascript:void(0)">
+                            <i class="si si-logout mr-5"></i> 注销
+                        </a>
+                    </div>
+                </div>
+                <!-- END User Dropdown -->
+
+                <!-- Notifications -->
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-rounded btn-dual-secondary message-container" id="messageBtn" title="消息">
+                        <i class="fa fa-flag"></i>
+                        <span class="badge badge-primary badge-pill" id="messageNum"></span>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right min-width-300 animated fadeIn message-content" id="messageContent">
+                        <h5 class="h6 text-center py-10 mb-0 border-b text-uppercase">消息</h5>
+                        <ul class="list-unstyled my-20" id="messageList"></ul>
+                        <a class="text-center message-btn" href="javascript:void(0)" data-url="/admin/postComment/listUI.html" data-name="评论列表">
+                            <i class="fa fa-comments-o mr-5"></i> 查看评论
+                        </a>
+                        <a class="text-center message-btn" href="javascript:void(0)" data-url="/admin/guestBook/listUI.html" data-name="留言列表">
+                            <i class="fa fa-comment-o mr-5"></i> 查看留言
+                        </a>
+                    </div>
+                </div>
+                <!-- END Notifications -->
+                <div class="btn-group" role="group">
+                    <a href="/" target="_blank" class="btn btn-circle btn-dual-secondary" title="跳至主页">
+                        <i class="fa fa-plane"></i>
+                    </a>
+                </div>
+                <button type="button" class="btn btn-circle btn-dual-secondary" data-toggle="layout" data-action="side_overlay_toggle"  title="博客信息">
+                    <i class="fa fa-tasks"></i>
+                </button>
+            </div>
+            <!-- END Right Section -->
+        </div>
+        <!-- END Header Content -->
+        <!-- Header Loader -->
+        <!-- Please check out the Activity page under Elements category to see examples of showing/hiding it -->
+        <div id="page-header-loader" class="overlay-header bg-primary">
+            <div class="content-header content-header-fullrow text-center">
+                <div class="content-header-item">
+                    <i class="fa fa-sun-o fa-spin text-white"></i>
+                </div>
+            </div>
+        </div>
+        <!-- END Header Loader -->
+    </header>
+    <!-- END Header -->
+
+    <!-- Main Container -->
+    <main id="main-container">
+        <div class="content animated fadeIn">
+            <div id="tab-container">
+                <div class='tab-container-menu'>
+                    <div class='tab-left'>
+                        <a href='javascript:;'><i class='fa fa-arrow-left'></i></a>
+                    </div>
+                    <div class='tab-right'>
+                        <a href='javascript:;'><i class='fa fa-arrow-right'></i></a>
+                    </div>
+                    <ul id='jquery-tabs' class='tabs'>
+                        <li class='tabs-item active' id='tab__admin_home_dashboard_html' data-close='false' data-index='0' ><a href='javascript:;' data-url="/admin/home/dashboard.html" data-name="仪表盘">仪表盘</a></li>
+                    </ul>
+                </div>
+                <div class='tab-container-content' id='tab-container-content'>
+                    <div id='iframe_tab__admin_home_dashboard_html' class='iframe active'>
+                        <div style="margin-top: 20px;">
+                            <div class="row invisible" data-toggle="appear">
+                                <!-- Row #1 -->
+                                <div class="col-6 col-xl-3">
+                                    <a class="block block-link-shadow text-right" href="javascript:void(0)" data-url="/admin/post/listUI.html" data-name="博客列表">
+                                        <div class="block-content block-content-full clearfix">
+                                            <div class="float-left mt-10 d-none d-sm-block">
+                                                <i class="fa fa-edit fa-3x text-body-bg-dark"></i>
+                                            </div>
+                                            <div class="font-size-h3 font-w600" data-toggle="countTo" data-speed="1000" th:data-to="${postNum}">0</div>
+                                            <div class="font-size-sm font-w600 text-uppercase text-muted">文章数</div>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-6 col-xl-3">
+                                    <a class="block block-link-shadow text-right" href="javascript:void(0)" data-url="/admin/category/listUI.html" data-name="分类列表">
+                                        <div class="block-content block-content-full clearfix">
+                                            <div class="float-left mt-10 d-none d-sm-block">
+                                                <i class="fa fa-bars fa-3x text-body-bg-dark"></i>
+                                            </div>
+                                            <div class="font-size-h3 font-w600" data-toggle="countTo" data-speed="1000" th:data-to="${categoryNum}">0</div>
+                                            <div class="font-size-sm font-w600 text-uppercase text-muted">分类数</div>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-6 col-xl-3">
+                                    <a class="block block-link-shadow text-right" href="javascript:void(0)" data-url="/admin/postComment/listUI.html" data-name="评论列表">
+                                        <div class="block-content block-content-full clearfix">
+                                            <div class="float-left mt-10 d-none d-sm-block">
+                                                <i class="fa fa-comments-o fa-3x text-body-bg-dark"></i>
+                                            </div>
+                                            <div class="font-size-h3 font-w600" data-toggle="countTo" data-speed="1000" th:data-to="${postCommentNum}">0</div>
+                                            <div class="font-size-sm font-w600 text-uppercase text-muted">评论数</div>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-6 col-xl-3">
+                                    <a class="block block-link-shadow text-right" href="javascript:void(0)" data-url="/admin/guestBook/listUI.html" data-name="留言列表">
+                                        <div class="block-content block-content-full clearfix">
+                                            <div class="float-left mt-10 d-none d-sm-block">
+                                                <i class="fa fa-comment-o fa-3x text-body-bg-dark"></i>
+                                            </div>
+                                            <div class="font-size-h3 font-w600" data-toggle="countTo" data-speed="1000" th:data-to="${guestBookNum}">0</div>
+                                            <div class="font-size-sm font-w600 text-uppercase text-muted">留言数</div>
+                                        </div>
+                                    </a>
+                                </div>
+                                <!-- END Row #1 -->
+                            </div>
+                            <div class="row invisible" data-toggle="appear">
+                                <!-- Row #2 -->
+                                <div class="col-md-6">
+                                    <div class="block">
+                                        <div class="block-header">
+                                            <h3 class="block-title">
+                                                访问人数 <small>（近7日）</small>
+                                            </h3>
+                                            <span style="position: absolute; right: 20px;padding-right: 10px;">当日访问数：<strong id="todayVisitNum"></strong></span>
+                                        </div>
+                                        <div class="block-content block-content-full">
+                                            <div class="pull-all">
+                                                <div id="visitLine" style="height:355px;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="block">
+                                        <div class="block-header">
+                                            <h3 class="block-title">
+                                                热门文章 <small>（Top 5）</small>
+                                            </h3>
+                                        </div>
+                                        <div class="block-content block-content-full" style="height: 355px">
+                                            <table class="table table-hover table-vcenter" id="postTable">
+                                                <thead>
+                                                <tr>
+                                                    <th class="text-center" style="width: 50px;">#</th>
+                                                    <th>标题名</th>
+                                                    <th class="d-none d-sm-table-cell" style="width: 15%;">浏览数</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody></tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- END Row #2 -->
+                            </div>
+                            <div class="row invisible" data-toggle="appear">
+                                <!-- Row #5 -->
+                                <div class="col-6 col-md-4 col-xl-2">
+                                    <a class="block block-link-shadow text-center" href="javascript:void(0)" data-url="/admin/theme/listUI.html" data-name="更换主题">
+                                        <div class="block-content">
+                                            <p class="mt-5">
+                                                <i class="fa fa-css3 fa-3x"></i>
+                                            </p>
+                                            <p class="font-w600">更换主题</p>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-6 col-md-4 col-xl-2">
+                                    <a class="block block-link-shadow text-center" href="javascript:void(0)" data-url="/admin/user/profileUI.html" data-name="个人详情">
+                                        <div class="block-content">
+                                            <p class="mt-5">
+                                                <i class="fa fa-user-o fa-3x"></i>
+                                            </p>
+                                            <p class="font-w600">个人详情</p>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-6 col-md-4 col-xl-2">
+                                    <a class="block block-link-shadow text-center" href="javascript:void(0)" data-url="/admin/friendLink/listUI.html" data-name="友链列表">
+                                        <div class="block-content">
+                                            <p class="mt-5">
+                                                <i class="fa fa-anchor fa-3x"></i>
+                                            </p>
+                                            <p class="font-w600">友链列表</p>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-6 col-md-4 col-xl-2">
+                                    <a class="block block-link-shadow text-center" href="javascript:void(0)" data-url="/admin/blacklist/listUI.html" data-name="黑名单列表">
+                                        <div class="block-content">
+                                            <p class="mt-5">
+                                                <i class="fa fa-lock fa-3x"></i>
+                                            </p>
+                                            <p class="font-w600">查看黑名单</p>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-6 col-md-4 col-xl-2">
+                                    <a class="block block-link-shadow text-center" href="javascript:void(0)" data-url="/admin/attachment/listUI.html" data-name="附件列表">
+                                        <div class="block-content">
+                                            <p class="mt-5">
+                                                <i class="fa fa-files-o fa-3x"></i>
+                                            </p>
+                                            <p class="font-w600">查看附件</p>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-6 col-md-4 col-xl-2">
+                                    <a class="block block-link-shadow text-center" href="javascript:void(0)" data-url="/admin/backup/listUI.html" data-name="备份列表">
+                                        <div class="block-content">
+                                            <p class="mt-5">
+                                                <i class="fa fa-database fa-3x"></i>
+                                            </p>
+                                            <p class="font-w600">备份列表</p>
+                                        </div>
+                                    </a>
+                                </div>
+                                <!-- END Row #5 -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <!-- END Main Container -->
+
+    <!-- Footer -->
+    <footer id="page-footer" class="opacity-0">
+        <div class="content py-20 font-size-xs clearfix">
+            <div class="float-right">
+                Crafted with <i class="fa fa-heart text-pulse"></i> by <a class="font-w600" href="http://www.extlight.com" target="_blank">MoonlightL</a>
+            </div>
+            <div class="float-left">
+                <a class="font-w600" href="https://github.com/moonlightL" target="_blank">Hexo Boot</a> &copy; <span class="js-year-copy">2020</span>
+            </div>
+        </div>
+    </footer>
+    <!-- END Footer -->
+</div>
+<!-- END Page Container -->
+
+<script th:src="@{'/admin/assets/js/codebase.core.min.js'}"></script>
+<script th:src="@{'/admin/assets/js/codebase.app.min.js'}"></script>
+<script th:src="@{'/admin/assets/js/plugins/sweetalert2/sweetalert2.min.js'}"></script>
+<!-- JQuery-tab 插件 -->
+<script th:src="@{'/admin/assets/custom/jquery-tab/js/BootstrapMenu/BootstrapMenu.min.js'}"></script>
+<script th:src="@{'/admin/assets/custom/jquery-tab/js/jquery-tab.js'}"></script>
+<!-- Page JS Plugins -->
+<script th:src="@{'/admin/assets/js/plugins/echarts/dist/echarts.min.js'}"></script>
+<script th:src="@{'/admin/assets/js/plugins/echarts/dist/macarons.js'}"></script>
+<script th:inline="javascript">
+    let installTime = [[${#servletContext.getAttribute('configMap')['install_time']}]];
+    $(function() {
+
+        let DashboardManager = {
+            init: function () {
+                DashboardManager.bindEvent();
+                DashboardManager.createVisitLine();
+                DashboardManager.queryPostList();
+                DashboardManager.getServerInfo();
+                DashboardManager.checkRunDay();
+                DashboardManager.connectServer();
+            },
+            createVisitLine: function () {
+                let myChart = echarts.init(document.getElementById("visitLine"), "macarons");
+                myChart.setOption({
+                    title: {
+                        text: '近七天访问人数',
+                        show: false
+                    },
+                    tooltip: {},
+                    legend: {
+                        data: ['人数']
+                    },
+                    xAxis: {
+                        type: 'category',
+                        name: "日期",
+                        boundaryGap: false,
+                        data: []
+                    },
+                    yAxis: {
+                        type: 'value',
+                        name: '人数(个)'
+                    },
+                    series: [{
+                        areaStyle: {},
+                        name: "人数",
+                        type: 'line',
+                        data: []
+                    }]
+                });
+                myChart.showLoading();
+
+                $.getJSON("/admin/home/visitData.json", function (resp) {
+                    myChart.hideLoading();
+                    if (resp.success) {
+                        myChart.setOption({
+                            xAxis: {
+                                data: resp.data.dates
+                            },
+                            series: [{
+                                data: resp.data.values
+                            }]
+                        });
+                    }
+                });
+
+                $.getJSON("/admin/home/todayVisitNum.json", function (resp) {
+                    if (resp.success) {
+                       $("#todayVisitNum").html(resp.data);
+                    }
+                });
+
+            },
+            queryPostList: function () {
+                $.getJSON("/admin/home/top5PostList.json", function (resp) {
+                    if (resp.success) {
+                        let data = resp.data;
+                        let htmlArr = [];
+                        for (let i = 0; i < data.length; i++) {
+                            let post = data[i];
+                            htmlArr.push('<tr>');
+                            htmlArr.push('<th class="text-center" scope="row">' + (i + 1) + '</th>');
+                            htmlArr.push('<td><a href="/' + post.link +'" target="_blank">' + post.title + '</a></td>');
+                            htmlArr.push('<td class="d-none d-sm-table-cell">' + post.readNum + '</td>');
+                            htmlArr.push('</tr>');
+                        }
+
+                        $("#postTable").find("tbody").html(htmlArr.join(""));
+                    }
+                });
+            },
+            getServerInfo: function() {
+                $.getJSON("/admin/home/getServerData.json", function (resp) {
+                    if (resp.success) {
+                        let server = resp.data;
+                        let jvm = server.jvm;
+                        for (let key in jvm) {
+                            $("#" + key).text(jvm[key]);
+                        }
+                    }
+                });
+            },
+            bindEvent: function () {
+                $("#tab-container").tab({
+                    bottom: 205, // 距离底部高度
+                    tabCallback: function(url, tab) { // 点击 tab 后的回调函数
+
+                    }
+                });
+
+                $(".logout-btn").off("click").on("click", function () {
+                    swal({
+                        title: "确定要退出系统吗？",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#DD6B55",
+                        cancelButtonText: "取消",
+                        confirmButtonText: "确定"
+                    }).then(function(dismiss) {
+                        if (dismiss.value === true) {
+                            $.ajax({
+                                type: "POST",
+                                url: "/admin/logout.json",
+                                success: function (resp) {
+                                    if (resp.success) {
+                                        window.location.href = "/admin/login.html";
+                                    }
+                                }
+                            })
+                        }
+                    });
+                });
+
+                $("#refreshJvmInfo").on("click", function () {
+                    DashboardManager.getServerInfo();
+                });
+
+                $("#adminBtn").on("click", function () {
+                    $("#adminItem").toggle();
+                    $("#messageContent").hide();
+                });
+
+                $("#messageBtn").on("click", function () {
+                    $("#messageContent").toggle();
+                    $("#adminItem").hide();
+                });
+
+            },
+            connectServer: function () {
+                let webSocket;
+                let host = window.location.host;
+                let protocol = (window.location.protocol === "http:" ? "ws:" : "wss:");
+                if ('WebSocket' in window) {
+                    webSocket = new WebSocket(protocol + "//" + host + "/messageServer");
+                } else if ('MozWebSocket' in window) {
+                    webSocket = new MozWebSocket(protocol + "//" + host + "/messageServer");
+                }
+
+                webSocket.onopen = function(event) {
+                    console.log(event.data)
+                };
+
+                webSocket.onmessage = function(event) {
+                    if (event.data) {
+                        let messageList = JSON.parse(event.data);
+                        let length = messageList.length;
+                        let $messageNum = $("#messageNum");
+                        $messageNum.html(parseInt($messageNum.html() === "" ? "0" : $messageNum.html()) + length);
+                        if (length > 0) {
+                            let arr = [];
+                            length = (length > 5 ? 5 : length);
+                            for (let i = 0; i < length; i++) {
+                                let message = messageList[i];
+                                arr.push('<li>');
+                                arr.push('<a class="text-body-color-dark media mb-15" href="javascript:void(0)">');
+                                arr.push('<div class="row">');
+                                arr.push('<div class="col-md-2">');
+                                if (message.msgType === 1) {
+                                    arr.push('<i class="fa fa-fw fa-comments-o text-success"></i>');
+                                } else {
+                                    arr.push('<i class="fa fa-fw fa-comment text-primary"></i>');
+                                }
+                                arr.push('</div>');
+                                arr.push('<div class="col-md-10">');
+                                arr.push('<p class="mb-0">' + message.content + '</p>');
+                                arr.push('<div class="text-muted font-size-sm font-italic">' + message.messageTime + '</div>');
+                                arr.push('</div>');
+                                arr.push('</div>');
+                                arr.push('</a>');
+                                arr.push('</li>');
+                            }
+                            $("#messageList").prepend(arr.join(""));
+                        } else {
+                            $("#messageList").html("<p class='text-center'></p>");
+                            $messageNum.html("");
+                        }
+                    }
+                };
+
+                webSocket.onerror = function(event) {
+                    console.log(event.data);
+                };
+
+                webSocket.onclose = function(event) {
+                    console.log(event.data);
+                }
+            },
+            checkRunDay: function () {
+                let $runDay = $("#runDay");
+                setInterval(function () {
+                    let date1 = installTime;
+                    let date2 = new Date();
+                    let date3 = date2.getTime() - new Date(date1).getTime();
+                    //计算出相差天数
+                    let days = Math.floor(date3/(24*3600*1000));
+
+                    //计算出小时数
+                    let leave1 = date3%(24*3600*1000);
+                    let hours = Math.floor(leave1/(3600*1000));
+                    //计算相差分钟数
+                    let leave2 = leave1%(3600*1000) ;
+                    let minutes = Math.floor(leave2/(60*1000));
+                    //计算相差秒数
+                    let leave3 = leave2%(60*1000);
+                    let seconds = Math.round(leave3/1000);
+                    $runDay.html(days + " 天 " + hours + " 小时 " + minutes + " 分钟 " + seconds + " 秒");
+                }, 1000);
+            }
+        };
+
+        DashboardManager.init();
+    });
+</script>
+</body>
+</html>

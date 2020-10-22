@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, initial-scale=1, shrink-to-fit=no">
+    <div th:replace="~{admin/common :: common-link}"></div>
+</head>
+<body>
+
+<div class="content animated fadeIn">
+    <h2 class="content-heading" id="toolbar">
+        <button type="button" class="btn btn-sm btn-secondary float-right hexo-query" data-query-area="queryArea"><i class="fa fa-search text-success mr-5"></i> 查询</button>
+        <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-refresh"><i class="fa fa-refresh mr-5"></i> 刷新</button>
+        <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-remove"><i class="fa fa-trash text-danger mr-5"></i> 删除</button>
+        <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-edit" title="编辑文章" data-full="true"><i class="fa fa-edit text-warning mr-5"></i> 编辑</button>
+        <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-add" title="新增文章" data-full="true"><i class="fa fa-plus-square text-primary mr-5"></i> 新增</button>
+        <button type="button" id="importBtn" class="btn btn-sm btn-secondary float-right mr-5" title="导入文章" data-width="550" data-height="320"><i class="fa fa-info text-info mr-5"></i> 导入</button>
+        <i class="fa fa-edit"></i> 文章列表
+    </h2>
+    <div class="block block-fx-shadow hide" id="queryArea">
+        <div class="block-content block-content-full">
+            <form class="form-inline" method="post" id="queryForm">
+                <label class="sr-only" for="title">标题名称</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <button type="button" class="btn btn-secondary">标题名称</button>
+                    </div>
+                    <input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="title" name="title">
+                </div>
+                <label class="sr-only" for="publish">发布状态</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <button type="button" class="btn btn-secondary">发布状态</button>
+                    </div>
+                    <select class="form-control mb-2 mr-sm-2 mb-sm-0" id="publish" name="publish">
+                        <option value="">全部</option>
+                        <option value="1">已发布</option>
+                        <option value="0">未发布</option>
+                    </select>
+                </div>
+                <label class="sr-only" for="top">置顶状态</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <button type="button" class="btn btn-secondary">置顶状态</button>
+                    </div>
+                    <select class="form-control mb-2 mr-sm-2 mb-sm-0" id="top" name="top">
+                        <option value="">全部</option>
+                        <option value="1">已置顶</option>
+                        <option value="0">未置顶</option>
+                    </select>
+                </div>
+                <label class="sr-only" for="publishDate">发布时间</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <button type="button" class="btn btn-secondary">发布日期</button>
+                    </div>
+                    <input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="publishDate" name="publishDate">
+                </div>
+                <button type="button" class="btn btn-alt-primary mr-5 hexo-query-submit">提交</button>
+                <button type="reset" class="btn btn-alt-warning">重置</button>
+            </form>
+        </div>
+    </div>
+    <div class="block block-fx-shadow">
+        <div class="block-content">
+            <div class="table-responsive">
+                <table id="listTable" class="table table-striped table-vcenter">
+                    <thead>
+                    <tr>
+                        <th class='text-center' width="5%" data-checkbox="true">
+                            <label class="css-control css-control-primary css-checkbox" for="check-all" >
+                                <input type="checkbox" class="css-control-input" id="check-all">
+                                <span class="css-control-indicator"></span>
+                            </label>
+                        </th>
+                        <th width="8%" data-field="coverUrl" data-formatter="urlFormatter">封面</th>
+                        <th data-field="title" data-formatter="titleFormatter">文章名</th>
+                        <th width="12%" data-field="categoryName">分类</th>
+                        <th width="6%" data-field="readNum">浏览数</th>
+                        <th width="6%" data-field="commentNum">评论数</th>
+                        <th width="6%" data-field="praiseNum">点赞数</th>
+                        <th width="10%" data-field="publishDate">发布日期</th>
+                        <th width="10%" data-field="comment" data-formatter="commentFormatter">是否评论</th>
+                        <th width="10%" data-field="top" data-formatter="topFormatter">是否置顶</th>
+                        <th width="10%" align="center" data-formatter="actionFormatter">操作</th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<div th:replace="~{admin/common :: common-script}"></div>
+<script th:inline="javascript">
+
+    function urlFormatter(val, row) {
+        return "<img src='" + val + "' width='32' height='32' alt='' />";
+    }
+
+    function titleFormatter(val, row) {
+        return "<a href='/" + row.link + "' target='_blank' style='color: rgba(0,0,0,0.6)'>" + row.title + "</a>";
+    }
+
+    function commentFormatter(val, row) {
+        let checked = val ? 'checked' : '';
+        let arr = [];
+        arr.push('<label class="css-control css-control-sm css-control-success css-switch">');
+        arr.push('<input type="checkbox" class="css-control-input" ' + checked + ' data-id="'+row.id+'" onclick="window.switchChange(\'comment\',$(this))">');
+        arr.push('<span class="css-control-indicator"></span>');
+        arr.push('</label>');
+        return arr.join("");
+    }
+
+    function topFormatter(val, row) {
+        let checked = val ? 'checked' : '';
+        let arr = [];
+        arr.push('<label class="css-control css-control-sm css-control-success css-switch">');
+        arr.push('<input type="checkbox" class="css-control-input" ' + checked + ' data-id="'+row.id+'" onclick="window.switchChange(\'top\',$(this))">');
+        arr.push('<span class="css-control-indicator"></span>');
+        arr.push('</label>');
+        return arr.join("");
+    }
+
+    function switchChange(type, $obj) {
+        let id = $obj.data("id");
+        let state = $obj.prop("checked");
+        let params = {
+            "comment": {id: id, comment: state, tip: "确定要修改评论按钮吗?"},
+            "top": {id: id, top: state, tip: "确定要修改置顶按钮吗?"}
+        };
+
+        let param = params[type];
+        $.hexo.modal.confirm(param.tip, function () {
+            $.hexo.action.sendRequest({
+                url: BASE_URL + "/updateSwitch.json",
+                params: param,
+                callback: function (resp) {
+                    $.hexo.modal.tip("操作成功", "success");
+                }
+            });
+        });
+    }
+
+    function publishPost(id) {
+        $.hexo.modal.confirm("确定要发表该文章吗？", function () {
+            $.hexo.action.sendRequest({
+                url: BASE_URL + "/publishPost.json",
+                params: {id: id},
+                callback: function (resp) {
+                    $.hexo.modal.tip(resp.message, "success", function () {
+                        $.hexo.table.refreshData();
+                    });
+                }
+            });
+        });
+    }
+
+    function actionFormatter(val, row) {
+        let btnArr = [];
+        btnArr.push('<div class="btn-group">');
+        btnArr.push('<button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="编辑文章" data-full="true" onclick="$.hexo.action.showEditUI(\'' + row.id + '\', $(this))"><i class="fa fa-pencil"></i></button>');
+        btnArr.push('<button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="删除" onclick="$.hexo.action.remove(\'' + row.id + '\')"><i class="fa fa-times"></i></button>');
+        if (!row.publish) {
+            btnArr.push('<button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="发表" onclick="window.publishPost(\'' + row.id + '\')"><i class="fa fa-upload"></i></button>');
+        }
+        btnArr.push("</div>");
+        return btnArr.join("");
+    }
+
+
+
+    $(function() {
+        $.hexo.table.init({
+            baseUrl: BASE_URL
+        });
+
+        $("#importBtn").on("click", function () {
+            let $target = $(this);
+            $.hexo.modal.window("导入", BASE_URL + "/importUI.html", $target);
+        });
+    });
+</script>
+</html>

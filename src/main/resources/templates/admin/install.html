@@ -1,0 +1,193 @@
+
+<!doctype html>
+<html lang="en" class="no-focus" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Hexo Boot 后台管理 | 安装</title>
+    <link rel="shortcut icon" th:href="@{${#servletContext.getAttribute('configMap')['favicon_url']}}">
+    <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/sweetalert2/sweetalert2.css'}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,400i,600,700&display=swap">
+    <link rel="stylesheet" id="css-main" th:href="@{'/admin/assets/css/codebase.min.css'}">
+</head>
+<body>
+<!-- Page Container -->
+<div id="page-container" class="main-content-boxed">
+    <!-- Main Container -->
+    <main id="main-container">
+        <div class="bg-body-light hero-bubbles">
+            <span class="hero-bubble wh-40 pos-t-20 pos-l-10 bg-primary"></span>
+            <span class="hero-bubble wh-30 pos-t-20 pos-l-80 bg-success"></span>
+            <span class="hero-bubble wh-20 pos-t-40 pos-l-25 bg-corporate"></span>
+            <span class="hero-bubble wh-40 pos-t-30 pos-l-90 bg-pulse"></span>
+            <span class="hero-bubble wh-30 pos-t-40 pos-l-20 bg-danger"></span>
+            <span class="hero-bubble wh-30 pos-t-60 pos-l-25 bg-warning"></span>
+            <span class="hero-bubble wh-30 pos-t-60 pos-l-80 bg-info"></span>
+            <span class="hero-bubble wh-40 pos-t-75 pos-l-70 bg-flat"></span>
+            <span class="hero-bubble wh-40 pos-t-75 pos-l-10 bg-earth"></span>
+            <span class="hero-bubble wh-30 pos-t-90 pos-l-90 bg-elegance"></span>
+            <div class="row no-gutters justify-content-center">
+                <div class="hero-static col-lg-7">
+                    <div class="content content-full overflow-hidden"><!-- Header -->
+                        <div class="py-50 text-center">
+                            <a class="link-effect font-w700" href="index.html"><i class="si si-fire"></i>
+                                <span class="font-size-xl text-primary-dark">Hexo</span><span class="font-size-xl">Boot</span>
+                            </a>
+                            <h1 class="h4 font-w700 mt-30 mb-10">欢迎安装 Hexo Boot 博客系统</h1>
+                        </div>
+
+             <!-- END Header -->
+            <div class="col-md-12">
+            <!-- Progress Wizard 2 -->
+            <div class="js-wizard-validation-classic block">
+                <!-- Wizard Progress Bar -->
+                <div class="progress rounded-0" data-wizard="progress" style="height: 8px;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 30%;" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <!-- END Wizard Progress Bar -->
+
+                <!-- Step Tabs -->
+                <ul class="nav nav-tabs nav-tabs-alt nav-fill" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#wizard-validation-classic-step1" data-toggle="tab"> 登录信息</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#wizard-validation-classic-step2" data-toggle="tab"> 博客信息</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#wizard-validation-classic-step3" data-toggle="tab"> 博主信息</a>
+                    </li>
+                </ul>
+                <!-- END Step Tabs -->
+
+                <!-- Form -->
+                <form class="js-wizard-validation-classic-form" id="installForm" method="post">
+                    <!-- Steps Content -->
+                    <div class="block-content block-content-full tab-content" style="min-height: 274px;">
+                        <!-- Step 1 -->
+                        <div class="tab-pane active" id="wizard-validation-classic-step1" role="tabpanel">
+                            <div class="block-content block-content-full">
+                                <div class="row items-push">
+                                    <div class="col-lg-4">
+                                        <p class="text-muted">
+                                            请填写用户名和密码创建账户
+                                        </p>
+                                    </div>
+                                    <div class="col-lg-6 offset-lg-1">
+                                        <div class="form-group">
+                                            <label for="install-username">用户名 <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control form-control-lg" id="install-username" name="username" placeholder="请填写用户名">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="install-password">密码 <span class="text-danger">*</span></label>
+                                            <input type="password" class="form-control form-control-lg" id="install-password" name="password" placeholder="请填写密码">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="confirm-password">确认密码 <span class="text-danger">*</span></label>
+                                            <input type="password" class="form-control form-control-lg" id="confirm-password" name="confirm-password" placeholder="请填写确认密码">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- END Step 1 -->
+
+                        <!-- Step 2 -->
+                        <div class="tab-pane" id="wizard-validation-classic-step2" role="tabpanel">
+                            <div class="block-content block-content-full">
+                                <div class="row items-push">
+                                    <div class="col-lg-4">
+                                        <p class="text-muted">
+                                            请填写博客基础信息
+                                        </p>
+                                    </div>
+                                    <div class="col-lg-6 offset-lg-1">
+                                        <div class="form-group">
+                                            <label for="install-blogName">博客名称 <span class="text-default">(选填)</span></label>
+                                            <input type="text" class="form-control form-control-lg" id="install-blogName" name="blogName" placeholder="请填写博客名称">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="install-homePage">博客首页 <span class="text-default">(选填)</span></label>
+                                            <input type="text" class="form-control form-control-lg" id="install-homePage" name="homePage" placeholder="注：“http://” 或 “https:// 开头”">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="install-description">博客描述 <span class="text-default">(选填)</span></label>
+                                            <input type="text" class="form-control form-control-lg" id="install-description" name="description" placeholder="请填写博客描述">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <!-- END Step 2 -->
+
+                        <!-- Step 3 -->
+                        <div class="tab-pane" id="wizard-validation-classic-step3" role="tabpanel">
+                            <div class="block-content block-content-full">
+                                <div class="row items-push">
+                                    <div class="col-lg-4">
+                                        <p class="text-muted">
+                                            请填写博主基础信息
+                                        </p>
+                                    </div>
+                                    <div class="col-lg-6 offset-lg-1">
+                                        <div class="form-group">
+                                            <label for="install-nickname">昵称 <span class="text-default">(选填)</span></label>
+                                            <input type="text" class="form-control form-control-lg" id="install-nickname" name="nickname" placeholder="请填写昵称">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="install-email">邮箱地址 <span class="text-default">(选填)</span></label>
+                                            <input type="text" class="form-control form-control-lg" id="install-email" name="email" placeholder="请填写邮箱地址">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- END Step 3 -->
+                    </div>
+                    <!-- END Steps Content -->
+
+                    <!-- Steps Navigation -->
+                    <div class="block-content block-content-sm block-content-full bg-body-light">
+                        <div class="row">
+                            <div class="col-6">
+                                <button type="button" class="btn btn-alt-secondary" data-wizard="prev">
+                                    <i class="fa fa-angle-left mr-5"></i> 上一步
+                                </button>
+                            </div>
+                            <div class="col-6 text-right">
+                                <button type="button" class="btn btn-alt-secondary" data-wizard="next">
+                                    下一步 <i class="fa fa-angle-right ml-5"></i>
+                                </button>
+                                <button id="submitBtn" type="submit" class="btn btn-alt-primary d-none" data-wizard="finish">
+                                    <i class="fa fa-check mr-5"></i> 提交
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END Steps Navigation -->
+                </form>
+                <!-- END Form -->
+            </div>
+            <!-- END Progress Wizard 2 -->
+        </div>
+</div>
+</div>
+</div>
+</div>
+    <!-- END Page Content -->
+</main>
+    <!-- END Main Container -->
+</div>
+<!-- END Page Container -->
+
+<script th:src="@{'/admin/assets/js/codebase.core.min.js'}"></script>
+<script th:src="@{'/admin/assets/js/codebase.app.min.js'}"></script>
+<script th:src="@{'/admin/assets/js/plugins/sweetalert2/sweetalert2.min.js'}"></script>
+<!-- Page JS Plugins -->
+<script th:src="@{'/admin/assets/js/plugins/bootstrap-wizard/jquery.bootstrap.wizard.js'}"></script>
+<script th:src="@{'/admin/assets/js/plugins/jquery-validation/jquery.validate.min.js'}"></script>
+<script th:src="@{'/admin/assets/js/plugins/jquery-validation/additional-methods.js'}"></script>
+<script th:src="@{'/admin/assets/custom/install.js'}"></script>
+</body>
+</html>
