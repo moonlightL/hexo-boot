@@ -2,6 +2,10 @@ let CommentManager = (function ($) {
 
     let CommentManager = {
         init: function (nickname, postId) {
+            CommentManager.initComment(nickname, postId);
+            CommentManager.bindEvent(postId);
+        },
+        initComment: function (nickname, postId) {
             $("#comment-container").BeautyComment({
                 title: "评论",
                 subTitle: "最新评论",
@@ -24,7 +28,24 @@ let CommentManager = (function ($) {
                     };
                 }
             });
+        },
+        bindEvent: function (postId) {
+            // 点赞
+            $("#priseBtn").on("click",function () {
+                if (sessionStorage.getItem("hasPrize" + postId)) {
+                    return;
+                }
+
+                $.post("/praisePost/" + postId, null, function (resp) {
+                    if (resp.success) {
+                        $("#prizeCount").text(resp.data);
+                        sessionStorage.setItem("hasPrize" + postId, "y");
+                    }
+                },"json");
+
+            });
         }
+
     };
 
     // let flag = false;
@@ -49,22 +70,6 @@ let CommentManager = (function ($) {
             rewardImgArea.addClass("hide");
             rewardImgArea.slideUp("slow");
         }
-    });
-
-    // 点赞
-    $("#priseBtn").on("click",function () {
-        let postId = $("#postId").val();
-        if (sessionStorage.getItem("hasPrize" + postId)) {
-            return;
-        }
-
-        $.post("/praisePost/" + postId,null,function (resp) {
-            if (resp.success) {
-                $("#prizeCount").text(resp.data);
-                sessionStorage.setItem("hasPrize" + postId, "y");
-            }
-        },"json");
-
     });
 
     // 分享
