@@ -76,7 +76,26 @@ Hexo Boot 是一套开源的博客系统。由 ml-blog 博客系统演变和扩�
 
 下载源码，修改 resources 目录下的 application.yml 中的数据库配置（用户名和密码），运行项目即可。
 
+前端主页访问地址： 
+```
+http://127.0.0.1:8080
+```
 
-# 五、更新日志
+后端管理访问地址
+```
+http://127.0.0.1:8080/admin/login.html
+```
+
+## 五、添加主题
+
+下载主题源码，将整个文件夹复制到项目的 resources/templates/theme 下（与 default 目录同级），启动项目即可。
+
+如若项目已经启动运行，也可复制到 classes/templates/theme 下即可。
+
+**目前已开源的主题:**
+
+[hexo-boot-theme-vCard](https://github.com/moonlightL/hexo-boot-theme-vCard)
+
+# 六、更新日志
 
 2020-10-22 上传开源
