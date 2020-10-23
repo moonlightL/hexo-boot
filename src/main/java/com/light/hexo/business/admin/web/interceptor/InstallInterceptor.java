@@ -28,7 +28,7 @@ public class InstallInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
         String installValue = this.configService.getConfigValue(ConfigEnum.IS_INSTALLED.getName());
-        if (!"1".equals(installValue)) {
+        if ("".equals(installValue) ||  !"1".equals(installValue)) {
             response.sendRedirect("/admin/install.html");
             return false;
         } else {
