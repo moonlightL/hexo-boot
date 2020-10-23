@@ -88,7 +88,7 @@ http://127.0.0.1:8080/admin/login.html
 
 ## 五、添加主题
 
-下载主题源码，将整个文件夹复制到项目的 resources/templates/theme 下（与 default 目录同级），启动项目即可。
+下载主题源码，修改名称（如果 hexo-boot-theme-abc 改成 abc），然后将整个文件夹复制到项目的 resources/templates/theme 下（与 default 目录同级），启动项目即可。
 
 如若项目已经启动运行，也可复制到 classes/templates/theme 下即可。
 
