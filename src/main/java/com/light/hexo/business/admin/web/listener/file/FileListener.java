@@ -42,11 +42,14 @@ public class FileListener extends FileAlterationListenerAdaptor {
             String content = FileUtils.readFileToString(file, "UTF-8");
             Map<String, Object> map = JsonUtil.string2Obj(content, Map.class);
 
+            String fileDir = file.getParentFile().getName();
             this.themeService.saveTheme(
-                    Objects.nonNull(map.get("name")) ? map.get("name").toString() : file.getParentFile().getName(),
-                    Objects.nonNull(map.get("preview")) ? map.get("preview").toString(): "",
+                    map.get("name").toString(),
+                    fileDir,
+                    String.format("/theme/%s/preview.png", fileDir),
                     false,
-                    Objects.nonNull(map.get("remark")) ? map.get("remark").toString(): ""
+                    Objects.nonNull(map.get("remark")) ? map.get("remark").toString(): "",
+                    (Map<String, Object>)map.get("extension")
             );
 
 
@@ -72,8 +75,8 @@ public class FileListener extends FileAlterationListenerAdaptor {
     @Override
     public void onFileDelete(File file) {
 
-        String themeName = file.getParentFile().getName();
-        Theme dbTheme = this.themeService.checkTheme(themeName);
+        String fileDir = file.getParentFile().getName();
+        Theme dbTheme = this.themeService.checkTheme(fileDir);
 
         this.themeService.removeModel(dbTheme.getId());
 

@@ -1,5 +1,7 @@
 {
   "name": "default",
-  "preview": "/theme/default/preview.png",
-  "remark": "默认主题"
+  "remark": "默认主题",
+  "extension": {
+    "pageSize": "9"
+  }
 }

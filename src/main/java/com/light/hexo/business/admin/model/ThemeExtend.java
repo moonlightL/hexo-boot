@@ -14,16 +14,16 @@ import java.time.LocalDateTime;
 
 /**
  * @Author MoonlightL
- * @ClassName: Theme
+ * @ClassName: ThemeExtend
  * @ProjectName hexo-boot
- * @Description: 主题
- * @DateTime 2020/9/24 14:34
+ * @Description: 主题配置扩展
+ * @DateTime 2020/10/27 16:59
  */
 @Data
 @Accessors(chain = true)
 @ToString
-@Table(name = "t_theme")
-public class Theme implements Serializable {
+@Table(name = "t_theme_extend")
+public class ThemeExtend implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -32,34 +32,19 @@ public class Theme implements Serializable {
     private Integer id;
 
     /**
-     * 主题名称
+     * 主题 id
      */
-    private String name;
+    private Integer themeId;
 
     /**
-     * 文件目录
+     * 配置名称
      */
-    private String fileDir;
+    private String configName;
 
     /**
-     * 预览图片地址（800x500 PNG ）
+     * 配置值
      */
-    private String coverUrl;
-
-    /**
-     * 状态
-     */
-    private Boolean state;
-
-    /**
-     * 排序
-     */
-    private Integer sort;
-
-    /**
-     * 备注
-     */
-    private String remark;
+    private String configValue;
 
     @CreateTime
     private LocalDateTime createTime;

@@ -1,6 +1,9 @@
 package com.light.hexo.business.admin.web.listener;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.light.hexo.business.admin.constant.ConfigEnum;
 import com.light.hexo.business.admin.model.Theme;
+import com.light.hexo.business.admin.service.ConfigService;
 import com.light.hexo.business.admin.service.ThemeService;
 import com.light.hexo.common.util.ExceptionUtil;
 import com.light.hexo.common.util.JsonUtil;
@@ -9,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ResourceUtils;
+import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -48,19 +52,34 @@ public class CheckThemeListener {
 
             // 读取内容
             String content = FileUtils.readFileToString(jsonFile, "UTF-8");
-            Map<String, Object> map = JsonUtil.string2Obj(content, Map.class);
+            Map<String, Object> map = JsonUtil.string2Obj(content, new TypeReference<Map<String, Object>>() {});
 
-            String themeName = Objects.nonNull(map.get("name")) ? map.get("name").toString() : file.getParentFile().getName();
-
-            if (currentTheme != null && currentTheme.getName().equals(themeName)) {
+            if (Objects.isNull(map.get("name"))) {
                 continue;
             }
 
+            String themeName = map.get("name").toString();
+
+            boolean state = false;
+            if (currentTheme == null) {
+                if (themeName.equals("default")) {
+                    state = true;
+                }
+            } else {
+                if (currentTheme.getName().equals(themeName)) {
+                    state = true;
+                }
+            }
+
+            String fileDir = jsonFile.getParentFile().getName();
             this.themeService.saveTheme(
                     themeName,
-                    Objects.nonNull(map.get("preview")) ? map.get("preview").toString(): "",
-                    false,
-                    Objects.nonNull(map.get("remark")) ? map.get("remark").toString(): "");
+                    fileDir,
+                    String.format("/theme/%s/preview.png", fileDir),
+                    state,
+                    Objects.nonNull(map.get("remark")) ? map.get("remark").toString(): "",
+                    (Map<String, Object>)map.get("extension")
+            );
 
         }
 

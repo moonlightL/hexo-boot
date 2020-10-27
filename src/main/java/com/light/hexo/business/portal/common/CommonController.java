@@ -74,13 +74,13 @@ public class CommonController {
 
         // 主题
         Theme currentTheme = this.themeService.getCurrentTheme();
-        String themeName = (currentTheme == null ? "default" : currentTheme.getName());
+        String fileDir = (currentTheme == null ? "default" : currentTheme.getFileDir());
 
         resultMap.put("isDetail", isDetail);
-        resultMap.put("prefix", "/theme/" + themeName);
+        resultMap.put("prefix", "/theme/" + fileDir);
         resultMap.put("md", MarkdownUtil.class);
 
-        return "/theme/" +  themeName + "/" + pageName;
+        return "/theme/" +  fileDir + "/" + pageName;
     }
 
     private Map<String, Integer> getCountInfo() {
@@ -88,7 +88,7 @@ public class CommonController {
         String key = PageConstant.INDEX_COUNT_INFO;
         Map<String, Integer> result = CacheUtil.get(key);
         if (result == null) {
-            result = new HashMap<>(3);
+            result = new HashMap<>(4);
             // 文章数
             result.put("postNum", this.postService.getPostNum());
             // 分类数

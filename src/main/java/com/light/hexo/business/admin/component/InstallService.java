@@ -1,5 +1,6 @@
 package com.light.hexo.business.admin.component;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.light.hexo.business.admin.constant.HexoExceptionEnum;
 import com.light.hexo.business.admin.model.*;
 import com.light.hexo.business.admin.service.*;
@@ -77,7 +78,7 @@ public class InstallService {
         this.createGuestBook(user, browserName, ipAddr);
 
         // 6. 创建友链
-        this.createFriendLink(user);
+        this.createFriendLink();
 
         // 7. 初始化全局配置
         this.initConfig(user, request.getBlogName(), request.getHomePage(), request.getDescription());
@@ -176,13 +177,14 @@ public class InstallService {
         this.guestBookService.saveModel(guestBook);
     }
 
-    private void createFriendLink(User user) {
+    private void createFriendLink() {
 
         FriendLink friendLink = new FriendLink();
         friendLink.setTitle("月光中的污点")
-                  .setAuthor(user.getNickname())
-                  .setHomeUrl("http://www.extlight.com")
+                  .setAuthor("MoonlightL")
+                  .setHomeUrl("https://www.extlight.com")
                   .setEmail("jx8996@163.com")
+                  .setBackgroundColor("#34495E")
                   .setSort(1)
                   .setRemark("技术博客");
         this.friendLinkService.saveModel(friendLink);
@@ -261,13 +263,15 @@ public class InstallService {
 
         // 读取内容
         String content = FileUtils.readFileToString(jsonFile, "UTF-8");
-        Map<String, Object> map = JsonUtil.string2Obj(content, Map.class);
-
+        Map<String, Object> map = JsonUtil.string2Obj(content, new TypeReference<Map<String, Object>>() {});
+        String fileDir = jsonFile.getParentFile().getName();
         this.themeService.saveTheme(
                 Objects.nonNull(map.get("name")) ? map.get("name").toString(): jsonFile.getParentFile().getName(),
-                Objects.nonNull(map.get("preview")) ? map.get("preview").toString(): "",
+                fileDir,
+                String.format("/theme/%s/preview.png", fileDir),
                 true,
-                Objects.nonNull(map.get("remark")) ? map.get("remark").toString(): ""
+                Objects.nonNull(map.get("remark")) ? map.get("remark").toString(): "",
+                (Map<String, Object>)map.get("extension")
         );
     }
 }

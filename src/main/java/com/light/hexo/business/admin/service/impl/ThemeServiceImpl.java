@@ -1,10 +1,10 @@
 package com.light.hexo.business.admin.service.impl;
 
-import com.light.hexo.business.admin.constant.ConfigEnum;
 import com.light.hexo.business.admin.constant.HexoExceptionEnum;
 import com.light.hexo.business.admin.mapper.ThemeMapper;
 import com.light.hexo.business.admin.model.Theme;
 import com.light.hexo.business.admin.service.ConfigService;
+import com.light.hexo.business.admin.service.ThemeExtendService;
 import com.light.hexo.business.admin.service.ThemeService;
 import com.light.hexo.common.base.BaseMapper;
 import com.light.hexo.common.base.BaseRequest;
@@ -20,10 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
-import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * @Author MoonlightL
@@ -39,7 +36,7 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
     private ThemeMapper themeMapper;
 
     @Autowired
-    private ConfigService configService;
+    private ThemeExtendService themeExtendService;
 
     @Override
     public BaseMapper<Theme> getBaseMapper() {
@@ -100,28 +97,34 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
     }
 
     @Override
-    public Theme checkTheme(String themeName) throws GlobalException {
+    public Theme checkTheme(String fileDir) throws GlobalException {
         Example example = new Example(Theme.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("name", themeName);
+        criteria.andEqualTo("fileDir", fileDir);
         return this.themeMapper.selectOneByExample(example);
     }
 
     @Override
-    public void saveTheme(String name, String coverUrl, boolean state, String remark) throws GlobalException {
-
-        Theme dbTheme = this.checkTheme(name);
-        if (dbTheme != null) {
-          return;
+    public void saveTheme(String name, String fileDir, String coverUrl, boolean state, String remark, Map<String, Object> extensionMap) throws GlobalException {
+        Theme theme = this.checkTheme(fileDir);
+        if (theme != null) {
+            theme.setFileDir(fileDir)
+                  .setCoverUrl(coverUrl)
+                  .setState(state)
+                  .setRemark(remark);
+           this.updateModel(theme);
+        } else {
+            theme = new Theme();
+            theme.setName(name)
+                 .setFileDir(fileDir)
+                 .setCoverUrl(coverUrl)
+                 .setState(state)
+                 .setSort(1)
+                 .setRemark(remark);
+            this.saveModel(theme);
         }
 
-        Theme theme = new Theme();
-        theme.setName(name)
-                .setCoverUrl(coverUrl)
-                .setState(state)
-                .setSort(1)
-                .setRemark(remark);
-        this.saveModel(theme);
+        this.themeExtendService.saveThemeExtend(theme.getId(), extensionMap);
     }
 
 }

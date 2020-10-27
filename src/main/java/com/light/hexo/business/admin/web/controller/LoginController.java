@@ -91,7 +91,7 @@ public class LoginController extends BaseController {
 
         HttpSession session = httpServletRequest.getSession();
         String capText = (String) session.getAttribute(HexoConstant.CAPTCHA);
-        if (!request.getVerifyCode().equals(capText)) {
+        if (!request.getVerifyCode().equalsIgnoreCase(capText)) {
             this.checkLoginError(httpServletRequest);
             ExceptionUtil.throwEx(GlobalExceptionEnum.ERROR_VERIFY_CODE_WRONG);
         }
