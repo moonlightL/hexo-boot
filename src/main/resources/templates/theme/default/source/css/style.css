@@ -1597,12 +1597,14 @@ pre, .highlight {
     margin-top: -5px !important;
 }
 
-.comment-data-body .comment-data-body-btns .send-message-btn {
+.comment-data-body .comment-data-body-btns .send-message-btn,
+.second-comment-data-body .comment-data-body-btns .send-message-btn{
     background-color: #1ABC9C !important;
     border: 1px solid #1ABC9C !important;
 }
 
-.comment-data-body .comment-data-body-btns .send-message-btn:hover {
+.comment-data-body .comment-data-body-btns .send-message-btn:hover,
+.second-comment-data-body .comment-data-body-btns .send-message-btn:hover {
     background-color: #16a78a !important;
 }
 

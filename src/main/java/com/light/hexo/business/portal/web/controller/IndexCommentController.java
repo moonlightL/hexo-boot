@@ -34,23 +34,22 @@ public class IndexCommentController extends CommonController {
      * 文章评论列表
      * @param postId
      * @param pageNum
+     * @param listType
      * @return
-     * @throws Exception
+     * @throws GlobalException
      */
-    @GetMapping("/commentList/{postId}/{pageNum}")
-    @ResponseBody
-    public Result getCommentList(@PathVariable Integer postId, @PathVariable Integer pageNum) throws GlobalException {
-        List<PostComment> commentList = this.postCommentService.listCommentByPostId(postId, pageNum, PAGE_SIZE);
-        return Result.success(new PageInfo<>(commentList));
-    }
-
     @GetMapping("/commentList.json")
     @ResponseBody
-    public Result commentList(@RequestParam(defaultValue = "0") Integer postId, @RequestParam(defaultValue = "1") Integer pageNum) throws GlobalException {
-        List<PostComment> commentList = this.postCommentService.listCommentByPostId(postId, pageNum, PAGE_SIZE);
+    public Result commentList(@RequestParam(defaultValue = "0") Integer postId, @RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "2") Integer listType) throws GlobalException {
+        List<PostComment> commentList;
+        if (listType.equals(1)) {
+            commentList = this.postCommentService.listCommentByPostId(postId, pageNum, PAGE_SIZE);
+        } else {
+            commentList = this.postCommentService.getCommentListByPostId(postId, pageNum, PAGE_SIZE);
+        }
+
         return Result.success(new PageInfo<>(commentList));
     }
-
 
     /**
      * 文章评论

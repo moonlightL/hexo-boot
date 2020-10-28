@@ -99,6 +99,9 @@ public class PostComment  implements Serializable {
     @Transient
     private PostComment parent;
 
+    /**
+     * 回复列表
+     */
     @Transient
     private List<PostComment> replyList;
 

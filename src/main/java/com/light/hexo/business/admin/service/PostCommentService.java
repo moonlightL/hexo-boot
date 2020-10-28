@@ -73,10 +73,21 @@ public interface PostCommentService extends BaseService<PostComment> {
     List<PostComment> listCommentByPostId(Integer postId, Integer pageNum, Integer pageSize) throws GlobalException;
 
     /**
+     * 获取文章评论列表（层级）
+     * @param postId
+     * @param pageNum
+     * @param pageSize
+     * @return
+     * @throws GlobalException
+     */
+    List<PostComment> getCommentListByPostId(Integer postId, Integer pageNum, Integer pageSize) throws GlobalException;
+
+    /**
      * 用户评论
      * @param comment
      * @throws GlobalException
      */
     void saveCommentByIndex(PostComment comment) throws GlobalException;
+
 
 }

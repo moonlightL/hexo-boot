@@ -243,7 +243,7 @@
         let list = self.commentData.commentList;
         for (let i = 0; i < list.length; i++) {
             let comment = list[i];
-            htmlArr.push('<div class="comment-list-item animated fadeInUp">');
+            htmlArr.push('<div class="comment-list-item">');
             htmlArr.push('<div class="avatar">');
             htmlArr.push('<img id="'+ comment.id +'" src="'+ comment.avatar +'" />');
             htmlArr.push('</div>');
@@ -256,14 +256,46 @@
             htmlArr.push('<div class="date">'+ comment.timeDesc +'</div>');
             htmlArr.push('<div class="content">');
             htmlArr.push('<p>'+ self.formatContent(comment.content) +'</p>');
-            let parent = comment.parent;
-            if (parent) {
-                htmlArr.push('<blockquote class="original-content">');
-                htmlArr.push('<p>@'+ parent.nickname +': '+ self.formatContent(parent.content) +'</p>');
-                htmlArr.push('</blockquote>');
+
+
+            // let parent = comment.parent;
+            // if (parent) {
+            //     htmlArr.push('<blockquote class="original-content">');
+            //     htmlArr.push('<p>@'+ parent.nickname +': '+ self.formatContent(parent.content) +'</p>');
+            //     htmlArr.push('</blockquote>');
+            // }
+
+
+            if (comment.replyList && comment.replyList.length > 0) {
+                for (let j = 0; j < comment.replyList.length; j++) {
+                    let replyComment = comment.replyList[j];
+                    htmlArr.push('<div class="second-item">')
+                    htmlArr.push('<div class="comment-list-item">');
+                    htmlArr.push('<div class="avatar">');
+                    htmlArr.push('<img id="'+ replyComment.id +'" src="'+ replyComment.avatar +'" />');
+                    htmlArr.push('</div>');
+                    htmlArr.push('<div class="second-info">');
+                    if (replyComment.nickname === self.options.bloggerName) {
+                        htmlArr.push('<div class="name"><span class="blog-master">博主</span> <b>'+ replyComment.nickname +'</b> <span class="area hidden-xs">['+ replyComment.ipInfo +'网友]</span></div>');
+                    } else {
+                        htmlArr.push('<div class="name"><b>'+ replyComment.nickname +'</b> <span class="area hidden-xs">['+ replyComment.ipInfo +'网友]</span></div>');
+                    }
+                    htmlArr.push('<div class="date">'+ replyComment.timeDesc +'</div>');
+                    htmlArr.push('<div class="content">');
+                    htmlArr.push('<p>'+ self.formatContent(replyComment.content) +'</p>');
+                    htmlArr.push('</div>');
+                    htmlArr.push('<div class="reply"><a class="second-comment-btn" href="javascript:void(0)" data-comment-id="'+ replyComment.id +'" data-nickname="'+ replyComment.nickname +'">回复</a></div>');
+                    htmlArr.push('</div>');
+                    htmlArr.push('</div>');
+                    htmlArr.push('</div>');
+                }
             }
+
+
+
+
             htmlArr.push('</div>');
-            htmlArr.push('<div class="reply pull-right"><a class="comment-btn" href="javascript:void(0)" data-comment-id="'+ comment.id +'">回复</a></div>');
+            htmlArr.push('<div class="reply pull-right"><a class="comment-btn" href="javascript:void(0)" data-comment-id="'+ comment.id +'" data-nickname="'+ comment.nickname +'">回复</a></div>');
             htmlArr.push('</div>');
             htmlArr.push('</div>');
         }
@@ -430,14 +462,35 @@
 
     BeautyComment.prototype.registerCommentListEvent = function() {
         $(document).on("click", ".comment-list-body a.comment-btn", function () {
+
             let infoDiv = $(this).parents(".info");
             if (!infoDiv.hasClass("reply")) {
                 $(this).text("取消");
-                $(this).parents(".info").addClass("reply").append($(".comment-data .comment-data-body").clone(true));
+                let nickname = $(this).data("nickname");
+                let $cloneBody = $(".comment-data .comment-data-body").clone(true);
+                $cloneBody.find("textarea").attr("placeholder", "@" + nickname);
+                $(this).parents(".info").addClass("reply").append($cloneBody);
+
             } else {
                 $(this).text("回复");
                 infoDiv.removeClass("reply");
                 infoDiv.find(".comment-data-body").remove();
+            }
+        });
+
+        $(document).on("click", ".comment-list-body a.second-comment-btn", function () {
+            let infoDiv = $(this).parents(".second-info");
+            if (!infoDiv.hasClass("reply")) {
+                $(this).text("取消");
+                let nickname = $(this).data("nickname");
+                let $cloneBody = $(".comment-data .comment-data-body").clone(true);
+                $cloneBody.removeClass("comment-data-body").addClass("second-comment-data-body").find("textarea").attr("placeholder", "@" + nickname);
+                $(this).parents(".second-info").addClass("reply").append($cloneBody);
+
+            } else {
+                $(this).text("回复");
+                infoDiv.removeClass("reply");
+                infoDiv.find(".second-comment-data-body").remove();
             }
         });
     };
