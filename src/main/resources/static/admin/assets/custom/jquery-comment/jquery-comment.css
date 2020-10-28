@@ -143,9 +143,25 @@ ul {
     margin-bottom: 30px;
 }
 
+.comment-data-body .comment-data-body-content .comment-mask {
+    position: absolute;
+    width: 100%;
+    height: 126px;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0,0,0,.5);
+    z-index: 2;
+    text-align: center;
+    line-height: 126px;
+    color: #fff;
+    border-radius: 5px 5px 0 0;
+}
+
 .comment-data-body .comment-data-body-content textarea {
     display: block;
-    height: 82px;
+    height: 126px;
     background-color: #fff;
     outline: none;
     padding: 1.25rem;
@@ -212,7 +228,7 @@ ul {
 .comment-data-body .comment-data-body-btns .emoji-container .emoji-content {
     position: absolute;
     top: 54px;
-    left: -6px;
+    left: 2px;
     width: 410px;
     border: 1px solid #cad9de;
     border-radius: 5px;

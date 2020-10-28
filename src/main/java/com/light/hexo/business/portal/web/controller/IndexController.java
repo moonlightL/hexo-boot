@@ -2,11 +2,13 @@ package com.light.hexo.business.portal.web.controller;
 
 import com.light.hexo.business.admin.constant.ConfigEnum;
 import com.light.hexo.business.admin.model.Post;
+import com.light.hexo.business.admin.model.Theme;
 import com.light.hexo.business.admin.model.UserExtend;
 import com.light.hexo.business.portal.common.CommonController;
 import com.light.hexo.business.portal.model.HexoPageInfo;
 import com.light.hexo.common.model.Result;
 import com.light.hexo.common.util.IpUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,7 +36,11 @@ public class IndexController extends CommonController {
      */
     @GetMapping(value = {"/", "/index.html"})
     public String index(HttpServletRequest request, Map<String, Object> resultMap) {
-        String pageSizeStr = this.configService.getConfigValue(ConfigEnum.POST_PAGE_SIZE.getName());
+        Theme activeTheme = this.themeService.getActiveTheme();
+        String pageSizeStr = activeTheme.getConfigMap().get("pageSize");
+        if (StringUtils.isBlank(pageSizeStr)) {
+            pageSizeStr = this.configService.getConfigValue(ConfigEnum.POST_PAGE_SIZE.getName());
+        }
         HexoPageInfo pageInfo = this.postService.pagePostsByIndex(1, Integer.parseInt(pageSizeStr));
         resultMap.put("pageInfo", pageInfo);
         resultMap.put("menu", "index");
@@ -43,7 +49,11 @@ public class IndexController extends CommonController {
 
     @GetMapping("/page/{pageNum}/")
     public String indexPage(@PathVariable Integer pageNum, Map<String, Object> resultMap) {
-        String pageSizeStr = this.configService.getConfigValue(ConfigEnum.POST_PAGE_SIZE.getName());
+        Theme activeTheme = this.themeService.getActiveTheme();
+        String pageSizeStr = activeTheme.getConfigMap().get("pageSize");
+        if (StringUtils.isBlank(pageSizeStr)) {
+            pageSizeStr = this.configService.getConfigValue(ConfigEnum.POST_PAGE_SIZE.getName());
+        }
         HexoPageInfo pageInfo = this.postService.pagePostsByIndex(pageNum, Integer.parseInt(pageSizeStr));
         resultMap.put("pageInfo", pageInfo);
         resultMap.put("menu", "index");

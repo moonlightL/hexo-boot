@@ -59,7 +59,7 @@ public class CommonController {
     protected FriendLinkService friendLinkService;
 
     @Autowired
-    private ThemeService themeService;
+    protected ThemeService themeService;
 
     @Autowired
     protected ConfigService configService;

@@ -14,6 +14,7 @@ import com.light.hexo.common.constant.CacheKey;
 import com.light.hexo.common.exception.GlobalException;
 import com.light.hexo.common.model.ThemeRequest;
 import com.light.hexo.common.util.CacheUtil;
+import com.light.hexo.common.util.EhcacheUtil;
 import com.light.hexo.common.util.ExceptionUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,6 +103,7 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
         this.updateModel(target);
 
         CacheUtil.remove(CacheKey.CURRENT_THEME);
+        EhcacheUtil.clearByCacheName("postCache");
     }
 
     @Override
@@ -135,6 +137,10 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
 
     @Override
     public void deleteThemeBatch(List<Theme> themeList) throws GlobalException {
+
+        if (CollectionUtils.isEmpty(themeList)) {
+            return;
+        }
 
         List<Integer> idList = themeList.stream().map(Theme::getId).collect(Collectors.toList());
         super.removeBatch(idList);

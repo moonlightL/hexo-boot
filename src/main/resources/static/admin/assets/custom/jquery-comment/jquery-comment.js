@@ -125,6 +125,9 @@
         htmlArr.push('</div>');
         let nickname = (self.visitor ? self.visitor.nickname : "游客");
         htmlArr.push('<div class="comment-data-body-content" data-label="'+ nickname +':">');
+        if (!self.options.canComment) {
+            htmlArr.push('<div class="comment-mask">该文章已关闭评论功能</div>');
+        }
         htmlArr.push('<textarea class="textarea form-control" name="content" placeholder="'+ self.options.title +'内容(必填)" rows="4" ></textarea>');
         htmlArr.push('<div class="comment-data-body-btns">');
         htmlArr.push('<div class="emoji-container">');
@@ -168,7 +171,9 @@
 
         self.$container.append(htmlArr.join(""));
 
-        self.registerCommentDataEvent();
+        if (self.options.canComment) {
+            self.registerCommentDataEvent();
+        }
     };
 
     BeautyComment.prototype.initCommentList = function () {
@@ -236,7 +241,6 @@
         self.$el.find(".comment-data").find("#commentNum").text(self.commentData.totalNum);
         let htmlArr = [];
         let list = self.commentData.commentList;
-        let prefix = self.options.baseUrl + "/jquery-comment/image/avatar/";
         for (let i = 0; i < list.length; i++) {
             let comment = list[i];
             htmlArr.push('<div class="comment-list-item">');
@@ -551,6 +555,7 @@
         sendUrl: "",                             // 发送评论请求地址
         ajaxParams: {pageNum: 1, pageSize: 10},  // 评论列表请求参数
         wrapClass: "",                           // 包裹样式
+        canComment: true,                        // 是否开启评论
         listHandler: function(resp) {            // 评论列表请求响应数据处理
             return resp;
         },

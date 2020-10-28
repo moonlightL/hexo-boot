@@ -417,7 +417,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
         if (!CollectionUtils.isEmpty(postIdList)) {
             select.where(Sqls.custom().andIn("id", postIdList));
         }
-
+        select.orderByDesc("createTime");
         Example example = select.build();
         return this.getBaseMapper().selectByExample(example);
     }

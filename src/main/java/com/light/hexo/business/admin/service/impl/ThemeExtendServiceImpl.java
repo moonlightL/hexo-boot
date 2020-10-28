@@ -13,6 +13,7 @@ import com.light.hexo.common.base.BaseServiceImpl;
 import com.light.hexo.common.constant.CacheKey;
 import com.light.hexo.common.exception.GlobalException;
 import com.light.hexo.common.util.CacheUtil;
+import com.light.hexo.common.util.EhcacheUtil;
 import com.light.hexo.common.util.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -81,6 +82,7 @@ public class ThemeExtendServiceImpl extends BaseServiceImpl<ThemeExtend> impleme
 
         this.themeExtendMapper.updateBatchById(themeExtendList);
         CacheUtil.remove(CacheKey.CURRENT_THEME);
+        EhcacheUtil.clearByCacheName("postCache");
     }
 
     @Override
