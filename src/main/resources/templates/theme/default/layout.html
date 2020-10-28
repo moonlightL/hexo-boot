@@ -115,9 +115,6 @@
     <script type='text/javascript' th:src="@{${prefix} + '/source/js/jqueryAos.js/dist/aos.js'}" ></script>
     <script type='text/javascript' th:src="@{'/admin/assets/custom/jquery-search/jquery.hideseek.min.js'}" ></script>
     <script type='text/javascript' th:src="@{'/admin/assets/custom/jquery-search/jquery.search.js'}" ></script>
-    <script type='text/javascript' th:src="@{${prefix} + '/source/js/autoToc/jquery.autoToc.js'}"></script>
-    <script type='text/javascript' th:src="@{${prefix} + '/source/js/overshare/js/social-share.min.js'}"></script>
-    <script type='text/javascript' th:src="@{'/admin/assets/js/plugins/highlightjs/highlight.pack.js'}"></script>
     <script type='text/javascript' th:src="@{${prefix} + '/source/js/anime.min.js'}"></script>
     <script type='text/javascript' th:src="@{${prefix} + '/source/js/main.js'}"></script>
     <span th:if="${isDetail == false}">
@@ -129,6 +126,8 @@
        </script>
     </span>
     <span th:if="${isDetail == true}">
+        <script type='text/javascript' th:src="@{'/admin/assets/js/plugins/highlightjs/highlight.pack.js'}"></script>
+        <script type='text/javascript' th:src="@{${prefix} + '/source/js/overshare/js/social-share.min.js'}"></script>
         <script type='text/javascript' th:src="@{${prefix} + '/source/js/lightbox/js/lightbox.min.js'}"></script>
         <script type='text/javascript' th:src="@{${prefix} + '/source/js/autoToc/jquery.autoToc.js'}"></script>
         <script type='text/javascript'>

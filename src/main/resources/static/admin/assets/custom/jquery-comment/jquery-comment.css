@@ -184,6 +184,7 @@ ul {
     font-size: 11px;
     padding: 0 5px;
     color: #5E6E80;
+    z-index: 1;
 }
 
 .comment-data-body .comment-data-body-btns .send-message-btn {

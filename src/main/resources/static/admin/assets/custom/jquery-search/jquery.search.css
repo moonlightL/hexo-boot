@@ -107,6 +107,7 @@
 .real-time-search-container .real-time-search-body-show {
     top: 150px;
     opacity: 1;
+    z-index: 10001;
 }
 
 @media screen and (max-width: 768px) {
