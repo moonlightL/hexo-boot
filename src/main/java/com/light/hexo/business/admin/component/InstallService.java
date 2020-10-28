@@ -267,11 +267,10 @@ public class InstallService {
         String fileDir = jsonFile.getParentFile().getName();
         this.themeService.saveTheme(
                 Objects.nonNull(map.get("name")) ? map.get("name").toString(): jsonFile.getParentFile().getName(),
-                fileDir,
                 String.format("/theme/%s/preview.png", fileDir),
                 true,
                 Objects.nonNull(map.get("remark")) ? map.get("remark").toString(): "",
-                (Map<String, Object>)map.get("extension")
+                (List<Map<String, String>>)map.get("extension")
         );
     }
 }

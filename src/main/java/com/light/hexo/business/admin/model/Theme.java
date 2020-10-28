@@ -9,8 +9,11 @@ import lombok.experimental.Accessors;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Author MoonlightL
@@ -37,11 +40,6 @@ public class Theme implements Serializable {
     private String name;
 
     /**
-     * 文件目录
-     */
-    private String fileDir;
-
-    /**
      * 预览图片地址（800x500 PNG ）
      */
     private String coverUrl;
@@ -66,4 +64,7 @@ public class Theme implements Serializable {
 
     @UpdateTime
     private LocalDateTime updateTime;
+
+    @Transient
+    private Map<String, String> configMap;
 }

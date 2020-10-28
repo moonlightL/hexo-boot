@@ -1,7 +1,12 @@
 {
   "name": "default",
   "remark": "默认主题",
-  "extension": {
-    "pageSize": "9"
-  }
+  "extension": [
+    {
+      "key": "pageSize",
+      "value": "10",
+      "type": "input",
+      "label": "页面大小"
+    }
+  ]
 }

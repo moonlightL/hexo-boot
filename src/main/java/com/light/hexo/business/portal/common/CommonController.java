@@ -66,21 +66,20 @@ public class CommonController {
 
     protected String render(String pageName, boolean isDetail, Map<String, Object> resultMap) {
 
-        resultMap.put("scheme", "Gemini");
-
         // 数量
         Map<String, Integer> countInfo = this.getCountInfo();
         resultMap.put("countInfo", countInfo);
 
         // 主题
-        Theme currentTheme = this.themeService.getCurrentTheme();
-        String fileDir = (currentTheme == null ? "default" : currentTheme.getFileDir());
+        Theme activeTheme = this.themeService.getActiveTheme();
+        String themeName = (activeTheme == null ? "default" : activeTheme.getName());
 
         resultMap.put("isDetail", isDetail);
-        resultMap.put("prefix", "/theme/" + fileDir);
+        resultMap.put("prefix", "/theme/" + themeName);
         resultMap.put("md", MarkdownUtil.class);
+        resultMap.put("activeTheme", activeTheme);
 
-        return "/theme/" +  fileDir + "/" + pageName;
+        return "/theme/" +  themeName + "/" + pageName;
     }
 
     private Map<String, Integer> getCountInfo() {

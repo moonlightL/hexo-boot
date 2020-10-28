@@ -4,6 +4,7 @@ import com.light.hexo.business.admin.model.Theme;
 import com.light.hexo.common.base.BaseService;
 import com.light.hexo.common.exception.GlobalException;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -20,7 +21,7 @@ public interface ThemeService extends BaseService<Theme> {
      * @return
      * @throws GlobalException
      */
-    Theme getCurrentTheme() throws GlobalException;
+    Theme getActiveTheme() throws GlobalException;
 
     /**
      * 启用主题
@@ -32,21 +33,27 @@ public interface ThemeService extends BaseService<Theme> {
 
     /**
      * 检查主题
-     * @param fileDir
+     * @param name
      * @return
      * @throws GlobalException
      */
-    Theme checkTheme(String fileDir) throws GlobalException;
+    Theme checkTheme(String name) throws GlobalException;
 
     /**
      * 保存主题
      * @param themeName
-     * @param fileDir
      * @param coverUrl
      * @param state
      * @param remark
-     * @param extensionMap
+     * @param extension
      * @throws GlobalException
      */
-    void saveTheme(String themeName, String fileDir, String coverUrl, boolean state, String remark, Map<String, Object> extensionMap) throws GlobalException;
+    void saveTheme(String themeName, String coverUrl, boolean state, String remark, List<Map<String, String>> extension) throws GlobalException;
+
+    /**
+     * 批量删除
+     * @param themeList
+     * @throws GlobalException
+     */
+    void deleteThemeBatch(List<Theme> themeList) throws GlobalException;
 }

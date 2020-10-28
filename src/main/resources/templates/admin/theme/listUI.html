@@ -73,23 +73,28 @@
             });
 
             // 绑定更换主题事件
-            $(document).on("click", ".change-btn", function (e) {
-                let themeId = $(e.target).data("id");
+            $(document).on("click", ".change-btn, .config-btn", function (e) {
+                let $target = $(e.target);
+                let themeId = $target.data("id");
                 if (!themeId) {
                     return;
                 }
 
-                $.hexo.modal.confirm("确定要更换主题吗?", function () {
-                    $.hexo.action.sendRequest({
-                        url: BASE_URL + "/useTheme.json",
-                        params: {id: themeId},
-                        callback: function (resp) {
-                            $.hexo.modal.tip("更换成功", "success", function () {
-                                ThemeManager.query();
-                            });
-                        }
+                if ($target.hasClass("change-btn")) {
+                    $.hexo.modal.confirm("确定要更换主题吗?", function () {
+                        $.hexo.action.sendRequest({
+                            url: BASE_URL + "/useTheme.json",
+                            params: {id: themeId},
+                            callback: function (resp) {
+                                $.hexo.modal.tip("更换成功", "success", function () {
+                                    ThemeManager.query();
+                                });
+                            }
+                        });
                     });
-                });
+                } else if ($target.hasClass("config-btn")) {
+                    $.hexo.modal._window("主题配置", BASE_URL + "/configUI.html?id=" + $target.data("id"), 800, 540, false);
+                }
             });
 
             ThemeManager.query();
@@ -129,7 +134,7 @@
                     contentArr.push('</div>');
                     contentArr.push('<div class="block-content block-content-full bg-body-light">');
                     if (obj.state) {
-                        contentArr.push('<button type="button" class="btn btn-circle btn-alt-danger mr-5 mb-5" title="使用中">');
+                        contentArr.push('<button type="button" class="btn btn-alt-danger mr-5 mb-5" title="使用中">');
                         contentArr.push('<i class="fa fa-power-off"></i>');
                         contentArr.push('</button>');
                     } else {
@@ -137,6 +142,10 @@
                         contentArr.push('<i class="fa fa-exchange"></i>');
                         contentArr.push('</button>');
                     }
+                    contentArr.push('<button type="button" class="btn btn-alt-primary mr-5 mb-5 config-btn" data-id="'+ obj.id +'" title="配置">');
+                    contentArr.push('<i class="fa fa-cog"></i>');
+                    contentArr.push('</button>');
+
                     contentArr.push('</div>');
                     contentArr.push('</div>');
                     contentArr.push('</a>');

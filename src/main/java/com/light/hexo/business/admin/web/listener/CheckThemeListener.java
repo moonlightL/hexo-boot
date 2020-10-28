@@ -16,8 +16,11 @@ import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @Author: MoonlightL
@@ -39,8 +42,10 @@ public class CheckThemeListener {
             return;
         }
 
-        Theme currentTheme = this.themeService.getCurrentTheme();
+        Theme activeTheme = this.themeService.getActiveTheme();
 
+        // 实际存在的主题名称
+        List<String> themeNameList = new ArrayList<>();
         for (File file : dir.listFiles()) {
 
             File[] jsonFiles = file.listFiles((i, name) -> name.equals("theme.json"));
@@ -59,14 +64,15 @@ public class CheckThemeListener {
             }
 
             String themeName = map.get("name").toString();
+            themeNameList.add(themeName);
 
             boolean state = false;
-            if (currentTheme == null) {
+            if (activeTheme == null) {
                 if (themeName.equals("default")) {
                     state = true;
                 }
             } else {
-                if (currentTheme.getName().equals(themeName)) {
+                if (activeTheme.getName().equals(themeName)) {
                     state = true;
                 }
             }
@@ -74,14 +80,17 @@ public class CheckThemeListener {
             String fileDir = jsonFile.getParentFile().getName();
             this.themeService.saveTheme(
                     themeName,
-                    fileDir,
                     String.format("/theme/%s/preview.png", fileDir),
                     state,
                     Objects.nonNull(map.get("remark")) ? map.get("remark").toString(): "",
-                    (Map<String, Object>)map.get("extension")
+                    (List<Map<String, String>>)map.get("extension")
             );
 
         }
 
+        // 过滤出不在 theme 目录的主题记录
+        List<Theme> themeList = this.themeService.findAll();
+        List<Theme> filterList = themeList.stream().filter(i -> !themeNameList.contains(i.getName())).collect(Collectors.toList());
+        this.themeService.deleteThemeBatch(filterList);
     }
 }

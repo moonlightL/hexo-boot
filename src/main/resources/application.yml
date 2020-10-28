@@ -52,7 +52,6 @@ spring:
       useGlobalDataSourceStat: true
       connectionProperties: druid.stat.slowSqlMillis=2000
       driver-class-name: com.mysql.cj.jdbc.Driver
-      filters: stat,wall
   cache:
     type: ehcache
     ehcache:

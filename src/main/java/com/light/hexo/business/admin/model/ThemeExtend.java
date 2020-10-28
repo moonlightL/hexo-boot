@@ -46,6 +46,21 @@ public class ThemeExtend implements Serializable {
      */
     private String configValue;
 
+    /**
+     * 标签
+     */
+    private String configLabel;
+
+    /**
+     * 配置类型（如：input，select）
+     */
+    private String configType;
+
+    /**
+     * 选项
+     */
+    private String configOption;
+
     @CreateTime
     private LocalDateTime createTime;
 

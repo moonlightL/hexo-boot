@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, initial-scale=1, shrink-to-fit=no">
+    <div th:replace="~{admin/common :: common-link}"></div>
+    <style>
+        span {
+            display: inline-block;
+            overflow: hidden;
+            text-overflow:ellipsis;
+            white-space: nowrap;
+            max-width: 500px;
+        }
+        img {
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+
+<div class="content">
+    <div class="block block-fx-shadow">
+        <div class="block-content">
+            <form id="saveForm" method="post" th:object="${vo}">
+                <div class="row justify-content-center py-20">
+                    <div class="col-xl-12">
+                        <div class="form-group row">
+                            <div class="col-lg-2 col-md-2 col-xs-2">预览图</div>
+                            <div class="col-lg-10 col-md-10 col-xs-10">
+                                <img th:src="@{*{coverUrl}}" width="400" height="150" alt="">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-lg-2 col-md-2 col-xs-2">主题名</div>
+                            <div class="col-lg-10 col-md-10 col-xs-10">
+                                <span id="filename" th:text="*{name}"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-lg-2 col-md-2 col-xs-2">备注</div>
+                            <div class="col-lg-10 col-md-10 col-xs-10">
+                                <span id="filePath" th:text="*{remark}"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row" th:each="config : ${extendList}">
+                            <div class="col-lg-2 col-md-2 col-xs-2" th:text="${config.configLabel}"></div>
+                            <div class="col-lg-10 col-md-10 col-xs-10">
+                                <span th:if="${config.configType eq 'input'}">
+                                    <input type="text" name="configValue" class="form-control theme-config" th:value="${config.configValue}" th:data-id="${config.id}">
+                                </span>
+                                <span th:if="${config.configType eq 'select'}">
+                                    <span th:if="${#strings.isEmpty(config.configOption) == false}">
+                                        <select name="configValue" class="form-control theme-config" style="width: 182px;" th:data-id="${config.id}">
+                                            <option th:each="op : ${#strings.arraySplit(config.configOption, ',')}" th:text="${op}" th:value="${op}" th:attr="selected=${op eq config.configValue}"></option>
+                                        </select>
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-12">
+                        <div class="form-group">
+                            <button type="button" class="btn btn-alt-primary pull-right" id="submitBtn" >
+                                <i class="fa fa-send mr-5"></i> 保存
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div th:replace="~{admin/common :: common-script}"></div>
+<script th:src="@{'/admin/assets/js/plugins/clipboard/clipboard.min.js'}"></script>
+<script type="text/javascript" th:inline="javascript">
+    $(function () {
+        $("#submitBtn").on("click", function () {
+
+            let length = $(".theme-config").length;
+            if (length === 0) {
+                window.parent.$.hexo.modal.close();
+            }
+
+            let parameter = [];
+            $(".theme-config").each(function (index, domEle) {
+                let $target = $(domEle);
+                let id = $target.data("id");
+                let val = $target.val();
+                parameter.push({"id": id, "configValue": val});
+            });
+
+            console.log(JSON.stringify(parameter))
+
+            $.ajax({
+                type: "POST",
+                url: BASE_URL + "/saveConfig.json",
+                data: JSON.stringify(parameter),
+                dataType: "JSON",
+                contentType: 'application/json;charset=UTF-8',
+                success: function (resp) {
+                    $.hexo.modal.tip("保存成功", "success", function () {
+                        window.parent.$.hexo.modal.close();
+                    });
+                }
+            })
+        });
+    });
+</script>
+</body>
+</html>

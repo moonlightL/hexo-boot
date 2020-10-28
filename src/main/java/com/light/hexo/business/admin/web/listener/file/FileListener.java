@@ -45,11 +45,10 @@ public class FileListener extends FileAlterationListenerAdaptor {
             String fileDir = file.getParentFile().getName();
             this.themeService.saveTheme(
                     map.get("name").toString(),
-                    fileDir,
                     String.format("/theme/%s/preview.png", fileDir),
                     false,
                     Objects.nonNull(map.get("remark")) ? map.get("remark").toString(): "",
-                    (Map<String, Object>)map.get("extension")
+                    (List<Map<String, String>>)map.get("extension")
             );
 
 

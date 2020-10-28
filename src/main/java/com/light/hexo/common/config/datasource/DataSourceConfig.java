@@ -1,8 +1,11 @@
 package com.light.hexo.common.config.datasource;
 
+import com.alibaba.druid.filter.Filter;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.support.http.StatViewServlet;
 import com.alibaba.druid.support.http.WebStatFilter;
+import com.alibaba.druid.wall.WallConfig;
+import com.alibaba.druid.wall.WallFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
@@ -14,6 +17,8 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @Author MoonlightL
@@ -32,6 +37,9 @@ public class DataSourceConfig {
     @Bean
     public DataSource dataSource() {
         DruidDataSource druidDataSource = druidProperties.dataSource(new DruidDataSource());
+        List<Filter> filterList = new ArrayList<>();
+        filterList.add(wallFilter());
+        druidDataSource.setProxyFilters(filterList);
 
         try {
 
@@ -89,5 +97,22 @@ public class DataSourceConfig {
         //添加不需要忽略的格式信息.
         filterRegistrationBean.addInitParameter("exclusions","*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*");
         return filterRegistrationBean;
+    }
+
+    @Bean
+    public WallFilter wallFilter() {
+        WallFilter wallFilter = new WallFilter();
+        wallFilter.setConfig(wallConfig());
+        return wallFilter;
+    }
+
+    @Bean
+    public WallConfig wallConfig() {
+        WallConfig config = new WallConfig();
+        // 允许一次执行多条语句
+        config.setMultiStatementAllow(true);
+        // 允许非基本语句的其他语句
+        config.setNoneBaseStatementAllow(true);
+        return config;
     }
 }

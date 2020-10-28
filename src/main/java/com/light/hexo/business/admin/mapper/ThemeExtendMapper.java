@@ -19,5 +19,11 @@ public interface ThemeExtendMapper extends BaseMapper<ThemeExtend> {
      * 插入/修改配置
      * @param list
      */
-    void updateByConfigName(@Param("list") List<ThemeExtend> list);
+    void updateBatchByConfigName(@Param("list") List<ThemeExtend> list);
+
+    /**
+     * 修改配置
+     * @param themeExtendList
+     */
+    void updateBatchById(@Param("list") List<ThemeExtend> themeExtendList);
 }
