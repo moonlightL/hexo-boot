@@ -243,7 +243,7 @@
         let list = self.commentData.commentList;
         for (let i = 0; i < list.length; i++) {
             let comment = list[i];
-            htmlArr.push('<div class="comment-list-item">');
+            htmlArr.push('<div class="comment-list-item animated fadeInUp">');
             htmlArr.push('<div class="avatar">');
             htmlArr.push('<img id="'+ comment.id +'" src="'+ comment.avatar +'" />');
             htmlArr.push('</div>');

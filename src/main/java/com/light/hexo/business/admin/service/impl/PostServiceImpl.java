@@ -228,6 +228,8 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
         this.saveModel(post);
 
         this.saveTags(post, false);
+
+        EhcacheUtil.clearByCacheName("postCache");
     }
 
     @Override
@@ -284,6 +286,8 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
         this.updateModel(post);
 
         this.saveTags(post, true);
+
+        EhcacheUtil.clearByCacheName("postCache");
     }
 
     @Override
