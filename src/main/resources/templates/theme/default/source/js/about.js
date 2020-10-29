@@ -1,6 +1,21 @@
 let GuestBookManager = (function ($) {
     let GuestBookManager = {
         init: function(nickname) {
+            // let flag = false;
+            // let postContainer = $("#postContainer");
+            // let mobile = isMobile();
+            // let scrollHeight = (mobile ? 1200 : 850);
+            // $(window).scroll(function(e) {
+            //     let scrollTop = $(this).scrollTop();
+            //     if (!flag && (scrollTop > parseInt(postContainer.offset().top + postContainer.height() - scrollHeight))) {
+            //         // 获取留言列表
+            //         flag = true;
+            //         GuestBookManager.initComment(nickname);
+            //     }
+            // });
+            GuestBookManager.initComment(nickname);
+        },
+        initComment: function (nickname) {
             $("#comment-container").BeautyComment({
                 title: "留言",
                 subTitle: "最新留言",
@@ -24,19 +39,8 @@ let GuestBookManager = (function ($) {
                     };
                 }
             });
-        },
+        }
     };
-
-    // let flag = false;
-    // let guestBookContainer = $("#guestBookContainer");
-    // let mobile = isMobile();
-    // let scrollHeight = (mobile ? 1200 : 900);
-    // $(window).scroll(function(e) {
-    //     let scrollTop = $(this).scrollTop();
-    //     if (!flag && (scrollTop > parseInt(guestBookContainer.offset().top + guestBookContainer.height()- scrollHeight) )) {
-    //         flag = true;
-    //     }
-    // });
 
     function isMobile(){
         if ( navigator.userAgent.match(/Android/i)

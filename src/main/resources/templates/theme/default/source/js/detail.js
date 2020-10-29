@@ -2,8 +2,19 @@ let CommentManager = (function ($) {
 
     let CommentManager = {
         init: function (nickname, postId, comment) {
-            CommentManager.initComment(nickname, postId, comment);
-            CommentManager.bindEvent(postId);
+            let flag = false;
+            let postContainer = $("#postContainer");
+            let mobile = isMobile();
+            let scrollHeight = (mobile ? 1200 : 850);
+            $(window).scroll(function(e) {
+                let scrollTop = $(this).scrollTop();
+                if (!flag && (scrollTop > parseInt(postContainer.offset().top + postContainer.height() - scrollHeight))) {
+                    // 获取评论列表
+                    flag = true;
+                    CommentManager.initComment(nickname, postId, comment);
+                    CommentManager.bindEvent(postId);
+                }
+            });
         },
         initComment: function (nickname, postId, comment) {
             $("#comment-container").BeautyComment({
@@ -50,18 +61,7 @@ let CommentManager = (function ($) {
 
     };
 
-    // let flag = false;
-    // let commentContainer = $("#commentContainer");
-    // let mobile = isMobile();
-    // let scrollHeight = (mobile ? 1200 : 900);
-    // $(window).scroll(function(e) {
-    //    let scrollTop = $(this).scrollTop();
-    //    if (!flag && (scrollTop > parseInt(commentContainer.offset().top + commentContainer.height() - scrollHeight))) {
-    //         // 获取评论列表
-    //
-    //         flag = true;
-    //     }
-    // });
+
 
     $("#showRewardImg").on("click", function () {
         let rewardImgArea = $("#rewardImgArea");
