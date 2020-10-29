@@ -7,6 +7,7 @@ import com.light.hexo.business.admin.model.event.VisitEvent;
 import com.light.hexo.business.admin.service.*;
 import com.light.hexo.business.portal.constant.PageConstant;
 import com.light.hexo.common.component.event.EventPublisher;
+import com.light.hexo.common.constant.CacheKey;
 import com.light.hexo.common.util.CacheUtil;
 import com.light.hexo.common.util.IpUtil;
 import com.light.hexo.common.util.MarkdownUtil;
@@ -84,7 +85,7 @@ public class CommonController {
 
     private Map<String, Integer> getCountInfo() {
 
-        String key = PageConstant.INDEX_COUNT_INFO;
+        String key = CacheKey.INDEX_COUNT_INFO;
         Map<String, Integer> result = CacheUtil.get(key);
         if (result == null) {
             result = new HashMap<>(4);

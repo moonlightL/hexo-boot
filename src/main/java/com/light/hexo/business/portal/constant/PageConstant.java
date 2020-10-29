@@ -15,11 +15,6 @@ public class PageConstant {
     public static final String MARKDOWN_KEY = "markdown:key";
 
     /**
-     * 首页数量信息
-     */
-    public static final String INDEX_COUNT_INFO = "index:count:info";
-
-    /**
      * 首页列表缓存 key（格式：PageConstant.POST_PAGE + #pageNum）
      */
     public static final String POST_PAGE = "hexo:page";
@@ -48,6 +43,11 @@ public class PageConstant {
      * 首页分类列表缓存 key（格式：PageConstant.CATEGORY_LIST）
      */
     public static final String CATEGORY_LIST = "hexo:category:list";
+
+    /**
+     * 首页友链列表缓存 key（格式：PageConstant.FRIEND_LINK_LIST）
+     */
+    public static final String FRIEND_LINK_LIST = "hexo:friend:link:list";
 
     /**
      * 文章评论列表缓存 key（格式：PageConstant.POST_COMMENT + #postId + #pageNum）

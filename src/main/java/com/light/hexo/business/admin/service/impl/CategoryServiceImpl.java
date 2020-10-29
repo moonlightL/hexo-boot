@@ -9,10 +9,12 @@ import com.light.hexo.business.portal.constant.PageConstant;
 import com.light.hexo.common.base.BaseMapper;
 import com.light.hexo.common.base.BaseRequest;
 import com.light.hexo.common.base.BaseServiceImpl;
+import com.light.hexo.common.constant.CacheKey;
 import com.light.hexo.common.constant.HexoConstant;
 import com.light.hexo.common.exception.GlobalException;
 import com.light.hexo.common.exception.GlobalExceptionEnum;
 import com.light.hexo.common.model.CategoryRequest;
+import com.light.hexo.common.util.CacheUtil;
 import com.light.hexo.common.util.EhcacheUtil;
 import com.light.hexo.common.util.ExceptionUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -73,6 +75,7 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category> implements Ca
         int num = super.saveModel(model);
         if (num > 0) {
             EhcacheUtil.clearByCacheName("categoryCache");
+            CacheUtil.remove(CacheKey.INDEX_COUNT_INFO);
         }
         return num;
     }
@@ -133,6 +136,9 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category> implements Ca
                 this.getBaseMapper().deleteByPrimaryKey(category.getId());
             }
         }
+
+        EhcacheUtil.clearByCacheName("categoryCache");
+        CacheUtil.remove(CacheKey.INDEX_COUNT_INFO);
     }
 
     @Override

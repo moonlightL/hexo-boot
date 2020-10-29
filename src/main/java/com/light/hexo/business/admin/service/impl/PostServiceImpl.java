@@ -17,6 +17,7 @@ import com.light.hexo.common.base.BaseServiceImpl;
 import com.light.hexo.common.component.event.BaseEvent;
 import com.light.hexo.common.component.event.EventEnum;
 import com.light.hexo.common.component.event.EventPublisher;
+import com.light.hexo.common.constant.CacheKey;
 import com.light.hexo.common.constant.HexoConstant;
 import com.light.hexo.common.exception.GlobalException;
 import com.light.hexo.common.model.PostRequest;
@@ -118,20 +119,12 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
 
     @Override
     public int saveModel(Post model) throws GlobalException {
-        int num = super.saveModel(model);
-        if (num > 0) {
-            EhcacheUtil.clearByCacheName("postCache");
-        }
-        return num;
+        return super.saveModel(model);
     }
 
     @Override
     public int updateModel(Post model) throws GlobalException {
-        int num = super.updateModel(model);
-        if (num > 0) {
-            EhcacheUtil.clearByCacheName("postCache");
-        }
-        return num;
+        return super.updateModel(model);
     }
 
     @Override
@@ -163,6 +156,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
         int num = this.getBaseMapper().deleteByExample(example);
         if (num > 0) {
             EhcacheUtil.clearByCacheName("postCache");
+            CacheUtil.remove(CacheKey.INDEX_COUNT_INFO);
         }
     }
 
@@ -230,6 +224,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
         this.saveTags(post, false);
 
         EhcacheUtil.clearByCacheName("postCache");
+        CacheUtil.remove(CacheKey.INDEX_COUNT_INFO);
     }
 
     @Override
@@ -288,6 +283,9 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
         this.saveTags(post, true);
 
         EhcacheUtil.clearByCacheName("postCache");
+        CacheUtil.remove(CacheKey.INDEX_COUNT_INFO);
+        CacheUtil.get(PageConstant.MARKDOWN_KEY + ":" + post.getId() + ":1");
+        CacheUtil.get(PageConstant.MARKDOWN_KEY + ":" + post.getId() + ":2");
     }
 
     @Override
@@ -314,6 +312,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
 
         // 清理缓存
         EhcacheUtil.clearAll();
+        CacheUtil.remove(CacheKey.INDEX_COUNT_INFO);
     }
 
     @Override
@@ -344,7 +343,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
 
             // 清理缓存
             EhcacheUtil.clearAll();
-
+            CacheUtil.remove(CacheKey.INDEX_COUNT_INFO);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -364,6 +363,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
         }
 
         this.updateModel(post);
+        EhcacheUtil.clearByCacheName("postCache");
     }
 
     @Override
@@ -381,7 +381,8 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
     @Override
     public int getPostNum() throws GlobalException {
         Example example = new Example(Post.class);
-        example.createCriteria().andEqualTo("delete", false);
+        example.createCriteria().andEqualTo("delete", false)
+                                .andEqualTo("publish", true);
         return this.getBaseMapper().selectCountByExample(example);
     }
 
@@ -413,6 +414,8 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
             .setLink(post.getYear() + "/" + post.getMonth() + "/" + post.getDay() + "/" + StringUtils.replace(post.getTitle(), " ", "-") + "/");
 
         this.updateModel(post);
+        EhcacheUtil.clearByCacheName("postCache");
+        CacheUtil.remove(CacheKey.INDEX_COUNT_INFO);
     }
 
     @Override

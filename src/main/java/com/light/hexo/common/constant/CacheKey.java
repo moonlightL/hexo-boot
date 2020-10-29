@@ -10,6 +10,11 @@ package com.light.hexo.common.constant;
 public final class CacheKey {
 
     /**
+     * 首页数量信息
+     */
+    public static final String INDEX_COUNT_INFO = "index:count:info";
+
+    /**
      * 黑名单列表
      */
     public static final String BLACK_LIST = "hexo:black:list";
@@ -18,11 +23,6 @@ public final class CacheKey {
      * 全局配置列表
      */
     public static final String CONFIG_LIST = "hexo:config:list";
-
-    /**
-     * 友链列表
-     */
-    public static final String FRIEND_LINK_LIST = "hexo:friend:link:list";
 
     /**
      * 当前使用的主题

@@ -53,6 +53,7 @@ public class IndexCommentController extends CommonController {
         } else {
             // 多行（父子级评论一起展示）
             commentList = this.postCommentService.getCommentListByPostId(postId, pageNum, PAGE_SIZE);
+            int postCommentNum = this.postCommentService.getPostCommentNum();
         }
 
         PageInfo<PostComment> pageInfo = new PageInfo<>(commentList);
