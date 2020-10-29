@@ -18,8 +18,9 @@ let CommentManager = (function ($) {
                 ajaxParams: {postId: postId, pageNum: 1, pageSize: 10},
                 listHandler: function (resp) {
                     return {
-                        totalNum: resp.data.total,
-                        commentList: resp.data.list
+                        totalNum: resp.data.totalNum,
+                        commentList: resp.data.commentList,
+                        commentShowType: resp.data.commentShowType
                     }
                 },
                 sendHandler: function (resp) {

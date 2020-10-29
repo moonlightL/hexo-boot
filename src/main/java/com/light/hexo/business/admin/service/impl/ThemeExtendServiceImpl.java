@@ -109,4 +109,12 @@ public class ThemeExtendServiceImpl extends BaseServiceImpl<ThemeExtend> impleme
 
         return result;
     }
+
+    @Override
+    public void deleteThemeExtendBatch(List<Integer> themeIdList) throws GlobalException {
+        Example example = new Example(ThemeExtend.class);
+        example.createCriteria().andIn("themeId", themeIdList);
+
+        this.getBaseMapper().deleteByExample(example);
+    }
 }

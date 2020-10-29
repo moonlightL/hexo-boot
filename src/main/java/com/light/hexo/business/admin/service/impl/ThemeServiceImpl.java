@@ -145,6 +145,8 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
         List<Integer> idList = themeList.stream().map(Theme::getId).collect(Collectors.toList());
         super.removeBatch(idList);
 
+        this.themeExtendService.deleteThemeExtendBatch(idList);
+
         Theme activeTheme = this.getActiveTheme();
         if (activeTheme == null || idList.contains(activeTheme.getId())) {
             List<Theme> allList = this.findAll();

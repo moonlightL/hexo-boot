@@ -73,10 +73,18 @@ public interface GuestBookService extends BaseService<GuestBook> {
     List<GuestBook> listGuestBookByIndex(Integer pageNum, Integer pageSize) throws GlobalException;
 
     /**
+     * 获取留言板留言列表（层级）
+     * @param pageNum
+     * @param pageSize
+     * @return
+     * @throws GlobalException
+     */
+    List<GuestBook> getGuestBookListByIndex(Integer pageNum, Integer pageSize) throws GlobalException;
+
+    /**
      * 保存留言
      * @param guestBook
      * @throws GlobalException
      */
     void saveGuestBookByIndex(GuestBook guestBook) throws GlobalException;
-
 }

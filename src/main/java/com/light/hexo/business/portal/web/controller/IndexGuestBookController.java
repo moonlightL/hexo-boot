@@ -2,6 +2,7 @@ package com.light.hexo.business.portal.web.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.light.hexo.business.admin.model.GuestBook;
+import com.light.hexo.business.admin.model.Theme;
 import com.light.hexo.business.admin.model.User;
 import com.light.hexo.business.portal.common.CommonController;
 import com.light.hexo.business.portal.component.RequestLimit;
@@ -17,7 +18,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author MoonlightL
@@ -35,18 +38,27 @@ public class IndexGuestBookController extends CommonController {
      * @return
      * @throws GlobalException
      */
-    @GetMapping("/guestBookList/{pageNum}")
-    @ResponseBody
-    public Result getGuestBookList(@PathVariable Integer pageNum) throws GlobalException {
-        List<GuestBook> list = this.guestBookService.listGuestBookByIndex(pageNum, PAGE_SIZE);
-        return Result.success(new PageInfo<>(list));
-    }
-
     @GetMapping("/guestBookList.json")
     @ResponseBody
     public Result guestBookList(@RequestParam(defaultValue = "1") Integer pageNum) throws GlobalException {
-        List<GuestBook> list = this.guestBookService.listGuestBookByIndex(pageNum, PAGE_SIZE);
-        return Result.success(new PageInfo<>(list));
+
+        Theme activeTheme = this.themeService.getActiveTheme();
+        String commentShowType = activeTheme.getConfigMap().get("commentShowType");
+        List<GuestBook> list;
+        if ("singleRow".equals(commentShowType)) {
+            // 单行
+            list = this.guestBookService.listGuestBookByIndex(pageNum, PAGE_SIZE);
+        } else {
+            // 多行（父子级评论一起展示）
+            list = this.guestBookService.getGuestBookListByIndex(pageNum, PAGE_SIZE);
+        }
+
+        PageInfo<GuestBook> pageInfo = new PageInfo<>(list);
+        Map<String, Object> map = new HashMap<>();
+        map.put("totalNum", pageInfo.getTotal());
+        map.put("commentList", pageInfo.getList());
+        map.put("commentShowType", commentShowType);
+        return Result.success(map);
     }
 
     /**

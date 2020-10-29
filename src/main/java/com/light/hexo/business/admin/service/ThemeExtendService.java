@@ -46,4 +46,11 @@ public interface ThemeExtendService extends BaseService<ThemeExtend> {
      * @throws GlobalException
      */
     Map<String, String> getThemeExtendMap(Integer themeId) throws GlobalException;
+
+    /**
+     * 批量删除主题配置
+     * @param themeIdList
+     * @throws GlobalException
+     */
+    void deleteThemeExtendBatch(List<Integer> themeIdList) throws GlobalException;
 }

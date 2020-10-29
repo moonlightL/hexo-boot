@@ -195,7 +195,9 @@
 
         self.$container.append(htmlArr.join(""));
 
-        self.registerCommentListEvent();
+        if (self.options.canComment) {
+            self.registerCommentListEvent();
+        }
     };
 
     // 请求评论列表
@@ -241,6 +243,7 @@
         self.$el.find(".comment-data").find("#commentNum").text(self.commentData.totalNum);
         let htmlArr = [];
         let list = self.commentData.commentList;
+        let commentShowType = self.commentData.commentShowType;
         for (let i = 0; i < list.length; i++) {
             let comment = list[i];
             htmlArr.push('<div class="comment-list-item">');
@@ -257,45 +260,42 @@
             htmlArr.push('<div class="content">');
             htmlArr.push('<p>'+ self.formatContent(comment.content) +'</p>');
 
-
-            // let parent = comment.parent;
-            // if (parent) {
-            //     htmlArr.push('<blockquote class="original-content">');
-            //     htmlArr.push('<p>@'+ parent.nickname +': '+ self.formatContent(parent.content) +'</p>');
-            //     htmlArr.push('</blockquote>');
-            // }
-
-
-            if (comment.replyList && comment.replyList.length > 0) {
-                for (let j = 0; j < comment.replyList.length; j++) {
-                    let replyComment = comment.replyList[j];
-                    htmlArr.push('<div class="second-item">')
-                    htmlArr.push('<div class="comment-list-item">');
-                    htmlArr.push('<div class="avatar">');
-                    htmlArr.push('<img id="'+ replyComment.id +'" src="'+ replyComment.avatar +'" />');
-                    htmlArr.push('</div>');
-                    htmlArr.push('<div class="second-info">');
-                    if (replyComment.nickname === self.options.bloggerName) {
-                        htmlArr.push('<div class="name"><span class="blog-master">博主</span> <b>'+ replyComment.nickname +'</b> <span class="area hidden-xs">['+ replyComment.ipInfo +'网友]</span></div>');
-                    } else {
-                        htmlArr.push('<div class="name"><b>'+ replyComment.nickname +'</b> <span class="area hidden-xs">['+ replyComment.ipInfo +'网友]</span></div>');
+            if (commentShowType === "singleRow") {
+                let parent = comment.parent;
+                if (parent) {
+                    htmlArr.push('<blockquote class="original-content">');
+                    htmlArr.push('<p><b>@'+ parent.nickname +':</b> '+ self.formatContent(parent.content) +'</p>');
+                    htmlArr.push('</blockquote>');
+                }
+            } else {
+                if (comment.replyList && comment.replyList.length > 0) {
+                    htmlArr.push('<div class="reply-list-body">');
+                    for (let j = 0; j < comment.replyList.length; j++) {
+                        let replyComment = comment.replyList[j];
+                        htmlArr.push('<div class="comment-list-item">');
+                        htmlArr.push('<div class="avatar">');
+                        htmlArr.push('<img id="'+ replyComment.id +'" src="'+ replyComment.avatar +'" />');
+                        htmlArr.push('</div>');
+                        htmlArr.push('<div class="info">');
+                        if (replyComment.nickname === self.options.bloggerName) {
+                            htmlArr.push('<div class="name"><span class="blog-master">博主</span> <b>'+ replyComment.nickname +'</b> <span class="area hidden-xs">['+ replyComment.ipInfo +'网友]</span></div>');
+                        } else {
+                            htmlArr.push('<div class="name"><b>'+ replyComment.nickname +'</b> <span class="area hidden-xs">['+ replyComment.ipInfo +'网友]</span></div>');
+                        }
+                        htmlArr.push('<div class="date">'+ replyComment.timeDesc +'</div>');
+                        htmlArr.push('<div class="content">');
+                        htmlArr.push('<p><b>@'+ replyComment.sourceNickname +'</b>&nbsp;&nbsp;'+ self.formatContent(replyComment.content) +'</p>');
+                        htmlArr.push('</div>');
+                        htmlArr.push('<div class="reply pull-right"><a class="reply-btn" href="javascript:void(0)" data-comment-id="'+ replyComment.id +'" data-nickname="'+ replyComment.nickname +'">回复</a></div>');
+                        htmlArr.push('</div>');
+                        htmlArr.push('</div>');
                     }
-                    htmlArr.push('<div class="date">'+ replyComment.timeDesc +'</div>');
-                    htmlArr.push('<div class="content">');
-                    htmlArr.push('<p>'+ self.formatContent(replyComment.content) +'</p>');
-                    htmlArr.push('</div>');
-                    htmlArr.push('<div class="reply"><a class="second-comment-btn" href="javascript:void(0)" data-comment-id="'+ replyComment.id +'" data-nickname="'+ replyComment.nickname +'">回复</a></div>');
-                    htmlArr.push('</div>');
-                    htmlArr.push('</div>');
                     htmlArr.push('</div>');
                 }
             }
 
-
-
-
             htmlArr.push('</div>');
-            htmlArr.push('<div class="reply pull-right"><a class="comment-btn" href="javascript:void(0)" data-comment-id="'+ comment.id +'" data-nickname="'+ comment.nickname +'">回复</a></div>');
+            htmlArr.push('<div class="reply pull-right"><a class="reply-btn" href="javascript:void(0)" data-comment-id="'+ comment.id +'" data-nickname="'+ comment.nickname +'">回复</a></div>');
             htmlArr.push('</div>');
             htmlArr.push('</div>');
         }
@@ -383,7 +383,7 @@
             let $target = $(e.target);
             if ($target.hasClass("change-avatar")) {
                 let num = Math.floor(Math.random() * 36);
-                $("#user_avatar").attr("src", baseUrl + "/jquery-comment/image/avatar/avatar_" + num + ".jpg");
+                $target.prev("img").attr("src", baseUrl + "/jquery-comment/image/avatar/avatar_" + num + ".jpg");
                 self.avatar = "avatar_" + num + ".jpg";
             } else if ($target.hasClass("emoji-container-btn")) {
                 $target.siblings("div").toggleClass("big");
@@ -425,7 +425,7 @@
                 return;
             }
 
-            let replyBtn = $commentDataBody.prev(".reply").find("a.comment-btn");
+            let replyBtn = $commentDataBody.prev(".reply").find("a.reply-btn");
             let parameter = {
                 "avatar": avatar,
                 "nickname": self.checkSafe(nickname),
@@ -461,38 +461,29 @@
     };
 
     BeautyComment.prototype.registerCommentListEvent = function() {
-        $(document).on("click", ".comment-list-body a.comment-btn", function () {
-
-            let infoDiv = $(this).parents(".info");
+        $(document).on("click", ".comment-list-body a.reply-btn", function () {
+            let infoDiv = $(this).parent().parent();
             if (!infoDiv.hasClass("reply")) {
+                // 移除其他评论框
+                let $commentItem = $(".comment-list-item");
+                $commentItem.find(".comment-data-body").remove();
+                let $info = $commentItem.find(".info");
+                $info.removeClass("reply").find("a.reply-btn").text("回复");
+
+                // 修改当前评论区状态
                 $(this).text("取消");
                 let nickname = $(this).data("nickname");
                 let $cloneBody = $(".comment-data .comment-data-body").clone(true);
                 $cloneBody.find("textarea").attr("placeholder", "@" + nickname);
-                $(this).parents(".info").addClass("reply").append($cloneBody);
+                infoDiv.addClass("reply").parent().append($cloneBody);
 
             } else {
                 $(this).text("回复");
                 infoDiv.removeClass("reply");
-                infoDiv.find(".comment-data-body").remove();
+                infoDiv.parent().find(".comment-data-body").remove();
             }
         });
 
-        $(document).on("click", ".comment-list-body a.second-comment-btn", function () {
-            let infoDiv = $(this).parents(".second-info");
-            if (!infoDiv.hasClass("reply")) {
-                $(this).text("取消");
-                let nickname = $(this).data("nickname");
-                let $cloneBody = $(".comment-data .comment-data-body").clone(true);
-                $cloneBody.removeClass("comment-data-body").addClass("second-comment-data-body").find("textarea").attr("placeholder", "@" + nickname);
-                $(this).parents(".second-info").addClass("reply").append($cloneBody);
-
-            } else {
-                $(this).text("回复");
-                infoDiv.removeClass("reply");
-                infoDiv.find(".second-comment-data-body").remove();
-            }
-        });
     };
 
     BeautyComment.prototype.registerPageClickEvent = function() {

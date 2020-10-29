@@ -12,7 +12,6 @@ import com.light.hexo.business.admin.service.BlacklistService;
 import com.light.hexo.business.admin.service.ConfigService;
 import com.light.hexo.business.admin.service.GuestBookService;
 import com.light.hexo.business.admin.service.UserService;
-import com.light.hexo.business.portal.constant.PageConstant;
 import com.light.hexo.common.base.BaseMapper;
 import com.light.hexo.common.base.BaseRequest;
 import com.light.hexo.common.base.BaseServiceImpl;
@@ -26,7 +25,6 @@ import com.light.hexo.common.util.IpUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import tk.mybatis.mapper.entity.Example;
@@ -276,6 +274,63 @@ public class GuestBookServiceImpl extends BaseServiceImpl<GuestBook> implements 
         }
 
         return guestBookList;
+    }
+
+    @Override
+    public List<GuestBook> getGuestBookListByIndex(Integer pageNum, Integer pageSize) throws GlobalException {
+
+        Example example = new Example(GuestBook.class);
+        example.createCriteria().andEqualTo("delete", 0)
+                                .andEqualTo("bannerId", 0);
+        example.orderBy("createTime").desc();
+
+        PageHelper.startPage(pageNum, pageSize);
+        List<GuestBook> parentList = this.getBaseMapper().selectByExample(example);
+        if (CollectionUtils.isEmpty(parentList)) {
+            return new ArrayList<>();
+        }
+
+        // 查询子级回复列表
+        List<Integer> pidList = parentList.stream().map(GuestBook::getId).collect(Collectors.toList());
+        Example replyExample = Example.builder(GuestBook.class).where(Sqls.custom().andIn("bannerId", pidList)).build();
+        List<GuestBook> replyList = this.getBaseMapper().selectByExample(replyExample);
+        Map<Integer, List<GuestBook>> replyMap = replyList.stream().collect(Collectors.groupingBy(GuestBook::getBannerId));
+
+        // 查询用户信息
+        List<Integer> uidList = parentList.stream().map(GuestBook::getUserId).collect(Collectors.toList());
+        List<Integer> uidList2 = replyList.stream().map(GuestBook::getUserId).collect(Collectors.toList());
+        uidList.addAll(uidList2);
+        List<User> userList = this.userService.listUserByIdList(uidList);
+        Map<Integer, User> userMap = userList.stream().collect(Collectors.toMap(User::getId, Function.identity(), (k1, k2)->k1));
+
+
+        for (GuestBook guestBook : parentList) {
+            guestBook.setIpInfo(IpUtil.getProvinceAndCity(guestBook.getIpAddress()));
+            guestBook.setIpAddress("");
+            // 子级评论
+            List<GuestBook> children = replyMap.get(guestBook.getId());
+            if (!CollectionUtils.isEmpty(children)) {
+                children.forEach(i -> {
+                    User user = userMap.get(i.getUserId());
+                    if (user != null) {
+                        i.setAvatar(user.getAvatar());
+                    }
+                    i.setIpInfo(IpUtil.getProvinceAndCity(i.getIpAddress()));
+                    i.setIpAddress("");
+                    i.setTimeDesc(DateUtil.timeDesc(i.getCreateTime()));
+                });
+                guestBook.setReplyList(children);
+            }
+            guestBook.setTimeDesc(DateUtil.timeDesc(guestBook.getCreateTime()));
+            // 用户头像
+            User user = userMap.get(guestBook.getUserId());
+            if (user != null) {
+                guestBook.setAvatar(user.getAvatar());
+                guestBook.setNickname(user.getNickname());
+            }
+        }
+
+        return parentList;
     }
 
     @Override

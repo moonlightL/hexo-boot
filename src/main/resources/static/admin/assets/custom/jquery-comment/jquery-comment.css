@@ -74,7 +74,7 @@ ul {
     color: #5E6E80;
 }
 
-.comment-data-body .comment-data-body-info, .second-comment-data-body .comment-data-body-info {
+.comment-data-body .comment-data-body-info {
     position: absolute;
     display: inline-block;
     width: 62px;
@@ -82,31 +82,27 @@ ul {
     background-color: #fff;
     text-align: center;
     line-height: 64px;
-    border: 1px solid #afb2c1;
-    border-radius: 5px;
 }
 
-.comment-data-body .comment-data-body-info img,
-.second-comment-data-body .comment-data-body-info img {
+.comment-data-body .comment-data-body-info img {
     width: 59px;
     height: 59px;
     object-fit: cover;
     border-radius: 5px;
+    border: 1px solid #afb2c1;
 }
 
-.comment-data-body .comment-data-body-info a.change-avatar,
-.second-comment-data-body .comment-data-body-info a.change-avatar {
+.comment-data-body .comment-data-body-info a.change-avatar {
     position: absolute;
     display: inline-block;
     width: 59px;
     height: 16px;
-    top: 44px;
-    left: 3px;
+    top: 60px;
+    left: 1px;
     color: #5E6E80;
 }
 
-.comment-data-body .comment-data-body-info .login-input,
-.second-comment-data-body .comment-data-body-info .login-input {
+.comment-data-body .comment-data-body-info .login-input {
     display: inline-block;
     position: absolute;
     top: -60px;
@@ -114,8 +110,7 @@ ul {
     z-index: 1;
 }
 
-.comment-data-body .comment-data-body-info .login-input input,
-.second-comment-data-body .comment-data-body-info .login-input input {
+.comment-data-body .comment-data-body-info .login-input input {
     height: 36px;
     border: 1px solid #afb2c1;
     border-radius: 5px;
@@ -124,13 +119,11 @@ ul {
     outline: none;
 }
 
-.comment-data-body .comment-data-body-info .login-input input::-webkit-input-placeholder,
-.second-comment-data-body .comment-data-body-info .login-input input::-webkit-input-placeholder{
+.comment-data-body .comment-data-body-info .login-input input::-webkit-input-placeholder {
     color: #afb2c1;
 }
 
-.comment-data-body .comment-data-body-btns,
-.second-comment-data-body .comment-data-body-btns {
+.comment-data-body .comment-data-body-btns {
     position: relative;
     margin-top: 4px;
     width: 100%;
@@ -139,8 +132,7 @@ ul {
     border-radius: 0 0 5px 5px;
 }
 
-.comment-data-body .comment-data-body-content,
-.second-comment-data-body .comment-data-body-content {
+.comment-data-body .comment-data-body-content {
     position: relative;
     display: inline-block;
     width: calc(100% - 72px);
@@ -165,8 +157,7 @@ ul {
     border-radius: 5px 5px 0 0;
 }
 
-.comment-data-body .comment-data-body-content textarea,
-.second-comment-data-body .comment-data-body-content textarea {
+.comment-data-body .comment-data-body-content textarea {
     display: block;
     height: 126px;
     background-color: #fff;
@@ -177,13 +168,11 @@ ul {
     border-radius: 5px 5px 0 0 ;
 }
 
-.comment-data-body .comment-data-body-content textarea::-webkit-input-placeholder,
-.second-comment-data-body .comment-data-body-content textarea::-webkit-input-placeholder{
+.comment-data-body .comment-data-body-content textarea::-webkit-input-placeholder {
     font-size: 12px;
 }
 
-.comment-data-body .comment-data-body-content::before,
-.second-comment-data-body .comment-data-body-content::before{
+.comment-data-body .comment-data-body-content::before {
     content: attr(data-label);
     display: block;
     position: absolute;
@@ -197,8 +186,7 @@ ul {
     z-index: 1;
 }
 
-.comment-data-body .comment-data-body-btns .send-message-btn,
-.second-comment-data-body .comment-data-body-btns .send-message-btn{
+.comment-data-body .comment-data-body-btns .send-message-btn {
     position: absolute;
     top: 0;
     right: -1px;
@@ -217,13 +205,11 @@ ul {
     }
 }
 
-.comment-data-body .comment-data-body-btns .send-message-btn:hover,
-.second-comment-data-body .comment-data-body-btns .send-message-btn:hover{
+.comment-data-body .comment-data-body-btns .send-message-btn:hover {
     background: #b8c8ce;
 }
 
-.comment-data-body .comment-data-body-btns .emoji-container,
-.second-comment-data-body .comment-data-body-btns .emoji-container{
+.comment-data-body .comment-data-body-btns .emoji-container {
     position: absolute;
     top: -12px;
     left: -1px;
@@ -231,15 +217,13 @@ ul {
     font-size: 30px;
 }
 
-.comment-data-body .comment-data-body-btns .emoji-container .emoji-container-btn,
-.second-comment-data-body .comment-data-body-btns .emoji-container .emoji-container-btn{
+.comment-data-body .comment-data-body-btns .emoji-container .emoji-container-btn {
     margin-top: 12px;
     margin-left: 12px;
     font-size: 2.25rem !important;
 }
 
-.comment-data-body .comment-data-body-btns .emoji-container .emoji-content,
-.second-comment-data-body .comment-data-body-btns .emoji-container .emoji-content{
+.comment-data-body .comment-data-body-btns .emoji-container .emoji-content {
     position: absolute;
     top: 54px;
     left: 2px;
@@ -263,8 +247,7 @@ ul {
     }
 }
 
-.comment-data-body .comment-data-body-btns .emoji-container .emoji-content::before,
-.second-comment-data-body .comment-data-body-btns .emoji-container .emoji-content::before{
+.comment-data-body .comment-data-body-btns .emoji-container .emoji-content::before {
     content: "";
     position: absolute;
     width: 10px;
@@ -329,8 +312,7 @@ ul {
     top: 4px;
 }
 
-.comment-data-body .comment-data-body-btns .input-container,
-.second-comment-data-body .comment-data-body-btns .input-container{
+.comment-data-body .comment-data-body-btns .input-container {
     position: absolute;
     top: 8px;
     left: 46px;
@@ -340,14 +322,12 @@ ul {
     padding: 0 10px;
 }
 
-.comment-data-body .comment-data-body-btns .input-container span,
-.second-comment-data-body .comment-data-body-btns .input-container span {
+.comment-data-body .comment-data-body-btns .input-container span {
     display: inline-block;
     transform: rotate(180deg);
 }
 
-.comment-data-body .comment-data-body-btns .input-container .input-content,
-.second-comment-data-body .comment-data-body-btns .input-container .input-content{
+.comment-data-body .comment-data-body-btns .input-container .input-content {
     position: absolute;
     top: 34px;
     left: -10px;
@@ -362,8 +342,7 @@ ul {
     transition: all .5s;
 }
 
-.comment-data-body .comment-data-body-btns .input-container .input-content::before,
-.second-comment-data-body .comment-data-body-btns .input-container .input-content::before{
+.comment-data-body .comment-data-body-btns .input-container .input-content::before {
     content: "";
     position: absolute;
     width: 10px;
@@ -376,8 +355,7 @@ ul {
     border-top: 1px solid #b6c5ca;
 }
 
-.comment-data-body .comment-data-body-btns .input-container .input-content input,
-.second-comment-data-body .comment-data-body-btns .input-container .input-content input{
+.comment-data-body .comment-data-body-btns .input-container .input-content input {
     width: 145px;
     padding: 0 10px;
     margin: 6px 5px;
@@ -398,13 +376,13 @@ ul {
     height: 61px;
     border-radius: 5px;
     object-fit: cover;
-    border: 1px solid #afb2c1;
 }
 
 .comment-list-body .comment-list-item .avatar img {
     width: 59px;
     height: 59px;
     border-radius: 5px;
+    border: 1px solid #afb2c1;
 }
 
 .comment-container .comment-list {
@@ -434,7 +412,7 @@ ul {
     border-top: 1px solid #ffeeba;
     border-left: none;
     border-bottom: 1px solid #ffeeba;
-    margin: 5px 0;
+    margin: 0 0 20px !important;
     background-image: url(/admin/assets/custom/images/openquote.gif);
     background-position: top left;
     background-repeat: no-repeat;
@@ -483,66 +461,71 @@ ul {
     display: inline-block;
 }
 
-.comment-list-body .comment-list-item .comment-btn {
-    visibility: hidden;
+/** 二级回复 start */
+
+.comment-list-body .comment-list-item .reply-list-body {
+    position: relative;
 }
 
-.comment-list-body .comment-list-item:hover .comment-btn {
-    color: #5E6E80;
-    visibility: visible;
-}
-
-@media (max-width: 767px) {
-    .comment-list-body .comment-list-item .info > .comment-data-body {
-        margin-left: -77px
-    }
-}
-
-.comment-list-body .comment-list-item .second-item .comment-list-item {
+.comment-list-body .comment-list-item .reply-list-body .comment-list-item:last-child {
     border-bottom: 0;
 }
 
-.comment-list-body .comment-list-item .second-item .second-info {
-    position: relative;
-    display: inline-block;
-    width: calc(100% - 80px);
-    margin-left: 75px;
+@media (max-width: 767px) {
+
+    .comment-data-body .comment-data-body-info {
+        width: 52px;
+        top: -5px;
+    }
+
+    .comment-data-body .comment-data-body-info a.change-avatar {
+        left: -3px;
+    }
+
+    .comment-data-body .comment-data-body-info img {
+        width: 50px;
+        height: 50px;
+    }
+
+    .comment-data-body .comment-data-body-content {
+        width: calc(100% - 70px);
+        margin-left: 62px;
+    }
+
+    .comment-container .comment-data-body {
+        margin-top: 14px;
+    }
+
+    .comment-list-body .comment-list-item {
+        padding: 5px 0;
+        margin: 10px auto;
+    }
+
+    .comment-list-body .comment-list-item .reply-list-body .comment-list-item {
+        margin-left: -55px;
+        padding-left: 10px;
+    }
+
+    .comment-list-body .comment-list-item .avatar {
+        width: 52px;
+    }
+
+    .comment-list-body .comment-list-item .avatar img {
+        width: 50px;
+        height: 50px;
+    }
+
+    .comment-list-body .comment-list-item .info {
+        width: calc(100% - 70px);
+        margin-left: 62px;
+    }
+
+    .comment-list-body .comment-list-item .info .date {
+        font-size: 12px;
+    }
 }
 
-.comment-list-body .comment-list-item .second-item .second-info .date {
-    position: absolute;
-    top: -2px;
-    right: -5px;
-    padding: 5px;
-    background-color: #cad9de;
-    color: #fff;
-    border-radius: 2px;
-}
-
-.comment-list-body .comment-list-item .second-item .second-info .blog-master {
-    display: inline-block;
-    padding: 2px 5px;
-    background-color: #b8c8ce;
-    color: #fff;
-}
-
-.comment-list-body .comment-list-item .second-item .second-info .content p {
-    padding: 1rem 0;
-}
-
-.comment-list-body .comment-list-item .second-item .second-info .area {
-    display: inline-block;
-}
-
-.comment-list-body .comment-list-item .second-item .second-info .second-comment-btn {
-    position: absolute;
-    right: -5px;
-}
-
-.comment-list-body .comment-list-item .second-item .second-comment-data-body {
-    margin-left: -75px;
-    margin-top:40px;
-}
+/** 二级回复 end */
 
 .comment-list .comment-list-page-bar {
     position: relative;
