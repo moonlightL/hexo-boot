@@ -72,9 +72,11 @@ Hexo Boot 是一套开源的博客系统。由 ml-blog 博客系统演变和扩�
 
 ![](https://images.extlight.com/hexo-boot-10.jpg)
 
-## 四、启动
+## 四、启动与部署
 
-下载源码，修改 resources 目录下的 application.yml 中的数据库配置（用户名和密码），运行项目即可。
+### 4.1 启动
+
+下载源码，通过 Idea 工具打开项目，修改 resources 目录下的 application.yml 中的数据库配置（用户名和密码），运行项目即可。
 
 前端主页访问地址： 
 ```
@@ -85,6 +87,20 @@ http://127.0.0.1:8080
 ```
 http://127.0.0.1:8080/admin/login.html
 ```
+
+### 4.2 部署
+
+该项目运行使用 war 包形式。
+
+修改 pom.xml 文件的 2 处地方：
+
+```
+将 <packaging>war</packaging> 注释放开
+
+排除 spring-boot-starter-web 的内置 tomcat
+```
+
+mvn clean package，打出名为 ROOT.war 文件，将其复制到 tomcat 的 webapps 目录下（如已有 ROOT 文件，将其删掉），启动 tomcat 即可。
 
 ## 五、添加主题
 
@@ -99,3 +115,4 @@ http://127.0.0.1:8080/admin/login.html
 ## 六、更新日志
 
 2020-10-22 上传开源
+2020-10-30 扩展主题配置，调整评论区插件的展示列表

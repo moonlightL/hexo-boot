@@ -38,7 +38,7 @@ public class IndexController extends CommonController {
     public String index(HttpServletRequest request, Map<String, Object> resultMap) {
         Theme activeTheme = this.themeService.getActiveTheme();
         String pageSizeStr = activeTheme.getConfigMap().get("pageSize");
-        if (StringUtils.isBlank(pageSizeStr)) {
+        if (StringUtils.isBlank(pageSizeStr) || !StringUtils.isNumeric(pageSizeStr)) {
             pageSizeStr = this.configService.getConfigValue(ConfigEnum.POST_PAGE_SIZE.getName());
         }
         HexoPageInfo pageInfo = this.postService.pagePostsByIndex(1, Integer.parseInt(pageSizeStr));
@@ -51,7 +51,7 @@ public class IndexController extends CommonController {
     public String indexPage(@PathVariable Integer pageNum, Map<String, Object> resultMap) {
         Theme activeTheme = this.themeService.getActiveTheme();
         String pageSizeStr = activeTheme.getConfigMap().get("pageSize");
-        if (StringUtils.isBlank(pageSizeStr)) {
+        if (StringUtils.isBlank(pageSizeStr) || !StringUtils.isNumeric(pageSizeStr)) {
             pageSizeStr = this.configService.getConfigValue(ConfigEnum.POST_PAGE_SIZE.getName());
         }
         HexoPageInfo pageInfo = this.postService.pagePostsByIndex(pageNum, Integer.parseInt(pageSizeStr));
