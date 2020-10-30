@@ -96,7 +96,7 @@ public class TagServiceImpl extends BaseServiceImpl<Tag> implements TagService {
         List<Tag> list = super.findAll();
         for (Tag tag : list) {
             tag.setStyle("font-size: 12px; color: #ccc");
-            tag.setUrl("");
+            tag.setUrl("/tags/" + tag.getName() + "/");
         }
         return list;
     }
