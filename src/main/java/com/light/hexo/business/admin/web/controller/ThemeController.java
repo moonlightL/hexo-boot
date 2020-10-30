@@ -12,12 +12,14 @@ import com.light.hexo.common.base.BaseRequest;
 import com.light.hexo.common.exception.GlobalException;
 import com.light.hexo.common.model.Result;
 import com.light.hexo.common.model.ThemeRequest;
+import com.light.hexo.common.model.TreeNode;
 import com.light.hexo.common.util.ExceptionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -39,20 +41,14 @@ public class ThemeController extends BaseController {
     private ThemeExtendService themeExtendService;
 
     /**
-     * 使用主题
-     * @param request
+     * 主题配置页
+     * @param id
+     * @param resultMap
      * @return
+     * @throws GlobalException
      */
-    @RequestMapping("/useTheme.json")
-    @ResponseBody
-    public Result useTheme(@Validated(BaseRequest.Update.class) ThemeRequest request) {
-        Theme theme = request.toDoModel();
-        this.themeService.useTheme(theme);
-        return Result.success();
-    }
-
     @GetMapping("/configUI.html")
-    public String configUI(Integer id, Map<String,Object> resultMap) throws GlobalException {
+    public String configUI(Integer id, Map<String,Object> resultMap) {
         Theme theme = this.themeService.findById(id);
         if (theme == null) {
             ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_THEME_NOT_EXIST);
@@ -66,6 +62,41 @@ public class ThemeController extends BaseController {
     }
 
     /**
+     * 源码页
+     * @param id
+     * @param resultMap
+     * @return
+     * @throws GlobalException
+     */
+    @GetMapping("/codeUI.html")
+    public String codeUI(Integer id, Map<String,Object> resultMap) {
+        Theme theme = this.themeService.findById(id);
+        if (theme == null) {
+            ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_THEME_NOT_EXIST);
+        }
+
+        resultMap.put("theme", theme);
+
+        List<TreeNode> catalogList = this.themeService.getThemeCatalog(theme);
+        resultMap.put("catalogList", catalogList);
+
+        return render("codeUI", resultMap);
+    }
+
+    /**
+     * 使用主题
+     * @param request
+     * @return
+     */
+    @RequestMapping("/useTheme.json")
+    @ResponseBody
+    public Result useTheme(@Validated(BaseRequest.Update.class) ThemeRequest request) {
+        Theme theme = request.toDoModel();
+        this.themeService.useTheme(theme);
+        return Result.success();
+    }
+
+    /**
      * 保存主题配置
      * @param extendList
      * @return
@@ -74,6 +105,31 @@ public class ThemeController extends BaseController {
     @ResponseBody
     public Result saveConfig(@RequestBody List<ThemeExtend> extendList) {
         this.themeExtendService.saveThemeExtend(extendList);
+        return Result.success();
+    }
+
+    /**
+     * 获取主题源码
+     * @param path
+     * @return
+     */
+    @RequestMapping("getCode.json")
+    @ResponseBody
+    public Result getCode(String path) throws IOException {
+        String content = this.themeService.getThemeFileContent(path);
+        return Result.success(content);
+    }
+
+    /**
+     * 编辑主题源码
+     * @param path
+     * @param content
+     * @return
+     */
+    @RequestMapping("editCode.json")
+    @ResponseBody
+    public Result editCode(String path, String content) throws IOException {
+        this.themeService.editThemeFileContent(path, content);
         return Result.success();
     }
 

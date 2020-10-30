@@ -54,7 +54,7 @@ public class Result implements Serializable {
     }
 
     public static Result fail() {
-        return new Result(500, "fail");
+        return new Result(500, "error");
     }
 
     public static Result fail(int code, String message) {

@@ -3,7 +3,9 @@ package com.light.hexo.business.admin.service;
 import com.light.hexo.business.admin.model.Theme;
 import com.light.hexo.common.base.BaseService;
 import com.light.hexo.common.exception.GlobalException;
+import com.light.hexo.common.model.TreeNode;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -56,4 +58,29 @@ public interface ThemeService extends BaseService<Theme> {
      * @throws GlobalException
      */
     void deleteThemeBatch(List<Theme> themeList) throws GlobalException;
+
+    /**
+     * 获取主题目录
+     * @param theme
+     * @return
+     * @throws GlobalException
+     */
+    List<TreeNode> getThemeCatalog(Theme theme) throws GlobalException;
+
+    /**
+     * 获取主题文件内容
+     * @param path
+     * @return
+     * @throws GlobalException
+     */
+    String getThemeFileContent(String path) throws GlobalException, IOException;
+
+    /**
+     * 编辑主题文件内容
+     * @param path
+     * @param content
+     * @throws GlobalException
+     */
+    void editThemeFileContent(String path, String content) throws GlobalException, IOException;
+
 }

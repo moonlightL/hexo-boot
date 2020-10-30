@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, initial-scale=1, shrink-to-fit=no">
+    <div th:replace="~{admin/common :: common-link}"></div>
+    <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/zTree_v3/css/zTreeStyle/zTreeStyle.css'}">
+    <style>
+
+        .catalog-content {
+            padding: 10px;
+            border: 1px solid #aaa;
+            height: calc(100vh - 245px);
+            overflow: auto;
+        }
+
+        .code-content {
+            padding: 10px;
+            border: 1px solid #aaa;
+            width: 100%;
+            height: calc(100vh - 200px);
+            overflow: auto;
+            resize: none;
+            outline:none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="content">
+    <div class="block block-fx-shadow">
+        <div class="block-content">
+            <div class="row justify-content-center py-20">
+                <div class="col-md-3">
+                    <h4 th:text="${theme.name + ' 主题目录'}" style="text-align: center"></h4>
+                    <div class="catalog-content">
+                        <ul id="catalogTree" class="ztree"></ul>
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <textarea class="code-content" id="code-content"></textarea>
+                </div>
+            </div>
+            <div class="row py-20">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <button type="button" class="btn btn-alt-primary pull-right" id="submitBtn" >
+                            <i class="fa fa-send mr-5"></i> 保存
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="~{admin/common :: common-script}"></div>
+<script th:src="@{'/admin/assets/js/plugins/zTree_v3/js/jquery.ztree.all.js'}"></script>
+<script type="text/javascript" th:inline="javascript">
+    let zNodes = [[${catalogList}]];
+    let ThemeManager = {
+        path: "",
+        init: function (zNodes) {
+            ThemeManager.initCatalogTree(zNodes);
+            ThemeManager.bindEvent();
+        },
+        initCatalogTree: function (zNodes) {
+            let setting = {
+                callback: {
+                    beforeClick: function (treeId, treeNode, clickFlag) {
+                        ThemeManager.path = treeNode.path;
+                        $.ajax({
+                            type: "POST",
+                            url: BASE_URL + "/getCode.json",
+                            data: {"path": ThemeManager.path},
+                            dataType: "JSON",
+                            success: function (resp) {
+                                if (resp.success) {
+                                    $("#code-content").val(resp.data);
+                                }
+                            }
+                        });
+                    }
+                }
+            };
+            $.fn.zTree.init($("#catalogTree"), setting, zNodes);
+        },
+        bindEvent: function () {
+            $("#submitBtn").on("click", function () {
+                $.hexo.modal.confirm("确定要修改该文件吗?", function () {
+                    $.ajax({
+                        type: "POST",
+                        url: BASE_URL + "/editCode.json",
+                        data: {"path": ThemeManager.path, "content": $("#code-content").val()},
+                        dataType: "JSON",
+                        success: function (resp) {
+                            $.hexo.modal.tip("请求成功", resp.msg);
+                        }
+                    });
+                });
+            });
+        }
+    };
+
+    ThemeManager.init(zNodes);
+</script>
+</body>
+</html>

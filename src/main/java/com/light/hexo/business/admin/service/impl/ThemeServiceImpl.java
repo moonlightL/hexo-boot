@@ -13,16 +13,25 @@ import com.light.hexo.common.base.BaseServiceImpl;
 import com.light.hexo.common.constant.CacheKey;
 import com.light.hexo.common.exception.GlobalException;
 import com.light.hexo.common.model.ThemeRequest;
+import com.light.hexo.common.model.TreeNode;
 import com.light.hexo.common.util.CacheUtil;
 import com.light.hexo.common.util.EhcacheUtil;
 import com.light.hexo.common.util.ExceptionUtil;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.ResourceUtils;
 import tk.mybatis.mapper.entity.Example;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -137,7 +146,6 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
 
     @Override
     public void deleteThemeBatch(List<Theme> themeList) throws GlobalException {
-
         if (CollectionUtils.isEmpty(themeList)) {
             return;
         }
@@ -155,6 +163,83 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
                 this.useTheme(theme);
             }
         }
+    }
+
+    @Override
+    public List<TreeNode> getThemeCatalog(Theme theme) throws GlobalException {
+        try {
+            File dir = ResourceUtils.getFile("classpath:templates/theme/" + theme.getName());
+            return this.wrapTreeNode(dir, null);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+
+    @Override
+    public String getThemeFileContent(String path) throws GlobalException, IOException {
+        String extension = FilenameUtils.getExtension(path);
+        if (extension.equals("png") || extension.equals("jpg")) {
+            return "不能编辑图片";
+        }
+
+        File file = new File(path);
+        if (!file.exists()) {
+            return "文件不存在";
+        }
+
+        if (file.isDirectory()) {
+            return "不能编辑文件目录";
+        }
+
+        return FileUtils.readFileToString(file, "UTF-8");
+    }
+
+    @Override
+    public void editThemeFileContent(String path, String content) throws GlobalException, IOException {
+
+        File file = new File(path);
+        if (!file.exists()) {
+            return;
+        }
+
+        FileUtils.writeStringToFile(file, content, "UTF-8", false);
+    }
+
+    private List<TreeNode> wrapTreeNode(File dir, TreeNode parent) {
+        List<TreeNode> treeNodeList = new ArrayList<>();
+        File[] files = dir.listFiles();
+        int index = 1;
+        for (File file : files) {
+            TreeNode treeNode = new TreeNode();
+            treeNode.setId(index++);
+            treeNode.setName(file.getName());
+            treeNode.setPath(file.getAbsolutePath());
+            if (parent != null) {
+                treeNode.setPId(parent.getId());
+                List<TreeNode> children = parent.getChildren();
+                if (children == null) {
+                    children = new ArrayList<>();
+                    parent.setChildren(children);
+                }
+                children.add(treeNode);
+            } else {
+                treeNode.setPId(0);
+            }
+
+            if (file.isDirectory()) {
+                treeNode.setParent(true);
+                this.wrapTreeNode(file, treeNode);
+            } else {
+                treeNode.setParent(false);
+            }
+
+            treeNodeList.add(treeNode);
+        }
+
+        return treeNodeList;
     }
 
 }
