@@ -3,18 +3,29 @@ let CommentManager = (function ($) {
     let CommentManager = {
         init: function (nickname, postId, comment) {
             let flag = false;
-            let postContainer = $("#postContainer");
-            let mobile = isMobile();
-            let scrollHeight = (mobile ? 1200 : 850);
-            $(window).scroll(function(e) {
-                let scrollTop = $(this).scrollTop();
-                if (!flag && (scrollTop > parseInt(postContainer.offset().top + postContainer.height() - scrollHeight))) {
-                    // 获取评论列表
-                    flag = true;
-                    CommentManager.initComment(nickname, postId, comment);
-                    CommentManager.bindEvent(postId);
-                }
-            });
+            let $footer = $("#footer-copyright");
+            let top = parseInt($footer.offset().top);
+            let winHeight = $(window).height();
+
+            if (top > winHeight) {
+                $(window).scroll(function(e) {
+                    let scrollTop = $(this).scrollTop();
+                    // console.log("winHeight:" + winHeight);
+                    // console.log("scrollTop:" + scrollTop);
+                    // console.log("top:" + top);
+                    // console.log("result:" + (winHeight + scrollTop) + ":" + top)
+                    // console.log("======================")
+                    if (!flag && (winHeight + scrollTop >= top)) {
+                        // 获取评论列表
+                        flag = true;
+                        CommentManager.initComment(nickname, postId, comment);
+                        CommentManager.bindEvent(postId);
+                    }
+                });
+            } else {
+                CommentManager.initComment(nickname, postId, comment);
+                CommentManager.bindEvent(postId);
+            }
         },
         initComment: function (nickname, postId, comment) {
             $("#comment-container").BeautyComment({

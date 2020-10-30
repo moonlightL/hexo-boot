@@ -37,8 +37,10 @@
     <script th:src="@{'/admin/assets/custom/jquery-comment/jquery-comment.js'}"></script>
     <script th:src="@{${prefix} + '/source/js/about.js'}"></script>
     <script type="text/javascript" th:inline="javascript">
-        let nickname = [[${#servletContext.getAttribute('configMap')['blog_author']}]];
-        GuestBookManager.init(nickname);
+       $(function () {
+           let nickname = [[${#servletContext.getAttribute('configMap')['blog_author']}]];
+           GuestBookManager.init(nickname);
+       });
     </script>
 </div>
 </body>

@@ -1,19 +1,22 @@
 let GuestBookManager = (function ($) {
     let GuestBookManager = {
         init: function(nickname) {
-            // let flag = false;
-            // let postContainer = $("#postContainer");
-            // let mobile = isMobile();
-            // let scrollHeight = (mobile ? 1200 : 850);
-            // $(window).scroll(function(e) {
-            //     let scrollTop = $(this).scrollTop();
-            //     if (!flag && (scrollTop > parseInt(postContainer.offset().top + postContainer.height() - scrollHeight))) {
-            //         // 获取留言列表
-            //         flag = true;
-            //         GuestBookManager.initComment(nickname);
-            //     }
-            // });
-            GuestBookManager.initComment(nickname);
+            let flag = false;
+            let $footer = $("#footer-copyright");
+            let top = parseInt($footer.offset().top);
+            let winHeight = $(window).height();
+            if (top > winHeight) {
+                $(window).scroll(function(e) {
+                    let scrollTop = $(this).scrollTop();
+                    if (!flag && (winHeight + scrollTop >= top)) {
+                        // 获取留言列表
+                        flag = true;
+                        GuestBookManager.initComment(nickname);
+                    }
+                });
+            } else {
+                GuestBookManager.initComment(nickname);
+            }
         },
         initComment: function (nickname) {
             $("#comment-container").BeautyComment({

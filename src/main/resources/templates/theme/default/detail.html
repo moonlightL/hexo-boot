@@ -92,9 +92,10 @@
         <script th:src="@{'/admin/assets/custom/jquery-comment/jquery-comment.js'}"></script>
         <script th:src="@{${prefix} + '/source/js/detail.js'}"></script>
         <script type="text/javascript" th:inline="javascript">
-            let nickname = [[${#servletContext.getAttribute('configMap')['blog_author']}]];
-            CommentManager.init(nickname, [[${post.id}]], [[${post.comment}]]);
-
+            $(function () {
+                let nickname = [[${#servletContext.getAttribute('configMap')['blog_author']}]];
+                CommentManager.init(nickname, [[${post.id}]], [[${post.comment}]]);
+            });
         </script>
     </div>
 </body>
