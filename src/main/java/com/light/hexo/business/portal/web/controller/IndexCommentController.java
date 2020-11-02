@@ -54,10 +54,10 @@ public class IndexCommentController extends CommonController {
         } else {
             // 多行（父子级评论一起展示）
             commentList = this.postCommentService.getCommentListByPostId(postId, pageNum, PAGE_SIZE);
-            map.put("totalNum", this.postCommentService.getPostCommentNum(postId));
         }
 
         PageInfo<PostComment> pageInfo = new PageInfo<>(commentList);
+        map.put("totalNum", "singleRow".equals(commentShowType) ? pageInfo.getTotal() : this.postCommentService.getPostCommentNum(postId));
         map.put("commentList", pageInfo.getList());
         map.put("commentShowType", commentShowType);
         return Result.success(map);

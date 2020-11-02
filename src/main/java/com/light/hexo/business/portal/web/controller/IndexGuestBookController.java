@@ -52,10 +52,11 @@ public class IndexGuestBookController extends CommonController {
         } else {
             // 多行（父子级评论一起展示）
             list = this.guestBookService.getGuestBookListByIndex(pageNum, PAGE_SIZE);
-            map.put("totalNum", this.guestBookService.getGuestBookNum());
+
         }
 
         PageInfo<GuestBook> pageInfo = new PageInfo<>(list);
+        map.put("totalNum", "singleRow".equals(commentShowType) ? pageInfo.getTotal() : this.guestBookService.getGuestBookNum());
         map.put("commentList", pageInfo.getList());
         map.put("commentShowType", commentShowType);
         return Result.success(map);
