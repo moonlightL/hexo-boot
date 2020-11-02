@@ -45,17 +45,17 @@ public class IndexGuestBookController extends CommonController {
         Theme activeTheme = this.themeService.getActiveTheme();
         String commentShowType = activeTheme.getConfigMap().get("commentShowType");
         List<GuestBook> list;
+        Map<String, Object> map = new HashMap<>();
         if ("singleRow".equals(commentShowType)) {
             // 单行
             list = this.guestBookService.listGuestBookByIndex(pageNum, PAGE_SIZE);
         } else {
             // 多行（父子级评论一起展示）
             list = this.guestBookService.getGuestBookListByIndex(pageNum, PAGE_SIZE);
+            map.put("totalNum", this.guestBookService.getGuestBookNum());
         }
 
         PageInfo<GuestBook> pageInfo = new PageInfo<>(list);
-        Map<String, Object> map = new HashMap<>();
-        map.put("totalNum", pageInfo.getTotal());
         map.put("commentList", pageInfo.getList());
         map.put("commentShowType", commentShowType);
         return Result.success(map);

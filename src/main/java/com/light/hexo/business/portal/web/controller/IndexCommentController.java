@@ -47,18 +47,17 @@ public class IndexCommentController extends CommonController {
         Theme activeTheme = this.themeService.getActiveTheme();
         String commentShowType = activeTheme.getConfigMap().get("commentShowType");
         List<PostComment> commentList;
+        Map<String, Object> map = new HashMap<>();
         if ("singleRow".equals(commentShowType)) {
             // 单行
             commentList = this.postCommentService.listCommentByPostId(postId, pageNum, PAGE_SIZE);
         } else {
             // 多行（父子级评论一起展示）
             commentList = this.postCommentService.getCommentListByPostId(postId, pageNum, PAGE_SIZE);
-            int postCommentNum = this.postCommentService.getPostCommentNum();
+            map.put("totalNum", this.postCommentService.getPostCommentNum());
         }
 
         PageInfo<PostComment> pageInfo = new PageInfo<>(commentList);
-        Map<String, Object> map = new HashMap<>();
-        map.put("totalNum", pageInfo.getTotal());
         map.put("commentList", pageInfo.getList());
         map.put("commentShowType", commentShowType);
         return Result.success(map);

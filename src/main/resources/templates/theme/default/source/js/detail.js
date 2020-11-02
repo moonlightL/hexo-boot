@@ -10,22 +10,16 @@ let CommentManager = (function ($) {
             if (top > winHeight) {
                 $(window).scroll(function(e) {
                     let scrollTop = $(this).scrollTop();
-                    // console.log("winHeight:" + winHeight);
-                    // console.log("scrollTop:" + scrollTop);
-                    // console.log("top:" + top);
-                    // console.log("result:" + (winHeight + scrollTop) + ":" + top)
-                    // console.log("======================")
                     if (!flag && (winHeight + scrollTop >= top)) {
                         // 获取评论列表
                         flag = true;
                         CommentManager.initComment(nickname, postId, comment);
-                        CommentManager.bindEvent(postId);
                     }
                 });
             } else {
                 CommentManager.initComment(nickname, postId, comment);
-                CommentManager.bindEvent(postId);
             }
+            CommentManager.bindEvent(postId);
         },
         initComment: function (nickname, postId, comment) {
             $("#comment-container").BeautyComment({
