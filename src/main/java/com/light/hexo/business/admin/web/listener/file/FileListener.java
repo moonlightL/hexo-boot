@@ -64,7 +64,22 @@ public class FileListener extends FileAlterationListenerAdaptor {
      */
     @Override
     public void onFileChange(File file) {
-        log.info("========文件修改===========");
+        try {
+            // 读取内容
+            String content = FileUtils.readFileToString(file, "UTF-8");
+            Map<String, Object> map = JsonUtil.string2Obj(content, Map.class);
+
+            String fileDir = file.getParentFile().getName();
+            this.themeService.saveTheme(
+                    map.get("name").toString(),
+                    String.format("/theme/%s/preview.png", fileDir),
+                    false,
+                    Objects.nonNull(map.get("remark")) ? map.get("remark").toString(): "",
+                    (List<Map<String, String>>)map.get("extension")
+            );
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

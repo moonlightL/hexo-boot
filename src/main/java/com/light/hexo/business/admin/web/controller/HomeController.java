@@ -50,7 +50,7 @@ public class HomeController extends BaseController {
     public String index(Map<String, Object> resultMap) {
         int postNum = this.postService.getPostNum();
         int categoryNum = this.categoryService.getCategoryNum();
-        int postCommentNum = this.postCommentService.getPostCommentNum();
+        int postCommentNum = this.postCommentService.getPostCommentNum(null);
         int guestBookNum = this.guestBookService.getGuestBookNum();
 
         resultMap.put("postNum", postNum);

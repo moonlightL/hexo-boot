@@ -47,18 +47,11 @@ public interface PostCommentService extends BaseService<PostComment> {
 
     /**
      * 查询评论数
+     * @param postId
      * @return
      * @throws GlobalException
      */
-    int getPostCommentNum() throws GlobalException;
-
-    /**
-     * 查询指定日期评论数
-     * @param date
-     * @return
-     * @throws GlobalException
-     */
-    int getPostCommentNum(LocalDate date) throws GlobalException;
+    int getPostCommentNum(Integer postId) throws GlobalException;
 
     // =========================== 以下为前端页面请求 ============================
 

@@ -249,19 +249,13 @@ public class PostCommentServiceImpl extends BaseServiceImpl<PostComment> impleme
     }
 
     @Override
-    public int getPostCommentNum() throws GlobalException {
-        Example example = new Example(PostComment.class);
-        example.createCriteria().andEqualTo("delete", false);
-        return this.getBaseMapper().selectCountByExample(example);
-    }
-
-    @Override
-    public int getPostCommentNum(LocalDate date) throws GlobalException {
-
+    public int getPostCommentNum(Integer postId) throws GlobalException {
         Example example = new Example(PostComment.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andBetween("createTime", date + " 00:00:00", date + " 23:59:59");
-
+        criteria.andEqualTo("delete", false);
+        if (postId != null) {
+            criteria.andEqualTo("postId", postId);
+        }
         return this.getBaseMapper().selectCountByExample(example);
     }
 
