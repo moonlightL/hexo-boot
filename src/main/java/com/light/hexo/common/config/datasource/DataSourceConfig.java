@@ -1,6 +1,7 @@
 package com.light.hexo.common.config.datasource;
 
 import com.alibaba.druid.filter.Filter;
+import com.alibaba.druid.filter.stat.StatFilter;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.support.http.StatViewServlet;
 import com.alibaba.druid.support.http.WebStatFilter;
@@ -38,6 +39,7 @@ public class DataSourceConfig {
     public DataSource dataSource() {
         DruidDataSource druidDataSource = druidProperties.dataSource(new DruidDataSource());
         List<Filter> filterList = new ArrayList<>();
+        filterList.add(statFilter());
         filterList.add(wallFilter());
         druidDataSource.setProxyFilters(filterList);
 
@@ -97,6 +99,12 @@ public class DataSourceConfig {
         //添加不需要忽略的格式信息.
         filterRegistrationBean.addInitParameter("exclusions","*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*");
         return filterRegistrationBean;
+    }
+
+    @Bean
+    public StatFilter statFilter() {
+        StatFilter statFilter = new StatFilter();
+        return statFilter;
     }
 
     @Bean

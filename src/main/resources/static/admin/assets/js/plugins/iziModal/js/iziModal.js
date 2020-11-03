@@ -873,7 +873,8 @@
 			this.$element
 				.off('.'+PLUGIN_NAME)
 				.removeData(PLUGIN_NAME)
-				.attr('style', '');
+				.attr('style', '')
+			    .removeClass('isFullscreen');
 
 			this.$overlay.remove();
 			this.$navigate.remove();

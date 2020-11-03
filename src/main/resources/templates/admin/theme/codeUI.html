@@ -8,21 +8,33 @@
     <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/zTree_v3/css/zTreeStyle/zTreeStyle.css'}">
     <style>
 
+        .catalog-container {
+            width: 20%;
+            display: inline-block;
+        }
+
+        .code-container {
+            width: 80%;
+            float: right;
+            display: inline-block;
+        }
+
         .catalog-content {
             padding: 10px;
             border: 1px solid #aaa;
-            height: calc(100vh - 245px);
+            height: calc(100vh - 200px);
             overflow: auto;
         }
 
         .code-content {
-            padding: 10px;
-            border: 1px solid #aaa;
             width: 100%;
             height: calc(100vh - 200px);
-            overflow: auto;
+            overflow-y: auto;
+            overflow-x: hidden;
             resize: none;
             outline:none;
+            background-color: #000;
+            color: #fff;
         }
     </style>
 </head>
@@ -32,14 +44,16 @@
     <div class="block block-fx-shadow">
         <div class="block-content">
             <div class="row justify-content-center py-20">
-                <div class="col-md-3">
-                    <h4 th:text="${theme.name + ' 主题目录'}" style="text-align: center"></h4>
-                    <div class="catalog-content">
-                        <ul id="catalogTree" class="ztree"></ul>
+                <div class="col-md-12">
+                    <div class="catalog-container">
+                        <div class="catalog-content">
+                            <h4 th:text="${theme.name + ' 主题目录'}" style="text-align: center"></h4>
+                            <ul id="catalogTree" class="ztree"></ul>
+                        </div>
                     </div>
-                </div>
-                <div class="col-md-9">
-                    <textarea class="code-content" id="code-content"></textarea>
+                    <div class="code-container">
+                        <textarea class="code-content" id="code-content"></textarea>
+                    </div>
                 </div>
             </div>
             <div class="row py-20">
@@ -56,6 +70,7 @@
 </div>
 <div th:replace="~{admin/common :: common-script}"></div>
 <script th:src="@{'/admin/assets/js/plugins/zTree_v3/js/jquery.ztree.all.js'}"></script>
+<script th:src="@{'/admin/assets/js/plugins/textarea-line-number/js/auto-line-number.js'}"></script>
 <script type="text/javascript" th:inline="javascript">
     let zNodes = [[${catalogList}]];
     let ThemeManager = {
@@ -76,7 +91,14 @@
                             dataType: "JSON",
                             success: function (resp) {
                                 if (resp.success) {
-                                    $("#code-content").val(resp.data);
+                                    let $codeContent = $("#code-content");
+                                    $codeContent.val(resp.data);
+                                    $codeContent.setTextareaCount({
+                                        width: "40px",
+                                        bgColor: "#000",
+                                        color: "#fff",
+                                        display: "block"
+                                    });
                                 }
                             }
                         });

@@ -143,8 +143,8 @@ ul {
 
 .comment-data-body .comment-data-body-content .comment-mask {
     position: absolute;
-    width: 100%;
     height: 126px;
+    padding: 1.25rem;
     top: 0;
     right: 0;
     bottom: 0;

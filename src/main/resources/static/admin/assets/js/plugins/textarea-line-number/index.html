@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>dEMO</title>
+	<style>
+	body{ font-family: Verdana; }
+textarea { width: 600px; background-color: #373737; height: 300px; padding-top: 10px; padding-right: 10px; padding-left: 10px; padding-bottom: 10px; overflow: auto; color: green; font-size: 16px; }
+    </style>
+</head>
+<body>
+<textarea type="text" id="text" class="text"></textarea>
+<script src="./js/jquery-1.12.0.min.js"></script>
+<script src="./js/auto-line-number.js"></script>
+<script>
+	$("#text").setTextareaCount({
+		width: "30px",
+		bgColor: "#000",
+		color: "#FFF",
+		display: "inline-block"
+	});
+</script>
+</body>
+</html>
