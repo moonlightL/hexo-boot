@@ -59,6 +59,7 @@ public enum ConfigEnum {
     LICENSE("license", "CC BY-NC-SA 4.0","文章版权协议"),
     LICENSE_URL("license_url", "https://creativecommons.org/licenses/by-nc-sa/4.0/","文章版权说明地址"),
 
+    META_CODE("meta_code", "", "文章详情页 meta 代码"),
     SCRIPT_CODE("script_code", "", "文章详情页 script 代码"),
 
     BAI_DU_PUSH_TOKEN("bai_du_push_token", "", "百度推送"),

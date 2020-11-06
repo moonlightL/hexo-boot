@@ -84,7 +84,10 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
     protected Example getExample(BaseRequest request) {
         // 获取查询参数
         PostRequest postRequest = (PostRequest) request;
-        Example example = new Example(Post.class);
+        Example example = Example.builder(Post.class)
+                .select("id", "title", "link", "coverUrl", "categoryId",
+                        "readNum", "commentNum", "praiseNum",
+                        "publishDate", "comment", "top").orderByDesc("createTime").build();
         Example.Criteria criteria = example.createCriteria();
 
         Boolean publish = postRequest.getPublish();
@@ -111,8 +114,6 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
         if (StringUtils.isNotBlank(publishDate)) {
             criteria.andEqualTo("publishDate", publishDate.trim());
         }
-
-        example.orderBy("createTime").desc();
 
         return example;
     }
@@ -297,8 +298,8 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
 
         EhcacheUtil.clearByCacheName("postCache");
         CacheUtil.remove(CacheKey.INDEX_COUNT_INFO);
-        CacheUtil.get(PageConstant.MARKDOWN_KEY + ":" + post.getId() + ":1");
-        CacheUtil.get(PageConstant.MARKDOWN_KEY + ":" + post.getId() + ":2");
+        CacheUtil.remove(PageConstant.MARKDOWN_KEY + ":" + post.getId() + ":1");
+        CacheUtil.remove(PageConstant.MARKDOWN_KEY + ":" + post.getId() + ":2");
     }
 
     @Override
@@ -447,7 +448,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
     public HexoPageInfo pagePostsByIndex(int pageNum, int pageSize) throws GlobalException {
         Example example = Example.builder(Post.class)
                 .select("id", "title", "summary", "author", "publishDate", "year", "month", "day", "top", "reprint",
-                        "coverUrl", "link", "categoryId", "tags", "readNum", "praiseNum", "commentNum", "createTime")
+                        "coverUrl", "link", "categoryId", "tags", "readNum", "praiseNum", "commentNum", "topTime", "createTime")
                 .where(Sqls.custom().andEqualTo("publish", true).andEqualTo("delete", false))
                 .orderByDesc("createTime")
                 .build();

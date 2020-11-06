@@ -474,7 +474,7 @@
                 $(this).text("取消");
                 let nickname = $(this).data("nickname");
                 let $cloneBody = $(".comment-data .comment-data-body").clone(true);
-                $cloneBody.find("textarea").attr("placeholder", "@" + nickname);
+                $cloneBody.find("textarea").attr("placeholder", "@" + nickname).val("");
                 infoDiv.addClass("reply").parent().append($cloneBody);
 
             } else {

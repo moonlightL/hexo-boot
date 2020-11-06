@@ -97,7 +97,7 @@
                 CommentManager.init(nickname, [[${post.id}]], [[${post.comment}]]);
             });
         </script>
-        <div th:replace="${#servletContext.getAttribute('configMap')['script_code']}"></div>
+        [(${#servletContext.getAttribute('configMap')['script_code']})]
     </div>
 </body>
 </html>

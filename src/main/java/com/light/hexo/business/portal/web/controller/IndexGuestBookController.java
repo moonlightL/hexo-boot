@@ -3,10 +3,8 @@ package com.light.hexo.business.portal.web.controller;
 import com.github.pagehelper.PageInfo;
 import com.light.hexo.business.admin.model.GuestBook;
 import com.light.hexo.business.admin.model.Theme;
-import com.light.hexo.business.admin.model.User;
 import com.light.hexo.business.portal.common.CommonController;
 import com.light.hexo.business.portal.component.RequestLimit;
-import com.light.hexo.business.portal.util.ThreadUtil;
 import com.light.hexo.common.exception.GlobalException;
 import com.light.hexo.common.model.GuestBookRequest;
 import com.light.hexo.common.model.Result;
@@ -14,10 +12,12 @@ import com.light.hexo.common.util.BrowserUtil;
 import com.light.hexo.common.util.IpUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,7 +71,7 @@ public class IndexGuestBookController extends CommonController {
      */
     @PostMapping("/auth/sendGuestBook.json")
     @ResponseBody
-    @RequestLimit(cacheName = "guestBookCache", time = 60, msg = "留言次数过于频繁，请等待60秒后再评论")
+    @RequestLimit(cacheName = "guestBookCache", time = 60, msg = "留言操作过于频繁，请等待60秒后再评论")
     public Result sendGuestBook(@Validated(GuestBookRequest.Send.class) GuestBookRequest request, HttpServletRequest httpServletRequest) throws GlobalException {
 
         GuestBook guestBook = request.toDoModel();

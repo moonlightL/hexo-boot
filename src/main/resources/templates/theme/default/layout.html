@@ -7,6 +7,8 @@
     <title th:text="${#servletContext.getAttribute('configMap')['blog_name']}">个人博客</title>
     <meta name="author" th:content="${#servletContext.getAttribute('configMap')['blog_author']}">
     <meta name="keywords" th:content="${#servletContext.getAttribute('configMap')['keywords']}" />
+    <meta name="description" th:content="${#servletContext.getAttribute('configMap')['description']}" />
+    [(${#servletContext.getAttribute('configMap')['meta_code']})]
     <link rel="shortcut icon" th:href="@{${#servletContext.getAttribute('configMap')['favicon_url']}}"/>
     <link rel="stylesheet" th:href="@{${prefix} + '/source/js/bootstrap-3.3.7/css/bootstrap.min.css'}">
     <link rel="stylesheet" th:href="@{${prefix} + '/source/fonts/font-awesome/css/font-awesome.min.css'}" />
