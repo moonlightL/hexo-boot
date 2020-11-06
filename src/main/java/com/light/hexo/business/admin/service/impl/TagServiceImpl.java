@@ -15,6 +15,7 @@ import tk.mybatis.mapper.entity.Example;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -63,18 +64,20 @@ public class TagServiceImpl extends BaseServiceImpl<Tag> implements TagService {
 
     @Override
     public List<Integer> saveTagBatch(String[] tagNames) throws GlobalException {
-        Tag tag;
-        List<Tag> list = new ArrayList<>(tagNames.length);
-        for (String tagName : tagNames) {
-            tag = new Tag();
+        // 查询旧标签
+        List<Tag> oldTagList = this.tagMapper.selectListByTags(tagNames);
+        List<String> oldTagNameList = oldTagList.stream().map(i -> i.getName().toLowerCase()).collect(Collectors.toList());
+
+        // 过滤出新标签
+        List<String> tmpTagNameList = Arrays.stream(tagNames).filter(i -> !oldTagNameList.contains(i.toLowerCase())).collect(Collectors.toList());
+
+        List<Tag> newTagList = new ArrayList<>(tmpTagNameList.size());
+        for (String tagName : tmpTagNameList) {
+            Tag tag = new Tag();
             tag.setName(tagName).setCreateTime(LocalDateTime.now()).setUpdateTime(tag.getCreateTime());
-            list.add(tag);
+            newTagList.add(tag);
         }
 
-        List<Tag> oldTagList = this.tagMapper.selectListByTags(tagNames);
-        List<String> oldTagNameList = oldTagList.stream().map(Tag::getName).collect(Collectors.toList());
-
-        List<Tag> newTagList = list.stream().filter(i -> !oldTagNameList.contains(i.getName())).collect(Collectors.toList());
         if (!newTagList.isEmpty()) {
             // 保存新标签
             this.tagMapper.insertBatch(newTagList);

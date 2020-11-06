@@ -172,6 +172,13 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
         // 前端上传的参数可能带空格，影响条件查询
         post.setTitle(post.getTitle().trim());
 
+        Example example = new Example(Post.class);
+        example.createCriteria().andEqualTo("title", post.getTitle());
+        Post dbPost = this.getBaseMapper().selectOneByExample(example);
+        if (dbPost != null) {
+            ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_POST_TITLE_REPEAT);
+        }
+
         if (StringUtils.isBlank(post.getAuthor())) {
             post.setAuthor(this.configService.getConfigValue(ConfigEnum.BLOG_AUTHOR.getName()));
         }
@@ -242,7 +249,14 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
         }
 
         // 前端上传的参数可能带空格，影响条件查询
-        post.setTitle(post.getTitle().trim());
+        dbPost.setTitle(post.getTitle().trim());
+
+        Example example = new Example(Post.class);
+        example.createCriteria().andEqualTo("title", post.getTitle());
+        Post tmp = this.getBaseMapper().selectOneByExample(example);
+        if (tmp != null && !tmp.getId().equals(dbPost.getId())) {
+            ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_POST_TITLE_REPEAT);
+        }
 
         // 摘要
         post.setSummary(this.interceptContent(post.getContent()));
@@ -262,7 +276,6 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
             }
 
             post.setLink(year + "/" + month + "/" + day + "/" + StringUtils.replace(post.getTitle(), " ", "-") + "/");
-
             this.baiDuPushService.push2BaiDu(post.getLink());
         }
 
@@ -412,8 +425,8 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
             .setMonth(DateUtil.fillTime(now.getMonth().getValue()))
             .setDay(DateUtil.fillTime(now.getDayOfMonth()))
             .setLink(post.getYear() + "/" + post.getMonth() + "/" + post.getDay() + "/" + StringUtils.replace(post.getTitle(), " ", "-") + "/");
-
         this.updateModel(post);
+        this.baiDuPushService.push2BaiDu(post.getLink());
         EhcacheUtil.clearByCacheName("postCache");
         CacheUtil.remove(CacheKey.INDEX_COUNT_INFO);
     }
@@ -658,25 +671,27 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
     }
 
     private void saveTags(Post post, boolean isEdit) {
-        if (StringUtils.isNotBlank(post.getTags())) {
-            // 保存标签
-            List<Integer> tagIdList = this.tagService.saveTagBatch(post.getTags().split(","));
-            if (!CollectionUtils.isEmpty(tagIdList)) {
+        if (StringUtils.isBlank(post.getTags())) {
+            return;
+        }
 
-                if (isEdit) {
-                    // 修改操作，先删除文章关联的标签
-                    this.postTagService.deletePostTag(post.getId());
-                }
+        // 保存标签
+        List<Integer> tagIdList = this.tagService.saveTagBatch(post.getTags().split(","));
+        if (!CollectionUtils.isEmpty(tagIdList)) {
 
-                List<PostTag> list = new ArrayList<>(tagIdList.size());
-                PostTag data;
-                for (Integer tagId : tagIdList) {
-                    data = new PostTag(post.getId(), tagId);
-                    list.add(data);
-                }
-
-                this.postTagService.savePostTagBatch(list);
+            if (isEdit) {
+                // 修改操作，先删除文章关联的标签
+                this.postTagService.deletePostTag(post.getId());
             }
+
+            List<PostTag> list = new ArrayList<>(tagIdList.size());
+            PostTag data;
+            for (Integer tagId : tagIdList) {
+                data = new PostTag(post.getId(), tagId);
+                list.add(data);
+            }
+
+            this.postTagService.savePostTagBatch(list);
         }
     }
 

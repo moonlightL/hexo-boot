@@ -174,14 +174,20 @@
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-12">
-                                        <label for="reward_by_ali_pay">支付宝收款码地址</label>
+                                        <label for="reward_by_ali_pay">支付宝收款码图片地址</label>
                                         <input class="form-control form-control-lg" id="reward_by_ali_pay" name="reward_by_ali_pay" type="text" th:value="${configMap['reward_by_ali_pay']}">
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-12">
-                                        <label for="reward_by_we_chat_pay">微信收款码地址</label>
+                                        <label for="reward_by_we_chat_pay">微信收款码图片地址</label>
                                         <input class="form-control form-control-lg" id="reward_by_we_chat_pay" name="reward_by_we_chat_pay" type="text" th:value="${configMap['reward_by_we_chat_pay']}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <label for="script_code">script 代码</label>
+                                        <textarea class="form-control form-control-lg" id="script_code" name="script_code" th:value="${configMap['script_code']}" rows="8" style="resize: none"></textarea>
                                     </div>
                                 </div>
                                 <div class="form-group row">

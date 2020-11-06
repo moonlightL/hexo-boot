@@ -59,6 +59,8 @@ public enum ConfigEnum {
     LICENSE("license", "CC BY-NC-SA 4.0","文章版权协议"),
     LICENSE_URL("license_url", "https://creativecommons.org/licenses/by-nc-sa/4.0/","文章版权说明地址"),
 
+    SCRIPT_CODE("script_code", "", "文章详情页 script 代码"),
+
     BAI_DU_PUSH_TOKEN("bai_du_push_token", "", "百度推送"),
 
     EMAIL_HOST("email_host", "smtp.163.com", "发送邮件服务器"),
