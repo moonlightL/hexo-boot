@@ -70,7 +70,7 @@ ul {
 
 .comment-container .comment-data-body {
     position: relative;
-    margin-top: 42px;
+    margin-top: 35px;
     color: #5E6E80;
 }
 
@@ -398,7 +398,7 @@ ul {
 
 .comment-list-body .comment-list-item {
     border-bottom: 1px dashed #e9e9ea;
-    padding: 20px 0;
+    padding: 10px 0;
     margin: 15px auto;
 }
 
@@ -412,7 +412,7 @@ ul {
     border-top: 1px solid #ffeeba;
     border-left: none;
     border-bottom: 1px solid #ffeeba;
-    margin: 0 0 20px !important;
+    margin: 0 0 10px !important;
     background-image: url(/admin/assets/custom/images/openquote.gif);
     background-position: top left;
     background-repeat: no-repeat;
@@ -454,7 +454,7 @@ ul {
 }
 
 .comment-list-body .comment-list-item .info .content p {
-    padding: 1rem 0;
+    padding-top: 10px;
 }
 
 .comment-list-body .comment-list-item .info .area {
