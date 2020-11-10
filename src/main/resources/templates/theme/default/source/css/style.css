@@ -266,7 +266,6 @@ strong {
     border:1px solid #eee;
     max-height: 400px;
     background: #fff;
-    box-shadow: 0 0 5px #d5d8da;
 }
 
 .post-info .post-bg {
@@ -275,14 +274,22 @@ strong {
     text-align: center;
     background-color: #000 !important;
     width: 100%;
-    height: 180px;
+    height: 215px;
     overflow: hidden;
 }
 
-.post-info .post-bg > img {
+.post-info .post-bg:hover i {
+    background-color: #1abc9c;
+}
+
+.post-info .post-bg a > img {
     object-fit: cover;
     transition: all .5s;
-    height: 180px;
+    height: 215px;
+}
+
+.post-info .post-bg a > img {
+    transform: scale(1.1);
 }
 
 .post-info .post-bg .top {
@@ -293,12 +300,12 @@ strong {
 }
 
 .post-info .post-bg .mask {
-    display: none;
     position: absolute;
-    top: 0;
+    bottom: 0;
     width: 100%;
-    height: 100%;
+    height: 20%;
     background-color: #000;
+    opacity: .4;
 }
 
 .ml-content .post-bg div.category {
@@ -342,12 +349,23 @@ strong {
     opacity: 1;
 }
 
-.ml-content .post-info:hover .show-btn a {
-    color: #1abc9c;
-}
-
 .post-info .post-title, .post-info .post-date{
  margin: 10px 2px;
+}
+
+.post-info .post-date {
+    position: absolute;
+    top: 176px;
+    color: #fff;
+    font-size: 12px;
+}
+
+.post-info .nums {
+    position: absolute;
+    top: 186px;
+    right: 28px;
+    color: #fff;
+    font-size: 12px;
 }
 
 .post-info .post-title {
@@ -401,13 +419,21 @@ strong {
 }
 
 .post-info .show-btn {
-    padding: 10px 0;
+    padding: 10px 0 16px 0;
 }
 
 .post-info .show-btn a {
-    display: block;
+    position: relative;
+    display: inline-block;
     color: #6c757d;
-    text-decoration: none;
+    border: 1px solid #e1e1e1;
+    padding: 4px 10px;
+
+}
+
+.post-info .show-btn a:hover {
+    border: 1px solid #1abc9c;
+    color: #1abc9c;
 }
 
 .pagination-bar {
