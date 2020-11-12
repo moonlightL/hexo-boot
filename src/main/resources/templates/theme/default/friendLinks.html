@@ -17,15 +17,13 @@
         <div class="ml-content-body">
             <h4 class="friend-link-title">博主网址</h4>
             <div class="row">
-                <div class="col-sm-6 col-md-4" th:each="friendLink,iterStat: ${bloggerList}">
-                    <div class="friend-link-item animate-box" data-animate-effect="fadeInUp">
-                        <a th:href="@{${friendLink.homeUrl}}" target="_blank">
-                            <div class="background" th:style="'background-color:' + ${friendLink.backgroundColor} ">
-                                <div class="title" th:text="${friendLink.title}"></div>
-                                <div class="link" th:text="${friendLink.homeUrl}"></div>
-                            </div>
+                <div class="col-md-4 animate-box" data-animate-effect="fadeInUp" th:each="friendLink,iterStat: ${bloggerList}">
+                    <div class="friend-link-item">
+                        <div class="bgColor" th:style="'background-color:' + ${friendLink.backgroundColor} "></div>
+                        <div class="info">
+                            <a th:href="@{${friendLink.homeUrl}}" th:text="${friendLink.title}" target="_blank"></a>
                             <div class="remark" th:text="${#strings.isEmpty(friendLink.remark) == true? '无' : friendLink.remark}"></div>
-                        </a>
+                        </div>
                     </div>
                 </div>
                 <div th:if="${#lists.isEmpty(bloggerList)}" th:style="'text-align:center;'" th:text="'~~暂时没有推荐的博主网址~~'"></div>
@@ -33,15 +31,13 @@
 
             <h4 class="friend-link-title">常用网址</h4>
             <div class="row">
-                <div class="col-sm-6 col-md-4" th:each="friendLink,iterStat: ${webSiteList}">
-                    <div class="friend-link-item animate-box" data-animate-effect="fadeInUp">
-                        <a th:href="@{${friendLink.homeUrl}}" target="_blank">
-                            <div class="background" th:style="'background-color:' + ${friendLink.backgroundColor} ">
-                                <div class="title" th:text="${friendLink.title}"></div>
-                                <div class="link" th:text="${friendLink.homeUrl}"></div>
-                            </div>
+                <div class="col-md-4 animate-box" data-animate-effect="fadeInUp" th:each="friendLink,iterStat: ${webSiteList}">
+                    <div class="friend-link-item">
+                        <div class="bgColor" th:style="'background-color:' + ${friendLink.backgroundColor} "></div>
+                        <div class="info">
+                            <a th:href="@{${friendLink.homeUrl}}" th:text="${friendLink.title}" target="_blank"></a>
                             <div class="remark" th:text="${#strings.isEmpty(friendLink.remark) == true? '无' : friendLink.remark}"></div>
-                        </a>
+                        </div>
                     </div>
                 </div>
                 <div th:if="${#lists.isEmpty(webSiteList)}" th:style="'text-align:center;'" th:text="'~~暂时没有推荐的常用网址~~'"></div>

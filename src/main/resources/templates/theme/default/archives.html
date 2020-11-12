@@ -17,7 +17,7 @@
         <div class="archive-body" id="archives">
             <div th:if="${pageInfo.total > 0}">
                 <div class='archive-content' th:each="map,iterStat : ${pageInfo.data}">
-                    <h3 class="animate-box" data-animate-effect="fadeInDown">[[${map.key}]]</h3>
+                    <h3 class="animate-box" data-animate-effect="fadeInUp">[[${map.key}]]</h3>
                     <div class='archives'>
                         <div class="animate-box" data-animate-effect="fadeInUp" th:each="vo,iterStat2 : ${map.value}">
                             <a th:href="@{'/'+${vo.link}}"><span class="time">[[${vo.month} + '-' + ${vo.day}]]</span>[[${vo.title}]]</a>
@@ -32,7 +32,7 @@
                 </div>
             </div>
         </div>
-        <nav class="pagination-bar" th:if="${#maps.isEmpty(pageInfo.data) eq false}">
+        <nav class="pagination-bar animate-box" data-animate-effect="fadeInUp" th:if="${#maps.isEmpty(pageInfo.data) eq false}">
         <span th:if="${pageInfo.hasPreviousPage}">
             <a class="prev page-numbers" th:href="@{${pageInfo.pageNum-1} == 1 ? '/archives/' : '/archives/page/' + ${pageInfo.pageNum-1}+'/'}" ><i class="fa fa-angle-left"></i></a>
         </span>

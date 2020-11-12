@@ -15,7 +15,7 @@
         </div>
 
         <div class="ml-content">
-            <div id="postContainer" class="postContainer animated fadeIn">
+            <div id="postContainer" class="postContainer animate-box" data-animate-effect="fadeIn">
                 <header class="post-header">
                     <div class="blogger-info">
                         <img class="hidden-xs" th:src="@{${#strings.isEmpty(#servletContext.getAttribute('configMap')['logo_url']) != true ? #strings.isEmpty(#servletContext.getAttribute('configMap')['logo_url']) : prefix + '/source/images/logo.png'}}">

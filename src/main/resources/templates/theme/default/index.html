@@ -15,7 +15,7 @@
        <div class="ml-content">
            <div class="row" >
                <div class="post col-md-4 col-sm-6 col-xs-12" th:each="post,iterStat : ${pageInfo.data}">
-                   <div class="post-info animate-box" data-animate-effect="fadeIn">
+                   <div class="post-info animate-box" data-animate-effect="fadeInUp">
                        <div class="post-bg">
                            <a th:href="@{'/' + ${post.link}}">
                                <span th:class="${post.reprint == false ? 'originality' : 'reprint'}" th:text="${post.reprint == false ? '原创' : '转载'}"></span>
@@ -43,7 +43,7 @@
                    </div>
                </div>
            </div>
-           <nav class="pagination-bar">
+           <nav class="pagination-bar animate-box" data-animate-effect="fadeInUp">
             <span th:if="${pageInfo.hasPreviousPage}">
                 <a class="prev page-numbers" th:href="@{${pageInfo.pageNum-1} == 1 ? '/' : '/page/' + ${pageInfo.pageNum-1}+'/'}" ><i class="fa fa-angle-left"></i></a>
             </span>

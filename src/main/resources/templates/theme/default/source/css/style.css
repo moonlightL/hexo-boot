@@ -34,19 +34,19 @@ body::-webkit-scrollbar-thumb {
  }
 
 ::selection {
-  background:#1abc9c;
+  background: #37b1f3;
   color: #fff
 }
 
 ::-moz-selection {
-  background:#1abc9c;
+  background:#37b1f3;
   color: #fff
 }
 
 /** 重置 bootstrap start  */
 
 a {
-  color: #1abc9c;
+  color: #37b1f3;
   text-decoration: none !important;
 }
 
@@ -64,8 +64,8 @@ strong {
 }
 
 .btn-primary {
-  background-color: #1abc9c;
-  border-color: #1abc9c;
+  background-color: #37b1f3;
+  border-color: #37b1f3;
 }
 
 .btn-primary:hover {
@@ -89,7 +89,7 @@ strong {
 }
 
 .form-control:focus {
-  border-color: #1abc9c;
+  border-color: #37b1f3;
   box-shadow:none;
 }
 
@@ -111,91 +111,13 @@ strong {
 
 /** 重置 bootstrap end  */
 
-
-/* -----------------------------------------------------------------
-    - Preloader
------------------------------------------------------------------ */
-.preloader {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #fff;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    text-align: center;
-    z-index: 1106;
-    opacity: 1;
-}
-.preloader > * {
-    min-width: 0;
-}
-.preloader__wrap {
-    width: 100%;
-    max-width: 9.375rem;
-}
-.preloader__progress {
-    background: #fff;
-    height: 0.2rem;
-    position: absolute;
-    top: 0;
-    left: 0;
-    overflow: hidden;
-    width: 100%;
-}
-.preloader__progress span {
-    background: #1abc9c;
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 0;
-}
-
-.circle-pulse > * {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    border-radius: 50%;
-    box-sizing: border-box;
-    transform: scale(0);
-    animation: pulse 1.6s linear infinite;
-}
-
-.circle-pulse__1 {
-    width: 6rem;
-    height: 6rem;
-    margin-top: -3rem;
-    margin-left: -3rem;
-    background-color: #1abc9c;
-}
-
-.circle-pulse__2 {
-    width: 4.8rem;
-    height: 4.8rem;
-    margin-top: -2.4rem;
-    margin-left: -2.4rem;
-    background-color: #1ed0ad;
-    animation-delay: -0.8s;
-}
-
-@keyframes pulse {
-    0% {
-        transform: scale(0, 0);
-        opacity: 1;
-    }
-    100% {
-        transform: scale(1, 1);
-        opacity: 0;
-    }
-}
-
 /** 主页 start  */
 .container {
   max-width: 960px;
+}
+
+.animate-box {
+    opacity: 0;
 }
 
 .navbar {
@@ -218,12 +140,12 @@ strong {
 }
 
 .navbar li.active a {
-    background-color: #1abc9c !important;
+    background-color: #37b1f3 !important;
     color: #fff !important;
 }
 
 .navbar li a:hover {
-    background-color: #1abc9c !important;
+    background-color: #37b1f3 !important;
     color: #fff !important;
 }
 
@@ -323,7 +245,7 @@ strong {
 }
 
 .post-info .post-bg:hover i {
-    background-color: #1abc9c;
+    background-color: #37b1f3;
 }
 
 .post-info .post-bg a > img {
@@ -429,7 +351,7 @@ strong {
     top: 10px;
     left: 10px;
     color: #fff;
-    background-color: #1abc9c;
+    background-color: #37b1f3;
     padding: 3px 6px;
     font-size: 12px;
     z-index: 3;
@@ -474,14 +396,14 @@ strong {
 .post-info .show-btn a {
     position: relative;
     display: inline-block;
-    border: 1px solid #1abc9c;
-    color: #1abc9c;
+    border: 1px solid #37b1f3;
+    color: #37b1f3;
     padding: 4px 10px;
     transition: all .5s;
 }
 
 .post-info .show-btn a:hover {
-    background-color: #1abc9c;
+    background-color: #37b1f3;
     color: #fff;
 }
 
@@ -507,12 +429,12 @@ strong {
 }
 
 .pagination-bar a.current {
-    background-color: #1abc9c;
+    background-color: #37b1f3;
     color: #fff;
 }
 
 .pagination-bar a:hover {
-   background-color: #1abc9c;
+   background-color: #37b1f3;
    color: #fff;
 }
 
@@ -535,7 +457,7 @@ strong {
 }
 
 .to-top:hover {
-  background-color: #1abc9c;
+  background-color: #37b1f3;
   color: #fff;
 }
 
@@ -552,7 +474,7 @@ strong {
 }
 
 .ml-content .footer-copyright a:hover{
-  color: #1abc9c;
+  color: #37b1f3;
 }
 
 .ml-content .footer-copyright .contract-info {
@@ -586,7 +508,7 @@ strong {
     height: 18px;
     border: 4px solid #daf9f5;
     border-radius: 50%;
-    background: #1abc9c;
+    background: #37b1f3;
 }
 
 .archive-body:after {
@@ -598,7 +520,7 @@ strong {
     height: 18px;
     border: 4px solid #daf9f5;
     border-radius: 50%;
-    background: #1abc9c;
+    background: #37b1f3;
 }
 
 .archives a {
@@ -620,7 +542,7 @@ strong {
     transition: all .3s;
     content: "";
     display: inline-block;
-    background: #1abc9c;
+    background: #37b1f3;
     z-index: -1;
     height: 2px;
     width: 100%;
@@ -650,7 +572,7 @@ strong {
     height: 18px;
     border: 4px solid #daf9f5;
     border-radius: 50%;
-    background: #1abc9c;
+    background: #37b1f3;
     box-sizing: border-box;
 }
 
@@ -698,41 +620,34 @@ h4.friend-link-title {
 
 .friend-link-item {
     position: relative;
-    border: 1px solid #e1e1e1;
     width: 100%;
-    text-align:center;
-    background-size: cover;
     margin-bottom: 2em;
     transition: all .3s;
-    box-shadow: 0 0 5px #d5d8da;
+    border: 1px solid #e1e1e1;
 }
 
 .friend-link-item:hover {
     box-shadow: 0 1px 10px #d0cfcf;
 }
 
-.friend-link-item .background {
-    height:85px;
-    text-align: left;
-    padding: 20px 20px 0 20px;
-    color: #fff !important;
+.friend-link-item .bgColor {
+    width: 62px;
+    height: 62px;
 }
 
-.friend-link-item div.title {
-    font-weight: 600;
-
-}
-
-.friend-link-item div.link {
+.friend-link-item .info {
+    position: absolute;
+    width: 180px;
+    height: 62px;
+    top: 5px;
+    left: 72px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
 .friend-link-item .remark {
-    height:85px;
     text-align: left;
-    padding: 20px;
     color: #6c757d;
 }
 
@@ -751,7 +666,7 @@ h4.friend-link-title {
 
 .comment .blog-master {
     display: inline-block;
-    background: #1abc9c;
+    background: #37b1f3;
     padding: 2px 6px;
     color: #fff;
     border-radius: 2px;
@@ -798,7 +713,7 @@ h4.friend-link-title {
 }
 
 .comment-reply h4 a:hover {
-    color: #1abc9c;
+    color: #37b1f3;
 }
 
 .comment-reply .panel-body textarea {
@@ -901,7 +816,7 @@ h4.friend-link-title {
 
 /*.post-content .dec {
     display: inline-block;
-    background-color: #1abc9c;
+    background-color: #37b1f3;
     padding: 8px 12px;
     color: #fff;
 }*/
@@ -1112,7 +1027,7 @@ h4.friend-link-title {
 }
 
 .post-content a:hover, .post-copyright a:hover,.post-other-info a:hover{
-  color:#1abc9c;
+  color:#37b1f3;
 }
 
 .post-other-info a.prev:before {
@@ -1122,7 +1037,7 @@ h4.friend-link-title {
   left: -10px;
   transform: scale(0);
   transition: all .2s;
-  color:#1abc9c;
+  color:#37b1f3;
 }
 
 .post-other-info a.prev:hover {
@@ -1141,7 +1056,7 @@ h4.friend-link-title {
   right: -10px;
   transform: scale(0);
   transition: all .2s;
-  color:#1abc9c;
+  color:#37b1f3;
 }
 
 .post-other-info a.next:hover {
@@ -1319,7 +1234,7 @@ h4.friend-link-title {
     }
 
     .archives a:hover{
-      color: #1abc9c;
+      color: #37b1f3;
       text-decoration: none;
     }
 
@@ -1340,7 +1255,7 @@ h4.friend-link-title {
       height: 0px;
       border: none;
       border-radius: 50%;
-      background: #1abc9c;
+      background: #37b1f3;
       position: absolute;
       left: -50px;
     }
@@ -1609,23 +1524,23 @@ pre, .highlight {
 }
 
 .real-time-search-container .real-time-search-btn:hover {
-    background-color: #1abc9c;
+    background-color: #37b1f3;
     color: #fff;
 }
 
 .real-time-search-container .real-time-search-body .highlight_list li:hover {
-    background-color: #1abc9c;
+    background-color: #37b1f3;
     color: #fff;
 }
 
 .real-time-search-container .real-time-search-body .highlight_list  a .highlight {
-    background-color: #1abc9c !important;
+    background-color: #37b1f3 !important;
     color: #fff !important;
     padding: 5px;
 }
 
 .color-turquoise {
-    background-color: #1ABC9C;
+    background-color: #37b1f3;
     color: #fff;
 }
 
@@ -1689,8 +1604,8 @@ pre, .highlight {
 
 .comment-data-body .comment-data-body-btns .send-message-btn,
 .second-comment-data-body .comment-data-body-btns .send-message-btn{
-    background-color: #1ABC9C !important;
-    border: 1px solid #1ABC9C !important;
+    background-color: #37b1f3 !important;
+    border: 1px solid #37b1f3 !important;
 }
 
 .comment-data-body .comment-data-body-btns .send-message-btn:hover,
@@ -1699,11 +1614,11 @@ pre, .highlight {
 }
 
 .comment-container .comment-list .comment-list-item .date {
-    background-color: #1ABC9C !important;
+    background-color: #37b1f3 !important;
 }
 
 .comment-list .comment-list-page-bar ul li {
-    background-color: #1ABC9C !important;
+    background-color: #37b1f3 !important;
 }
 
 .comment-list .comment-list-page-bar ul li {
@@ -1716,10 +1631,10 @@ pre, .highlight {
 }
 
 .comment-list .comment-list-page-bar ul li.active {
-    background-color: #1ABC9C !important;
+    background-color: #37b1f3 !important;
 }
 
 .comment-list .comment-list-page-bar ul li a:hover {
-    background-color: #1ABC9C !important;
+    background-color: #37b1f3 !important;
 }
 
