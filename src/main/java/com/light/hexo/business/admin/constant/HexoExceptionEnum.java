@@ -61,6 +61,7 @@ public enum HexoExceptionEnum implements GlobalExceptionMap {
 
     // 11xxx --> 主题
     ERROR_THEME_NOT_EXIST(11001, "该主题不存在"),
+    ERROR_THEME_URL_WRONG(11002, "主题地址格式不正确"),
 
     // 12xxx --> 前端
     ERROR_REPEAT_PRAISE_POST(12001, "已点赞，请勿重复操作")

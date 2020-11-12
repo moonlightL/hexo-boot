@@ -41,6 +41,16 @@ public class ThemeController extends BaseController {
     private ThemeExtendService themeExtendService;
 
     /**
+     * 拉取主题
+     * @param resultMap
+     * @return
+     */
+    @GetMapping("/fetchUI.html")
+    public String fetchUI(Map<String,Object> resultMap) {
+        return render("fetchUI", resultMap);
+    }
+
+    /**
      * 主题配置页
      * @param id
      * @param resultMap
@@ -94,6 +104,30 @@ public class ThemeController extends BaseController {
         Theme theme = request.toDoModel();
         this.themeService.useTheme(theme);
         return Result.success();
+    }
+
+    /**
+     * 拉取主题
+     * @param themeUrl
+     * @return
+     */
+    @RequestMapping("/fetchTheme.json")
+    @ResponseBody
+    public Result fetchTheme(@RequestParam String themeUrl) {
+        this.themeService.fetchTheme(themeUrl);
+        return Result.success();
+    }
+
+    /**
+     * 检测主题
+     * @param themeName
+     * @return
+     */
+    @RequestMapping("/checkThemeName.json")
+    @ResponseBody
+    public Result checkThemeName(@RequestParam String themeName) {
+        Theme theme = this.themeService.checkTheme(themeName);
+        return Result.success(theme != null);
     }
 
     /**

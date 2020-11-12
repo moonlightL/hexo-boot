@@ -24,6 +24,10 @@ import com.light.hexo.common.model.PostRequest;
 import com.light.hexo.common.util.*;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.annotations.Param;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
@@ -87,7 +91,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
         Example example = Example.builder(Post.class)
                 .select("id", "title", "link", "coverUrl", "categoryId",
                         "readNum", "commentNum", "praiseNum",
-                        "publishDate", "comment", "top").orderByDesc("createTime").build();
+                        "publishDate","publish", "comment", "top").orderByDesc("createTime").build();
         Example.Criteria criteria = example.createCriteria();
 
         Boolean publish = postRequest.getPublish();
@@ -661,14 +665,29 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
     }
 
     private String interceptContent(String content) {
+        StringBuilder result = new StringBuilder();
         int index = content.indexOf("<!---->");
         if (index > -1) {
-            content = content.substring(0, index);
+            String tmp = content.substring(0, index);
+            if (StringUtils.isNotBlank(tmp)) {
+                content = tmp;
+            }
         }
 
-        int length = content.length();
-        int targetLength = length > 500 ? 250 : Double.valueOf(length * 0.3).intValue();
-        return content.substring(0, targetLength);
+        String html = MarkdownUtil.md2html(content);
+        Elements elements = Jsoup.parse(html).select("p");
+        if (elements.size() > 3) {
+            List<Element> elementList = elements.subList(0, 3);
+            elementList.forEach(i -> {
+                result.append(i.text()).append("\n");
+            });
+        } else {
+            elements.forEach(i -> {
+                result.append(i.text()).append("\n");
+            });
+        }
+
+        return result.toString();
     }
 
     private void saveTags(Post post, boolean isEdit) {

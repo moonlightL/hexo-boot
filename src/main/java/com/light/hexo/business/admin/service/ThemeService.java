@@ -83,4 +83,11 @@ public interface ThemeService extends BaseService<Theme> {
      */
     void editThemeFileContent(String path, String content) throws GlobalException, IOException;
 
+    /**
+     * 拉取主题
+     * @param themeUrl
+     * @throws GlobalException
+     * @throws IOException
+     */
+    void fetchTheme(String themeUrl) throws GlobalException;
 }

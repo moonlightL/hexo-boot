@@ -104,16 +104,30 @@ mvn clean package，打出名为 ROOT.war 文件，将其复制到 tomcat 的 we
 
 ## 五、添加主题
 
+### 5.1 方式一
+
 下载主题源码，修改名称（比如 hexo-boot-theme-abc 改成 abc），然后将整个文件夹复制到项目的 resources/templates/theme 下（与 default 目录同级），启动项目即可。
 
 如若项目已经启动运行，也可复制到 classes/templates/theme 下即可。
 
+### 5.2 方式二
+
+进入博客后端管理界面 -> 更换主题 -> 拉取
+
+输入主题的 git 地址，点击“拉取”按钮，即可等待下载安装
+
 **目前已开源的主题:**
 
 [hexo-boot-theme-vCard](https://github.com/moonlightL/hexo-boot-theme-vCard)
+
+[hexo-boot-theme-breezyCV](https://github.com/moonlightL/hexo-boot-theme-breezyCV)
+
+如果网络不佳，无法访问 GitHub，也可以访问 [码云](https://gitee.com/moonlightL) ，找到主题进行下载。
 
 ## 六、更新日志
 
 2020-10-22 上传开源
 
 2020-10-30 扩展主题配置，在线编辑主题文件，调整评论区插件的展示列表
+
+2020-11-12 新增在线下载拉取主题功能

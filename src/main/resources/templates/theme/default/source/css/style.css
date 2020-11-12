@@ -360,6 +360,11 @@ strong {
     font-size: 12px;
 }
 
+.post-info .post-summary {
+    height: 64px;
+    overflow: hidden;
+}
+
 .post-info .nums {
     position: absolute;
     top: 186px;
@@ -419,7 +424,7 @@ strong {
 }
 
 .post-info .show-btn {
-    padding: 10px 0 16px 0;
+    padding: 16px 0;
 }
 
 .post-info .show-btn a {
@@ -641,6 +646,12 @@ strong {
 /** 分类 end  */
 
 /** 友链 start  */
+
+h4.friend-link-title {
+    border-bottom: 1px solid #d4dcda;
+    padding-bottom: 5px;
+}
+
 .friend-link-item {
     position: relative;
     border: 1px solid #e1e1e1;

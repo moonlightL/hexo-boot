@@ -31,6 +31,7 @@ public class PostRequest extends BaseRequest<Post> {
     /**
      * 文章内容（markdown 格式）
      */
+    @NotEmpty(message = "文章内容不能为空", groups = {BaseRequest.Save.class, BaseRequest.Update.class})
     private String content;
 
     /**

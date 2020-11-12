@@ -12,6 +12,7 @@
     <h2 class="content-heading" id="toolbar">
         <button type="button" class="btn btn-sm btn-secondary float-right hexo-query" data-query-area="queryArea"><i class="fa fa-search text-success mr-5"></i> 查询</button>
         <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-refresh"><i class="fa fa-refresh mr-5"></i> 刷新</button>
+        <button type="button" class="btn btn-sm btn-primary float-right mr-5 hexo-fetch"><i class="fa fa-download mr-5"></i> 拉取</button>
         <i class="fa fa fa-files-o"></i> 主题列表 <span id="totalNum"></span>
     </h2>
     <div class="block block-fx-shadow hide" id="queryArea">
@@ -41,13 +42,15 @@
 <div th:replace="~{admin/common :: common-script}"></div>
 <script th:inline="javascript">
 
-    let ThemeManager = {
+    window.ThemeManager = {
         params: {},
         init: function() {
 
             $("#toolbar").find("button").on("click", function(e) {
                 let $target = $(this);
-                if ($target.hasClass("hexo-refresh")) {
+                if ($target.hasClass("hexo-fetch")) {
+                    $.hexo.modal._window("拉取主题", BASE_URL + "/fetchUI.html", 780, 340, false);
+                } else if ($target.hasClass("hexo-refresh")) {
                     ThemeManager.query();
                 } else if ($target.hasClass("hexo-query")) {
                     let $area = $("#" + $target.data("queryArea"));

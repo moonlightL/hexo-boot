@@ -1,5 +1,10 @@
 package com.light.hexo.business.admin.service.impl;
 
+import cn.hutool.Hutool;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.StreamProgress;
+import cn.hutool.core.lang.Console;
+import cn.hutool.http.HttpUtil;
 import com.light.hexo.business.admin.constant.HexoExceptionEnum;
 import com.light.hexo.business.admin.mapper.ThemeMapper;
 import com.light.hexo.business.admin.model.Theme;
@@ -19,6 +24,7 @@ import com.light.hexo.common.util.EhcacheUtil;
 import com.light.hexo.common.util.ExceptionUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,7 +36,9 @@ import tk.mybatis.mapper.entity.Example;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.channels.FileChannel;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -206,6 +214,52 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
         }
 
         FileUtils.writeStringToFile(file, content, "UTF-8", false);
+    }
+
+    @Override
+    public void fetchTheme(String themeUrl) throws GlobalException {
+
+        int index = themeUrl.indexOf("hexo-boot-theme");
+        if (index < 0) {
+            ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_THEME_URL_WRONG);
+        }
+
+        String ext = FileUtil.extName(themeUrl);
+        if (!"git".equals(ext)) {
+            ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_THEME_URL_WRONG);
+        }
+
+        String[] split = themeUrl.split("-");
+        String tmp = split[split.length - 1];
+        String themeName = tmp.split("\\.")[0];
+
+        String path = this.getClass().getClassLoader().getResource("").getPath();
+        File file = new File(path, "templates/theme");
+
+        InputStream in = null;
+        Process process = null;
+        String result = null;
+        try {
+            process = Runtime.getRuntime().exec("git clone " + themeUrl + " " + file + "/" +themeName);
+            in = process.getInputStream();
+            result = IOUtils.toString(in, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (process != null) {
+                process.destroy();
+            }
+
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        System.out.println(result);
     }
 
     private List<TreeNode> wrapTreeNode(File dir, TreeNode parent) {
