@@ -8,8 +8,8 @@
        <div class="image-banner" style="color: #fff">
            <div class="image-content"><img th:src="@{${prefix} + '/source/images/index.png'}" class="magic img-responsive" ></div>
            <div class="descr"><a th:href="@{/}">首页</a></div>
-           <div class="word_1 animated fadeInRight">不积跬步,无以至千里</div>
-           <div class="word_2 animated fadeInLeft">不积小流,无以成江海</div>
+           <div class="word_1 animated fadeInRight">不积跬步，无以至千里</div>
+           <div class="word_2 animated fadeInLeft">不积小流，无以成江海</div>
        </div>
 
        <div class="ml-content">
@@ -18,7 +18,7 @@
                    <div class="post-info animate-box" data-animate-effect="fadeInUp">
                        <div class="post-bg">
                            <a th:href="@{'/' + ${post.link}}">
-                               <span th:class="${post.reprint == false ? 'originality' : 'reprint'}" th:text="${post.reprint == false ? '原创' : '转载'}"></span>
+                               <span class="reprint" th:if="${post.reprint}">转载</span>
                                <span class="top" th:if="${post.top}"><img src="/theme/default/source/images/article-top.png" alt="" width="38" height="38"></span>
                                <img class="lazy" th:data-original="@{${post.coverUrl}}" alt="" width="100%" height="100%">
                                <div class="mask"></div>

@@ -29,6 +29,7 @@
     });
     };
 
+    // 气泡
     let circleMagic = function() {
         $('.image-content').circleMagic({
             radius: 16,
@@ -38,6 +39,7 @@
         });
     };
 
+    // 滚动
     let contentWayPoint = function () {
         let i = 0;
         $('.animate-box').waypoint(function (direction) {
