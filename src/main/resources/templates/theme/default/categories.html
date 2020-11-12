@@ -6,14 +6,18 @@
 </head>
 <body>
 <div layout:fragment="content">
+    <!-- 图片 -->
+    <div class="image-banner" style="color: #fff">
+        <div class="image-content"><img th:src="@{${prefix} + '/source/images/index.png'}" class="magic img-responsive" ></div>
+        <div class="descr"><a th:href="@{/}">首页</a>  /  <a href="javascript:void(0)">分类</a></div>
+        <div class="title">分类</div>
+    </div>
+
     <div class="ml-content">
-        <div class="ml-content-title">
-            <h3>分类([[${categoryNum}]])</h3>
-        </div>
         <div class="ml-content-body">
             <div class="row">
-                <div class="col-sm-6  col-md-3" aos="fade-up" aos-once="true" th:aos-delay="${iterStat.index * 150}" th:each="category,iterStat: ${categoryList}">
-                   <div  class="category-item">
+                <div class="col-sm-6 col-md-3" th:each="category,iterStat: ${categoryList}">
+                   <div class="category-item animate-box" data-animate-effect="fadeInUp">
                        <a th:href="@{'/categories/'+${category.name}+'/'}">
                            <img th:src="@{${category.coverUrl}}" alt="">
                            <div class="descr">

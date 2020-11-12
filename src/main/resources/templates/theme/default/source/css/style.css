@@ -20,15 +20,15 @@ body, th, td, input, textarea {
 }
 
 body::-webkit-scrollbar {
-  width:5px;
+  width:8px;
   height:0;
   background:#ccc;
   border-radius:10px;
 }
 body::-webkit-scrollbar-thumb {
-   display:block;
-   width:5px;
-   margin:0 auto;
+   display: block;
+   width: 8px;
+   margin: 0 auto;
    border-radius: 10px;
    background:#aaa;
  }
@@ -202,7 +202,7 @@ strong {
     background-color: #fff;
     border-radius: 0;
     font-weight: bold;
-    box-shadow: 0 0 5px #c0c0c1;
+    box-shadow: 0 0 5px #e5e5e8;
     padding: 0 1rem;
 }
 
@@ -234,15 +234,59 @@ strong {
     border-radius: 3px;
 }
 
-.image-show {
+.image-banner {
     position: relative;
-    box-shadow: 0 0 36px #c0c0c1;
+    box-shadow: 0 0 36px #e5e5e8;
+    margin-bottom: 18px;
 }
 
-.image-show .descr {
-  position: absolute;
-  left:60px;
-  bottom:50px;
+.image-banner .image-content {
+    position: relative;
+    width: 100%;
+    height: 274px;
+}
+
+.image-banner .image-content canvas {
+    position: absolute;
+    top: 0;
+}
+
+.image-banner .descr {
+    background-color: #fff;
+    color: #6c757d;
+    padding: 10px 30px;
+}
+
+.image-banner .descr a {
+    color: #6c757d !important;
+}
+
+.image-banner .title {
+    position: absolute;
+    display: inline-block;
+    max-width: 600px;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    padding: 10px 20px;
+    background: rgba(0, 0, 0, .4);
+    color: #fff;
+    font-size: 18px;
+}
+
+.image-banner .word_1,.image-banner .word_2 {
+    position: absolute;
+    font-size: 20px;
+}
+
+.image-banner .word_1 {
+    bottom: 110px;
+    right: 56px;
+}
+
+.image-banner .word_2 {
+    bottom: 70px;
+    right: 16px;
 }
 
 .ml-content {
@@ -250,7 +294,7 @@ strong {
   background-color: #fff;
   padding: 2em;
   margin-bottom: 1em;
-  box-shadow: 0 0 5px #c0c0c1;
+  box-shadow: 0 0 5px #e5e5e8;
 }
 
 .ml-content-title {
@@ -430,15 +474,15 @@ strong {
 .post-info .show-btn a {
     position: relative;
     display: inline-block;
-    color: #6c757d;
-    border: 1px solid #e1e1e1;
+    border: 1px solid #1abc9c;
+    color: #1abc9c;
     padding: 4px 10px;
-
+    transition: all .5s;
 }
 
 .post-info .show-btn a:hover {
-    border: 1px solid #1abc9c;
-    color: #1abc9c;
+    background-color: #1abc9c;
+    color: #fff;
 }
 
 .pagination-bar {
@@ -648,8 +692,8 @@ strong {
 /** 友链 start  */
 
 h4.friend-link-title {
-    border-bottom: 1px solid #d4dcda;
-    padding-bottom: 5px;
+    border-left: 3px solid #d4dcda;
+    padding-left: 5px;
 }
 
 .friend-link-item {
@@ -823,10 +867,9 @@ h4.friend-link-title {
 
 .post-header {
   position: relative;
-  text-align: center;
   margin-bottom:12px;
-  padding:10px 0px;
-  border-bottom: 1px dashed #ccc;
+  padding: 0 0 10px 0;
+  border-bottom: 1px solid #dee1e2;
 }
 
 .post-content {
@@ -891,22 +934,6 @@ h4.friend-link-title {
   border-top: 1px solid #ddd;
   background: none;
 }
-/*.post-content code {*/
-/*  padding: 3px;*/
-/*  border-radius: 3px;*/
-/*  font-size: 14px;*/
-/*}*/
-/*.post-content pre {*/
-/*  border: 1px solid #ddd;*/
-/*  border-radius:0;*/
-/*  padding:0;*/
-/*}*/
-/*.post-content pre code {*/
-/*  padding: 6px;*/
-/*}*/
-/*.post-content pre, .post-content code, .post-content kbd {*/
-/*  font-family: Play,"Microsoft YaHei";*/
-/*}*/
 
 .post-content p.editormd-tex {
   text-align: center;
@@ -935,6 +962,36 @@ h4.friend-link-title {
 
 .postContainer h1.post-title {
     font-size: 30px !important;
+}
+
+.postContainer .post-header {
+    position: relative;
+}
+
+.postContainer .post-header img {
+    width: 48px;
+    height: 48px;
+    border-radius: 3px;
+}
+
+.postContainer .post-header .blog-author,
+.postContainer .post-header .post-date {
+    position: absolute;
+    left: 64px;
+}
+
+.postContainer .post-header .post-date {
+    top: 24px;
+}
+
+.postContainer .post-header .post-read,
+.postContainer .post-header .post-comment {
+    position: absolute;
+    right: 0;
+}
+
+.postContainer .post-header .post-comment {
+    top: 24px;
 }
 
 .postContainer .highlight {
@@ -1017,7 +1074,6 @@ h4.friend-link-title {
 }
 
 .postContainer .reward {
-    border: 1px dashed #ccc;
     margin: 12px 0;
     padding: 10px 0;
 }
@@ -1042,7 +1098,7 @@ h4.friend-link-title {
 }
 
 .post-other-info {
-  border-top: 1px dashed #ccc;
+  border-top: 1px solid #dee1e2;
   padding:2em 0;
 }
 
@@ -1195,22 +1251,16 @@ h4.friend-link-title {
        font-size: 12px;
    }
 
-   .image-show img {
+   .image-banner img {
        height: 180px;
    }
 
-  .image-show .descr {
-      position: absolute;
-      left:30px;
-      bottom:20px;
-  }
+    .image-banner .image-content {
+        height: 180px;
+    }
 
-    .image-show .descr h2 {
-         font-size: 16px;
-     }
-
-    .image-show .descr h4 {
-        font-size: 12px;
+    .image-banner .descr {
+        padding: 10px 12px;
     }
 
     .ml-content .post-info {
@@ -1301,12 +1351,6 @@ h4.friend-link-title {
 
     /** 归档 end **/
 
-    /** 文章 end **/  
-    .postContainer h1.post-title {
-        font-size: 24px !important;
-    }
-    /** 文章 end **/
-
     /**留言start **/
 
     .comment {
@@ -1361,12 +1405,21 @@ h4.friend-link-title {
          font-size: 12px;
      }
 
-    .post-header {
-      position: relative;
-      text-align: center;
-      margin-bottom:12px;
-      padding:10px 0px;
-      border-bottom: 1px dashed #ccc;
+    .postContainer .post-header {
+        position: relative;
+        margin-bottom:12px;
+        padding:10px 0px;
+        border-bottom: 1px solid #dee1e2;
+        height: 56px;
+        font-size: 12px;
+    }
+
+    .postContainer .post-header .blog-author, .postContainer .post-header .post-date {
+        left: 0;
+    }
+
+    .postContainer .post-header .post-date, .postContainer .post-header .post-comment{
+        top: 30px
     }
 
     .post-content {

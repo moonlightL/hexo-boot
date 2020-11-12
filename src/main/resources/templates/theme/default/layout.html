@@ -22,17 +22,6 @@
     <link rel="stylesheet" th:href="@{${prefix} + '/source/css/style.css'}"/>
 </head>
 <body>
-    <!-- Preloader -->
-    <div class="preloader">
-        <div class="preloader__wrap">
-            <div class="circle-pulse">
-                <div class="circle-pulse__1"></div>
-                <div class="circle-pulse__2"></div>
-            </div>
-            <div class="preloader__progress"><span></span></div>
-        </div>
-    </div>
-
     <div class="ml-container" id="pageContainer">
         <div class="container">
             <!-- 首部 -->
@@ -54,7 +43,7 @@
                             </div>
                             <div id="navbar" class="navbar-collapse collapse">
                                 <ul class="nav navbar-nav navbar-right">
-                                    <li th:class="${menu eq 'index' ? 'active' : ''}"><a th:href="@{/}">主页</a></li>
+                                    <li th:class="${menu eq 'index' ? 'active' : ''}"><a th:href="@{/}">首页</a></li>
                                     <li th:class="${menu eq 'archives' ? 'active' : ''}"><a th:href="@{/archives/}">归档</a></li>
                                     <li th:class="${menu eq 'categories' ? 'active' : ''}"><a th:href="@{/categories/}">分类</a></li>
                                     <li th:class="${menu eq 'friendLinks' ? 'active' : ''}"><a th:href="@{/friendLinks/}">友链</a></li>
@@ -65,19 +54,6 @@
                     </nav>
                 </div>
             </header>
-
-            <!-- 图片 -->
-            <div class="image-show" style="color: #fff">
-                <a href="#"><img th:src="@{${prefix} + '/source/images/index.png'}" class="img-responsive" ></a>
-                <div class="descr" aos="fade-left" aos-delay="400">
-                    <h2>人生何处似樽前</h2>
-                </div>
-            </div>
-
-            <!-- 公告 -->
-            <!--<div class="ml-content">
-                <marquee  direction="left" scrollamount="100" scrolldelay="1000" width="100%" onmouseover="this.stop();" onmouseout="this.start();"  style="width: 100%;"><i class="fa fa-bullhorn"></i>&nbsp;充值公告：首充100送1元</marquee>
-            </div>-->
 
             <!-- 内容 -->
             <div layout:fragment="content" ></div>
@@ -117,7 +93,8 @@
     <script type='text/javascript' th:src="@{${prefix} + '/source/js/jqueryAos.js/dist/aos.js'}" ></script>
     <script type='text/javascript' th:src="@{'/admin/assets/custom/jquery-search/jquery.hideseek.min.js'}" ></script>
     <script type='text/javascript' th:src="@{'/admin/assets/custom/jquery-search/jquery.search.js'}" ></script>
-    <script type='text/javascript' th:src="@{${prefix} + '/source/js/anime.min.js'}"></script>
+    <script type='text/javascript' th:src="@{${prefix} + '/source/js/waypoints/jquery.waypoints.min.js'}"></script>
+    <script type='text/javascript' th:src="@{${prefix} + '/source/js/circleMagic/circleMagic.min.js'}"></script>
     <script type='text/javascript' th:src="@{${prefix} + '/source/js/main.js'}"></script>
     <span th:if="${isDetail == false}">
         <script type='text/javascript' th:src="@{${prefix} + '/source/js/jqueryLazyload/jquery.lazyload.min.js'}"></script>

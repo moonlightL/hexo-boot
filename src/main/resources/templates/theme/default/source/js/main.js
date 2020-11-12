@@ -1,13 +1,7 @@
 ;(function() {
 
-    AOS.init({
-        easing: 'ease-out-back',
-        duration: 1000,
-        disable: 'mobile'
-    });
-
-  // 返回顶部
-  let goBack = function() {
+    // 返回顶部
+    let goBack = function() {
       let toTop = $("#toTop");
       $(window).scroll(function(e) {
            let scrollTop = $(this).scrollTop();
@@ -25,51 +19,56 @@
               scrollTop: $('html').offset().top
             }, 500);
       });
-  };
+    };
 
-  // 搜索
-  let search = function () {
+    // 搜索
+    let search = function () {
     $("#real-time-search-container").RealTimeSearch({
         searchId: "search-btn",
         listUrl: "/postList.json"
     });
-  };
-
-    let preloader = function() {
-        let tl = anime.timeline({});
-        tl.add({
-                targets: '.preloader',
-                duration: 1,
-                opacity: 1
-            })
-            .add({
-                targets: '.circle-pulse',
-                duration: 300,
-                //delay: 500,
-                opacity: 1,
-                zIndex: '-1',
-                easing: 'easeInOutQuart'
-            },'+=500')
-            .add({
-                targets: '.preloader__progress span',
-                duration: 500,
-                width: '100%',
-                easing: 'easeInOutQuart'
-            },'-=500')
-            .add({
-                targets: '.preloader',
-                duration: 500,
-                opacity: 0,
-                zIndex: '-1',
-                easing: 'easeInOutQuart'
-            });
     };
 
+    let circleMagic = function() {
+        $('.image-content').circleMagic({
+            radius: 16,
+            density: .1,
+            color: 'rgba(255,255,255, .4)',
+            clearOffset: .3
+        });
+    };
+
+    let contentWayPoint = function () {
+        let i = 0;
+        $('.animate-box').waypoint(function (direction) {
+            if (direction === 'down' && !$(this.element).hasClass('animated')) {
+                i++;
+                $(this.element).addClass('item-animate');
+                setTimeout(function () {
+                    $('body .animate-box.item-animate').each(function (k) {
+                        let el = $(this);
+                        setTimeout(function () {
+                            let effect = el.data('animate-effect');
+                            if (effect) {
+                                el.addClass(effect + ' animated');
+                            } else {
+                                el.addClass('fadeInUp animated');
+                            }
+                            el.removeClass('item-animate');
+                        }, k * 200, 'easeInOutExpo');
+                    });
+                }, 100);
+            }
+        }, {
+            offset: '85%'
+        });
+    };
 
     $(function() {
-        preloader();
         goBack();
         search();
+        circleMagic();
+        contentWayPoint();
   });
 
 })();

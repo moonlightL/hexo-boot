@@ -6,16 +6,20 @@
 </head>
 <body>
 <div layout:fragment="content">
+    <!-- 图片 -->
+    <div class="image-banner" style="color: #fff">
+        <div class="image-content"><img th:src="@{${prefix} + '/source/images/index.png'}" class="magic img-responsive" ></div>
+        <div class="descr"><a th:href="@{/}">首页</a>  /  <a href="javascript:void(0)">归档</a></div>
+        <div class="title">归档</div>
+    </div>
+
     <div class="ml-content">
-        <div class="ml-content-title">
-            <h3>归档([[${pageInfo.total}]])</h3>
-        </div>
         <div class="archive-body" id="archives">
             <div th:if="${pageInfo.total > 0}">
                 <div class='archive-content' th:each="map,iterStat : ${pageInfo.data}">
-                    <h3  aos="fade-down" >[[${map.key}]]</h3>
+                    <h3 class="animate-box" data-animate-effect="fadeInDown">[[${map.key}]]</h3>
                     <div class='archives'>
-                        <div aos="fade-up" aos-once="true" th:each="vo,iterStat2 : ${map.value}">
+                        <div class="animate-box" data-animate-effect="fadeInUp" th:each="vo,iterStat2 : ${map.value}">
                             <a th:href="@{'/'+${vo.link}}"><span class="time">[[${vo.month} + '-' + ${vo.day}]]</span>[[${vo.title}]]</a>
                         </div>
                     </div>

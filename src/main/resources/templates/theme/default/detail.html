@@ -7,15 +7,23 @@
 </head>
 <body>
     <div layout:fragment="content">
+        <!-- 图片 -->
+        <div class="image-banner" style="color: #fff">
+            <div class="image-content"><img th:src="@{${prefix} + '/source/images/index.png'}" class="magic img-responsive" ></div>
+            <div class="descr"><a th:href="@{/}">首页</a>  /  <a href="javascript:void(0)">[[${post.title}]]</a></div>
+            <div class="title">[[${post.title}]]</div>
+        </div>
+
         <div class="ml-content">
-            <div id="postContainer" class="postContainer" aos="fade-up">
-                <header class="post-header text-center">
-                    <h1 class="post-title">[[${post.title}]]</h1>
-                    <span style="color:#6b6969;display: block;padding: 10px;">
-                <i class="fa fa-calendar-o"></i> <span class="hidden-xs">发表于</span> [[${post.year} + '-' + ${post.month} + '-' + ${post.day}]] &nbsp;
-                |&nbsp; <i class="fa fa-folder-o"></i> <span class="hidden-xs">分类于</span> [[${post.categoryName}]] <span>&nbsp;
-                |&nbsp; <i class="fa fa-eye"></i> <span class="hidden-xs">阅读数:</span> <span class="leancloud-visitors-count">[[${post.readNum}]]</span></span>&nbsp;
-                |&nbsp; <i class="fa fa-comments-o"></i> <span class="hidden-xs">评论数:</span> <span class="leancloud-visitors-count">[[${post.commentNum}]]</span></span>&nbsp;
+            <div id="postContainer" class="postContainer animated fadeIn">
+                <header class="post-header">
+                    <div class="blogger-info">
+                        <img class="hidden-xs" th:src="@{${#strings.isEmpty(#servletContext.getAttribute('configMap')['logo_url']) != true ? #strings.isEmpty(#servletContext.getAttribute('configMap')['logo_url']) : prefix + '/source/images/logo.png'}}">
+                        <span class="blog-author">[[${#servletContext.getAttribute('configMap')['blog_author']}]]</span>
+                        <span class="post-date">[[${post.year} + '年' + ${post.month} + '月' + ${post.day} + '日']]</span>
+                        <span class="post-read">浏览数: [[${post.readNum}]]</span>
+                        <span class="post-comment">评论数: [[${post.commentNum}]]</span>
+                    </div>
                 </header>
                 <div class="alert alert-danger" th:if="${post.reprint == true}">
                     <ul class="post-copyright">

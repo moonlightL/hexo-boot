@@ -7,11 +7,15 @@
 </head>
 <body>
 <div layout:fragment="content">
+    <!-- 图片 -->
+    <div class="image-banner" style="color: #fff">
+        <div class="image-content"><img th:src="@{${prefix} + '/source/images/index.png'}" class="magic img-responsive" ></div>
+        <div class="descr"><a th:href="@{/}">首页</a>  /  <a th:href="@{/about/}">关于</a></div>
+        <div class="title">关于</div>
+    </div>
+
     <div class="ml-content">
-        <div class="ml-content-title">
-            <h3>关于</h3>
-        </div>
-        <div id="postContainer" class="postContainer" aos="fade-up">
+        <div id="postContainer" class="postContainer animated fadeInUp">
             <div class="post-content"  th:utext="${md.md2html(#objects.nullSafe(about.descr, '懒人一枚~~'))}"></div>
             <div class="alert alert-info" role="alert">
                 <ul class="post-copyright">
