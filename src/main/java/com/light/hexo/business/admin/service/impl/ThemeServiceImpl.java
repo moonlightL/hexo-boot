@@ -157,6 +157,11 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
         }
 
         this.themeExtendService.saveThemeExtend(theme.getId(), extension);
+
+        Theme activeTheme = this.getActiveTheme(false);
+        if (activeTheme == null) {
+            this.useTheme(theme);
+        }
     }
 
     @Override
@@ -245,11 +250,16 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
         String path = this.getClass().getClassLoader().getResource("").getPath();
         File file = new File(path, "templates/theme");
 
+        File dir = new File(file.getAbsolutePath(), themeName);
+        if (dir.exists() && dir.isDirectory()) {
+            FileUtil.del(dir);
+        }
+
         InputStream in = null;
         Process process = null;
         String result = null;
         try {
-            process = Runtime.getRuntime().exec("git clone " + themeUrl + " " + file + "/" +themeName);
+            process = Runtime.getRuntime().exec("git clone " + themeUrl + " " + file.getAbsolutePath() + "/" +themeName);
             in = process.getInputStream();
             result = IOUtils.toString(in, StandardCharsets.UTF_8);
         } catch (IOException e) {
