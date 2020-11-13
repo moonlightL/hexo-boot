@@ -42,7 +42,7 @@ public class CheckThemeListener {
             return;
         }
 
-        Theme activeTheme = this.themeService.getActiveTheme();
+        Theme activeTheme = this.themeService.getActiveTheme(false);
 
         // 实际存在的主题名称
         List<String> themeNameList = new ArrayList<>();

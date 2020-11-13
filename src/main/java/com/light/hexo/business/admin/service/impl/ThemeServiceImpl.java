@@ -83,7 +83,14 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
 
 
     @Override
-    public Theme getActiveTheme() throws GlobalException {
+    public Theme getActiveTheme(boolean cache) throws GlobalException {
+
+        if (!cache) {
+            Example example = new Example(Theme.class);
+            Example.Criteria criteria = example.createCriteria();
+            criteria.andEqualTo("state", 1);
+            return this.themeMapper.selectOneByExample(example);
+        }
 
         String key = CacheKey.CURRENT_THEME;
         Theme theme = CacheUtil.get(key);
@@ -110,7 +117,7 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
             ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_THEME_NOT_EXIST);
         }
 
-        Theme currentTheme = this.getActiveTheme();
+        Theme currentTheme = this.getActiveTheme(false);
         if (currentTheme != null) {
             currentTheme.setState(false);
             this.updateModel(currentTheme);
@@ -158,12 +165,14 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
             return;
         }
 
+        // 删除主题
         List<Integer> idList = themeList.stream().map(Theme::getId).collect(Collectors.toList());
         super.removeBatch(idList);
 
+        // 删除主题配置
         this.themeExtendService.deleteThemeExtendBatch(idList);
 
-        Theme activeTheme = this.getActiveTheme();
+        Theme activeTheme = this.getActiveTheme(false);
         if (activeTheme == null || idList.contains(activeTheme.getId())) {
             List<Theme> allList = this.findAll();
             if (!CollectionUtils.isEmpty(allList)) {

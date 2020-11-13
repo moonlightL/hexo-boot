@@ -10,6 +10,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -88,19 +89,9 @@ public class FileListener extends FileAlterationListenerAdaptor {
      */
     @Override
     public void onFileDelete(File file) {
-
         String fileDir = file.getParentFile().getName();
         Theme dbTheme = this.themeService.checkTheme(fileDir);
-
-        this.themeService.removeModel(dbTheme.getId());
-
-        if (dbTheme.getState()) {
-            List<Theme> themeList = this.themeService.findAll();
-            if (!CollectionUtils.isEmpty(themeList)) {
-                Theme theme = themeList.get(0);
-                this.themeService.useTheme(theme);
-            }
-        }
+        this.themeService.deleteThemeBatch(Arrays.asList(dbTheme));
     }
 
 }

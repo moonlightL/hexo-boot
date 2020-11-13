@@ -42,7 +42,7 @@ public class IndexGuestBookController extends CommonController {
     @ResponseBody
     public Result guestBookList(@RequestParam(defaultValue = "1") Integer pageNum) throws GlobalException {
 
-        Theme activeTheme = this.themeService.getActiveTheme();
+        Theme activeTheme = this.themeService.getActiveTheme(true);
         String commentShowType = activeTheme.getConfigMap().get("commentShowType");
         List<GuestBook> list;
         Map<String, Object> map = new HashMap<>();

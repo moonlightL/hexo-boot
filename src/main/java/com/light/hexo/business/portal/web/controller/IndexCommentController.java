@@ -43,7 +43,7 @@ public class IndexCommentController extends CommonController {
     @ResponseBody
     public Result commentList(@RequestParam(defaultValue = "0") Integer postId, @RequestParam(defaultValue = "1") Integer pageNum) throws GlobalException {
 
-        Theme activeTheme = this.themeService.getActiveTheme();
+        Theme activeTheme = this.themeService.getActiveTheme(true);
         String commentShowType = activeTheme.getConfigMap().get("commentShowType");
         List<PostComment> commentList;
         Map<String, Object> map = new HashMap<>();

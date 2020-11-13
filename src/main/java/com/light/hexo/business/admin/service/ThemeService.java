@@ -23,7 +23,7 @@ public interface ThemeService extends BaseService<Theme> {
      * @return
      * @throws GlobalException
      */
-    Theme getActiveTheme() throws GlobalException;
+    Theme getActiveTheme(boolean cache) throws GlobalException;
 
     /**
      * 启用主题

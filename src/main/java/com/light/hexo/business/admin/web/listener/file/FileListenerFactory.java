@@ -27,7 +27,6 @@ public class FileListenerFactory {
     // 设置轮询间隔
     private final long interval = TimeUnit.SECONDS.toMillis(1);
 
-    // 自动注入业务服务
     @Autowired
     private ThemeService themeService;
 

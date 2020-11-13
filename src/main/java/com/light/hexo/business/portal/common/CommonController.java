@@ -72,7 +72,7 @@ public class CommonController {
         resultMap.put("countInfo", countInfo);
 
         // 主题
-        Theme activeTheme = this.themeService.getActiveTheme();
+        Theme activeTheme = this.themeService.getActiveTheme(true);
         String themeName = (activeTheme == null ? "default" : activeTheme.getName());
 
         resultMap.put("isDetail", isDetail);

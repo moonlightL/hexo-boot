@@ -35,8 +35,8 @@ public class IndexController extends CommonController {
      * @return
      */
     @GetMapping(value = {"/", "/index.html"})
-    public String index(HttpServletRequest request, Map<String, Object> resultMap) {
-        Theme activeTheme = this.themeService.getActiveTheme();
+    public String index(Map<String, Object> resultMap) {
+        Theme activeTheme = this.themeService.getActiveTheme(true);
         String pageSizeStr = activeTheme.getConfigMap().get("pageSize");
         if (StringUtils.isBlank(pageSizeStr) || !StringUtils.isNumeric(pageSizeStr)) {
             pageSizeStr = this.configService.getConfigValue(ConfigEnum.POST_PAGE_SIZE.getName());
@@ -49,7 +49,7 @@ public class IndexController extends CommonController {
 
     @GetMapping("/page/{pageNum}/")
     public String indexPage(@PathVariable Integer pageNum, Map<String, Object> resultMap) {
-        Theme activeTheme = this.themeService.getActiveTheme();
+        Theme activeTheme = this.themeService.getActiveTheme(true);
         String pageSizeStr = activeTheme.getConfigMap().get("pageSize");
         if (StringUtils.isBlank(pageSizeStr) || !StringUtils.isNumeric(pageSizeStr)) {
             pageSizeStr = this.configService.getConfigValue(ConfigEnum.POST_PAGE_SIZE.getName());
@@ -67,7 +67,7 @@ public class IndexController extends CommonController {
      */
     @GetMapping("/blogs/")
     public String blogs(Map<String, Object> resultMap) {
-        Theme activeTheme = this.themeService.getActiveTheme();
+        Theme activeTheme = this.themeService.getActiveTheme(true);
         String pageSizeStr = activeTheme.getConfigMap().get("pageSize");
         if (StringUtils.isBlank(pageSizeStr) || !StringUtils.isNumeric(pageSizeStr)) {
             pageSizeStr = this.configService.getConfigValue(ConfigEnum.POST_PAGE_SIZE.getName());
@@ -85,7 +85,7 @@ public class IndexController extends CommonController {
      */
     @GetMapping("/blogs/page/{pageNum}/")
     public String blogs(@PathVariable Integer pageNum, Map<String, Object> resultMap) {
-        Theme activeTheme = this.themeService.getActiveTheme();
+        Theme activeTheme = this.themeService.getActiveTheme(true);
         String pageSizeStr = activeTheme.getConfigMap().get("pageSize");
         if (StringUtils.isBlank(pageSizeStr) || !StringUtils.isNumeric(pageSizeStr)) {
             pageSizeStr = this.configService.getConfigValue(ConfigEnum.POST_PAGE_SIZE.getName());

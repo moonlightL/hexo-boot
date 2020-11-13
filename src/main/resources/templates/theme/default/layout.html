@@ -19,7 +19,7 @@
     <link rel="stylesheet" th:href="@{${prefix} + '/source/js/lightbox/css/lightbox.css'}"/>
     <link rel="stylesheet" th:href="@{${prefix} + '/source/js/overshare/css/share.min.css'}"/>
     <link rel="stylesheet" th:href="@{${prefix} + '/source/css/animate.css'}"/>
-    <link rel="stylesheet" th:href="@{${prefix} + '/source/css/style.css'}"/>
+    <link rel="stylesheet" th:href="@{${prefix} + '/source/css/style_'+ ${activeTheme.configMap['pattern']} +'.css'}"/>
 </head>
 <body>
     <div class="ml-container" id="pageContainer">
