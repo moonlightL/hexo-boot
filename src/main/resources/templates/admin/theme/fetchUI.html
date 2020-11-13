@@ -29,11 +29,24 @@
                     <div class="col-lg-8 col-md-8">
                         <input type="text" class="form-control" id="themeUrl" name="themeUrl" placeholder="主题地址" >
                     </div>
-                    <div class="col-lg-4 col-md-2"><button type="button" class="btn btn-primary" id="submitBtn">拉取</button></div>
+                    <div class="col-lg-4 col-md-2">
+                        <button type="button" class="btn btn-primary" id="submitBtn">拉取</button>
+                    </div>
                 </div>
                 <div class="form-group row">
                     <div class="col-lg-12 col-md-12">
-                        <textarea id="resultContainer" class="form-control" cols="30" rows="9" style="resize: none;overflow: auto;" disabled></textarea>
+                        <textarea id="resultContainer" class="form-control" cols="30" rows="6" style="resize: none;overflow: auto;" disabled></textarea>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-lg-12 col-md-12">
+                        <div>
+                            <b>获取主题: </b><a href="https://github.com/moonlightL" target="_blank">GitHub资源</a>&nbsp;&nbsp;
+                            <a href="https://gitee.com/moonlightL" target="_blank">码云资源</a>&nbsp;&nbsp;
+                        </div>
+                        <div>
+                            <b>友情提示: 找到“hexo-boot-theme-xxx” 类型的主题复制其 .git 地址到输入框，点击“按钮”即可下载安装</b>
+                        </div>
                     </div>
                 </div>
             </form>
@@ -44,7 +57,7 @@
 <script type="text/javascript" th:inline="javascript">
     $(function () {
         $("#submitBtn").on("click", function () {
-
+            let that = this;
             let themeUrl = $("#themeUrl").val();
             if (!themeUrl) {
                 $.hexo.modal.tip("主题地址不能为空");
@@ -61,8 +74,10 @@
             let tmp = split[split.length - 1];
             let themeName = tmp.split(".")[0];
 
+            $(that).prop("disabled", true);
             let $resultContainer = $("#resultContainer");
-            $resultContainer.val("").val("[info] 开始拉取" + themeName + "主题...");
+            $resultContainer.val("***********************************************【开始】***********************************************")
+                            .val($resultContainer.val() + "\n[5%] 开始拉取" + themeName + "主题...");
 
             $.ajax({
                 type: "POST",
@@ -70,8 +85,9 @@
                 data: {"themeUrl": themeUrl},
                 dataType: "JSON",
                 success: function (resp) {
+                    $(that).prop("disabled", false);
                     if (resp.success) {
-                        $resultContainer.val($resultContainer.val() + "\n[success] " + themeName + "主题拉取成功,正在进行安装...");
+                        $resultContainer.val($resultContainer.val() + "\n[80%] " + themeName + "主题拉取成功,正在进行安装...");
                         let timer = setInterval(function() {
                             $.ajax({
                                 type: "POST",
@@ -80,7 +96,8 @@
                                 dataType: "JSON",
                                 success: function (resp) {
                                     if (resp.data === true) {
-                                        $resultContainer.val($resultContainer.val() + "\n[success] " + themeName + "主题安装成功!");
+                                        $resultContainer.val($resultContainer.val() + "\n[100%] " + themeName + "主题安装成功!")
+                                                        .val($resultContainer.val() + "\n***********************************************【结束】***********************************************");
                                         window.parent.ThemeManager.query();
                                         clearInterval(timer);
                                     }
@@ -90,7 +107,9 @@
                     }
                 },
                 error: function () {
-                    $resultContainer.val($resultContainer.val() + "\n[error] " + themeName + "主题拉取失败!");
+                    $(that).prop("disabled", false);
+                    $resultContainer.val($resultContainer.val() + "\n[失败] " + themeName + "主题拉取失败!")
+                                    .val($resultContainer.val() + "\n***********************************************【结束】***********************************************");
                 }
             });
         });
