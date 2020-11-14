@@ -1101,7 +1101,7 @@ h4.friend-link-title {
 .shareContainer {
     position: relative;
     height: 50px;
-    margin-bottom: 8px;
+    margin: 20px auto;
 }
 
 .shareContainer .btns {

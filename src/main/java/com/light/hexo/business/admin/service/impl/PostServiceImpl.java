@@ -665,7 +665,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
     }
 
     private String interceptContent(String content) {
-        StringBuilder result = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
         int index = content.indexOf("<!---->");
         if (index > -1) {
             String tmp = content.substring(0, index);
@@ -679,15 +679,20 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
         if (elements.size() > 3) {
             List<Element> elementList = elements.subList(0, 3);
             elementList.forEach(i -> {
-                result.append(i.text()).append("\n");
+                sb.append(i.text()).append("\n");
             });
         } else {
             elements.forEach(i -> {
-                result.append(i.text()).append("\n");
+                sb.append(i.text()).append("\n");
             });
         }
 
-        return result.toString();
+        String result = sb.toString();
+        if (result.length() > 300) {
+            result = result.substring(0, 300);
+        }
+
+        return result;
     }
 
     private void saveTags(Post post, boolean isEdit) {
