@@ -8,6 +8,7 @@
     <meta name="author" th:content="${#servletContext.getAttribute('configMap')['blog_author']}">
     <meta name="keywords" th:content="${#servletContext.getAttribute('configMap')['keywords']}" />
     <meta name="description" th:content="${#servletContext.getAttribute('configMap')['description']}" />
+    <meta name="referrer" content="no-referrer" />
     [(${#servletContext.getAttribute('configMap')['meta_code']})]
     <link rel="shortcut icon" th:href="@{${#servletContext.getAttribute('configMap')['favicon_url']}}"/>
     <link rel="stylesheet" th:href="@{${prefix} + '/source/js/bootstrap-3.3.7/css/bootstrap.min.css'}">
@@ -57,34 +58,34 @@
 
             <!-- 内容 -->
             <div layout:fragment="content" ></div>
+
             <!-- 尾部 -->
-            <div class="ml-content" style="padding: 1.5rem; margin-bottom: 0">
-                <footer class="footer-copyright" id="footer-copyright">
-                    <div class="row">
-                        <div class="col-md-4 col-sm-6">
-                            <span class="pull-left">[[${#servletContext.getAttribute('configMap')['power_by']}]]</span>
-                        </div>
-                        <div class="col-md-4 hidden-sm hidden-xs" style="text-align: center">
-                            <ul class="contract-info">
-                                <li class="wechat" th:if="${#strings.isEmpty(#servletContext.getAttribute('configMap')['wx_account']) != true}">
-                                    <a th:title="${#servletContext.getAttribute('configMap')['wx_account']}" class="socialicon" href="javascript:void(0)" target="_blank"><i class="fa fa-weixin fa-lg" aria-hidden="true"></i></a>
-                                </li>
-                                <li th:if="${#strings.isEmpty(#servletContext.getAttribute('configMap')['qq_account']) != true}">
-                                    <a th:title="${#servletContext.getAttribute('configMap')['qq_account']}" class="socialicon" href="javascript:void(0)" target="_blank"><i class="fa fa-qq fa-lg" aria-hidden="true"></i></a>
-                                </li>
-                                <li th:if="${#strings.isEmpty(#servletContext.getAttribute('configMap')['git_hub_account']) != true}">
-                                    <a title="github" class="socialicon" th:href="@{${#servletContext.getAttribute('configMap')['git_hub_account']}}" target="_blank"><i class="fa fa-github-alt fa-lg" aria-hidden="true"></i></a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="col-md-4 col-sm-6 hidden-xs">
-                            <a class="pull-right" href="http://www.miitbeian.gov.cn/" target="_blank">[[${#servletContext.getAttribute('configMap')['record']}]]</a>
-                        </div>
+            <footer class="footer-copyright" id="footer-copyright">
+                <div class="row">
+                    <div class="col-md-4 col-sm-6">
+                        <span class="pull-left">[[${#servletContext.getAttribute('configMap')['power_by']}]]</span>
                     </div>
-                </footer>
-            </div>
+                    <div class="col-md-4 hidden-sm hidden-xs" style="text-align: center">
+                        <ul class="contract-info">
+                            <li class="wechat" th:if="${#strings.isEmpty(#servletContext.getAttribute('configMap')['wx_account']) != true}">
+                                <a th:title="${#servletContext.getAttribute('configMap')['wx_account']}" class="socialicon" href="javascript:void(0)" target="_blank"><i class="fa fa-weixin fa-lg" aria-hidden="true"></i></a>
+                            </li>
+                            <li th:if="${#strings.isEmpty(#servletContext.getAttribute('configMap')['qq_account']) != true}">
+                                <a th:title="${#servletContext.getAttribute('configMap')['qq_account']}" class="socialicon" href="javascript:void(0)" target="_blank"><i class="fa fa-qq fa-lg" aria-hidden="true"></i></a>
+                            </li>
+                            <li th:if="${#strings.isEmpty(#servletContext.getAttribute('configMap')['git_hub_account']) != true}">
+                                <a title="github" class="socialicon" th:href="@{${#servletContext.getAttribute('configMap')['git_hub_account']}}" target="_blank"><i class="fa fa-github-alt fa-lg" aria-hidden="true"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4 col-sm-6 hidden-xs">
+                        <a class="pull-right" href="http://www.miitbeian.gov.cn/" target="_blank">[[${#servletContext.getAttribute('configMap')['record']}]]</a>
+                    </div>
+                </div>
+            </footer>
         </div>
         <!-- /container -->
+
         <div class="real-time-search-container" id="real-time-search-container"></div>
         <div class="to-top to-hide" id="toTop"><i class="fa fa-arrow-up"></i></div>
     </div>
