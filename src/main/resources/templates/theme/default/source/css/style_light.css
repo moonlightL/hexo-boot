@@ -207,6 +207,7 @@ strong {
 .image-banner .word_1,.image-banner .word_2 {
     position: absolute;
     font-size: 20px;
+    text-shadow: 0 1px 10px #000;
 }
 
 .image-banner .word_1 {
@@ -616,8 +617,8 @@ strong {
 }
 
 .footer-copyright {
-    height: 120px;
-    line-height: 120px;
+    height: 80px;
+    line-height: 80px;
     letter-spacing: 0;
     background-color: #fff;
     padding: 0 24px;
@@ -1215,7 +1216,7 @@ h4.friend-link-title {
     }
 
     .post-info {
-        max-height: 360px;
+        max-height: 370px;
         background-color: #fff;
     }
 
@@ -1236,7 +1237,9 @@ h4.friend-link-title {
     }
 
     .post-info .show-btn {
+        margin-top: 10px;
         padding: 6px 0;
+        height: 68px;
     }
 
     /** 归档 start **/

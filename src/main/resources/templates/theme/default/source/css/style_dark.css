@@ -621,8 +621,8 @@ strong {
 }
 
 .footer-copyright {
-    height: 120px;
-    line-height: 120px;
+    height: 80px;
+    line-height: 80px;
     letter-spacing: 0;
     color: #cbd6dc;
     padding: 0 24px;
@@ -1260,7 +1260,7 @@ h4.friend-link-title {
     }
 
     .post-info {
-        max-height: 360px;
+        max-height: 370px;
     }
 
     .navbar {
@@ -1280,7 +1280,9 @@ h4.friend-link-title {
     }
 
     .post-info .show-btn {
+        margin-top: 10px;
         padding: 6px 0;
+        height: 68px;
     }
 
     /** 归档 start **/
@@ -1307,7 +1309,7 @@ h4.friend-link-title {
         z-index: 0;
         display: block;
         padding: 5px 0;
-        color: #333;
+        color: #cbd6dc;
         font-style: normal;
         text-overflow: ellipsis;
         overflow: hidden;
