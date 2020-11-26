@@ -40,6 +40,11 @@ public class Post implements Serializable {
     private String summary;
 
     /**
+     * 摘要（html 格式）
+     */
+    private String summaryHtml;
+
+    /**
      * 文章内容（markdown 格式）
      */
     private String content;

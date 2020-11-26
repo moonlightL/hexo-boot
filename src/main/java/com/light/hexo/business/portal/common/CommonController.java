@@ -80,6 +80,10 @@ public class CommonController {
         resultMap.put("md", MarkdownUtil.class);
         resultMap.put("activeTheme", activeTheme);
 
+        // 友链
+        List<FriendLink> friendLinkList = this.friendLinkService.listFriendLinkByIndex();
+        resultMap.put("friendLinkList", friendLinkList);
+
         return "/theme/" +  themeName + "/" + pageName;
     }
 

@@ -26,8 +26,11 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.annotations.Param;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
+import org.jsoup.select.NodeFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
@@ -206,7 +209,8 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
         }
 
         // 摘要
-        post.setSummary(this.interceptContent(post.getContent()));
+        post.setSummary(this.interceptContent(post.getContent()))
+            .setSummaryHtml(this.interceptContentHtml(post.getContent()));
 
         LocalDateTime now = LocalDateTime.now();
         if (post.getPublish() != null) {
@@ -264,7 +268,8 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
         }
 
         // 摘要
-        post.setSummary(this.interceptContent(post.getContent()));
+        post.setSummary(this.interceptContent(post.getContent()))
+            .setSummaryHtml(this.interceptContentHtml(post.getContent()));
 
         LocalDateTime now = LocalDateTime.now();
         if (post.getPublish() != null) {
@@ -451,7 +456,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
     @Override
     public HexoPageInfo pagePostsByIndex(int pageNum, int pageSize) throws GlobalException {
         Example example = Example.builder(Post.class)
-                .select("id", "title", "summary", "author", "publishDate", "year", "month", "day", "top", "reprint",
+                .select("id", "title", "summary", "summaryHtml", "author", "publishDate", "year", "month", "day", "top", "reprint",
                         "coverUrl", "link", "categoryId", "tags", "readNum", "praiseNum", "commentNum", "topTime", "createTime")
                 .where(Sqls.custom().andEqualTo("publish", true).andEqualTo("delete", false))
                 .orderByDesc("createTime")
@@ -695,6 +700,35 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
         return result;
     }
 
+    private String interceptContentHtml(String content) {
+        StringBuilder sb = new StringBuilder();
+        int index = content.indexOf("<!---->");
+        if (index > -1) {
+            String tmp = content.substring(0, index);
+            if (StringUtils.isNotBlank(tmp)) {
+                content = tmp;
+            }
+        }
+
+        String html = MarkdownUtil.md2html(content);
+        Document document = Jsoup.parse(html);
+        Elements elements = document.select("body");
+        Element element = elements.get(0);
+        Elements children = element.children();
+        if (children.size() > 3) {
+            List<Element> elementList = children.subList(0, 3);
+            elementList.forEach(i -> {
+                sb.append(i.toString()).append("\n");
+            });
+        } else {
+            children.forEach(i -> {
+                sb.append(i.toString()).append("\n");
+            });
+        }
+
+        return sb.toString();
+    }
+
     private void saveTags(Post post, boolean isEdit) {
         if (StringUtils.isBlank(post.getTags())) {
             return;
@@ -736,7 +770,8 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
             post.setTitle(objectMap.get("title").toString())
                     .setAuthor(author)
                     .setContent(objectMap.get("content").toString())
-                    .setSummary(this.interceptContent(post.getContent()));
+                    .setSummary(this.interceptContent(post.getContent()))
+                    .setSummaryHtml(this.interceptContentHtml(post.getContent()));
 
             // 设置封面
             if (dir != null && dir.exists()) {
@@ -826,7 +861,8 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
                 post.setTitle(titleStr.substring(titleStr.indexOf(":") + 1).trim())
                     .setAuthor(author)
                     .setContent(sb.toString())
-                    .setSummary(this.interceptContent(post.getContent()));
+                    .setSummary(this.interceptContent(post.getContent()))
+                    .setSummaryHtml(this.interceptContentHtml(post.getContent()));
 
                 // 设置封面
                 if (dir != null && dir.exists()) {
