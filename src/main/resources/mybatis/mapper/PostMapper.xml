@@ -83,6 +83,7 @@
             p.is_publish = 1
         AND
             p.is_delete = 0
+        ORDER BY p.create_time DESC
     </select>
 
     <insert id="checkInsert" parameterType="com.light.hexo.business.admin.model.Post" useGeneratedKeys="true" keyProperty="id">
