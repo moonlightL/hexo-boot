@@ -1,6 +1,6 @@
 let GuestBookManager = (function ($) {
     let GuestBookManager = {
-        init: function(nickname) {
+        init: function() {
             let flag = false;
             let $footer = $("#footer-copyright");
             let top = parseInt($footer.offset().top);
@@ -11,18 +11,17 @@ let GuestBookManager = (function ($) {
                     if (!flag && (winHeight + scrollTop >= top)) {
                         // 获取留言列表
                         flag = true;
-                        GuestBookManager.initComment(nickname);
+                        GuestBookManager.initComment();
                     }
                 });
             } else {
-                GuestBookManager.initComment(nickname);
+                GuestBookManager.initComment();
             }
         },
-        initComment: function (nickname) {
+        initComment: function () {
             $("#comment-container").BeautyComment({
                 title: "留言",
                 subTitle: "最新留言",
-                bloggerName: nickname,
                 baseUrl: "/admin/assets/custom/",
                 listUrl: "/guestBookList.json",
                 sendUrl: "/auth/sendGuestBook.json",

@@ -251,7 +251,7 @@
             htmlArr.push('<img id="'+ comment.id +'" src="'+ comment.avatar +'" />');
             htmlArr.push('</div>');
             htmlArr.push('<div class="info">');
-            if (comment.nickname === self.options.bloggerName) {
+            if (comment.blogger) {
                 htmlArr.push('<div class="name"><span class="blog-master">博主</span> <b>'+ comment.nickname +'</b> <span class="area hidden-xs">['+ comment.ipInfo +'网友]</span></div>');
             } else {
                 htmlArr.push('<div class="name"><b>'+ comment.nickname +'</b> <span class="area hidden-xs">['+ comment.ipInfo +'网友]</span></div>');
@@ -277,7 +277,7 @@
                         htmlArr.push('<img id="'+ replyComment.id +'" src="'+ replyComment.avatar +'" />');
                         htmlArr.push('</div>');
                         htmlArr.push('<div class="info">');
-                        if (replyComment.nickname === self.options.bloggerName) {
+                        if (replyComment.blogger) {
                             htmlArr.push('<div class="name"><span class="blog-master">博主</span> <b>'+ replyComment.nickname +'</b> <span class="area hidden-xs">['+ replyComment.ipInfo +'网友]</span></div>');
                         } else {
                             htmlArr.push('<div class="name"><b>'+ replyComment.nickname +'</b> <span class="area hidden-xs">['+ replyComment.ipInfo +'网友]</span></div>');

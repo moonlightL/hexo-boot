@@ -234,6 +234,11 @@ public class GuestBookServiceImpl extends BaseServiceImpl<GuestBook> implements 
     @Override
     public List<GuestBook> listGuestBookByIndex(Integer pageNum, Integer pageSize) throws GlobalException {
 
+        User blogger = this.userService.getBloggerInfo();
+        if (blogger == null) {
+            return new ArrayList<>();
+        }
+
         Example example = new Example(GuestBook.class);
         example.createCriteria().andEqualTo("delete", 0);
         example.orderBy("createTime").desc();
@@ -256,6 +261,8 @@ public class GuestBookServiceImpl extends BaseServiceImpl<GuestBook> implements 
         Map<Integer, GuestBook> parentMap = parentList.stream().collect(Collectors.toMap(GuestBook::getId, Function.identity(), (k1, k2)->k1));
 
         for (GuestBook guestBook : guestBookList) {
+            // 判断是否为博主
+            guestBook.setBlogger(guestBook.getUserId().equals(blogger.getId()));
             guestBook.setIpInfo(IpUtil.getProvinceAndCity(guestBook.getIpAddress()));
             guestBook.setIpAddress("");
             // 父级评论
@@ -278,6 +285,11 @@ public class GuestBookServiceImpl extends BaseServiceImpl<GuestBook> implements 
 
     @Override
     public List<GuestBook> getGuestBookListByIndex(Integer pageNum, Integer pageSize) throws GlobalException {
+
+        User blogger = this.userService.getBloggerInfo();
+        if (blogger == null) {
+            return new ArrayList<>();
+        }
 
         Example example = new Example(GuestBook.class);
         example.createCriteria().andEqualTo("delete", 0)
@@ -305,6 +317,8 @@ public class GuestBookServiceImpl extends BaseServiceImpl<GuestBook> implements 
 
 
         for (GuestBook guestBook : parentList) {
+            // 判断是否为博主
+            guestBook.setBlogger(guestBook.getUserId().equals(blogger.getId()));
             guestBook.setIpInfo(IpUtil.getProvinceAndCity(guestBook.getIpAddress()));
             guestBook.setIpAddress("");
             // 子级评论
@@ -318,6 +332,8 @@ public class GuestBookServiceImpl extends BaseServiceImpl<GuestBook> implements 
                     i.setIpInfo(IpUtil.getProvinceAndCity(i.getIpAddress()));
                     i.setIpAddress("");
                     i.setTimeDesc(DateUtil.timeDesc(i.getCreateTime()));
+                    // 判断是否为博主
+                    i.setBlogger(i.getUserId().equals(blogger.getId()));
                 });
                 guestBook.setReplyList(children);
             }

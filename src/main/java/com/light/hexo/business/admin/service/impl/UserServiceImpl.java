@@ -107,6 +107,13 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
     }
 
     @Override
+    public User getBloggerInfo() throws GlobalException {
+        Example example = new Example(User.class);
+        example.createCriteria().andEqualTo("role", 1);
+        return this.getBaseMapper().selectOneByExample(example);
+    }
+
+    @Override
     public User checkUser(String nickname, String email, String avatar) throws GlobalException {
 
         Example example = new Example(User.class);

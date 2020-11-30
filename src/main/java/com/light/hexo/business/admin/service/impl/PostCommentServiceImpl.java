@@ -262,6 +262,11 @@ public class PostCommentServiceImpl extends BaseServiceImpl<PostComment> impleme
     @Override
     public List<PostComment> listCommentByPostId(Integer postId, Integer pageNum, Integer pageSize) throws GlobalException {
 
+        User blogger = this.userService.getBloggerInfo();
+        if (blogger == null) {
+            return new ArrayList<>();
+        }
+
         Example example = new Example(PostComment.class);
         example.createCriteria().andEqualTo("postId", postId)
                                 .andEqualTo("delete", 0);
@@ -286,6 +291,8 @@ public class PostCommentServiceImpl extends BaseServiceImpl<PostComment> impleme
         Map<Integer, PostComment> parentMap = parentList.stream().collect(Collectors.toMap(PostComment::getId, Function.identity(), (k1, k2)->k1));
 
         for (PostComment postComment : postCommentList) {
+            // 判断是否为博主
+            postComment.setBlogger(postComment.getUserId().equals(blogger.getId()));
             postComment.setIpInfo(IpUtil.getProvinceAndCity(postComment.getIpAddress()));
             postComment.setIpAddress("");
             // 父级评论
@@ -308,6 +315,11 @@ public class PostCommentServiceImpl extends BaseServiceImpl<PostComment> impleme
 
     @Override
     public List<PostComment> getCommentListByPostId(Integer postId, Integer pageNum, Integer pageSize) throws GlobalException {
+
+        User blogger = this.userService.getBloggerInfo();
+        if (blogger == null) {
+            return new ArrayList<>();
+        }
 
         Example example = new Example(PostComment.class);
         example.createCriteria().andEqualTo("postId", postId)
@@ -337,6 +349,8 @@ public class PostCommentServiceImpl extends BaseServiceImpl<PostComment> impleme
 
 
         for (PostComment postComment : parentList) {
+            // 判断是否为博主
+            postComment.setBlogger(postComment.getUserId().equals(blogger.getId()));
             postComment.setIpInfo(IpUtil.getProvinceAndCity(postComment.getIpAddress()));
             postComment.setIpAddress("");
             // 子级评论
@@ -350,6 +364,8 @@ public class PostCommentServiceImpl extends BaseServiceImpl<PostComment> impleme
                     i.setIpInfo(IpUtil.getProvinceAndCity(i.getIpAddress()));
                     i.setIpAddress("");
                     i.setTimeDesc(DateUtil.timeDesc(i.getCreateTime()));
+                    // 判断是否为博主
+                    i.setBlogger(i.getUserId().equals(blogger.getId()));
                 });
                 postComment.setReplyList(children);
             }
