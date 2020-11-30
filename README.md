@@ -1,6 +1,6 @@
 ## 一、Hexo Boot
 
-Hexo Boot 是一套开源的博客系统。由 ml-blog 博客系统演变和扩展而来。
+Hexo Boot 是基于 Spring Boot + MySQL 开发的一套开源的博客系统。前身是 ml-blog 博客系统，在此基础上演变和扩展而来。
 
 [![](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://github.com/moonlightL/ml-blog/blob/master/LICENSE)
 ![](https://img.shields.io/badge/language-Java-blue.svg)
