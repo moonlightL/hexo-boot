@@ -45,6 +45,8 @@ Hexo Boot 是一套开源的博客系统。由 ml-blog 博客系统演变和扩�
 
 ## 三、预览效果
 
+[网站演示](https://www.extlight.com/)
+
 ### 3.1 后台管理预览图
 
 ![](https://images.extlight.com/hexo-boot-00.jpg)
@@ -121,6 +123,8 @@ mvn clean package，打出名为 ROOT.war 文件，将其复制到 tomcat 的 we
 [hexo-boot-theme-vCard](https://github.com/moonlightL/hexo-boot-theme-vCard)
 
 [hexo-boot-theme-breezyCV](https://github.com/moonlightL/hexo-boot-theme-breezyCV)
+
+[hexo-boot-theme-next](https://github.com/moonlightL/hexo-boot-theme-next)
 
 如果网络不佳，无法访问 GitHub，也可以访问 [码云](https://gitee.com/moonlightL) ，找到主题进行下载。
 
