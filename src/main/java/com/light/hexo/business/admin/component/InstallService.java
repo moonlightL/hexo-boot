@@ -133,6 +133,7 @@ public class InstallService {
 
         Post post = new Post();
         post.setTitle("第一篇文章")
+            .setSummaryHtml("")
             .setContent("```\n" +
                     "public static void main(String[] args) {\n" +
                     "\tSystem.out.println(\"Hello World\");\n" +
