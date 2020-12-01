@@ -16,11 +16,15 @@ import com.light.hexo.common.model.TreeNode;
 import com.light.hexo.common.util.CacheUtil;
 import com.light.hexo.common.util.EhcacheUtil;
 import com.light.hexo.common.util.ExceptionUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -31,9 +35,14 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -46,6 +55,7 @@ import java.util.stream.Collectors;
  * @DateTime 2020/9/24 14:38
  */
 @Service
+@Slf4j
 public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeService {
 
     @Autowired
@@ -53,6 +63,11 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
 
     @Autowired
     private ThemeExtendService themeExtendService;
+
+    @Autowired
+    private Environment environment;
+
+    private static final String THEME_DIR = "templates/theme";
 
     @Override
     public BaseMapper<Theme> getBaseMapper() {
@@ -83,7 +98,7 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
             Example example = new Example(Theme.class);
             Example.Criteria criteria = example.createCriteria();
             criteria.andEqualTo("state", 1);
-            return this.themeMapper.selectOneByExample(example);
+            return this.getBaseMapper().selectOneByExample(example);
         }
 
         String key = CacheKey.CURRENT_THEME;
@@ -105,8 +120,8 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void useTheme(Theme theme) throws GlobalException {
-        Theme target = this.findById(theme.getId());
+    public void useTheme(Integer themeId) throws GlobalException {
+        Theme target = this.findById(themeId);
         if (target == null) {
             ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_THEME_NOT_EXIST);
         }
@@ -133,7 +148,7 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
     }
 
     @Override
-    public void saveTheme(String name, String coverUrl, boolean state, String remark, List<Map<String, String>> extension) throws GlobalException {
+    public Integer saveTheme(String name, String coverUrl, boolean state, String remark, List<Map<String, String>> extension) throws GlobalException {
         Theme theme = this.checkTheme(name);
         if (theme != null) {
             theme.setCoverUrl(coverUrl)
@@ -152,10 +167,7 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
 
         this.themeExtendService.saveThemeExtend(theme.getId(), extension);
 
-        Theme activeTheme = this.getActiveTheme(false);
-        if (activeTheme == null) {
-            this.useTheme(theme);
-        }
+        return theme.getId();
     }
 
     @Override
@@ -176,17 +188,25 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
             List<Theme> allList = this.findAll();
             if (!CollectionUtils.isEmpty(allList)) {
                 Theme theme = allList.get(0);
-                this.useTheme(theme);
+                this.useTheme(theme.getId());
             }
         }
     }
 
     @Override
-    public List<TreeNode> getThemeCatalog(Theme theme) throws GlobalException {
+    public List<TreeNode> getThemeTreeNode(Theme theme) throws GlobalException {
         try {
-            File dir = ResourceUtils.getFile("classpath:templates/theme/" + theme.getName());
+            File dir;
+            URI themeUri = ResourceUtils.getURL(ResourceUtils.CLASSPATH_URL_PREFIX + THEME_DIR).toURI();
+
+            if ("jar".equalsIgnoreCase(themeUri.getScheme())) {
+                dir = ResourceUtils.getFile(this.environment.getProperty("spring.config.additional-location") + THEME_DIR + File.separator + theme.getName());
+            } else {
+                dir = ResourceUtils.getFile(themeUri.toString() + File.separator + theme.getName());
+            }
+
             return this.wrapTreeNode(dir, null);
-        } catch (FileNotFoundException e) {
+        } catch (FileNotFoundException | URISyntaxException e) {
             e.printStackTrace();
         }
         return null;
@@ -241,38 +261,60 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
         String tmp = split[split.length - 1];
         String themeName = tmp.split("\\.")[0];
 
-        String path = this.getClass().getClassLoader().getResource("").getPath();
-        File file = new File(path, "templates/theme");
-
+        File file = this.getThemeCatalog();
         File dir = new File(file.getAbsolutePath(), themeName);
         if (dir.exists() && dir.isDirectory()) {
             FileUtil.del(dir);
         }
 
-        InputStream in = null;
-        Process process = null;
-        String result = null;
         try {
-            process = Runtime.getRuntime().exec("git clone " + themeUrl + " " + file.getAbsolutePath() + "/" +themeName);
-            in = process.getInputStream();
-            result = IOUtils.toString(in, StandardCharsets.UTF_8);
-        } catch (IOException e) {
+            Git git = Git.cloneRepository()
+                    .setURI(themeUrl)
+                    .setDirectory(new File(file.getAbsolutePath(), themeName))
+                    .call();
+            log.info("Cloning from " + themeUrl + " to " + git.getRepository());
+        } catch (GitAPIException e) {
             e.printStackTrace();
-        } finally {
-            if (process != null) {
-                process.destroy();
-            }
-
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+            log.info(e.getMessage());
         }
 
-        System.out.println(result);
+    }
+
+    @Override
+    public File getThemeCatalog() throws GlobalException {
+        File dir = null;
+        try {
+            URI uri = ResourceUtils.getURL(ResourceUtils.CLASSPATH_URL_PREFIX + THEME_DIR).toURI();
+            if ("jar".equalsIgnoreCase(uri.getScheme())) {
+                dir = ResourceUtils.getFile(this.environment.getProperty("spring.config.additional-location") + THEME_DIR);
+                if (!dir.exists()) {
+                    FileSystem fileSystem = FileSystems.newFileSystem(uri, Collections.emptyMap());
+                    Path source = fileSystem.getPath("/BOOT-INF/classes/" + THEME_DIR);
+                    Path target = dir.toPath();
+                    Files.walkFileTree(source, new SimpleFileVisitor<Path>() {
+
+                        @Override
+                        public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+                            Path current = target.resolve(source.relativize(dir).toString());
+                            Files.createDirectories(current);
+                            return FileVisitResult.CONTINUE;
+                        }
+
+                        @Override
+                        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                            Files.copy(file, target.resolve(source.relativize(file).toString()), StandardCopyOption.REPLACE_EXISTING);
+                            return FileVisitResult.CONTINUE;
+                        }
+                    });
+                }
+            } else {
+                dir = ResourceUtils.getFile(uri);
+            }
+        } catch (URISyntaxException | IOException e) {
+            e.printStackTrace();
+        }
+
+        return dir;
     }
 
     private List<TreeNode> wrapTreeNode(File dir, TreeNode parent) {

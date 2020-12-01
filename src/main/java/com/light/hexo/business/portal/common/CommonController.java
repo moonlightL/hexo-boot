@@ -84,7 +84,7 @@ public class CommonController {
         List<FriendLink> friendLinkList = this.friendLinkService.listFriendLinkByIndex();
         resultMap.put("friendLinkList", friendLinkList);
 
-        return "/theme/" +  themeName + "/" + pageName;
+        return "theme/" +  themeName + "/" + pageName;
     }
 
     private Map<String, Integer> getCountInfo() {

@@ -37,7 +37,8 @@ public abstract class BaseController {
     protected String render(String pageName, Map<String, Object> resultMap) {
         String prefix = getPrefix();
         resultMap.put("baseUrl", prefix);
-        return prefix + "/" + pageName;
+        String tmp = prefix + "/" + pageName;
+        return tmp.substring(1);
     }
 
     /**

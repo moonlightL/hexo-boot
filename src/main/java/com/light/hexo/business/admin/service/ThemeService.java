@@ -5,6 +5,7 @@ import com.light.hexo.common.base.BaseService;
 import com.light.hexo.common.exception.GlobalException;
 import com.light.hexo.common.model.TreeNode;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -27,11 +28,11 @@ public interface ThemeService extends BaseService<Theme> {
 
     /**
      * 启用主题
-     * @param theme
+     * @param themeId
      * @return
      * @throws GlobalException
      */
-    void useTheme(Theme theme) throws GlobalException;
+    void useTheme(Integer themeId) throws GlobalException;
 
     /**
      * 检查主题
@@ -50,7 +51,7 @@ public interface ThemeService extends BaseService<Theme> {
      * @param extension
      * @throws GlobalException
      */
-    void saveTheme(String themeName, String coverUrl, boolean state, String remark, List<Map<String, String>> extension) throws GlobalException;
+    Integer saveTheme(String themeName, String coverUrl, boolean state, String remark, List<Map<String, String>> extension) throws GlobalException;
 
     /**
      * 批量删除
@@ -65,7 +66,7 @@ public interface ThemeService extends BaseService<Theme> {
      * @return
      * @throws GlobalException
      */
-    List<TreeNode> getThemeCatalog(Theme theme) throws GlobalException;
+    List<TreeNode> getThemeTreeNode(Theme theme) throws GlobalException;
 
     /**
      * 获取主题文件内容
@@ -90,4 +91,11 @@ public interface ThemeService extends BaseService<Theme> {
      * @throws IOException
      */
     void fetchTheme(String themeUrl) throws GlobalException;
+
+    /**
+     * 获取主题目录
+     * @return
+     * @throws GlobalException
+     */
+    File getThemeCatalog() throws GlobalException;
 }

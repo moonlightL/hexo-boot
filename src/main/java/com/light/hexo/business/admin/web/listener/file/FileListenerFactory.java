@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 public class FileListenerFactory {
 
     // 设置轮询间隔
-    private final long interval = TimeUnit.SECONDS.toMillis(1);
+    private final long interval = TimeUnit.SECONDS.toSeconds(1);
 
     @Autowired
     private ThemeService themeService;
@@ -37,13 +37,7 @@ public class FileListenerFactory {
         IOFileFilter filter = FileFilterUtils.or(directories, files);
 
         // 装配过滤器
-        File dir = null;
-        try {
-            dir = ResourceUtils.getFile("classpath:templates/theme");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
+        File dir = this.themeService.getThemeCatalog();
         FileAlterationObserver observer = new FileAlterationObserver(dir, filter);
 
         // 向监听者添加监听器，并注入业务服务

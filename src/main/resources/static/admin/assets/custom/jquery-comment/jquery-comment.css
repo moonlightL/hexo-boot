@@ -405,6 +405,7 @@ ul {
 
 .comment-list-body .comment-list-item img {
     display: inline-block;
+    width: 22px;
 }
 
 .comment-list-body .comment-list-item  blockquote.original-content {

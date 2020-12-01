@@ -13,6 +13,7 @@ import com.light.hexo.common.util.JsonUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
@@ -58,6 +59,11 @@ public class InstallService {
 
     @Autowired
     private ThemeService themeService;
+
+    @Autowired
+    private Environment environment;
+
+    private static final String THEME_DIR = "templates/theme";
 
     @Transactional(rollbackFor = Exception.class)
     public void installApplication(InstallRequest request, String browserName, String ipAddr) throws Exception {
@@ -133,6 +139,7 @@ public class InstallService {
 
         Post post = new Post();
         post.setTitle("第一篇文章")
+            .setSummaryHtml("")
             .setContent("```\n" +
                     "public static void main(String[] args) {\n" +
                     "\tSystem.out.println(\"Hello World\");\n" +
@@ -192,6 +199,8 @@ public class InstallService {
 
     private void initConfig(User user, String blogName, String homePage, String description) {
 
+        String configPath = this.environment.getProperty("spring.config.additional-location");
+
         ConfigEnum[] values = ConfigEnum.values();
         List<Config> configList = new ArrayList<>(values.length);
         for (ConfigEnum configEnum : values) {
@@ -231,12 +240,12 @@ public class InstallService {
             }
 
             if (config.getConfigKey().equals(ConfigEnum.BACKUP_DIR.getName())) {
-                config.setConfigValue(System.getProperty("user.home") + File.separator + ".hexo-boot-attachment" + File.separator);
+                config.setConfigValue(configPath + "attachments" + File.separator);
             }
 
             if (config.getConfigKey().equals(ConfigEnum.LOCAL_FILE_PATH.getName())) {
                 // 与 SpringMvcConfig 类中配置的 addResourceHandlers 保持一致
-                config.setConfigValue(System.getProperty("user.home") + File.separator + ".hexo-boot-attachment" + File.separator);
+                config.setConfigValue(configPath + "attachments" + File.separator);
             }
 
             configList.add(config);
@@ -247,7 +256,7 @@ public class InstallService {
 
     private void initTheme() throws Exception {
 
-        File dir = ResourceUtils.getFile("classpath:templates/theme");
+        File dir = this.themeService.getThemeCatalog();
         File[] files = dir.listFiles((file, name) -> name.equals("default"));
         if (files == null || files.length == 0) {
             ExceptionUtil.throwEx(404, "主题目录不存在");
