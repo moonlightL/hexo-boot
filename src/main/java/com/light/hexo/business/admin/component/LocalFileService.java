@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayInputStream;
@@ -35,6 +36,9 @@ public class LocalFileService implements FileService {
     @Autowired
     private BlogProperty blogProperty;
 
+    @Autowired
+    private Environment environment;
+
     @Override
     public FileResponse upload(FileRequest fileRequest) throws GlobalException {
 
@@ -55,7 +59,7 @@ public class LocalFileService implements FileService {
             FileUtils.copyToFile(bis, dest);
             fileResponse.setSuccess(true)
                     .setPath(dest.getAbsolutePath())
-                    .setUrl("http://" + IpUtil.getHostIp() + ":8080" + "/images/" + dest.getName());
+                    .setUrl("http://" + IpUtil.getHostIp() + ":" + environment.getProperty("server.port") + "/images/" + dest.getName());
             return fileResponse;
 
         } catch (GlobalException e) {
