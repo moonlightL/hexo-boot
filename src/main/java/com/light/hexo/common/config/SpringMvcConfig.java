@@ -1,5 +1,6 @@
 package com.light.hexo.common.config;
 
+import com.light.hexo.business.admin.config.BlogProperty;
 import com.light.hexo.business.admin.constant.ConfigEnum;
 import com.light.hexo.business.admin.service.ConfigService;
 import com.light.hexo.business.admin.web.interceptor.InstallInterceptor;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.core.env.Environment;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -44,19 +46,23 @@ public class SpringMvcConfig implements WebMvcConfigurer {
     @Autowired
     private ConfigService configService;
 
+    @Autowired
+    private BlogProperty blogProperty;
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
 
         String filePath = this.configService.getConfigValue(ConfigEnum.LOCAL_FILE_PATH.getName());
         String localFilePath = StringUtils.isNotBlank(filePath) ?
                 filePath  + File.separator
-                : System.getProperty("user.home") + File.separator + ".hexo-boot-attachment" + File.separator;
+                : this.blogProperty.getAttachmentDir();
 
         registry.addResourceHandler("/images/**")
                     .addResourceLocations("file:" +  localFilePath);
 
         registry.addResourceHandler("/theme/**")
-                .addResourceLocations("classpath:/templates/theme/");
+                .addResourceLocations("classpath:/templates/theme/",
+                        "file:" + this.blogProperty.getThemeDir());
     }
 
     @Override

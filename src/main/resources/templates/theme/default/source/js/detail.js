@@ -1,7 +1,7 @@
 let CommentManager = (function ($) {
 
     let CommentManager = {
-        init: function (nickname, postId, comment) {
+        init: function (postId, comment) {
             let flag = false;
             let $footer = $("#footer-copyright");
             let top = parseInt($footer.offset().top);
@@ -13,19 +13,18 @@ let CommentManager = (function ($) {
                     if (!flag && (winHeight + scrollTop >= top)) {
                         // 获取评论列表
                         flag = true;
-                        CommentManager.initComment(nickname, postId, comment);
+                        CommentManager.initComment(postId, comment);
                     }
                 });
             } else {
-                CommentManager.initComment(nickname, postId, comment);
+                CommentManager.initComment(postId, comment);
             }
             CommentManager.bindEvent(postId);
         },
-        initComment: function (nickname, postId, comment) {
+        initComment: function (postId, comment) {
             $("#comment-container").BeautyComment({
                 title: "评论",
                 subTitle: "最新评论",
-                bloggerName: nickname,
                 baseUrl: "/admin/assets/custom/",
                 listUrl: "/commentList.json",
                 sendUrl: "/auth/sendComment.json",

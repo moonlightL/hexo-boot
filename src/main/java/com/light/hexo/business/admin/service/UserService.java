@@ -60,6 +60,13 @@ public interface UserService extends BaseService<User> {
      */
     int getUserNum() throws GlobalException;
 
+    /**
+     * 获取博主信息
+     * @return
+     * @throws GlobalException
+     */
+    User getBloggerInfo() throws GlobalException;
+
     // ================================= 以下为前端页面请求 ===============================
 
     /**

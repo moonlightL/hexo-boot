@@ -103,8 +103,7 @@
         <script th:src="@{${prefix} + '/source/js/detail.js'}"></script>
         <script type="text/javascript" th:inline="javascript">
             $(function () {
-                let nickname = [[${#servletContext.getAttribute('configMap')['blog_author']}]];
-                CommentManager.init(nickname, [[${post.id}]], [[${post.comment}]]);
+                CommentManager.init([[${post.id}]], [[${post.comment}]]);
             });
         </script>
         [(${#servletContext.getAttribute('configMap')['script_code']})]

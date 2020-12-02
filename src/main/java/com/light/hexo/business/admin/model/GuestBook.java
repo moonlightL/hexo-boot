@@ -121,4 +121,10 @@ public class GuestBook implements Serializable {
      */
     @Transient
     private String avatar;
+
+    /**
+     * 是否为博主
+     */
+    @Transient
+    private Boolean blogger;
 }

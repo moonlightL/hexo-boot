@@ -1,5 +1,6 @@
 package com.light.hexo;
 
+import com.light.hexo.common.util.IpUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -30,8 +31,8 @@ public class HexoBootApplication extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
         ConfigurableApplicationContext context = SpringApplication.run(HexoBootApplication.class, args);
-        log.info("访问地址：http://127.0.0.1:{}/", context.getEnvironment().getProperty("server.port"));
-        log.info("后台登录地址：http://127.0.0.1:{}/admin/login.html", context.getEnvironment().getProperty("server.port"));
+        log.info("访问地址：http://{}:{}/", IpUtil.getHostIp(), context.getEnvironment().getProperty("server.port"));
+        log.info("后台登录地址：http://{}:{}/admin/login.html", IpUtil.getHostIp(), context.getEnvironment().getProperty("server.port"));
     }
 
 }

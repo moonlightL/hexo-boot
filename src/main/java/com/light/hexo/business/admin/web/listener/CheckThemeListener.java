@@ -1,21 +1,16 @@
 package com.light.hexo.business.admin.web.listener;
 
+import cn.hutool.json.JSONArray;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.light.hexo.business.admin.constant.ConfigEnum;
 import com.light.hexo.business.admin.model.Theme;
-import com.light.hexo.business.admin.service.ConfigService;
 import com.light.hexo.business.admin.service.ThemeService;
-import com.light.hexo.common.util.ExceptionUtil;
 import com.light.hexo.common.util.JsonUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.ResourceUtils;
-import org.springframework.util.StringUtils;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -30,19 +25,18 @@ import java.util.stream.Collectors;
  * @DateTime: 2020/10/5 10:53 下午
  */
 @Component
+@Slf4j
 public class CheckThemeListener {
 
     @Autowired
     private ThemeService themeService;
 
     public void checkTheme() throws Exception {
-
-        File dir = ResourceUtils.getFile("classpath:templates/theme");
-        if (dir.list() == null || dir.listFiles().length == 0) {
+        // 获取主题目录
+        File dir = this.themeService.getThemeCatalog();
+        if (dir == null) {
             return;
         }
-
-        Theme activeTheme = this.themeService.getActiveTheme(false);
 
         // 实际存在的主题名称
         List<String> themeNameList = new ArrayList<>();
@@ -54,6 +48,8 @@ public class CheckThemeListener {
             }
 
             File jsonFile = jsonFiles[0];
+
+            Theme activeTheme = this.themeService.getActiveTheme(false);
 
             // 读取内容
             String content = FileUtils.readFileToString(jsonFile, "UTF-8");
@@ -78,14 +74,17 @@ public class CheckThemeListener {
             }
 
             String fileDir = jsonFile.getParentFile().getName();
-            this.themeService.saveTheme(
+            Integer themeId = this.themeService.saveTheme(
                     themeName,
                     String.format("/theme/%s/preview.png", fileDir),
                     state,
                     Objects.nonNull(map.get("remark")) ? map.get("remark").toString(): "",
-                    (List<Map<String, String>>)map.get("extension")
+                    (List<Map<String, String>>) map.get("extension")
             );
 
+            if (state) {
+                this.themeService.useTheme(themeId);
+            }
         }
 
         // 过滤出不在 theme 目录的主题记录

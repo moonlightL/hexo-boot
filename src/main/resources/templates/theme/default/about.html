@@ -42,8 +42,7 @@
     <script th:src="@{${prefix} + '/source/js/about.js'}"></script>
     <script type="text/javascript" th:inline="javascript">
        $(function () {
-           let nickname = [[${#servletContext.getAttribute('configMap')['blog_author']}]];
-           GuestBookManager.init(nickname);
+           GuestBookManager.init();
        });
     </script>
 </div>

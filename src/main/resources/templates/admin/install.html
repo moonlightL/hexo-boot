@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Hexo Boot 后台管理 | 安装</title>
     <link rel="shortcut icon" th:href="@{${#servletContext.getAttribute('configMap')['favicon_url']}}">
-    <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/sweetalert2/sweetalert2.css'}">
+    <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/sweetalert2/sweetalert2.min.css'}">
     <link rel="stylesheet" th:href="@{'/admin/assets/fonts/googleapis/fonts.googleapis.css?family=Nunito+Sans:300,400,400i,600,700&display=swap'}">
     <link rel="stylesheet" id="css-main" th:href="@{'/admin/assets/css/codebase.min.css'}">
 </head>
@@ -108,7 +108,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="install-homePage">博客首页 <span class="text-default">(选填)</span></label>
-                                            <input type="text" class="form-control form-control-lg" id="install-homePage" name="homePage" placeholder="注：“http://” 或 “https:// 开头”">
+                                            <input type="text" class="form-control form-control-lg" id="install-homePage" name="homePage" th:value="${webSite}" placeholder="注：“http://” 或 “https:// 开头”">
                                         </div>
                                         <div class="form-group">
                                             <label for="install-description">博客描述 <span class="text-default">(选填)</span></label>

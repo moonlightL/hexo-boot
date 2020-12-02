@@ -87,7 +87,7 @@ public class ThemeController extends BaseController {
 
         resultMap.put("theme", theme);
 
-        List<TreeNode> catalogList = this.themeService.getThemeCatalog(theme);
+        List<TreeNode> catalogList = this.themeService.getThemeTreeNode(theme);
         resultMap.put("catalogList", catalogList);
 
         return render("codeUI", resultMap);
@@ -102,7 +102,7 @@ public class ThemeController extends BaseController {
     @ResponseBody
     public Result useTheme(@Validated(BaseRequest.Update.class) ThemeRequest request) {
         Theme theme = request.toDoModel();
-        this.themeService.useTheme(theme);
+        this.themeService.useTheme(theme.getId());
         return Result.success();
     }
 
