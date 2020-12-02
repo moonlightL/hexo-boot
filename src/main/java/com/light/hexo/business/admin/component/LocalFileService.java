@@ -1,5 +1,6 @@
 package com.light.hexo.business.admin.component;
 
+import com.light.hexo.business.admin.config.BlogProperty;
 import com.light.hexo.business.admin.constant.ConfigEnum;
 import com.light.hexo.business.admin.service.ConfigService;
 import com.light.hexo.common.component.file.FileManageEnum;
@@ -30,6 +31,9 @@ public class LocalFileService implements FileService {
 
     @Autowired
     private ConfigService configService;
+
+    @Autowired
+    private BlogProperty blogProperty;
 
     @Override
     public FileResponse upload(FileRequest fileRequest) throws GlobalException {
@@ -82,13 +86,8 @@ public class LocalFileService implements FileService {
     }
 
     private String getUploadDir() {
-
         String uploadDir = this.configService.getConfigValue(ConfigEnum.LOCAL_FILE_PATH.getName());
-        if (StringUtils.isBlank(uploadDir)) {
-            uploadDir = System.getProperty("user.home") + ".hexo-boot-attachment" + File.separator;
-        }
-
-        return uploadDir;
+        return StringUtils.isBlank(uploadDir) ? this.blogProperty.getAttachmentDir() : uploadDir;
     }
 
     @Override

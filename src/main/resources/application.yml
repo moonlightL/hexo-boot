@@ -16,17 +16,10 @@ server:
 
 # spring 配置
 spring:
-  config:
-    additional-location: file:${user.home}/.hexo-boot/
   application:
     name: hexo-boot
   profiles:
     active: dev
-#  thymeleaf:
-#    mode: HTML
-#    encoding: UTF-8
-#    cache: false
-#    prefix: classpath:/templates/
   jackson:
     time-zone: GMT+8
     date-format: yyyy-MM-dd HH:mm:ss
@@ -79,3 +72,11 @@ pagehelper:
   reasonable: true
   supportMethodsArguments: true
   params: count=countSql
+
+###########自定义##############
+
+blog:
+  home-dir: ${user.home}/.hexo-boot/
+  theme-dir: ${blog.home-dir}templates/theme/
+  attachment-dir: ${blog.home-dir}attachments/
+  log-dir: ${blog.home-dir}logs/

@@ -1,5 +1,6 @@
 package com.light.hexo.common.config;
 
+import com.light.hexo.business.admin.config.BlogProperty;
 import com.light.hexo.business.admin.constant.ConfigEnum;
 import com.light.hexo.business.admin.service.ConfigService;
 import com.light.hexo.business.admin.web.interceptor.InstallInterceptor;
@@ -46,7 +47,7 @@ public class SpringMvcConfig implements WebMvcConfigurer {
     private ConfigService configService;
 
     @Autowired
-    private Environment environment;
+    private BlogProperty blogProperty;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -54,14 +55,14 @@ public class SpringMvcConfig implements WebMvcConfigurer {
         String filePath = this.configService.getConfigValue(ConfigEnum.LOCAL_FILE_PATH.getName());
         String localFilePath = StringUtils.isNotBlank(filePath) ?
                 filePath  + File.separator
-                : this.environment.getProperty("spring.config.additional-location") + "attachments" + File.separator;
+                : this.blogProperty.getAttachmentDir();
 
         registry.addResourceHandler("/images/**")
                     .addResourceLocations("file:" +  localFilePath);
 
         registry.addResourceHandler("/theme/**")
                 .addResourceLocations("classpath:/templates/theme/",
-                        this.environment.getProperty("spring.config.additional-location") + "templates/theme/");
+                        "file:" + this.blogProperty.getThemeDir());
     }
 
     @Override

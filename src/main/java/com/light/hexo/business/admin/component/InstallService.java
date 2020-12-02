@@ -1,6 +1,7 @@
 package com.light.hexo.business.admin.component;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.light.hexo.business.admin.config.BlogProperty;
 import com.light.hexo.business.admin.constant.HexoExceptionEnum;
 import com.light.hexo.business.admin.model.*;
 import com.light.hexo.business.admin.service.*;
@@ -61,7 +62,7 @@ public class InstallService {
     private ThemeService themeService;
 
     @Autowired
-    private Environment environment;
+    private BlogProperty blogProperty;
 
     private static final String THEME_DIR = "templates/theme";
 
@@ -199,8 +200,6 @@ public class InstallService {
 
     private void initConfig(User user, String blogName, String homePage, String description) {
 
-        String configPath = this.environment.getProperty("spring.config.additional-location");
-
         ConfigEnum[] values = ConfigEnum.values();
         List<Config> configList = new ArrayList<>(values.length);
         for (ConfigEnum configEnum : values) {
@@ -240,12 +239,12 @@ public class InstallService {
             }
 
             if (config.getConfigKey().equals(ConfigEnum.BACKUP_DIR.getName())) {
-                config.setConfigValue(configPath + "attachments" + File.separator);
+                config.setConfigValue(this.blogProperty.getAttachmentDir());
             }
 
             if (config.getConfigKey().equals(ConfigEnum.LOCAL_FILE_PATH.getName())) {
                 // 与 SpringMvcConfig 类中配置的 addResourceHandlers 保持一致
-                config.setConfigValue(configPath + "attachments" + File.separator);
+                config.setConfigValue(this.blogProperty.getAttachmentDir());
             }
 
             configList.add(config);

@@ -1,6 +1,7 @@
 package com.light.hexo.business.admin.service.impl;
 
 import cn.hutool.core.io.FileUtil;
+import com.light.hexo.business.admin.config.BlogProperty;
 import com.light.hexo.business.admin.constant.HexoExceptionEnum;
 import com.light.hexo.business.admin.mapper.ThemeMapper;
 import com.light.hexo.business.admin.model.Theme;
@@ -65,7 +66,7 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
     private ThemeExtendService themeExtendService;
 
     @Autowired
-    private Environment environment;
+    private BlogProperty blogProperty;
 
     private static final String THEME_DIR = "templates/theme";
 
@@ -200,7 +201,7 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
             URI themeUri = ResourceUtils.getURL(ResourceUtils.CLASSPATH_URL_PREFIX + THEME_DIR).toURI();
 
             if ("jar".equalsIgnoreCase(themeUri.getScheme())) {
-                dir = ResourceUtils.getFile(this.environment.getProperty("spring.config.additional-location") + THEME_DIR + File.separator + theme.getName());
+                dir = ResourceUtils.getFile(ResourceUtils.FILE_URL_PREFIX + this.blogProperty.getThemeDir() + theme.getName());
             } else {
                 dir = ResourceUtils.getFile(themeUri.toString() + File.separator + theme.getName());
             }
@@ -285,12 +286,14 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
         File dir = null;
         try {
             URI uri = ResourceUtils.getURL(ResourceUtils.CLASSPATH_URL_PREFIX + THEME_DIR).toURI();
+
             if ("jar".equalsIgnoreCase(uri.getScheme())) {
-                dir = ResourceUtils.getFile(this.environment.getProperty("spring.config.additional-location") + THEME_DIR);
+                dir = ResourceUtils.getFile(ResourceUtils.FILE_URL_PREFIX + this.blogProperty.getThemeDir());
                 if (!dir.exists()) {
                     FileSystem fileSystem = FileSystems.newFileSystem(uri, Collections.emptyMap());
                     Path source = fileSystem.getPath("/BOOT-INF/classes/" + THEME_DIR);
                     Path target = dir.toPath();
+
                     Files.walkFileTree(source, new SimpleFileVisitor<Path>() {
 
                         @Override
@@ -320,6 +323,10 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
     private List<TreeNode> wrapTreeNode(File dir, TreeNode parent) {
         List<TreeNode> treeNodeList = new ArrayList<>();
         File[] files = dir.listFiles();
+        if (files == null) {
+            return new ArrayList<>();
+        }
+
         int index = 1;
         for (File file : files) {
             TreeNode treeNode = new TreeNode();
