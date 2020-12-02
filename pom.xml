@@ -250,6 +250,7 @@
             <version>1.0.0</version>
         </dependency>
 
+        <!-- 存储对象相关 -->
         <dependency>
             <groupId>com.qiniu</groupId>
             <artifactId>qiniu-java-sdk</artifactId>
@@ -262,7 +263,7 @@
             <version>3.8.0</version>
         </dependency>
 
-        <!-- 查询 ip -->
+        <!-- 查询 ip 对应国家、城市 -->
         <dependency>
             <groupId>org.lionsoul</groupId>
             <artifactId>ip2region</artifactId>
