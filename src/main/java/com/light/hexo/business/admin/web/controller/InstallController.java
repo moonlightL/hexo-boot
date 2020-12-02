@@ -8,6 +8,7 @@ import com.light.hexo.common.model.UserRequest;
 import com.light.hexo.common.util.BrowserUtil;
 import com.light.hexo.common.util.IpUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +31,9 @@ public class InstallController {
     @Autowired
     private InstallService installService;
 
+    @Autowired
+    private Environment environment;
+
     /**
      * 安装页
      * @param resultMap
@@ -37,7 +41,9 @@ public class InstallController {
      */
     @RequestMapping("/install.html")
     public String install(Map<String, Object> resultMap) {
-        return "/admin/install";
+        // 此处开头不能加 "/"，否则 jar 方式运行访问会报错
+        resultMap.put("webSite", "http://" + IpUtil.getHostIp() + ":" + environment.getProperty("server.port"));
+        return "admin/install";
     }
 
     /**
