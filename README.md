@@ -98,7 +98,7 @@ http://127.0.0.1:8080/admin/login.html
 
 ### 4.2.1 war 包形式
 
-修改 pom.xml 文件的 2 处地方：
+1.修改 pom.xml 文件的 2 处地方：
 
 ```
 将 <packaging>war</packaging> 注释放开
@@ -106,20 +106,21 @@ http://127.0.0.1:8080/admin/login.html
 排除 spring-boot-starter-web 的内置 tomcat
 ```
 
-mvn clean package，打出名为 ROOT.war 文件，将其上传至 tomcat 的 webapps 目录下（如已有 ROOT 文件，将其删掉），启动 tomcat 即可
+2.``mvn clean package``，打出名为 ROOT.war 文件，将其上传至 tomcat 的 webapps 目录下（如已有 ROOT 文件，将其删掉），启动 tomcat 即可
 
 ### 4.2.2 jar 包形式
 
-1. 创建博客配置文件夹 ``mkdir ~/.hexo-boot``
+1.创建博客配置文件夹 ``mkdir ~/.hexo-boot``
 
-2. mvn clean package，打出 jar 包后上传至 **~/.hexo-boot**
+2.mvn clean package，打出 jar 包后上传至 **~/.hexo-boot**
 
-3. 将 application.yml 文件上传至 **~/.hexo-boot** 目录中，根据自己的情况修改 application.yml 的数据库信息
+3.将 application.yml 文件上传至 **~/.hexo-boot** 目录中，根据自己的情况修改**application.yml**的数据库信息
 
-4. 创建 Service 服务
+4.创建 Service 服务
 
 ```
-# vim /etc/systemd/system/hexo-boot.service
+vim /etc/systemd/system/hexo-boot.service
+
 # 编辑内容如下：
 
 [Unit]
@@ -135,11 +136,11 @@ Restart=always
 WantedBy=multi-user.target
 ```
 
-**注意：路径根据自己的情况进行修改，用到的路径必须是绝对路径！**
+**注意：内存分配和路径根据自己的情况进行修改，且路径必须是绝对路径！**
 
-**注意：路径根据自己的情况进行修改，用到的路径必须是绝对路径！**
+**注意：内存分配和路径根据自己的情况进行修改，且路径必须是绝对路径！**
 
-**注意：路径根据自己的情况进行修改，用到的路径必须是绝对路径！**
+**注意：内存分配和路径根据自己的情况进行修改，且路径必须是绝对路径！**
 
 5. 服务命令
 
@@ -156,26 +157,25 @@ systemctl stop hexo-boot
 
 步骤1 和 步骤2 可以使用如下命令代替
 
+【GitHub】资源
+
 ```
-# 下载安装包（2选1）
+# 下载安装包
 curl -L https://github.com/moonlightL/hexo-boot/releases/download/1.4.0/hexo-boot-1.4.0.jar --output ~/.hexo-boot/hexo-boot.jar
-# 下载安装包（2选1）
-wget https://github.com/moonlightL/hexo-boot/releases/download/1.4.0/hexo-boot-1.4.0.jar -O ~/.hexo-boot/hexo-boot.jar
-# 下载 spring boot 配置文件
-curl -o ~/.hexo-boot/application.yml --create-dirs https://github.com/moonlightL/hexo-boot/releases/download/1.4.0/application.yml
+
+# 下载 spring boot 配置文件，记得要修改数据库配置
+curl -L -o ~/.hexo-boot/application.yml --create-dirs https://github.com/moonlightL/hexo-boot/releases/download/1.4.0/application.yml
 ```
 
-码云
+【码云】资源
 
 ```
-# 下载安装包（2选1）
+# 下载安装包
 curl -L https://gitee.com/moonlightL/hexo-boot/attach_files/537531/download/hexo-boot-1.4.0.jar --output ~/.hexo-boot/hexo-boot.jar
-# 下载安装包（2选1）
-wget https://gitee.com/moonlightL/hexo-boot/attach_files/537531/download/hexo-boot-1.4.0.jar -O ~/.hexo-boot/hexo-boot.jar
-# 下载 spring boot 配置文件
-curl -o ~/.hexo-boot/application.yml --create-dirs https://gitee.com/moonlightL/hexo-boot/attach_files/537532/download/application.yml
-```
 
+# 下载 spring boot 配置文件，记得要修改数据库配置
+curl -L -o ~/.hexo-boot/application.yml --create-dirs https://gitee.com/moonlightL/hexo-boot/attach_files/537532/download/application.yml
+```
 
 ## 五、添加主题
 
