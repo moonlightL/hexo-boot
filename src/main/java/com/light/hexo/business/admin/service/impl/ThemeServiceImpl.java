@@ -265,14 +265,16 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
         File file = this.getThemeCatalog();
         File dir = new File(file.getAbsolutePath(), themeName);
         if (dir.exists() && dir.isDirectory()) {
-            FileUtil.del(dir);
+            FileUtils.deleteQuietly(dir);
         }
 
-        try {
+        try(
             Git git = Git.cloneRepository()
-                    .setURI(themeUrl)
-                    .setDirectory(new File(file.getAbsolutePath(), themeName))
-                    .call();
+                         .setURI(themeUrl)
+                         .setDirectory(new File(file.getAbsolutePath(), themeName))
+                         .call()
+            ) {
+
             log.info("Cloning from " + themeUrl + " to " + git.getRepository());
         } catch (GitAPIException e) {
             e.printStackTrace();

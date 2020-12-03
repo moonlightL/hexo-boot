@@ -96,7 +96,7 @@ http://127.0.0.1:8080/admin/login.html
 
 该项目支持 war 包和 jar 包两种方式运行
 
-### 4.2.1 war 包形式
+#### 4.2.1 war 包形式
 
 1.修改 pom.xml 文件的 2 处地方：
 
@@ -108,7 +108,7 @@ http://127.0.0.1:8080/admin/login.html
 
 2.``mvn clean package``，打出名为 ROOT.war 文件，将其上传至 tomcat 的 webapps 目录下（如已有 ROOT 文件，将其删掉），启动 tomcat 即可
 
-### 4.2.2 jar 包形式
+#### 4.2.2 jar 包形式
 
 1.创建博客配置文件夹 ``mkdir ~/.hexo-boot``
 
