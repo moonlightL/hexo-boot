@@ -40,6 +40,7 @@ public enum ConfigEnum {
     QN_ACCESS_KEY("qn_access_key", "","七牛云 KEY"),
     QN_SECRET_KEY("qn_secret_key", "","七牛云密钥"),
     QN_BUCKET("qn_bucket", "","七牛云桶"),
+    QN_REGION("qn_region", "", "机房"),
 
     OSS_ENDPOINT("oss_endpoint", "","OSS域名"),
     OSS_ACCESS_KEY("oss_access_key", "","OSS KEY"),

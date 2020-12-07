@@ -32,7 +32,7 @@ public class FileListener extends FileAlterationListenerAdaptor {
     }
 
     /**
-     * 文件创建执行
+     * 文件创建
      * @param file
      */
     @Override
@@ -44,7 +44,7 @@ public class FileListener extends FileAlterationListenerAdaptor {
             Map<String, Object> map = JsonUtil.string2Obj(content, Map.class);
 
             String fileDir = file.getParentFile().getName();
-            this.themeService.saveTheme(
+            Integer themeId = this.themeService.saveTheme(
                     map.get("name").toString(),
                     String.format("/theme/%s/preview.png", fileDir),
                     false,
@@ -52,6 +52,10 @@ public class FileListener extends FileAlterationListenerAdaptor {
                     (List<Map<String, String>>)map.get("extension")
             );
 
+            Theme activeTheme = this.themeService.getActiveTheme(false);
+            if (activeTheme == null) {
+                this.themeService.useTheme(themeId);
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -60,7 +64,7 @@ public class FileListener extends FileAlterationListenerAdaptor {
     }
 
     /**
-     * 文件创建修改
+     * 文件修改
      * @param file
      */
     @Override
@@ -84,7 +88,7 @@ public class FileListener extends FileAlterationListenerAdaptor {
     }
 
     /**
-     * 文件创建删除
+     * 文件删除
      * @param file
      */
     @Override
