@@ -8,10 +8,7 @@ import org.apache.commons.io.monitor.FileAlterationMonitor;
 import org.apache.commons.io.monitor.FileAlterationObserver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ResourceUtils;
-
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -23,9 +20,6 @@ import java.util.concurrent.TimeUnit;
  */
 @Component
 public class FileListenerFactory {
-
-    // 设置轮询间隔
-    private final long interval = TimeUnit.SECONDS.toSeconds(1);
 
     @Autowired
     private ThemeService themeService;
@@ -44,7 +38,7 @@ public class FileListenerFactory {
         observer.addListener(new FileListener(themeService));
 
         // 返回监听者
-        return new FileAlterationMonitor(interval, observer);
+        return new FileAlterationMonitor(TimeUnit.SECONDS.toSeconds(1), observer);
     }
 
 }

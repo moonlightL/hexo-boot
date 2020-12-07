@@ -74,6 +74,18 @@
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-12">
+                                        <label for="qn_bucket">七牛云机房</label>
+                                        <select class="form-control form-control-lg" id="qn_region" name="qn_region">
+                                            <option th:text="华东" th:value="0" th:attr="selected=${'0' eq configMap['qn_region']}"></option>
+                                            <option th:text="华北" th:value="1" th:attr="selected=${'1' eq configMap['qn_region']}"></option>
+                                            <option th:text="华南" th:value="2" th:attr="selected=${'2' eq configMap['qn_region']}"></option>
+                                            <option th:text="北美" th:value="3" th:attr="selected=${'3' eq configMap['qn_region']}"></option>
+                                            <option th:text="东南亚" th:value="4" th:attr="selected=${'4' eq configMap['qn_region']}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12">
                                         <label for="oss_endpoint">OSS域名</label>
                                         <input class="form-control form-control-lg" id="oss_endpoint" name="oss_endpoint" type="text"  th:value="${configMap['oss_endpoint']}">
                                     </div>

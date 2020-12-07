@@ -1,0 +1,1 @@
+INSERT INTO `hexo-boot`.`t_config` (`config_key`, `remark`) VALUES ('qn_region', '七牛云机房');

@@ -10,6 +10,7 @@ import com.light.hexo.common.component.file.FileService;
 import com.light.hexo.common.exception.GlobalException;
 import com.light.hexo.common.util.ExceptionUtil;
 import com.light.hexo.common.util.JsonUtil;
+import com.qiniu.common.Region;
 import com.qiniu.common.Zone;
 import com.qiniu.http.Response;
 import com.qiniu.storage.BucketManager;
@@ -23,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -49,9 +51,7 @@ public class QiNiuFileService implements FileService {
         String fileName = fileRequest.getFilename();
 
         try {
-            // Zone.zone2() 根据自己情况选择
-            Configuration cfg = new Configuration(Zone.zone2());
-            UploadManager uploadManager = new UploadManager(cfg);
+            UploadManager uploadManager = this.createUploadManager();
             Auth auth = this.createAuth();
             String upToken = auth.uploadToken(this.getBucket());
 
@@ -141,6 +141,32 @@ public class QiNiuFileService implements FileService {
         return FileManageEnum.QI_NIU.getCode();
     }
 
+
+    private static final Map<String, Region> REGION_MAP = new HashMap<>();
+
+    static {
+        // 华东
+        REGION_MAP.put("0", Region.region0());
+        // 华北
+        REGION_MAP.put("1", Region.region1());
+        // 华南
+        REGION_MAP.put("2", Region.region2());
+        // 北美
+        REGION_MAP.put("3", Region.regionNa0());
+        // 东南亚
+        REGION_MAP.put("4", Region.regionAs0());
+    }
+
+    /**
+     * 创建配置
+     * @return
+     */
+    private UploadManager createUploadManager() {
+        Map<String, String> configMap = this.configService.getConfigMap();
+        String regionKey = configMap.get(ConfigEnum.QN_REGION.getName());
+        Configuration cfg = new Configuration(REGION_MAP.get(regionKey));
+        return new UploadManager(cfg);
+    }
 
     /**
      * 创建认证
