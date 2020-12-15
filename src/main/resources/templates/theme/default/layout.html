@@ -10,7 +10,7 @@
     <meta name="description" th:content="${#servletContext.getAttribute('configMap')['description']}" />
     <meta name="referrer" content="no-referrer" />
     [(${#servletContext.getAttribute('configMap')['meta_code']})]
-    <link rel="shortcut icon" th:href="@{${#servletContext.getAttribute('configMap')['favicon_url']}}"/>
+<!--    <link rel="shortcut icon" th:href="@{${#servletContext.getAttribute('configMap')['favicon_url']}}"/>-->
     <link rel="stylesheet" th:href="@{${prefix} + '/source/js/bootstrap-3.3.7/css/bootstrap.min.css'}">
     <link rel="stylesheet" th:href="@{${prefix} + '/source/fonts/font-awesome/css/font-awesome.min.css'}" />
     <link rel="stylesheet" th:href="@{'/admin/assets/custom/jquery-search/jquery.search.css'}"/>
@@ -43,11 +43,9 @@
                             </div>
                             <div id="navbar" class="navbar-collapse collapse">
                                 <ul class="nav navbar-nav navbar-right">
-                                    <li th:class="${menu eq 'index' ? 'active' : ''}"><a th:href="@{/}">首页</a></li>
-                                    <li th:class="${menu eq 'archives' ? 'active' : ''}"><a th:href="@{/archives/}">归档</a></li>
-                                    <li th:class="${menu eq 'categories' ? 'active' : ''}"><a th:href="@{/categories/}">分类</a></li>
-                                    <li th:class="${menu eq 'friendLinks' ? 'active' : ''}"><a th:href="@{/friendLinks/}">友链</a></li>
-                                    <li th:class="${menu eq 'about' ? 'active' : ''}"><a th:href="@{/about/}">关于</a></li>
+                                    <li th:each="nav : ${navList}" th:class="${menu eq nav.code ? 'active' : ''}">
+                                        <a th:href="@{${nav.link}}"><i th:class="${nav.icon}"></i> [[${nav.name}]]</a>
+                                    </li>
                                 </ul>
                             </div>
                         </div>

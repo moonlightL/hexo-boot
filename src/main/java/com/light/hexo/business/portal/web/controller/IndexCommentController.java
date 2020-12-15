@@ -39,7 +39,7 @@ public class IndexCommentController extends CommonController {
      * @return
      * @throws GlobalException
      */
-    @GetMapping("/commentList.json")
+    @GetMapping("commentList.json")
     @ResponseBody
     public Result commentList(@RequestParam(defaultValue = "0") Integer postId, @RequestParam(defaultValue = "1") Integer pageNum) throws GlobalException {
 
@@ -69,7 +69,7 @@ public class IndexCommentController extends CommonController {
      * @return
      * @throws GlobalException
      */
-    @PostMapping("/auth/sendComment.json")
+    @PostMapping("auth/sendComment.json")
     @ResponseBody
     @RequestLimit(cacheName = "commentCache", time = 60, msg = "评论操作过于频繁，请等待60秒后再评论")
     public Result sendComment(@Validated(PostCommentRequest.Send.class) PostCommentRequest request, HttpServletRequest httpServletRequest) throws GlobalException {

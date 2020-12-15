@@ -34,7 +34,7 @@ public class IndexController extends CommonController {
      * @param resultMap
      * @return
      */
-    @GetMapping(value = {"/", "/index.html"})
+    @GetMapping(value = {"", "/index.html"})
     public String index(Map<String, Object> resultMap) {
         Theme activeTheme = this.themeService.getActiveTheme(true);
         String pageSizeStr = activeTheme.getConfigMap().get("pageSize");
@@ -47,7 +47,7 @@ public class IndexController extends CommonController {
         return render("index", false, resultMap);
     }
 
-    @GetMapping("/page/{pageNum}/")
+    @GetMapping("page/{pageNum}/")
     public String indexPage(@PathVariable Integer pageNum, Map<String, Object> resultMap) {
         Theme activeTheme = this.themeService.getActiveTheme(true);
         String pageSizeStr = activeTheme.getConfigMap().get("pageSize");
@@ -65,7 +65,7 @@ public class IndexController extends CommonController {
      * @param resultMap
      * @return
      */
-    @GetMapping("/blogs/")
+    @GetMapping("blogs/")
     public String blogs(Map<String, Object> resultMap) {
         Theme activeTheme = this.themeService.getActiveTheme(true);
         String pageSizeStr = activeTheme.getConfigMap().get("pageSize");
@@ -83,7 +83,7 @@ public class IndexController extends CommonController {
      * @param resultMap
      * @return
      */
-    @GetMapping("/blogs/page/{pageNum}/")
+    @GetMapping("blogs/page/{pageNum}/")
     public String blogs(@PathVariable Integer pageNum, Map<String, Object> resultMap) {
         Theme activeTheme = this.themeService.getActiveTheme(true);
         String pageSizeStr = activeTheme.getConfigMap().get("pageSize");
@@ -105,7 +105,7 @@ public class IndexController extends CommonController {
      * @param resultMap
      * @return
      */
-    @GetMapping("/{year}/{month}/{day}/{title}/")
+    @GetMapping("{year}/{month}/{day}/{title}/")
     public String post(@PathVariable("year") String year,
                        @PathVariable("month") String month,
                        @PathVariable("day") String day,
@@ -128,7 +128,7 @@ public class IndexController extends CommonController {
      * @param resultMap
      * @return
      */
-    @GetMapping(value = "/about/")
+    @GetMapping(value = "about/")
     public String about(Map<String, Object> resultMap) {
         UserExtend extend = this.userExtendService.getBloggerInfo();
         resultMap.put("about", extend);
@@ -141,7 +141,7 @@ public class IndexController extends CommonController {
      * @param postId
      * @return
      */
-    @PostMapping("/praisePost/{postId}")
+    @PostMapping("praisePost/{postId}")
     @ResponseBody
     public Result prizePost(@PathVariable Integer postId, HttpServletRequest request) {
         String ipAddr = IpUtil.getIpAddr(request);
@@ -153,7 +153,7 @@ public class IndexController extends CommonController {
      * 文章列表
      * @return
      */
-    @GetMapping("/postList.json")
+    @GetMapping("postList.json")
     @ResponseBody
     public Result getPostList() {
         List<Post> list = this.postService.listPostByIdList(null);

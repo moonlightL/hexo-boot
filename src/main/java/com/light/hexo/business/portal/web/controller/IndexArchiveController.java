@@ -23,7 +23,7 @@ public class IndexArchiveController extends CommonController {
      * @param resultMap
      * @return
      */
-    @GetMapping(value = {"/archives", "/archives/", "/archives/index.html"})
+    @GetMapping(value = {"archives", "archives/", "archives/index.html"})
     public String archives(Map<String, Object> resultMap) {
         HexoPageInfo pageInfo =  this.postService.archivePostsByIndex(1, PAGE_SIZE);
         resultMap.put("pageInfo", pageInfo);
@@ -31,7 +31,7 @@ public class IndexArchiveController extends CommonController {
         return render("archives", false, resultMap);
     }
 
-    @GetMapping(value = "/archives/page/{pageNum}/")
+    @GetMapping(value = "archives/page/{pageNum}/")
     public String archivesPage(@PathVariable("pageNum") Integer pageNum, Map<String, Object> resultMap) {
         HexoPageInfo pageInfo =  this.postService.archivePostsByIndex(pageNum, PAGE_SIZE);
         resultMap.put("pageInfo", pageInfo);

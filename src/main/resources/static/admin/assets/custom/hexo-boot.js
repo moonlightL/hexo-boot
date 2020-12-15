@@ -113,7 +113,7 @@
                         id = selections[0].id
                     }
 
-                    $.hexo.modal.window("新增", $.hexo.table.getEditUrl(id), $target);
+                    $.hexo.modal.window("编辑", $.hexo.table.getEditUrl(id), $target);
                 },
                 save: function (formId, formData, fn) {
                     $('#' + formId).bootstrapValidator().off('success.form.bv').on('success.form.bv', function(e) {

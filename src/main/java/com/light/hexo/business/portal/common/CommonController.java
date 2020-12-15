@@ -1,7 +1,9 @@
 package com.light.hexo.business.portal.common;
 
 import com.light.hexo.business.admin.constant.ConfigEnum;
+import com.light.hexo.business.admin.model.Category;
 import com.light.hexo.business.admin.model.FriendLink;
+import com.light.hexo.business.admin.model.Nav;
 import com.light.hexo.business.admin.model.Theme;
 import com.light.hexo.business.admin.model.event.VisitEvent;
 import com.light.hexo.business.admin.service.*;
@@ -65,6 +67,9 @@ public class CommonController {
     @Autowired
     protected ConfigService configService;
 
+    @Autowired
+    private NavService navService;
+
     protected String render(String pageName, boolean isDetail, Map<String, Object> resultMap) {
 
         // 数量
@@ -80,9 +85,15 @@ public class CommonController {
         resultMap.put("md", MarkdownUtil.class);
         resultMap.put("activeTheme", activeTheme);
 
+        List<Nav> navList = this.navService.listNavsByIndex();
+        resultMap.put("navList", navList);
+
         // 友链
         List<FriendLink> friendLinkList = this.friendLinkService.listFriendLinkByIndex();
         resultMap.put("friendLinkList", friendLinkList);
+
+        List<Category> categoryList = this.categoryService.listCategoriesByIndex();
+        resultMap.put("categoryList", categoryList);
 
         return "theme/" +  themeName + "/" + pageName;
     }

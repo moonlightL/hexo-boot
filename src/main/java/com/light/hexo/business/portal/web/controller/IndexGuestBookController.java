@@ -38,7 +38,7 @@ public class IndexGuestBookController extends CommonController {
      * @return
      * @throws GlobalException
      */
-    @GetMapping("/guestBookList.json")
+    @GetMapping("guestBookList.json")
     @ResponseBody
     public Result guestBookList(@RequestParam(defaultValue = "1") Integer pageNum) throws GlobalException {
 
@@ -69,7 +69,7 @@ public class IndexGuestBookController extends CommonController {
      * @return
      * @throws GlobalException
      */
-    @PostMapping("/auth/sendGuestBook.json")
+    @PostMapping("auth/sendGuestBook.json")
     @ResponseBody
     @RequestLimit(cacheName = "guestBookCache", time = 60, msg = "留言操作过于频繁，请等待60秒后再评论")
     public Result sendGuestBook(@Validated(GuestBookRequest.Send.class) GuestBookRequest request, HttpServletRequest httpServletRequest) throws GlobalException {

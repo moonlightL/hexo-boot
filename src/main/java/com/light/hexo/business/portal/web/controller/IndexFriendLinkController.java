@@ -26,7 +26,7 @@ public class IndexFriendLinkController extends CommonController {
      * @param resultMap
      * @return
      */
-    @GetMapping(value = {"/friendLinks", "/friendLinks/", "/friendLinks/index.html"})
+    @GetMapping(value = {"friendLinks", "friendLinks/", "friendLinks/index.html"})
     public String categories(Map<String, Object> resultMap) {
         List<FriendLink> friendLinkList = this.friendLinkService.listFriendLinkByIndex();
         resultMap.put("friendLinkNum", friendLinkList.size());
