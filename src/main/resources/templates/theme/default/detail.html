@@ -52,7 +52,16 @@
                     </div>
                 </div>
 
-                <div id="reward" class="reward  text-center">
+                <div class="text-center">
+                    <span th:if="${#strings.isEmpty(#servletContext.getAttribute('configMap')['we_chat_gzh']) != true}">
+                        <a href="javascript:void(0)" class="reward-img">
+                            <img th:src="@{${#servletContext.getAttribute('configMap')['we_chat_gzh']}}" width="164" height="164" alt="微信公众号">
+                            <div class="reward-desc" th:text="${#servletContext.getAttribute('configMap')['we_chat_gzh_comment']}"></div>
+                        </a>
+                    </span>
+                </div>
+
+                <div id="reward" class="reward text-center">
                     <p><b th:text="${#servletContext.getAttribute('configMap')['reward_comment']}"></b></p>
                     <button id="showRewardImg" type="button" class="btn btn-primary">打赏</button>
                     <div id="rewardImgArea" class="reward-img-area hide">

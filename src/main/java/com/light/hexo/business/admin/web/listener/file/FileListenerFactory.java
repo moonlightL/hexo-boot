@@ -24,14 +24,14 @@ public class FileListenerFactory {
     @Autowired
     private ThemeService themeService;
 
-    public FileAlterationMonitor getMonitor() {
+    public FileAlterationMonitor createMonitor() {
         // 创建过滤器
         IOFileFilter directories = FileFilterUtils.and(FileFilterUtils.directoryFileFilter(), HiddenFileFilter.VISIBLE);
         IOFileFilter files = FileFilterUtils.and(FileFilterUtils.fileFileFilter(), FileFilterUtils.nameFileFilter("theme.json"));
         IOFileFilter filter = FileFilterUtils.or(directories, files);
 
         // 装配过滤器
-        File dir = this.themeService.getThemeCatalog();
+        File dir = this.themeService.getThemeCatalog(false);
         FileAlterationObserver observer = new FileAlterationObserver(dir, filter);
 
         // 向监听者添加监听器，并注入业务服务

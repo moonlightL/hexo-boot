@@ -1,6 +1,7 @@
 package com.light.hexo.business.admin.service.impl;
 
 import cn.hutool.core.io.FileUtil;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.light.hexo.business.admin.config.BlogProperty;
 import com.light.hexo.business.admin.constant.HexoExceptionEnum;
 import com.light.hexo.business.admin.mapper.ThemeMapper;
@@ -17,6 +18,7 @@ import com.light.hexo.common.model.TreeNode;
 import com.light.hexo.common.util.CacheUtil;
 import com.light.hexo.common.util.EhcacheUtil;
 import com.light.hexo.common.util.ExceptionUtil;
+import com.light.hexo.common.util.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -42,10 +44,7 @@ import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -141,7 +140,7 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
     }
 
     @Override
-    public Theme checkTheme(String name) throws GlobalException {
+    public Theme getTheme(String name) throws GlobalException {
         Example example = new Example(Theme.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("name", name);
@@ -150,7 +149,7 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
 
     @Override
     public Integer saveTheme(String name, String coverUrl, boolean state, String remark, List<Map<String, String>> extension) throws GlobalException {
-        Theme theme = this.checkTheme(name);
+        Theme theme = this.getTheme(name);
         if (theme != null) {
             theme.setCoverUrl(coverUrl)
                  .setState(state)
@@ -262,7 +261,7 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
         String tmp = split[split.length - 1];
         String themeName = tmp.split("\\.")[0];
 
-        File file = this.getThemeCatalog();
+        File file = this.getThemeCatalog(false);
         File dir = new File(file.getAbsolutePath(), themeName);
         if (dir.exists() && dir.isDirectory()) {
             FileUtils.deleteQuietly(dir);
@@ -284,14 +283,14 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
     }
 
     @Override
-    public File getThemeCatalog() throws GlobalException {
+    public File getThemeCatalog(boolean sync) throws GlobalException {
         File dir = null;
         try {
             URI uri = ResourceUtils.getURL(ResourceUtils.CLASSPATH_URL_PREFIX + THEME_DIR).toURI();
 
             if ("jar".equalsIgnoreCase(uri.getScheme())) {
                 dir = ResourceUtils.getFile(ResourceUtils.FILE_URL_PREFIX + this.blogProperty.getThemeDir());
-                if (!dir.exists()) {
+                if (!dir.exists() || sync) {
                     FileSystem fileSystem = FileSystems.newFileSystem(uri, Collections.emptyMap());
                     Path source = fileSystem.getPath("/BOOT-INF/classes/" + THEME_DIR);
                     Path target = dir.toPath();
@@ -320,6 +319,69 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
         }
 
         return dir;
+    }
+
+    @Override
+    public void checkThemeByStartup() throws GlobalException, IOException {
+        // 获取主题目录
+        File dir = this.getThemeCatalog(true);
+        if (dir == null) {
+            return;
+        }
+
+        // 实际存在的主题名称
+        List<String> themeNameList = new ArrayList<>();
+        for (File file : dir.listFiles()) {
+
+            File[] jsonFiles = file.listFiles((i, name) -> name.equals("theme.json"));
+            if (jsonFiles == null) {
+                continue;
+            }
+
+            File jsonFile = jsonFiles[0];
+
+            Theme activeTheme = this.getActiveTheme(false);
+
+            // 读取内容
+            String content = FileUtils.readFileToString(jsonFile, "UTF-8");
+            Map<String, Object> map = JsonUtil.string2Obj(content, new TypeReference<Map<String, Object>>() {});
+
+            if (Objects.isNull(map.get("name"))) {
+                continue;
+            }
+
+            String themeName = map.get("name").toString();
+            themeNameList.add(themeName);
+
+            boolean state = false;
+            if (activeTheme == null) {
+                if (themeName.equals("default")) {
+                    state = true;
+                }
+            } else {
+                if (activeTheme.getName().equals(themeName)) {
+                    state = true;
+                }
+            }
+
+            String fileDir = jsonFile.getParentFile().getName();
+            Integer themeId = this.saveTheme(
+                    themeName,
+                    String.format("/theme/%s/preview.png", fileDir),
+                    state,
+                    Objects.nonNull(map.get("remark")) ? map.get("remark").toString(): "",
+                    (List<Map<String, String>>) map.get("extension")
+            );
+
+            if (state) {
+                this.useTheme(themeId);
+            }
+        }
+
+        // 过滤出不在 theme 目录的主题记录
+        List<Theme> themeList = this.findAll();
+        List<Theme> filterList = themeList.stream().filter(i -> !themeNameList.contains(i.getName())).collect(Collectors.toList());
+        this.deleteThemeBatch(filterList);
     }
 
     private List<TreeNode> wrapTreeNode(File dir, TreeNode parent) {

@@ -51,7 +51,7 @@ a {
 }
 
 a:focus, a:hover {
-    color: #20d6b2;
+    color: #30a0dc;
     text-decoration: underline;
 }
 
@@ -70,8 +70,8 @@ strong {
 
 .btn-primary:hover {
     color: #fff;
-    background-color: #60c5b9;
-    border-color: #60c5b9;
+    background-color: #30a0dc;
+    border-color: #30a0dc;
 }
 
 .form-control {

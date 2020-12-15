@@ -94,7 +94,7 @@ public class FileListener extends FileAlterationListenerAdaptor {
     @Override
     public void onFileDelete(File file) {
         String fileDir = file.getParentFile().getName();
-        Theme dbTheme = this.themeService.checkTheme(fileDir);
+        Theme dbTheme = this.themeService.getTheme(fileDir);
         this.themeService.deleteThemeBatch(Arrays.asList(dbTheme));
     }
 
