@@ -29,7 +29,7 @@ public class IndexCustomController extends CommonController {
      * @param resultMap
      * @return
      */
-    @RequestMapping("/{link}")
+    @RequestMapping("/custom/{link}")
     public String page(@PathVariable String link, Map<String, Object> resultMap) {
         Nav nav = this.navService.findByLink(link);
         resultMap.put("nav", nav);

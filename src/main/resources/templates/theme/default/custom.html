@@ -3,6 +3,7 @@
 
 <head>
     <title th:text="${#servletContext.getAttribute('configMap')['blog_name']} + ' | ' + ${nav.name}"></title>
+    <link rel="stylesheet" th:href="@{${prefix} + '/source/js/video/video.css'}">
 </head>
 <body>
 <div layout:fragment="content">
@@ -29,6 +30,8 @@
                     </li>
                 </ul>
             </div>
+            <script th:src="@{${prefix} + '/source/js/jquery.min.js'}"></script>
+            <script th:src="@{${prefix} + '/source/js/video/pingzi_video.js'}"></script>
         </div>
     </div>
 </div>

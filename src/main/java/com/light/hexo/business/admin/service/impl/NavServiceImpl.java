@@ -69,7 +69,7 @@ public class NavServiceImpl extends BaseServiceImpl<Nav> implements NavService {
     public Nav findByLink(String link) throws GlobalException {
 
         Example example = new Example(Nav.class);
-        example.createCriteria().andEqualTo("link", "/" + link);
+        example.createCriteria().andEqualTo("link", "/custom/" + link);
         Nav nav = this.getBaseMapper().selectOneByExample(example);
 
         if (nav == null || StateEnum.OFF.getCode().equals(nav.getState())) {
