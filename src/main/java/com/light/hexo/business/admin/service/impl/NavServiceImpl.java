@@ -103,6 +103,10 @@ public class NavServiceImpl extends BaseServiceImpl<Nav> implements NavService {
 
     @Override
     public void saveNav(Nav nav) throws GlobalException {
+        String link = nav.getLink();
+        if (!link.startsWith("/custom/")) {
+            nav.setLink("/custom/" + link);
+        }
         nav.setNavType(2);
         super.saveModel(nav);
         EhcacheUtil.clearByCacheName("navCache");
@@ -110,6 +114,10 @@ public class NavServiceImpl extends BaseServiceImpl<Nav> implements NavService {
 
     @Override
     public void updateNav(Nav nav) throws GlobalException {
+        String link = nav.getLink();
+        if (!link.startsWith("/custom/")) {
+            nav.setLink("/custom/" + link);
+        }
         super.updateModel(nav);
         EhcacheUtil.clearByCacheName("navCache");
     }

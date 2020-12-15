@@ -34,11 +34,13 @@ public class NavRequest extends BaseRequest<Nav> {
     /**
      * 链接
      */
+    @NotEmpty(message = "导航链接不能为空", groups = {BaseRequest.Save.class, BaseRequest.Update.class})
     private String link;
 
     /**
      * 编码
      */
+    @NotEmpty(message = "导航编码不能为空", groups = {BaseRequest.Save.class, BaseRequest.Update.class})
     private String code;
 
     /**
