@@ -684,7 +684,7 @@ strong {
     margin-left: 35px;
     padding-left: 40px;
     position: relative;
-    border-left: 1px solid #cecece;
+    border-left: 2px solid #cecece;
 }
 
 .archive-body:before {
