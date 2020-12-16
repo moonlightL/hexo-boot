@@ -89,9 +89,6 @@ public class InstallService {
 
         // 7. 初始化全局配置
         this.initConfig(user, request.getBlogName(), request.getHomePage(), request.getDescription());
-
-        // 8. 初始化主题数据
-        this.initTheme();
     }
 
     private User createBlogger(String username, String password, String nickname, String email) {
@@ -253,32 +250,4 @@ public class InstallService {
         this.configService.saveConfigBatch(configList);
     }
 
-    private void initTheme() throws Exception {
-
-        File dir = this.themeService.getThemeCatalog();
-        File[] files = dir.listFiles((file, name) -> name.equals("default"));
-        if (files == null || files.length == 0) {
-            ExceptionUtil.throwEx(404, "主题目录不存在");
-        }
-
-        File parent = files[0];
-        File[] jsonFiles = parent.listFiles((file, name) -> name.equals("theme.json"));
-        if (jsonFiles == null) {
-            ExceptionUtil.throwEx(404, "主题配置文件不存在");
-        }
-
-        File jsonFile = jsonFiles[0];
-
-        // 读取内容
-        String content = FileUtils.readFileToString(jsonFile, "UTF-8");
-        Map<String, Object> map = JsonUtil.string2Obj(content, new TypeReference<Map<String, Object>>() {});
-        String fileDir = jsonFile.getParentFile().getName();
-        this.themeService.saveTheme(
-                Objects.nonNull(map.get("name")) ? map.get("name").toString(): jsonFile.getParentFile().getName(),
-                String.format("/theme/%s/preview.png", fileDir),
-                true,
-                Objects.nonNull(map.get("remark")) ? map.get("remark").toString(): "",
-                (List<Map<String, String>>)map.get("extension")
-        );
-    }
 }

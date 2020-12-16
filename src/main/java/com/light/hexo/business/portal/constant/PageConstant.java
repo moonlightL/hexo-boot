@@ -50,6 +50,11 @@ public class PageConstant {
     public static final String FRIEND_LINK_LIST = "hexo:friend:link:list";
 
     /**
+     * 首页导航列表缓存 key（格式：PageConstant.NAV_LIST）
+     */
+    public static final String NAV_LIST = "nav:list";
+
+    /**
      * 文章评论列表缓存 key（格式：PageConstant.POST_COMMENT + #postId + #pageNum）
      */
     public static final String POST_COMMENT = "hexo:comment";

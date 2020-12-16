@@ -44,6 +44,15 @@
            overflowToDisk="false"
            memoryStoreEvictionPolicy="LRU"/>
 
+    <!-- 导航缓存 -->
+    <cache name="navCache"
+           maxElementsInMemory="1000"
+           eternal="true"
+           timeToIdleSeconds="0"
+           timeToLiveSeconds="0"
+           overflowToDisk="false"
+           memoryStoreEvictionPolicy="LRU"/>
+
     <!-- 文章评论缓存 -->
     <cache name="postCommentCache"
            maxElementsInMemory="1000"

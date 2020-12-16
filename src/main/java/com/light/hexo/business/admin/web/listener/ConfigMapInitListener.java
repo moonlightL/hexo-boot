@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 /**
  * @Author MoonlightL
- * @ClassName: BackupTask
+ * @ClassName: ConfigMapInitListener
  * @ProjectName hexo-boot
  * @Description: 加载全局变量(bean加载完成后执行)
  * @DateTime 2020/10/1 10:57

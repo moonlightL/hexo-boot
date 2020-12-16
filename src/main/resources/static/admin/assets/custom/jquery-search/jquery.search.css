@@ -16,6 +16,7 @@
 .real-time-search-container a {
     text-decoration: none !important;
     border-bottom: none !important;
+    margin-left: 24px;
 }
 
 .real-time-search-container .real-time-search-btn:hover {
@@ -99,9 +100,10 @@
 }
 
 .real-time-search-container .real-time-search-body .highlight_list li:hover a {
-    display: block;
+    display: inline-block;
     color: #fff;
     text-decoration: none;
+    margin-left: 24px;
 }
 
 .real-time-search-container .real-time-search-body-show {

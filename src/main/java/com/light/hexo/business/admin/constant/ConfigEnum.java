@@ -60,6 +60,9 @@ public enum ConfigEnum {
     LICENSE("license", "CC BY-NC-SA 4.0","文章版权协议"),
     LICENSE_URL("license_url", "https://creativecommons.org/licenses/by-nc-sa/4.0/","文章版权说明地址"),
 
+    WE_CHAT_GZH("we_chat_gzh", "", "微信公众号"),
+    WE_CHAT_GZH_COMMENT("we_chat_gzh_comment", "", "关注微信公众号话语"),
+
     META_CODE("meta_code", "", "文章详情页 meta 代码"),
     SCRIPT_CODE("script_code", "", "文章详情页 script 代码"),
 

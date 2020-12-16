@@ -443,7 +443,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
 
     @Override
     public List<Post> listPostByIdList(List<Integer> postIdList) throws GlobalException {
-        Example.Builder select = Example.builder(Post.class).select("id", "title", "link");
+        Example.Builder select = Example.builder(Post.class).select("id", "title", "link", "coverUrl");
         if (!CollectionUtils.isEmpty(postIdList)) {
             select.where(Sqls.custom().andIn("id", postIdList));
         }

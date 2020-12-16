@@ -126,7 +126,7 @@ public class ThemeController extends BaseController {
     @RequestMapping("/checkThemeName.json")
     @ResponseBody
     public Result checkThemeName(@RequestParam String themeName) {
-        Theme theme = this.themeService.checkTheme(themeName);
+        Theme theme = this.themeService.getTheme(themeName);
         return Result.success(theme != null);
     }
 

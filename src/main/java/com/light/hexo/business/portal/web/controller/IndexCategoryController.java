@@ -26,7 +26,7 @@ public class IndexCategoryController extends CommonController {
      * @param resultMap
      * @return
      */
-    @GetMapping(value = {"/categories", "/categories/", "/categories/index.html"})
+    @GetMapping(value = {"categories", "/categories/", "/categories/index.html"})
     public String categories(Map<String, Object> resultMap) {
         List<Category> categoryList = this.categoryService.listCategoriesByIndex();
         resultMap.put("categoryList", categoryList);
@@ -35,7 +35,7 @@ public class IndexCategoryController extends CommonController {
         return render("categories", false, resultMap);
     }
 
-    @GetMapping(value = "/categories/{categoryName}/")
+    @GetMapping(value = "categories/{categoryName}/")
     public String categoriesByName(@PathVariable String categoryName, Map<String, Object> resultMap) {
         List<Post> postList = this.postService.listPostsByCategoryName(categoryName, 1, PAGE_SIZE);
         resultMap.put("pageInfo", new PageInfo<>(postList, PAGE_SIZE));
@@ -44,7 +44,7 @@ public class IndexCategoryController extends CommonController {
         return render("postList", false, resultMap);
     }
 
-    @GetMapping("/categories/{categoryName}/page/{pageNum}/")
+    @GetMapping("categories/{categoryName}/page/{pageNum}/")
     public String categoriesPage(@PathVariable String categoryName, @PathVariable Integer pageNum, Map<String, Object> resultMap) {
         List<Post> postList = this.postService.listPostsByCategoryName(categoryName, pageNum, PAGE_SIZE);
         resultMap.put("pageInfo", new PageInfo<>(postList, PAGE_SIZE));

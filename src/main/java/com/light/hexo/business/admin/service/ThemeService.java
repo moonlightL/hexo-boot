@@ -35,12 +35,12 @@ public interface ThemeService extends BaseService<Theme> {
     void useTheme(Integer themeId) throws GlobalException;
 
     /**
-     * 检查主题
+     * 通过名称获取主题
      * @param name
      * @return
      * @throws GlobalException
      */
-    Theme checkTheme(String name) throws GlobalException;
+    Theme getTheme(String name) throws GlobalException;
 
     /**
      * 保存主题
@@ -97,5 +97,11 @@ public interface ThemeService extends BaseService<Theme> {
      * @return
      * @throws GlobalException
      */
-    File getThemeCatalog() throws GlobalException;
+    File getThemeCatalog(boolean sync) throws GlobalException;
+
+    /**
+     * 启动时，检测主题
+     * @throws GlobalException
+     */
+    void checkThemeByStartup() throws GlobalException, IOException;
 }

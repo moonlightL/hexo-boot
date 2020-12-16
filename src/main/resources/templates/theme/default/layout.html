@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+<html lang="zh" mode="light" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
 <head>
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
@@ -10,7 +10,7 @@
     <meta name="description" th:content="${#servletContext.getAttribute('configMap')['description']}" />
     <meta name="referrer" content="no-referrer" />
     [(${#servletContext.getAttribute('configMap')['meta_code']})]
-    <link rel="shortcut icon" th:href="@{${#servletContext.getAttribute('configMap')['favicon_url']}}"/>
+<!--    <link rel="shortcut icon" th:href="@{${#servletContext.getAttribute('configMap')['favicon_url']}}"/>-->
     <link rel="stylesheet" th:href="@{${prefix} + '/source/js/bootstrap-3.3.7/css/bootstrap.min.css'}">
     <link rel="stylesheet" th:href="@{${prefix} + '/source/fonts/font-awesome/css/font-awesome.min.css'}" />
     <link rel="stylesheet" th:href="@{'/admin/assets/custom/jquery-search/jquery.search.css'}"/>
@@ -19,7 +19,7 @@
     <link rel="stylesheet" th:href="@{${prefix} + '/source/js/lightbox/css/lightbox.css'}"/>
     <link rel="stylesheet" th:href="@{${prefix} + '/source/js/overshare/css/share.min.css'}"/>
     <link rel="stylesheet" th:href="@{${prefix} + '/source/css/animate.css'}"/>
-    <link rel="stylesheet" th:href="@{${prefix} + '/source/css/style_'+ ${activeTheme.configMap['pattern']} +'.css'}"/>
+    <link rel="stylesheet" th:href="@{${prefix} + '/source/css/style.css'}"/>
 </head>
 <body>
     <div class="ml-container" id="pageContainer">
@@ -43,11 +43,9 @@
                             </div>
                             <div id="navbar" class="navbar-collapse collapse">
                                 <ul class="nav navbar-nav navbar-right">
-                                    <li th:class="${menu eq 'index' ? 'active' : ''}"><a th:href="@{/}">首页</a></li>
-                                    <li th:class="${menu eq 'archives' ? 'active' : ''}"><a th:href="@{/archives/}">归档</a></li>
-                                    <li th:class="${menu eq 'categories' ? 'active' : ''}"><a th:href="@{/categories/}">分类</a></li>
-                                    <li th:class="${menu eq 'friendLinks' ? 'active' : ''}"><a th:href="@{/friendLinks/}">友链</a></li>
-                                    <li th:class="${menu eq 'about' ? 'active' : ''}"><a th:href="@{/about/}">关于</a></li>
+                                    <li th:each="nav : ${navList}" th:class="${menu eq nav.code ? 'active' : ''}">
+                                        <a th:href="@{${nav.link}}"><i th:class="${nav.icon}"></i> [[${nav.name}]]</a>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -56,7 +54,7 @@
             </header>
 
             <!-- 内容 -->
-            <div layout:fragment="content" ></div>
+            <div layout:fragment="content"></div>
 
             <!-- 尾部 -->
             <footer class="footer-copyright" id="footer-copyright">
@@ -78,7 +76,7 @@
                         </ul>
                     </div>
                     <div class="col-md-4 col-sm-6 hidden-xs">
-                        <a class="pull-right" href="http://www.miitbeian.gov.cn/" target="_blank">[[${#servletContext.getAttribute('configMap')['record']}]]</a>
+                        <a class="pull-right" href="http://beian.miit.gov.cn/" target="_blank">[[${#servletContext.getAttribute('configMap')['record']}]]</a>
                     </div>
                 </div>
             </footer>
@@ -87,6 +85,8 @@
 
         <div class="real-time-search-container" id="real-time-search-container"></div>
         <div class="to-top to-hide" id="toTop"><i class="fa fa-arrow-up"></i></div>
+
+        <div id="modeBtn" class="mode"></div>
     </div>
     <script type='text/javascript' th:src="@{${prefix} + '/source/js/jquery.min.js'}"></script>
     <script type='text/javascript' th:src="@{${prefix} + '/source/js/bootstrap-3.3.7/js/bootstrap.min.js'}"></script>

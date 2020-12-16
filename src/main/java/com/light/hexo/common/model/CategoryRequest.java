@@ -24,6 +24,7 @@ public class CategoryRequest extends BaseRequest<Category> {
      */
     @NotNull(message = "主键不能为空", groups = {BaseRequest.Update.class})
     private Integer id;
+
     /**
      * 分类名称
      */

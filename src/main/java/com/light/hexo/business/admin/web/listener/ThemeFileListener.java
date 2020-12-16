@@ -1,5 +1,6 @@
 package com.light.hexo.business.admin.web.listener;
 
+import com.light.hexo.business.admin.service.ThemeService;
 import com.light.hexo.business.admin.web.listener.file.FileListenerFactory;
 import org.apache.commons.io.monitor.FileAlterationMonitor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,16 +9,16 @@ import org.springframework.stereotype.Component;
 
 /**
  * @Author: MoonlightL
- * @ClassName: FileListenerRunner
+ * @ClassName: ThemeFileListener
  * @ProjectName: hexo-boot
  * @Description: 启动文件监听器
  * @DateTime: 2020/10/3 2:42 上午
  */
 @Component
-public class FileListenerRunner implements CommandLineRunner {
+public class ThemeFileListener implements CommandLineRunner {
 
     @Autowired
-    private CheckThemeListener checkThemeListener;
+    private ThemeService themeService;
 
     @Autowired
     private FileListenerFactory fileListenerFactory;
@@ -26,16 +27,16 @@ public class FileListenerRunner implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         try {
-            // 启动线程，监听文件变化
-            FileAlterationMonitor fileAlterationMonitor = fileListenerFactory.getMonitor();
-            fileAlterationMonitor.start();
+            // 检测主题目录
+            this.themeService.checkThemeByStartup();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         try {
-            // 检测主题目录
-            this.checkThemeListener.checkTheme();
+            // 启动线程，监听文件变化
+            FileAlterationMonitor fileAlterationMonitor = fileListenerFactory.createMonitor();
+            fileAlterationMonitor.start();
         } catch (Exception e) {
             e.printStackTrace();
         }

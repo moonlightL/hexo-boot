@@ -34,32 +34,56 @@
                         <input id="content" type="hidden" name="content" />
                         <input id="coverUrl" type="hidden" name="coverUrl" th:field="*{coverUrl}"/>
                         <div class="editorArea">
-                            <div class="form-group">
-                                <input type="text" class="form-control" placeholder="标题名 *" name="title" data-bv-notempty="true" data-bv-notempty-message="标题不能为空" th:field="*{title}">
+                            <div class="form-group row">
+                                <label class="col-md-1 col-form-label" for="title">标题名</label>
+                                <div class="col-md-11">
+                                    <input type="text" id="title" class="form-control" placeholder="标题名 *" name="title" data-bv-notempty="true" data-bv-notempty-message="标题不能为空" th:field="*{title}">
+                                </div>
                             </div>
                             <div id="postEditor"></div>
                         </div>
                         <div class="optionArea">
-                            <div class="form-group">
-                                <select class="custom-select" id="categoryId" name="categoryId" data-bv-notempty="true" data-bv-notempty-message="分类不能为空" th:field="*{categoryId}">
-                                    <option value="" disabled selected>分类 *</option>
-                                    <option th:each="category:${categoryList}" th:value="${category.id}" th:text="${category.name}"></option>
-                                </select>
+                            <div class="row">
+                                <span class="dropzone" id="dropz" style="border: 1px solid #D4DAE3;margin: 0 15px 15px 15px;width:300px;border-radius: 5px;"></span>
                             </div>
-                            <div class="form-group">
-                                <input type="text" id="tags" name="tags" class="js-tags-input form-control" placeholder="标签" data-height="32px" th:field="*{tags}">
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label" for="title">分类</label>
+                                <div class="col-md-9">
+                                    <select class="custom-select" id="categoryId" name="categoryId" data-bv-notempty="true" data-bv-notempty-message="分类不能为空" th:field="*{categoryId}">
+                                        <option value="" disabled selected>分类 *</option>
+                                        <option th:each="category:${categoryList}" th:value="${category.id}" th:text="${category.name}"></option>
+                                    </select>
+                                </div>
                             </div>
-                           <div class="row">
-                               <span class="dropzone" id="dropz" style="border: 1px solid #D4DAE3;margin:15px;width: 300px;border-radius: 5px;"></span>
-                           </div>
-                            <div class="form-group">
-                                <select class="custom-select" id="reprint" name="reprint" th:field="*{reprint}">
-                                    <option value="" disabled selected>是否转载</option>
-                                    <option value="0">否</option>
-                                    <option value="1">是</option>
-                                </select> <br><br>
-                                <input type="text" class="form-control" placeholder="原作者" name="author" th:field="*{author}"><br>
-                                <input type="text" class="form-control" placeholder="原文章地址" name="reprintLink" th:field="*{reprintLink}">
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label" for="title">标签</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="tags" name="tags" class="js-tags-input form-control" placeholder="标签" data-height="32px" th:field="*{tags}">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label" for="title">转载</label>
+                                <div class="col-md-9">
+                                    <select class="custom-select" id="reprint" name="reprint" th:field="*{reprint}">
+                                        <option value="" disabled selected>是否转载</option>
+                                        <option value="0">否</option>
+                                        <option value="1">是</option>
+                                    </select> <br><br>
+                                </div>
+                                <div class="col-md-12" id="anchorInfo" th:attr="style='display:' + ${vo.reprint ? 'block' : 'none'}">
+                                    <div class="form-group row">
+                                        <label class="col-md-3 col-form-label" for="title">作者</label>
+                                        <div class="col-md-9">
+                                            <input type="text" class="form-control" placeholder="原作者" name="author" th:field="*{author}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-3 col-form-label" for="title">链接</label>
+                                        <div class="col-md-9">
+                                            <input type="text" class="form-control" placeholder="原文章地址" name="reprintLink" th:field="*{reprintLink}">
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-12">
@@ -110,6 +134,16 @@
         let vo = [[${vo}]];
         Dropzone.autoDiscover = false;
         $(function(){
+
+            $("#reprint").on("change", function () {
+                let val = $(this).val();
+                if (val === "1") {
+                    $("#anchorInfo").show();
+                } else {
+                    $("#anchorInfo").hide();
+                }
+            });
+
             Codebase.helpers(['tags-inputs']);
             $("#submitBtn").on("click", function () {
                 $("#content").val(MyEditor.getMarkdown());
