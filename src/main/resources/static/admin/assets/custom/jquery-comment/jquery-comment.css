@@ -460,6 +460,11 @@ ul {
     padding-top: 10px;
 }
 
+.comment-list-body .comment-list-item .info .content p img{
+    width: 22px;
+    height: 22px;
+}
+
 .comment-list-body .comment-list-item .info .area {
     display: inline-block;
 }

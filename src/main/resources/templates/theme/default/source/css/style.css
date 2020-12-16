@@ -1105,7 +1105,6 @@ h4.friend-link-title {
 .post-other-info a.prev:before {
     position: absolute;
     font-family: FontAwesome;
-    content: "\f177";
     left: -10px;
     transform: scale(0);
     transition: all .2s;
@@ -1629,6 +1628,10 @@ h4.friend-link-title {
     font-size: 22px !important;
     font-weight: bold;
     color: var(--text-color);
+}
+
+.comment-data-body .comment-data-body-btns .emoji-container .emoji-container-btn {
+    color: var(--theme-color);
 }
 
 .comment-data-body .comment-data-body-info {
