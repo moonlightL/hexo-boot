@@ -90,7 +90,7 @@
                     let htmlArr = [];
                     for(let i = 0; i < self.data.length; i++) {
                         let post = self.data[i];
-                        htmlArr.push("<li><a href='/" + post.link + "'>" + post.title + "</a></li>");
+                        htmlArr.push("<li><img src='" + post.coverUrl + "' width='32p' height='32'/><a href='/" + post.link + "'>" + post.title + "</a></li>");
                     }
                     self.$container.find("#real-time-search-content").html(htmlArr.join(""));
 

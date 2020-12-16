@@ -14,13 +14,6 @@
       "type": "select",
       "option": "singleRow,multiRow",
       "label": "评论列表展示"
-    },
-    {
-      "key": "pattern",
-      "value": "light",
-      "type": "select",
-      "option": "light,dark",
-      "label": "主题模式"
     }
   ]
 }
