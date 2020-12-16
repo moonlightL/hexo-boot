@@ -311,6 +311,8 @@ ul {
 .emoji-content .emoji-content-items ul li img {
     position: absolute;
     top: 4px;
+    width: 22px;
+    height: 22px;
 }
 
 .comment-data-body .comment-data-body-btns .input-container {

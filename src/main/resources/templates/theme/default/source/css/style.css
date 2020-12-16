@@ -146,7 +146,7 @@ strong {
 
 .navbar {
     background-color: var(--content-color);
-    border: 1px solid var(--content-color);
+    border: 2px solid var(--content-color);
     border-radius: 0;
     font-weight: bold;
     box-shadow: 0 0 5px var(--shadow-color);
@@ -475,7 +475,7 @@ strong {
     content: '';
     position: absolute;
     width: 80%;
-    height: 1px;
+    height: 2px;
     left: 50%;
     bottom: 0;
     display: block;
@@ -605,8 +605,8 @@ strong {
     line-height: 18px;
     padding: 5px;
     text-decoration: none;
-    background: #f1f1f1;
     color: #aaa;
+    border: 2px solid var(--theme-color);
     border-radius: 50%;
 }
 
@@ -649,7 +649,7 @@ strong {
     line-height: 80px;
     letter-spacing: 0;
     background-color: var(--content-color);
-    border: 1px solid var(--content-color);
+    border: 2px solid var(--content-color);
     box-shadow: 0 0 5px var(--shadow-color);
     padding: 0 24px;
     color: var(--text-color);
@@ -775,6 +775,7 @@ strong {
     margin-bottom: 2em;
     transition: all .3s;
     box-shadow: 0 0 5px var(--shadow-color);
+    border-radius: 4px;
 }
 
 .category-item:hover {
@@ -785,6 +786,7 @@ strong {
     width: 100%;
     height:150px;
     object-fit: cover;
+    border-radius: 4px 4px 0 0;
 }
 
 .category-item a:hover {
@@ -802,7 +804,7 @@ strong {
 /** 友链 start  */
 
 h4.friend-link-title {
-    border-left: 3px solid #d4dcda;
+    border-left: 3px solid var(--theme-color);
     padding-left: 5px;
     color: var(--text-color);
 }
@@ -812,7 +814,8 @@ h4.friend-link-title {
     width: 100%;
     margin-bottom: 2em;
     transition: all .3s;
-    border: 1px solid #e1e1e1;
+    border: 2px solid var(--theme-color);
+    border-radius: 4px;
 }
 
 .friend-link-item:hover {
@@ -1173,7 +1176,7 @@ h4.friend-link-title {
 
 .alert-info {
     background-color: var(--blog-bg-color) !important;
-    border-color: var(--border-color) !important;
+    border: 2px solid var(--border-color) !important;
     color: var(--text-color) !important;
     border-radius: 4px;
 }
@@ -1187,7 +1190,7 @@ h4.friend-link-title {
 .notification_success {
     padding: 15px;
     margin-bottom: 20px;
-    border: 1px solid transparent;
+    border: 2px solid transparent;
     color: #3c763d;
     background-color: #dff0d8;
     border-color: #d6e9c6;
@@ -1196,7 +1199,7 @@ h4.friend-link-title {
 .notification_info {
     padding: 15px;
     margin-bottom: 20px;
-    border: 1px solid transparent;
+    border: 2px solid transparent;
     color: #31708f;
     background-color: #d9edf7;
     border-color: #bce8f1;
@@ -1205,7 +1208,7 @@ h4.friend-link-title {
 .notification_warning {
     padding: 15px;
     margin-bottom: 20px;
-    border: 1px solid transparent;
+    border: 2px solid transparent;
     color: #8a6d3b;
     background-color: #fcf8e3;
     border-color: #faebcc;
@@ -1214,7 +1217,7 @@ h4.friend-link-title {
 .notification_error {
     padding: 15px;
     margin-bottom: 20px;
-    border: 1px solid transparent;
+    border: 2px solid transparent;
     color: #a94442;
     background-color: #f2dede;
     border-color: #ebccd1
@@ -1425,7 +1428,7 @@ h4.friend-link-title {
     }
 
     .post-content pre {
-        border: 1px solid #ddd;
+        border: 2px solid #ddd;
         border-radius:0;
         padding:0;
     }
@@ -1620,6 +1623,14 @@ h4.friend-link-title {
 
 /** 评论区 start **/
 
+.comment-container a {
+    color: var(--text-color) !important;
+}
+
+.comment-container a:hover {
+    color: var(--theme-color) !important;
+}
+
 .comment-container .comment-data .comment-data-title, .comment-container .comment-list .comment-list-title {
     border-bottom: none !important;
 }
@@ -1649,11 +1660,11 @@ h4.friend-link-title {
 
 .comment-data-body .comment-data-body-info img {
     margin-top: -5px !important;
-    border: 1px solid var(--border-color) !important;
+    border: 2px solid var(--border-color) !important;
 }
 
 .comment-data-body .comment-data-body-content textarea {
-    border: 1px solid var(--border-color) !important;
+    border: 2px solid var(--border-color) !important;
     background-color: var(--content-color) !important;
     color: var(--text-color);
 }
@@ -1663,7 +1674,7 @@ h4.friend-link-title {
 }
 
 .comment-data-body .comment-data-body-btns {
-    border: 1px solid var(--border-color) !important;
+    border: 2px solid var(--border-color) !important;
     background-color: var(--content-color);
     height: 40px !important;
 }
@@ -1671,7 +1682,7 @@ h4.friend-link-title {
 .comment-data-body .comment-data-body-btns .send-message-btn,
 .second-comment-data-body .comment-data-body-btns .send-message-btn{
     background-color: var(--theme-color) !important;
-    border: 1px solid var(--border-color) !important;
+    border: 2px solid var(--border-color) !important;
 }
 
 .comment-data-body .comment-data-body-btns .send-message-btn:hover,
@@ -1693,13 +1704,14 @@ h4.friend-link-title {
 }
 
 .comment-list .comment-list-page-bar ul li a {
-    background-color: var(--blog-bg-color) !important;
-    color: var(--text-color);
+    border: 2px solid var(--theme-color);
     border-radius: 50% !important;
+    color: var(--text-color);
 }
 
 .comment-list .comment-list-page-bar ul li.active a {
     background-color: var(--theme-color) !important;
+    color: #fff !important;
 }
 
 .comment-list .comment-list-page-bar ul li a:hover {
@@ -1707,12 +1719,16 @@ h4.friend-link-title {
     color: var(--text-hover-color);
 }
 
+.comment-list-body .comment-list-item {
+    border-bottom: 1px solid var(--theme-color) !important;
+}
+
 .comment-list-body .comment-list-item .info {
     color: var(--text-color);
 }
 
 .comment-list-body .comment-list-item .avatar img {
-    border: 1px solid var(--border-color) !important;
+    border: 2px solid var(--border-color) !important;
 }
 
 /** 评论区 end **/
