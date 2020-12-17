@@ -76,7 +76,7 @@
             });
 
             // 绑定更换主题事件
-            $(document).on("click", ".change-btn, .config-btn, .code-btn", function (e) {
+            $(document).on("click", ".change-btn, .config-btn, .code-btn, .remove-btn", function (e) {
                 let $target = $(e.target);
                 let themeId = $target.data("id");
                 if (!themeId) {
@@ -99,6 +99,22 @@
                     $.hexo.modal._window("主题配置", BASE_URL + "/configUI.html?id=" + $target.data("id"), 780, 540, false);
                 } else if ($target.hasClass("code-btn")) {
                     $.hexo.modal._window("源码修改", BASE_URL + "/codeUI.html?id=" + $target.data("id"), 780, 540, true);
+                } else if ($target.hasClass("remove-btn")) {
+                    $.hexo.modal.confirm("确定要删除该主题吗?", function () {
+                        $.hexo.action.sendRequest({
+                            url: BASE_URL + "/remove.json",
+                            params: {id: themeId},
+                            callback: function (resp) {
+                                if (resp.success) {
+                                    $.hexo.modal.tip("删除成功", "success", function () {
+                                        ThemeManager.query();
+                                    });
+                                } else {
+                                    $.hexo.modal.tip(resp.message, "error");
+                                }
+                            }
+                        });
+                    });
                 }
             });
 
@@ -125,19 +141,26 @@
                 for (let i = 0; i < themeList.length; i++) {
                     let obj = themeList[i];
                     contentArr.push('<div class="col-md-3 col-xl-3 animated fadeIn">');
-                    contentArr.push('<a class="block block-rounded block-link-pop text-center">');
                     contentArr.push('<div class="block block-fx-shadow text-center block-link-pop">');
-                    contentArr.push('<div class="block-content block-content-full block-content-sm">');
-                    if (obj.state) {
-                        contentArr.push('<div class="font-w600">'+ obj.name +'(使用中...)</div>');
-                    } else {
-                        contentArr.push('<div class="font-w600">'+ obj.name +'</div>');
-                    }
+                    contentArr.push('<div class="block block-content block-content-full block-sticky-options">');
+                    contentArr.push('<img src="'+ obj.coverUrl +'" width="80%" height="230">');
+                    contentArr.push('<div class="block-options">');
+                    contentArr.push('<div class="dropdown">');
+                    contentArr.push('<button type="button" class="btn-block-option" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-cog"></i></button>');
+                    contentArr.push('<div class="dropdown-menu dropdown-menu-right" style="">');
+                    contentArr.push('<a class="dropdown-item config-btn" href="javascript:void(0)" data-id="'+ obj.id +'"><i class="fa fa-fw fa-edit mr-5"></i>配置参数</a>');
+                    contentArr.push('<a class="dropdown-item code-btn" href="javascript:void(0)" data-id="'+ obj.id +'"><i class="fa fa-fw fa-pencil mr-5"></i>修改源码</a>');
+                    contentArr.push('<div class="dropdown-divider"></div>');
+                    contentArr.push('<a class="dropdown-item remove-btn" href="javascript:void(0)" data-id="'+ obj.id +'"><i class="fa fa-fw fa-remove mr-5"></i>删除主题</a>');
+                    contentArr.push('</div>');
+                    contentArr.push('</div>');
+                    contentArr.push('</div>');
+                    contentArr.push('</div>');
+                    contentArr.push('<div class="block-content block-content-full block-content-sm bg-body-light">');
+                    contentArr.push('<div class="font-w600 mb-5">'+ obj.name +'</div>');
                     contentArr.push('</div>');
                     contentArr.push('<div class="block-content block-content-full">');
-                    contentArr.push('<img src="'+ obj.coverUrl +'" alt="" width="100%" height="200">');
-                    contentArr.push('</div>');
-                    contentArr.push('<div class="block-content block-content-full bg-body-light">');
+                    contentArr.push('<div class="mb-5">');
                     if (obj.state) {
                         contentArr.push('<button type="button" class="btn btn-alt-danger mr-5 mb-5" title="使用中">');
                         contentArr.push('<i class="fa fa-power-off"></i>');
@@ -147,16 +170,11 @@
                         contentArr.push('<i class="fa fa-exchange"></i>');
                         contentArr.push('</button>');
                     }
-                    contentArr.push('<button type="button" class="btn btn-alt-primary mr-5 mb-5 config-btn" data-id="'+ obj.id +'" title="配置">');
-                    contentArr.push('<i class="fa fa-cog"></i>');
-                    contentArr.push('</button>');
-                    contentArr.push('<button type="button" class="btn btn-alt-warning mr-5 mb-5 code-btn" data-id="'+ obj.id +'" title="修改">');
-                    contentArr.push('<i class="fa fa-code"></i>');
-                    contentArr.push('</button>');
                     contentArr.push('</div>');
                     contentArr.push('</div>');
-                    contentArr.push('</a>');
                     contentArr.push('</div>');
+                    contentArr.push('</div>');
+
                 }
             } else {
                 contentArr.push('<div class="col-md-12 col-lg-12 col-xl-12 animated fadeIn text-center"><h5>暂无主题</h5></div>');

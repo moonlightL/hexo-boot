@@ -392,6 +392,27 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
         this.deleteThemeBatch(idList);
     }
 
+    @Override
+    public void removeTheme(Integer id) throws GlobalException {
+
+        Theme theme = super.findById(id);
+        if (theme == null) {
+            ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_THEME_NOT_EXIST);
+        }
+
+        Theme activeTheme = this.getActiveTheme(false);
+        if (activeTheme != null && activeTheme.getId().equals(id)) {
+            ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_ACTIVE_THEME_CANNOT_REMOVE);
+        }
+
+        File file = this.getThemeCatalog(false);
+        File dir = new File(file.getAbsolutePath(), theme.getName());
+        if (dir.exists() && dir.isDirectory()) {
+            FileUtils.deleteQuietly(dir);
+        }
+
+    }
+
     private List<TreeNode> wrapTreeNode(File dir, TreeNode parent) {
         List<TreeNode> treeNodeList = new ArrayList<>();
         File[] files = dir.listFiles();

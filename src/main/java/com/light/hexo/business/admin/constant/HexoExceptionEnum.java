@@ -62,6 +62,7 @@ public enum HexoExceptionEnum implements GlobalExceptionMap {
     // 11xxx --> 主题
     ERROR_THEME_NOT_EXIST(11001, "该主题不存在"),
     ERROR_THEME_URL_WRONG(11002, "主题地址格式不正确"),
+    ERROR_ACTIVE_THEME_CANNOT_REMOVE(11003, "使用中的主题不能被删除"),
 
     // 12xxx --> 导航
     ERROR_NAV_NOT_EXIST(12001, "访问路径不存在"),

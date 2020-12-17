@@ -104,4 +104,11 @@ public interface ThemeService extends BaseService<Theme> {
      * @throws GlobalException
      */
     void checkThemeByStartup() throws GlobalException, IOException;
+
+    /**
+     * 删除主题
+     * @param id
+     * @throws GlobalException
+     */
+    void removeTheme(Integer id) throws GlobalException;
 }

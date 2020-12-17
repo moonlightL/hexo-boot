@@ -168,6 +168,19 @@ public class ThemeController extends BaseController {
     }
 
     /**
+     * 删除主题
+     * @param id
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping("remove.json")
+    @ResponseBody
+    public Result remove(Integer id) {
+        this.themeService.removeTheme(id);
+        return Result.success();
+    }
+
+    /**
      * 分页查询
      * @param request
      * @return
