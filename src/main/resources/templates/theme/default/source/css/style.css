@@ -1269,7 +1269,7 @@ h4.friend-link-title {
 
     .post-info {
         max-height: 370px;
-        background-color: #fff;
+        background-color: var(--content-color);
     }
 
     .navbar {
@@ -1382,7 +1382,7 @@ h4.friend-link-title {
         font-size: 12px;
         line-height: 1.6;
         width: 100%;
-        background-color: #fff;
+        background-color: var(--content-color);
     }
 
     .post-content h2 {
@@ -1526,7 +1526,6 @@ h4.friend-link-title {
     }
 
     .post-copyright {
-       margin-top: 20px;
        list-style: none;
        padding: 0;
     }
