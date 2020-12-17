@@ -55,10 +55,10 @@ public interface ThemeService extends BaseService<Theme> {
 
     /**
      * 批量删除
-     * @param themeList
+     * @param idList
      * @throws GlobalException
      */
-    void deleteThemeBatch(List<Theme> themeList) throws GlobalException;
+    void deleteThemeBatch(List<Integer> idList) throws GlobalException;
 
     /**
      * 获取主题目录
@@ -104,4 +104,11 @@ public interface ThemeService extends BaseService<Theme> {
      * @throws GlobalException
      */
     void checkThemeByStartup() throws GlobalException, IOException;
+
+    /**
+     * 删除主题
+     * @param id
+     * @throws GlobalException
+     */
+    void removeTheme(Integer id) throws GlobalException;
 }

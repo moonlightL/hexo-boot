@@ -52,7 +52,9 @@ public class VisitInterceptor extends HandlerInterceptorAdapter {
             this.eventPublisher.emit(new VisitEvent(IpUtil.getIpAddr(request), BrowserUtil.getBrowserName(request)));
         }
 
-        request.setAttribute("time", System.currentTimeMillis());
+        if (log.isDebugEnabled()) {
+            request.setAttribute("time", System.currentTimeMillis());
+        }
 
         return true;
     }
@@ -60,8 +62,10 @@ public class VisitInterceptor extends HandlerInterceptorAdapter {
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
         super.afterCompletion(request, response, handler, ex);
-        long start = (long) request.getAttribute("time");
-        log.info("=========visit afterCompletion 请求 {}, 耗时 {} ms========", URLDecoder.decode(request.getRequestURI(), "UTF-8"), (System.currentTimeMillis() - start));
+        if (log.isDebugEnabled()) {
+            long start = (long) request.getAttribute("time");
+            log.info("=========visit afterCompletion 请求 {}, 耗时 {} ms========", URLDecoder.decode(request.getRequestURI(), "UTF-8"), (System.currentTimeMillis() - start));
+        }
     }
 
     private void print(HttpServletResponse response, String result) throws IOException {
