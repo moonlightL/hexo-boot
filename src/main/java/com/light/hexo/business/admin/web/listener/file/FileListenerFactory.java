@@ -25,20 +25,24 @@ public class FileListenerFactory {
     private ThemeService themeService;
 
     public FileAlterationMonitor createMonitor() {
+
         // 创建过滤器
         IOFileFilter directories = FileFilterUtils.and(FileFilterUtils.directoryFileFilter(), HiddenFileFilter.VISIBLE);
         IOFileFilter files = FileFilterUtils.and(FileFilterUtils.fileFileFilter(), FileFilterUtils.nameFileFilter("theme.json"));
         IOFileFilter filter = FileFilterUtils.or(directories, files);
 
-        // 装配过滤器
+        // 观察者
         File dir = this.themeService.getThemeCatalog(false);
         FileAlterationObserver observer = new FileAlterationObserver(dir, filter);
 
-        // 向监听者添加监听器，并注入业务服务
-        observer.addListener(new FileListener(themeService));
+        // 监听器
+        FileListener fileListener = new FileListener(themeService);
+
+        // 注册监听器
+        observer.addListener(fileListener);
 
         // 返回监听者
-        return new FileAlterationMonitor(TimeUnit.SECONDS.toSeconds(1), observer);
+        return new FileAlterationMonitor(1, observer);
     }
 
 }

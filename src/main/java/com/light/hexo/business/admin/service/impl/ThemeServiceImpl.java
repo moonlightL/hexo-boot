@@ -45,6 +45,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -171,13 +172,12 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
     }
 
     @Override
-    public void deleteThemeBatch(List<Theme> themeList) throws GlobalException {
-        if (CollectionUtils.isEmpty(themeList)) {
+    public void deleteThemeBatch(List<Integer> idList) throws GlobalException {
+        if (CollectionUtils.isEmpty(idList)) {
             return;
         }
 
         // 删除主题
-        List<Integer> idList = themeList.stream().map(Theme::getId).collect(Collectors.toList());
         super.removeBatch(idList);
 
         // 删除主题配置
@@ -265,6 +265,13 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
         File dir = new File(file.getAbsolutePath(), themeName);
         if (dir.exists() && dir.isDirectory()) {
             FileUtils.deleteQuietly(dir);
+        }
+
+        try {
+            // 控制 FileListener 的操作频率
+            TimeUnit.SECONDS.sleep(2);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
 
         try(
@@ -381,7 +388,8 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
         // 过滤出不在 theme 目录的主题记录
         List<Theme> themeList = this.findAll();
         List<Theme> filterList = themeList.stream().filter(i -> !themeNameList.contains(i.getName())).collect(Collectors.toList());
-        this.deleteThemeBatch(filterList);
+        List<Integer> idList = filterList.stream().map(Theme::getId).collect(Collectors.toList());
+        this.deleteThemeBatch(idList);
     }
 
     private List<TreeNode> wrapTreeNode(File dir, TreeNode parent) {

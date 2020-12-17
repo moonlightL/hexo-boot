@@ -45,7 +45,7 @@
                             <a href="https://gitee.com/moonlightL" target="_blank">码云资源</a>&nbsp;&nbsp;
                         </div>
                         <div>
-                            <b>友情提示: 找到“hexo-boot-theme-xxx” 类型的主题复制其 .git 地址到输入框，点击“按钮”即可下载安装</b>
+                            <b>友情提示: 找到“hexo-boot-theme-xxx” 类型的主题复制其 .git 地址到输入框，点击“拉取”即可下载安装</b>
                         </div>
                     </div>
                 </div>
@@ -87,6 +87,7 @@
                 success: function (resp) {
                     $(that).prop("disabled", false);
                     if (resp.success) {
+                        let num = 0;
                         $resultContainer.val($resultContainer.val() + "\n[80%] " + themeName + "主题拉取成功,正在进行安装...");
                         let timer = setInterval(function() {
                             $.ajax({
@@ -95,11 +96,19 @@
                                 data: {"themeName": themeName},
                                 dataType: "JSON",
                                 success: function (resp) {
+                                    num++;
                                     if (resp.data === true) {
                                         $resultContainer.val($resultContainer.val() + "\n[100%] " + themeName + "主题安装成功!")
                                                         .val($resultContainer.val() + "\n***********************************************【结束】***********************************************");
                                         window.parent.ThemeManager.query();
                                         clearInterval(timer);
+                                    }
+
+                                    // 10 秒内不能成功保存主题配置，视为失败
+                                    if (num >= 10) {
+                                        clearInterval(timer);
+                                        $resultContainer.val($resultContainer.val() + "\n[失败] " + themeName + "主题配置保存失败!")
+                                            .val($resultContainer.val() + "\n***********************************************【结束】***********************************************");
                                     }
                                 }
                             });
