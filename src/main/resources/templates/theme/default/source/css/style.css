@@ -902,7 +902,7 @@ h4.friend-link-title {
 
 .post-content blockquote {
     color: #666;
-    border-left: 4px solid #ddd;
+    border-left: 4px solid var(--theme-color);
     padding-left: 20px;
     margin-left: 0;
     margin-bottom: 20px;
@@ -1001,6 +1001,11 @@ h4.friend-link-title {
     line-height: 1.6;
 }
 
+.postContainer pre {
+    padding: 10px;
+    border: 2px solid var(--theme-color);
+}
+
 .postContainer .highlight td {
     border: none;
     padding: 0;
@@ -1013,12 +1018,12 @@ h4.friend-link-title {
 .postContainer pre::-webkit-scrollbar-thumb, .highlight::-webkit-scrollbar-thumb {
     width:5px;
     border-radius: 10px;
-    background: rgba(0,0,0,0.2);
+    background: var(--text-color);
 }
 
 .postContainer pre::-webkit-scrollbar-track, .highlight::-webkit-scrollbar-track {
     border-radius: 0;
-    background: rgba(0,0,0,0.1);
+    background: var(--blog-bg-color);
 }
 
 .postContainer .gutter {
@@ -1142,8 +1147,14 @@ h4.friend-link-title {
     transform: scale(1);
 }
 
+.btn-default {
+    color: var(--text-color);
+    border: 2px solid var(--theme-color);
+    background-color: var(--blog-bg-color);
+}
+
 .btn-default:hover {
-    color: #333;
+    color: var(--text-hover-color);
     border-color: var(--border-color);
     background-color: var(--theme-color);
 }
@@ -1403,7 +1414,7 @@ h4.friend-link-title {
 
     .post-content blockquote {
         color: #666;
-        border-left: 4px solid #ddd;
+        border-left: 4px solid var(--theme-color);
         padding-left: 20px;
         margin-left: 0;
         margin-bottom: 20px;
@@ -1430,11 +1441,7 @@ h4.friend-link-title {
     .post-content pre {
         border: 2px solid #ddd;
         border-radius:0;
-        padding:0;
-    }
-
-    .post-content pre code {
-        padding: 4px;
+        padding: 10px;
     }
 
     .post-content pre, .post-content code, .post-content kbd {
@@ -1642,6 +1649,19 @@ h4.friend-link-title {
 
 .comment-data-body .comment-data-body-btns .emoji-container .emoji-container-btn {
     color: var(--theme-color);
+}
+
+.comment-data-body .comment-data-body-btns .input-container {
+    border: 2px solid var(--theme-color) !important;
+}
+
+.comment-data-body .comment-data-body-btns .input-container .input-content {
+    background-color: var(--content-color) !important;
+    box-shadow: 0 1px 10px var(--shadow-color) !important;
+}
+
+.comment-data-body .comment-data-body-btns .input-container .input-content::before {
+    background-color: var(--content-color) !important;
 }
 
 .comment-data-body .comment-data-body-info {
