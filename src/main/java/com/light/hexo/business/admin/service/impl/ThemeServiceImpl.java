@@ -86,7 +86,7 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
             criteria.andLike("name", name.trim() + "%");
         }
 
-        example.orderBy("id").asc();
+        example.orderBy("state").desc().orderBy("id").asc();
 
         return example;
     }
