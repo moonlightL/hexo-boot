@@ -87,8 +87,8 @@
     </select>
 
     <insert id="checkInsert" parameterType="com.light.hexo.business.admin.model.Post" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO t_post(title, summary, content, author, read_num, praise_num, publish_date, year, month, day, cover_url, is_publish, is_comment ,is_top, is_reprint, category_id, tags, link, create_time, update_time)
-        SELECT #{title},#{summary},#{content},#{author},#{readNum},#{praiseNum},#{publishDate},#{year},#{month},#{day},#{coverUrl},#{publish},#{comment},#{top},#{reprint},#{categoryId},#{tags},#{link}, #{createTime},#{updateTime}
+        INSERT INTO t_post(title, summary, summary_html, content, author, read_num, praise_num, publish_date, year, month, day, cover_url, is_publish, is_comment ,is_top, is_reprint, category_id, tags, link, create_time, update_time)
+        SELECT #{title},#{summary}, #{summaryHtml}, #{content},#{author},#{readNum},#{praiseNum},#{publishDate},#{year},#{month},#{day},#{coverUrl},#{publish},#{comment},#{top},#{reprint},#{categoryId},#{tags},#{link}, #{createTime},#{updateTime}
         FROM dual
         WHERE NOT EXISTS(
               SELECT id
