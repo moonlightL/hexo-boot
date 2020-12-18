@@ -22,6 +22,7 @@ import com.light.hexo.common.constant.HexoConstant;
 import com.light.hexo.common.exception.GlobalException;
 import com.light.hexo.common.model.PostRequest;
 import com.light.hexo.common.util.*;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.annotations.Param;
@@ -43,11 +44,15 @@ import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.util.Sqls;
 
 import java.io.*;
+import java.net.URI;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @Author MoonlightL
@@ -58,6 +63,7 @@ import java.util.stream.Collectors;
  */
 @CacheConfig(cacheNames = "postCache")
 @Service
+@Slf4j
 public class PostServiceImpl extends BaseServiceImpl<Post> implements PostService {
 
     @Autowired
@@ -81,6 +87,8 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
     @Autowired
     @Lazy
     private EventPublisher eventPublisher;
+
+    private static final Integer COVER_NUM = 20;
 
     @Override
     public BaseMapper<Post> getBaseMapper() {
@@ -164,6 +172,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
         int num = this.getBaseMapper().deleteByExample(example);
         if (num > 0) {
             EhcacheUtil.clearByCacheName("postCache");
+            EhcacheUtil.clearByCacheName("categoryCache");
             CacheUtil.remove(CacheKey.INDEX_COUNT_INFO);
         }
     }
@@ -193,19 +202,9 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
 
         String coverUrl = post.getCoverUrl();
         if(StringUtils.isBlank(coverUrl)) {
-            coverUrl = HexoConstant.DEFAULT_POST_COVER;
-            try {
-                File dir = ResourceUtils.getFile("classpath:static/admin/assets/custom/images/post");
-                String[] list = dir.list();
-                if (dir.exists() && list != null) {
-                    // 有一张默认图片，因此需要 -1
-                    int num = new Random().nextInt(list.length - 1);
-                    coverUrl = HexoConstant.DEFAULT_IMG_DIR + "/post/post_cover_" + num + ".jpg";
-                }
-                post.setCoverUrl(coverUrl);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
+            int num = new Random().nextInt(COVER_NUM);
+            coverUrl = HexoConstant.DEFAULT_IMG_DIR + "/post/post_cover_" + num + ".jpg";
+            post.setCoverUrl(coverUrl);
         }
 
         // 摘要
@@ -240,6 +239,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
         this.saveTags(post, false);
 
         EhcacheUtil.clearByCacheName("postCache");
+        EhcacheUtil.clearByCacheName("categoryCache");
         CacheUtil.remove(CacheKey.INDEX_COUNT_INFO);
     }
 
@@ -306,6 +306,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
         this.saveTags(post, true);
 
         EhcacheUtil.clearByCacheName("postCache");
+        EhcacheUtil.clearByCacheName("categoryCache");
         CacheUtil.remove(CacheKey.INDEX_COUNT_INFO);
         CacheUtil.remove(PageConstant.MARKDOWN_KEY + ":" + post.getId() + ":1");
         CacheUtil.remove(PageConstant.MARKDOWN_KEY + ":" + post.getId() + ":2");
@@ -387,6 +388,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
 
         this.updateModel(post);
         EhcacheUtil.clearByCacheName("postCache");
+        EhcacheUtil.clearByCacheName("categoryCache");
     }
 
     @Override
@@ -438,6 +440,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
         this.updateModel(post);
         this.baiDuPushService.push2BaiDu(post.getLink());
         EhcacheUtil.clearByCacheName("postCache");
+        EhcacheUtil.clearByCacheName("categoryCache");
         CacheUtil.remove(CacheKey.INDEX_COUNT_INFO);
     }
 
@@ -754,14 +757,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
         }
     }
 
-    private List<Post> packageToList(List<Map<String, Object>> recordList) {
-
-        File dir = null;
-        try {
-            dir = ResourceUtils.getFile("classpath:static/admin/assets/custom/images/post");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+    private List<Post> packageToList(List<Map<String, Object>> recordList) throws UnsupportedEncodingException {
 
         List<Post> postList = new ArrayList<>(recordList.size());
         String author = this.configService.getConfigValue(ConfigEnum.BLOG_AUTHOR.getName());
@@ -774,14 +770,8 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
                     .setSummaryHtml(this.interceptContentHtml(post.getContent()));
 
             // 设置封面
-            if (dir != null && dir.exists()) {
-                String[] list = dir.list();
-                if (list != null) {
-                    // 有一张默认图片，因此需要 -1
-                    int num = new Random().nextInt(list.length - 1);
-                    post.setCoverUrl(HexoConstant.DEFAULT_IMG_DIR + "/post/post_cover_" + num + ".jpg");
-                }
-            }
+            int num = new Random().nextInt(COVER_NUM);
+            post.setCoverUrl(HexoConstant.DEFAULT_IMG_DIR + "/post/post_cover_" + num + ".jpg");
 
             // 设置分类
             String categoryName = objectMap.get("category_name").toString();
@@ -830,20 +820,13 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
 
     private List<Post> packageToList(File[] files) {
 
-        File dir = null;
-        try {
-            dir = ResourceUtils.getFile("classpath:static/admin/assets/custom/images/post");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
         List<Post> postList = new ArrayList<>(files.length);
         BufferedReader br = null;
         Post post;
         String author = this.configService.getConfigValue(ConfigEnum.BLOG_AUTHOR.getName());
         for (File file : files) {
             try {
-                br = new BufferedReader(new FileReader(file));
+                br = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
                 br.readLine();
                 String titleStr = br.readLine();
                 String createTimeStr = br.readLine();
@@ -865,14 +848,8 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
                     .setSummaryHtml(this.interceptContentHtml(post.getContent()));
 
                 // 设置封面
-                if (dir != null && dir.exists()) {
-                    String[] list = dir.list();
-                    if (list != null) {
-                        // 有一张默认图片，因此需要 -1
-                        int num = new Random().nextInt(list.length - 1);
-                        post.setCoverUrl(HexoConstant.DEFAULT_IMG_DIR + "/post/post_cover_" + num + ".jpg");
-                    }
-                }
+                int num = new Random().nextInt(COVER_NUM);
+                post.setCoverUrl(HexoConstant.DEFAULT_IMG_DIR + "/post/post_cover_" + num + ".jpg");
 
                 // 设置分类
                 String categoryName = categoryNameStr.substring(categoryNameStr.indexOf(":") + 1).trim();
