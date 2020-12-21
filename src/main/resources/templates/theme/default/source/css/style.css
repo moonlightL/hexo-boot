@@ -911,7 +911,9 @@ h4.friend-link-title {
 
 .post-content p, .post-content blockquote p {
     font-size: 15px;
+    margin: 0 0 24px;
 }
+
 .post-content p code {
     margin-left: 5px;
     margin-right: 4px;
