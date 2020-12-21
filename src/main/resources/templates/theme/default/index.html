@@ -17,18 +17,21 @@
                <div class="post col-md-4 col-sm-6 col-xs-12" th:each="post,iterStat : ${pageInfo.data}">
                    <div class="post-info animated fadeInUp">
                        <div class="post-bg">
-                           <a th:href="@{'/' + ${post.link}}">
-                               <span class="reprint" th:if="${post.reprint}">转载</span>
-                               <span class="top" th:if="${post.top}"><img src="/theme/default/source/images/article-top.png" alt="" width="38" height="38"></span>
-                               <img class="lazy" th:data-original="@{${post.coverUrl}}" alt="" width="100%" height="100%">
-                               <div class="mask"></div>
-                               <div class="category">分类: [[${post.categoryName}]]</div>
-                               <div class="tags">标签: [[${#strings.isEmpty(post.tags) ? '无' : post.tags}]]</div>
-                           </a>
+                           <span class="reprint" th:if="${post.reprint}">转载</span>
+                           <span class="top" th:if="${post.top}"><img src="/theme/default/source/images/article-top.png" alt="" width="38" height="38"></span>
+                           <img class="lazy" th:data-original="@{${post.coverUrl}}" alt="" width="100%" height="100%">
+                           <div class="mask"></div>
+                           <div class="category">分类: <a class="jump" th:href="@{'/categories/'+${post.categoryName}+'/'}">[[${post.categoryName}]]</a></div>
+                           <div class="tags">标签:
+                               <span th:if="${#strings.isEmpty(post.tags) == false}">
+                                   <a class="jump" th:href="@{'/tags/'+${tag}+'/'}" rel="tag" th:each="tag,status : ${#strings.arraySplit(post.tags, ',')}">[[${tag}]] &nbsp;</a>
+                               </span>
+                               <span th:if="${#strings.isEmpty(post.tags)}">无</span>
+                           </div>
                        </div>
                        <div class="post-data">
                            <div class="post-title">
-                               [[${post.title}]]
+                               <a th:href="@{'/' + ${post.link}}">[[${post.title}]]</a>
                            </div>
                            <div class="post-summary">
                                [[${post.summary}]]

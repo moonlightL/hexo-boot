@@ -20,6 +20,7 @@
                    <div class="category-item animate-box" data-animate-effect="fadeInUp">
                        <a th:href="@{'/categories/'+${category.name}+'/'}">
                            <img th:src="@{${category.coverUrl}}" alt="">
+                           <div class="mask"><span>[[${category.remark}]]</span></div>
                            <div class="descr">
                                [[${category.name}]]<span>([[${category.postNum}]])</span>
                            </div>
