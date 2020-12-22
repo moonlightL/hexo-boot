@@ -622,7 +622,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
         PageHelper.startPage(pageNum, pageSize);
         Example example = Example.builder(Post.class)
                 .select("id", "title", "author", "publishDate", "year", "month", "day", "top", "reprint",
-                        "coverUrl", "link", "categoryId", "tags", "createTime")
+                        "coverUrl", "link", "categoryId", "tags", "readNum", "createTime")
                 .where(Sqls.custom()
                         .andEqualTo("categoryId", category.getId())
                         .andEqualTo("publish", true)

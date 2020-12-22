@@ -1,28 +1,16 @@
 package com.light.hexo.business.portal.common;
 
-import com.light.hexo.business.admin.constant.ConfigEnum;
 import com.light.hexo.business.admin.model.Category;
 import com.light.hexo.business.admin.model.FriendLink;
 import com.light.hexo.business.admin.model.Nav;
 import com.light.hexo.business.admin.model.Theme;
-import com.light.hexo.business.admin.model.event.VisitEvent;
 import com.light.hexo.business.admin.service.*;
-import com.light.hexo.business.portal.constant.PageConstant;
-import com.light.hexo.common.component.event.EventPublisher;
 import com.light.hexo.common.constant.CacheKey;
 import com.light.hexo.common.util.CacheUtil;
-import com.light.hexo.common.util.IpUtil;
 import com.light.hexo.common.util.MarkdownUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.RequestAttributes;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

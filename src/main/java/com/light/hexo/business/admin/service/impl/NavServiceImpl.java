@@ -114,10 +114,21 @@ public class NavServiceImpl extends BaseServiceImpl<Nav> implements NavService {
 
     @Override
     public void updateNav(Nav nav) throws GlobalException {
+        Nav dbNav = this.findById(nav.getId());
+        if (dbNav == null) {
+            ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_NAV_NOT_EXIST);
+        }
+
         String link = nav.getLink();
         if (!link.startsWith("/custom/")) {
             nav.setLink("/custom/" + link);
         }
+
+        // 默认导航不能修改链接
+        if (dbNav.getNavType().equals(1)) {
+            nav.setLink(null);
+        }
+
         super.updateModel(nav);
         EhcacheUtil.clearByCacheName("navCache");
     }

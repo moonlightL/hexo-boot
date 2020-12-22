@@ -21,7 +21,11 @@
                 <div th:if="${pageInfo.total > 0}">
                     <div class='archive-content'th:each="post,iterStat : ${pageInfo.list}">
                         <div class="archives animate-box" data-animate-effect="fadeInUp">
-                            <a th:href="@{'/'+${post.link}}"><span class="time">[[${post.year} + '-' + ${post.month} + '-' + ${post.day}]]</span>[[${post.title}]]</a>
+                            <a th:href="@{'/'+${post.link}}" style="display: block">
+                                <span class="time">[[${post.year} + '-' + ${post.month} + '-' + ${post.day}]]</span>
+                                <span class="title">[[${post.title}]]</span>
+                                <span class="pull-right hidden-xs">([[${post.readNum}]])</span>
+                            </a>
                         </div>
                     </div>
                 </div>

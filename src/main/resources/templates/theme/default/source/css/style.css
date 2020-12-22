@@ -195,6 +195,11 @@ strong {
     height: 274px;
 }
 
+.image-banner .image-content img {
+    width: 100%;
+    height: 274px !important;
+}
+
 .image-banner .image-content::after {
     content: "";
     position: absolute;
@@ -1093,6 +1098,9 @@ h4.friend-link-title {
     font-size: 14px;
     color: #6c757d;
     font-family: "Nunito Sans",-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+    display: inline !important;
+    background: none !important;
+    padding: 0 !important;
 }
 
 .postContainer .reward-img-area {
@@ -1304,6 +1312,11 @@ h4.friend-link-title {
     }
 
     .image-banner .image-content {
+        height: 180px;
+    }
+
+    .image-banner .image-content img {
+        object-fit: cover;
         height: 180px;
     }
 
@@ -1593,6 +1606,33 @@ h4.friend-link-title {
     padding: 5px;
 }
 
+/** 主题模式 start **/
+.mode-container {
+    position: fixed;
+    right: 15px;
+    top: 210px;
+    width: 48px;
+    height: 48px;
+    text-align: center;
+    line-height: 48px;
+    cursor: pointer;
+    transition: all .3s;
+    z-index: 999;
+}
+
+.mode-container .mode {
+    background-color: var(--content-color);
+    color: var(--text-color);
+    box-shadow: 0 0 10px 1px var(--shadow-color);
+}
+
+.mode-container .mode:hover {
+    background-color: var(--theme-color);
+    color: var(--text-hover-color);
+}
+
+/** 主题模式 end **/
+
 .color-turquoise {
     background-color: var(--theme-color);
     color: #fff;
@@ -1780,27 +1820,4 @@ h4.friend-link-title {
 
 /** 目录 start **/
 
-/** 主题模式 start **/
-#pageContainer .mode {
-    position: fixed;
-    right: 15px;
-    top: 210px;
-    width: 48px;
-    height: 48px;
-    text-align: center;
-    line-height: 48px;
-    background-color: var(--content-color);
-    color: var(--text-color);
-    cursor: pointer;
-    transition: all .3s;
-    box-shadow: 0 0 10px 1px var(--shadow-color);
-    z-index: 999;
-}
-
-#pageContainer .mode:hover {
-    background-color: var(--theme-color);
-    color: var(--text-hover-color);
-}
-
-/** 主题模式 end **/
 
