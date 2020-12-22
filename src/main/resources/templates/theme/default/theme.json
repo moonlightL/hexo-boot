@@ -9,6 +9,13 @@
       "label": "页面大小"
     },
     {
+      "key": "useCDN",
+      "value": "true",
+      "type": "select",
+      "option": "true,false",
+      "label": "是否开启CDN"
+    },
+    {
       "key": "commentShowType",
       "value": "singleRow",
       "type": "select",

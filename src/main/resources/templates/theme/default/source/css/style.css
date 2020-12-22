@@ -1098,6 +1098,9 @@ h4.friend-link-title {
     font-size: 14px;
     color: #6c757d;
     font-family: "Nunito Sans",-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+    display: inline !important;
+    background: none !important;
+    padding: 0 !important;
 }
 
 .postContainer .reward-img-area {
