@@ -40,9 +40,6 @@ public class ThymeleafConfig implements ApplicationContextAware {
 
     private ApplicationContext applicationContext;
 
-    @Autowired
-    private Environment environment;
-
     @Bean
     public SpringResourceTemplateResolver classPathTemplateResolver() {
         SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();

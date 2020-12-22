@@ -58,11 +58,13 @@ public class SpringMvcConfig implements WebMvcConfigurer {
                 : this.blogProperty.getAttachmentDir();
 
         registry.addResourceHandler("/images/**")
-                    .addResourceLocations("file:" +  localFilePath);
+                .addResourceLocations("file:" +  localFilePath);
 
         registry.addResourceHandler("/theme/**")
-                .addResourceLocations("classpath:/templates/theme/",
-                        "file:" + this.blogProperty.getThemeDir());
+                .addResourceLocations(
+                        "file:" + this.blogProperty.getThemeDir(),
+                        "classpath:/templates/theme/"
+                );
     }
 
     @Override
