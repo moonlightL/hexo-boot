@@ -69,6 +69,11 @@
         });
     };
 
+    // 图片懒加载
+    let lazyImage = function() {
+        $("img.lazy").lazyload({effect: "fadeIn"});
+    };
+
     // 滚动
     let contentWayPoint = function () {
         let i = 0;
@@ -126,6 +131,7 @@
         changeMode();
         goBack();
         search();
+        lazyImage();
         circleMagic();
         contentWayPoint();
         clickEffect();

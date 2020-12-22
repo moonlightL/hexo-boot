@@ -14,11 +14,11 @@
     <link rel="stylesheet" th:href="@{${prefix} + '/source/js/bootstrap-3.3.7/css/bootstrap.min.css'}">
     <link rel="stylesheet" th:href="@{${prefix} + '/source/fonts/font-awesome/css/font-awesome.min.css'}" />
     <link rel="stylesheet" th:href="@{'/admin/assets/custom/jquery-search/jquery.search.css'}"/>
-    <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/highlightjs/styles/github-gist.css'}"/>
-    <link rel="stylesheet" th:href="@{${prefix} + '/source/js/autoToc/jquery.autoToc.css'}"/>
+    <link rel="stylesheet" th:href="@{${prefix} + '/source/js/highlightjs/styles/github-gist.css'}"/>
     <link rel="stylesheet" th:href="@{${prefix} + '/source/js/lightbox/css/lightbox.css'}"/>
     <link rel="stylesheet" th:href="@{${prefix} + '/source/js/overshare/css/share.min.css'}"/>
     <link rel="stylesheet" th:href="@{${prefix} + '/source/css/animate.css'}"/>
+    <link rel="stylesheet" th:href="@{${prefix} + '/source/js/autoToc/jquery.autoToc.css'}"/>
     <link rel="stylesheet" th:href="@{${prefix} + '/source/css/style.css'}"/>
 </head>
 <body>
@@ -93,34 +93,23 @@
     <script type='text/javascript' th:src="@{'/admin/assets/custom/jquery-search/jquery.search.js'}" ></script>
     <script type='text/javascript' th:src="@{${prefix} + '/source/js/waypoints/jquery.waypoints.min.js'}"></script>
     <script type='text/javascript' th:src="@{${prefix} + '/source/js/circleMagic/circleMagic.min.js'}"></script>
-    <script type='text/javascript' th:src="@{${prefix} + '/source/js/main.js'}"></script>
-    <span th:if="${isDetail == false}">
-        <script type='text/javascript' th:src="@{${prefix} + '/source/js/jqueryLazyload/jquery.lazyload.min.js'}"></script>
-        <script type="text/javascript" charset="utf-8">
-           ;(function () {
-               $("img.lazy").lazyload({effect: "fadeIn"});
-           })(jQuery);
-       </script>
-    </span>
+    <script type='text/javascript' th:src="@{${prefix} + '/source/js/jqueryLazyload/jquery.lazyload.min.js'}"></script>
     <span th:if="${isDetail == true}">
-        <script type='text/javascript' th:src="@{'/admin/assets/js/plugins/highlightjs/highlight.pack.js'}"></script>
+        <script type='text/javascript' th:src="@{${prefix} + '/source/js/highlightjs/highlight.pack.js'}"></script>
         <script type='text/javascript' th:src="@{${prefix} + '/source/js/overshare/js/social-share.min.js'}"></script>
         <script type='text/javascript' th:src="@{${prefix} + '/source/js/lightbox/js/lightbox.min.js'}"></script>
         <script type='text/javascript' th:src="@{${prefix} + '/source/js/autoToc/jquery.autoToc.js'}"></script>
         <script type='text/javascript'>
 
-            if (window.location.href.split("/").length > 6) {
-                // 文章目录
-                $("#tocContainer").autoToc({offsetTop: 520});
-            }
+            $("#tocContainer").autoToc({offsetTop: 520});
 
-            document.addEventListener('DOMContentLoaded', function() {
-                document.querySelectorAll('figure span').forEach(function(block) {
+            document.addEventListener('DOMContentLoaded', (event) => {
+                document.querySelectorAll('figure span').forEach((block) => {
                     hljs.highlightBlock(block);
                 });
             });
-
         </script>
     </span>
+    <script type='text/javascript' th:src="@{${prefix} + '/source/js/main.js'}"></script>
 </body>
 </html>
