@@ -9,7 +9,10 @@
     <!-- 图片 -->
     <div class="image-banner" style="color: #fff">
         <div class="image-content"><img th:src="@{${prefix} + '/source/images/custom.png'}" class="magic img-responsive" ></div>
-        <div class="descr"><a th:href="@{/}">首页</a>  /  <a th:href="@{${nav.link}}" th:text="${nav.name}"></a></div>
+        <div class="descr">
+            <a th:href="@{/}">首页  /  </a>
+            <a th:href="@{${nav.link}}" th:text="${nav.name}"></a>
+        </div>
         <div class="title" th:text="${nav.name}"></div>
     </div>
 
