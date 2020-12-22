@@ -195,6 +195,11 @@ strong {
     height: 274px;
 }
 
+.image-banner .image-content img {
+    width: 100%;
+    height: 274px !important;
+}
+
 .image-banner .image-content::after {
     content: "";
     position: absolute;
@@ -1304,6 +1309,11 @@ h4.friend-link-title {
     }
 
     .image-banner .image-content {
+        height: 180px;
+    }
+
+    .image-banner .image-content img {
+        object-fit: cover;
         height: 180px;
     }
 
