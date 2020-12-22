@@ -15,19 +15,23 @@
         <link rel="stylesheet" th:href="@{'https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css'}">
         <link rel="stylesheet" th:href="@{'https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css'}" />
         <link rel="stylesheet" th:href="@{'/admin/assets/custom/jquery-search/jquery.search.css'}"/>
-        <link rel="stylesheet" th:href="@{'https://cdn.jsdelivr.net/npm/highlightjs@9.12.0/styles/github-gist.css'}"/>
-        <link rel="stylesheet" th:href="@{'https://cdn.jsdelivr.net/npm/lightbox2@2.8.2/dist/css/lightbox.min.css'}"/>
         <link rel="stylesheet" th:href="@{'https://cdn.jsdelivr.net/npm/animate.css@3.7.0/animate.min.css'}"/>
     </span>
     <span th:if="${activeTheme.configMap['useCDN'] == 'false'}">
         <link rel="stylesheet" th:href="@{${prefix} + '/source/js/bootstrap-3.3.7/css/bootstrap.min.css'}">
         <link rel="stylesheet" th:href="@{${prefix} + '/source/fonts/font-awesome/css/font-awesome.min.css'}" />
         <link rel="stylesheet" th:href="@{'/admin/assets/custom/jquery-search/jquery.search.css'}"/>
-        <link rel="stylesheet" th:href="@{${prefix} + '/source/js/highlightjs/styles/github-gist.css'}"/>
-        <link rel="stylesheet" th:href="@{${prefix} + '/source/js/lightbox/css/lightbox.css'}"/>
         <link rel="stylesheet" th:href="@{${prefix} + '/source/css/animate.css'}"/>
     </span>
     <span th:if="${isDetail == true}">
+        <span th:if="${activeTheme.configMap['useCDN'] == 'true'}">
+            <link rel="stylesheet" th:href="@{${prefix} + '/source/js/highlightjs/styles/'+ ${activeTheme.configMap['highlight']} +'.min.css'}"/>
+            <link rel="stylesheet" th:href="@{'https://cdn.jsdelivr.net/npm/lightbox2@2.8.2/dist/css/lightbox.min.css'}"/>
+        </span>
+        <span th:if="${activeTheme.configMap['useCDN'] == 'false'}">
+            <link rel="stylesheet" th:href="@{${prefix} + '/source/js/highlightjs/styles/atom-one-light.min.css'}"/>
+            <link rel="stylesheet" th:href="@{${prefix} + '/source/js/lightbox/css/lightbox.css'}"/>
+        </span>
         <link rel="stylesheet" th:href="@{${prefix} + '/source/js/autoToc/jquery.autoToc.css'}"/>
         <link rel="stylesheet" th:href="@{${prefix} + '/source/js/overshare/css/share.min.css'}"/>
     </span>
@@ -108,15 +112,12 @@
         <script type='text/javascript' th:src="@{${prefix} + '/source/js/circleMagic/circleMagic.min.js'}"></script>
         <script type='text/javascript' th:src="@{'https://cdn.jsdelivr.net/npm/jquery-lazyload@1.9.7/jquery.lazyload.min.js'}"></script>
         <span th:if="${isDetail == true}">
-            <script type='text/javascript' th:src="@{'https://cdn.jsdelivr.net/npm/highlightjs@9.12.0/highlight.pack.min.js'}"></script>
+            <script type='text/javascript' th:src="@{${prefix} + '/source/js/highlightjs/highlight.pack.js'}"></script>
             <script type='text/javascript' th:src="@{${prefix} + '/source/js/overshare/js/social-share.min.js'}"></script>
             <script type='text/javascript' th:src="@{'https://cdn.jsdelivr.net/npm/lightbox2@2.8.2/dist/js/lightbox.min.js'}"></script>
             <script type='text/javascript' th:src="@{${prefix} + '/source/js/autoToc/jquery.autoToc.js'}"></script>
             <script type='text/javascript'>
-                if (window.location.href.split("/").length > 6) {
-                    // 文章目录
-                    $("#tocContainer").autoToc({offsetTop: 520});
-                }
+                $("#tocContainer").autoToc({offsetTop: 520});
                 document.addEventListener('DOMContentLoaded', (event) => {
                     document.querySelectorAll('figure span').forEach((block) => {
                         hljs.highlightBlock(block);

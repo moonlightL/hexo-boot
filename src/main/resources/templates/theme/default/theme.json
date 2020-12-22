@@ -16,6 +16,13 @@
       "label": "是否开启CDN"
     },
     {
+      "key": "highlight",
+      "value": "atom-one-light",
+      "type": "select",
+      "option": "atom-one-light,atom-one-dark",
+      "label": "代码高亮主题"
+    },
+    {
       "key": "commentShowType",
       "value": "singleRow",
       "type": "select",
