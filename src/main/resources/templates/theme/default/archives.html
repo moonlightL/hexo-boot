@@ -22,9 +22,9 @@
                 <div class='archive-content' th:each="map,iterStat : ${pageInfo.data}">
                     <h3 class="animate-box" data-animate-effect="fadeInUp">[[${map.key}]]</h3>
                     <div class='archives'>
-                        <div class="animate-box" data-animate-effect="fadeInUp" th:each="vo,iterStat2 : ${map.value}">
+                        <div class="animate-box archives-item" data-animate-effect="fadeInUp" th:each="vo,iterStat2 : ${map.value}">
                             <a th:href="@{'/'+${vo.link}}" style="display: block">
-                                <span class="time">[[${vo.month} + '-' + ${vo.day}]]</span>
+                                <span class="time"><b>[[${vo.month} + '-' + ${vo.day}]]</b></span>
                                 <span class="title">[[${vo.title}]]</span>
                                 <span class="pull-right hidden-xs">([[${vo.readNum}]])</span>
                             </a>
