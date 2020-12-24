@@ -1,6 +1,9 @@
 
 ###################################【公共配置】##########################################
 server:
+  compression:
+    enabled: true
+    mime-types: application/javascript,text/css,application/json,application/xml,text/html,text/xml,text/plain
   port: 8080
   servlet:
     context-path: /

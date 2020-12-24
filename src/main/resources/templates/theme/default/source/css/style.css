@@ -1671,10 +1671,13 @@ h4.friend-link-title {
 
 .comment-data-body .comment-data-body-btns .emoji-container .emoji-container-btn {
     color: var(--theme-color);
+    margin-top: 8px !important;
 }
 
 .comment-data-body .comment-data-body-btns .input-container {
     border: 2px solid var(--theme-color) !important;
+    border-radius: 4px;
+    top: 2px !important;
 }
 
 .comment-data-body .comment-data-body-btns .input-container .input-content {
@@ -1724,6 +1727,8 @@ h4.friend-link-title {
 .second-comment-data-body .comment-data-body-btns .send-message-btn{
     background-color: var(--theme-color) !important;
     border: 2px solid var(--border-color) !important;
+    height: 36px;
+    line-height: 18px;
 }
 
 .comment-data-body .comment-data-body-btns .send-message-btn:hover,
