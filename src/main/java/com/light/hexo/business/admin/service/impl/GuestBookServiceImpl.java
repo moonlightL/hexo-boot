@@ -234,11 +234,6 @@ public class GuestBookServiceImpl extends BaseServiceImpl<GuestBook> implements 
     @Override
     public List<GuestBook> listGuestBookByIndex(Integer pageNum, Integer pageSize) throws GlobalException {
 
-        User blogger = this.userService.getBloggerInfo();
-        if (blogger == null) {
-            return new ArrayList<>();
-        }
-
         Example example = new Example(GuestBook.class);
         example.createCriteria().andEqualTo("delete", 0);
         example.orderBy("createTime").desc();
@@ -249,20 +244,12 @@ public class GuestBookServiceImpl extends BaseServiceImpl<GuestBook> implements 
             return new ArrayList<>();
         }
 
-        // 查询留言用户
-        List<Integer> uidList = guestBookList.stream().map(GuestBook::getUserId).collect(Collectors.toList());
-        List<User> userList = this.userService.listUserByIdList(uidList);
-        Map<Integer, User> userMap = userList.stream().collect(Collectors.toMap(User::getId, Function.identity(), (k1, k2)->k1));
-
-
         List<Integer> pidList = guestBookList.stream().map(GuestBook::getId).collect(Collectors.toList());
         Example parentExample = Example.builder(GuestBook.class).where(Sqls.custom().andIn("id", pidList)).build();
         List<GuestBook> parentList = this.getBaseMapper().selectByExample(parentExample);
         Map<Integer, GuestBook> parentMap = parentList.stream().collect(Collectors.toMap(GuestBook::getId, Function.identity(), (k1, k2)->k1));
 
         for (GuestBook guestBook : guestBookList) {
-            // 判断是否为博主
-            guestBook.setBlogger(guestBook.getUserId().equals(blogger.getId()));
             guestBook.setIpInfo(IpUtil.getProvinceAndCity(guestBook.getIpAddress()));
             guestBook.setIpAddress("");
             // 父级评论
@@ -272,12 +259,6 @@ public class GuestBookServiceImpl extends BaseServiceImpl<GuestBook> implements 
                 guestBook.setParent(parent);
             }
             guestBook.setTimeDesc(DateUtil.timeDesc(guestBook.getCreateTime()));
-            // 用户头像
-            User user = userMap.get(guestBook.getUserId());
-            if (user != null) {
-                guestBook.setAvatar(user.getAvatar());
-                guestBook.setNickname(user.getNickname());
-            }
         }
 
         return guestBookList;
@@ -285,11 +266,6 @@ public class GuestBookServiceImpl extends BaseServiceImpl<GuestBook> implements 
 
     @Override
     public List<GuestBook> getGuestBookListByIndex(Integer pageNum, Integer pageSize) throws GlobalException {
-
-        User blogger = this.userService.getBloggerInfo();
-        if (blogger == null) {
-            return new ArrayList<>();
-        }
 
         Example example = new Example(GuestBook.class);
         example.createCriteria().andEqualTo("delete", 0)
@@ -308,42 +284,21 @@ public class GuestBookServiceImpl extends BaseServiceImpl<GuestBook> implements 
         List<GuestBook> replyList = this.getBaseMapper().selectByExample(replyExample);
         Map<Integer, List<GuestBook>> replyMap = replyList.stream().collect(Collectors.groupingBy(GuestBook::getBannerId));
 
-        // 查询用户信息
-        List<Integer> uidList = parentList.stream().map(GuestBook::getUserId).collect(Collectors.toList());
-        List<Integer> uidList2 = replyList.stream().map(GuestBook::getUserId).collect(Collectors.toList());
-        uidList.addAll(uidList2);
-        List<User> userList = this.userService.listUserByIdList(uidList);
-        Map<Integer, User> userMap = userList.stream().collect(Collectors.toMap(User::getId, Function.identity(), (k1, k2)->k1));
-
-
         for (GuestBook guestBook : parentList) {
             // 判断是否为博主
-            guestBook.setBlogger(guestBook.getUserId().equals(blogger.getId()));
             guestBook.setIpInfo(IpUtil.getProvinceAndCity(guestBook.getIpAddress()));
             guestBook.setIpAddress("");
             // 子级评论
             List<GuestBook> children = replyMap.get(guestBook.getId());
             if (!CollectionUtils.isEmpty(children)) {
                 children.forEach(i -> {
-                    User user = userMap.get(i.getUserId());
-                    if (user != null) {
-                        i.setAvatar(user.getAvatar());
-                    }
                     i.setIpInfo(IpUtil.getProvinceAndCity(i.getIpAddress()));
                     i.setIpAddress("");
                     i.setTimeDesc(DateUtil.timeDesc(i.getCreateTime()));
-                    // 判断是否为博主
-                    i.setBlogger(i.getUserId().equals(blogger.getId()));
                 });
                 guestBook.setReplyList(children);
             }
             guestBook.setTimeDesc(DateUtil.timeDesc(guestBook.getCreateTime()));
-            // 用户头像
-            User user = userMap.get(guestBook.getUserId());
-            if (user != null) {
-                guestBook.setAvatar(user.getAvatar());
-                guestBook.setNickname(user.getNickname());
-            }
         }
 
         return parentList;
