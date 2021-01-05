@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -42,6 +43,8 @@ public class NavController extends BaseController {
      */
     @RequestMapping("addUI.html")
     public String addUI(Map<String, Object> resultMap) {
+        List<Nav> navList =  this.navService.listParentNav();
+        resultMap.put("navList", navList);
         return this.render("addUI", resultMap);
     }
 
@@ -54,6 +57,8 @@ public class NavController extends BaseController {
     public String editUI(@PathVariable Integer id, Map<String, Object> resultMap) {
         Nav nav = this.navService.findById(id);
         resultMap.put("vo", nav);
+        List<Nav> navList =  this.navService.listParentNav();
+        resultMap.put("navList", navList);
         return this.render("editUI", resultMap);
     }
 

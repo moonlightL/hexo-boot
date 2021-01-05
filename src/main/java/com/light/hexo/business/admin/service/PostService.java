@@ -7,6 +7,7 @@ import com.light.hexo.common.component.event.EventService;
 import com.light.hexo.common.exception.GlobalException;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author MoonlightL
@@ -103,9 +104,17 @@ public interface PostService extends BaseService<Post>, EventService {
      * 首页文章列表
      * @param pageNum
      * @param pageSize
+     * @param filterTop 是否过滤掉指定文章
      * @return
      */
-    HexoPageInfo pagePostsByIndex(int pageNum, int pageSize) throws GlobalException;
+    HexoPageInfo pagePostsByIndex(int pageNum, int pageSize, boolean filterTop) throws GlobalException;
+
+    /**
+     * 获取所有归档文章列表
+     * @return
+     * @throws GlobalException
+     */
+    HexoPageInfo archivePostsByIndex() throws GlobalException;
 
     /**
      * 归档文章列表
@@ -177,5 +186,12 @@ public interface PostService extends BaseService<Post>, EventService {
      * @throws GlobalException
      */
     List<Post> listPostsByTagName(String tagName, Integer pageNum, Integer pageSize) throws GlobalException;
+
+    /**
+     * 查询指定文章
+     * @return
+     * @throws GlobalException
+     */
+    List<Post> findTopList() throws GlobalException;
 
 }

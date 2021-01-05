@@ -24,6 +24,8 @@ public class PageConstant {
      */
     public static final String POST_ARCHIVE = "hexo:archive";
 
+    public static final String POST_ARCHIVE_ALL = "hexo:archive:all";
+
     /**
      * 文章详情页上一页缓存 key（格式：PageConstant.POST_DETAIL_PREVIOUS + #id）
      */
@@ -50,7 +52,7 @@ public class PageConstant {
     public static final String FRIEND_LINK_LIST = "hexo:friend:link:list";
 
     /**
-     * 首页导航列表缓存 key（格式：PageConstant.NAV_LIST）
+     * 导航列表缓存 key
      */
     public static final String NAV_LIST = "nav:list";
 

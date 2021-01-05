@@ -6,6 +6,17 @@
     unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2212,U+2215
 }
 
+@keyframes slowUp {
+    0% {
+        opacity: 0;
+        transform: translateY(25px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 :root[mode=light] {
     --theme-color: #37b1f3;
     --hover-color: #30a0dc;
@@ -160,21 +171,60 @@ strong {
     background-color: var(--text-hover-color);
 }
 
-.navbar li a {
+.navbar ul.menu li {
+    position: relative;
+}
+
+.navbar ul.menu > li > a {
     position: relative;
     z-index: 0;
     color: var(--text-color) !important;
     padding: 1.6rem;
 }
 
-.navbar li.active a {
+.navbar ul.menu > li a:hover {
+    background-color: var(--theme-color) !important;
+    color: var(--text-hover-color) !important;
+}
+
+.navbar ul.menu > li:hover > ul.second-menu {
+    display: block;
+    opacity: 1;
+}
+
+.navbar ul.menu > li.active a {
     background-color: var(--theme-color) !important;
     color: #fff !important;
 }
 
-.navbar li a:hover {
-    background-color: var(--theme-color) !important;
-    color: var(--text-hover-color) !important;
+.navbar ul.menu > li > ul.second-menu {
+    position: absolute;
+    width: 100%;
+    top: 52px;
+    left: 0;
+    text-align: center;
+    background: var(--content-color);
+    box-shadow: 0 1px 7px 1px var(--shadow-color);
+    border-radius: .625rem 0;
+    padding: 0;
+    margin: 0;
+    display: none;
+    opacity: 0;
+    animation: slowUp 1s;
+    z-index: 9;
+    list-style-type: none;
+}
+
+.navbar ul.menu > li > ul.second-menu a {
+    color: var(--text-color);
+}
+
+.navbar ul > li:hover {
+    background: var(--theme-color);
+}
+
+.navbar ul li:hover a {
+    color: #fff;
 }
 
 .navbar-brand img {

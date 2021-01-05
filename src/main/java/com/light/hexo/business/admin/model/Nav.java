@@ -12,6 +12,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @Author MoonlightL
@@ -72,9 +73,31 @@ public class Nav implements Serializable {
      */
     private String content;
 
+    /**
+     * 父级 id
+     */
+    private Integer parentId;
+
+    @Transient
+    private List<Nav> children;
+
+    /**
+     * 封面
+     */
+    private String cover;
+
     @CreateTime
     private LocalDateTime createTime;
 
     @UpdateTime
     private LocalDateTime updateTime;
+
+    public Nav() {}
+
+    public Nav(String name, String link, String cover, String code) {
+        this.name = name;
+        this.link = link;
+        this.cover = cover;
+        this.code = code;
+    }
 }

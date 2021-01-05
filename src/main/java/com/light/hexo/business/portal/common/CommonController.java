@@ -11,6 +11,12 @@ import com.light.hexo.common.util.MarkdownUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,7 +62,7 @@ public class CommonController {
     protected ConfigService configService;
 
     @Autowired
-    private NavService navService;
+    protected NavService navService;
 
     protected String render(String pageName, boolean isDetail, Map<String, Object> resultMap) {
 
@@ -70,21 +76,22 @@ public class CommonController {
 
         resultMap.put("isDetail", isDetail);
         resultMap.put("prefix", "/theme/" + themeName);
-        resultMap.put("md", MarkdownUtil.class);
         resultMap.put("activeTheme", activeTheme);
+        resultMap.put("md", MarkdownUtil.class);
 
-        List<Nav> navList = this.navService.listNavsByIndex();
-        resultMap.put("navList", navList);
+        if ("next".equals(themeName)) {
+            // 友链
+            List<FriendLink> friendLinkList = this.friendLinkService.listFriendLinkByIndex();
+            resultMap.put("friendLinkList", friendLinkList);
 
-        // 友链
-        List<FriendLink> friendLinkList = this.friendLinkService.listFriendLinkByIndex();
-        resultMap.put("friendLinkList", friendLinkList);
-
-        List<Category> categoryList = this.categoryService.listCategoriesByIndex();
-        resultMap.put("categoryList", categoryList);
+            List<Category> categoryList = this.categoryService.listCategoriesByIndex();
+            resultMap.put("categoryList", categoryList);
+        }
 
         return "theme/" +  themeName + "/" + pageName;
     }
+
+
 
     private Map<String, Integer> getCountInfo() {
 
@@ -106,4 +113,5 @@ public class CommonController {
 
         return result;
     }
+
 }

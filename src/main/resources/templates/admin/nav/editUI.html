@@ -58,9 +58,24 @@
                                 </div>
                             </div>
                             <div class="form-group row">
+                                <label class="col-md-3 col-form-label" for="cover">封面</label>
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control" id="cover" name="cover" placeholder="封面" th:field="*{cover}">
+                                </div>
+                            </div>
+                            <div class="form-group row">
                                 <label class="col-md-3 col-form-label" for="sort">排序</label>
                                 <div class="col-md-9">
                                     <input type="text" class="form-control" id="sort" name="sort" placeholder="排序 *" data-bv-notempty="true" data-bv-notempty-message="排序不能为空" th:field="*{sort}">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label" for="parentId">父导航</label>
+                                <div class="col-md-9">
+                                    <select class="custom-select" id="parentId" name="parentId" th:field="*{parentId}">
+                                        <option value="0">父导航</option>
+                                        <option th:each="nav:${navList}" th:value="${nav.id}" th:text="${nav.name}"></option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="form-group row">

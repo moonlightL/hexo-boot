@@ -188,7 +188,6 @@ public class InstallService {
         friendLink.setTitle("月光中的污点")
                   .setAuthor("MoonlightL")
                   .setHomeUrl("https://www.extlight.com")
-                  .setEmail("jx8996@163.com")
                   .setBackgroundColor("#34495E")
                   .setSort(1)
                   .setRemark("技术博客");

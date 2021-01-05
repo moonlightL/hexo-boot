@@ -61,9 +61,16 @@
                                 <a class="navbar-brand" href="#">[[${#servletContext.getAttribute('configMap')['blog_name']}]]</a>
                             </div>
                             <div id="navbar" class="navbar-collapse collapse">
-                                <ul class="nav navbar-nav navbar-right">
-                                    <li th:each="nav : ${navList}" th:class="${menu eq nav.code ? 'active' : ''}">
-                                        <a th:href="@{${nav.link}}"><i th:class="${nav.icon}"></i> [[${nav.name}]]</a>
+                                <ul class="nav menu navbar-nav navbar-right">
+                                    <li th:each="nav : ${#servletContext.getAttribute('firstNav')}" th:class="${currentNav.code eq nav.code ? 'item active' : 'item'}">
+                                        <a th:href="@{${#lists.isEmpty(nav.children) ? nav.link : '#'}}">
+                                            <i th:class="${nav.icon}"></i> [[${nav.name}]]
+                                        </a>
+                                        <ul class="second-menu" th:if="${#lists.isEmpty(nav.children) == false}">
+                                            <li class="item" th:each="child : ${nav.children}">
+                                                <a th:href="@{${child.link}}"><i th:class="${child.icon}"></i> [[${child.name}]]</a>
+                                            </li>
+                                        </ul>
                                     </li>
                                 </ul>
                             </div>

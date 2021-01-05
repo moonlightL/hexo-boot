@@ -4,23 +4,36 @@ import com.light.hexo.business.admin.constant.HexoExceptionEnum;
 import com.light.hexo.business.admin.constant.StateEnum;
 import com.light.hexo.business.admin.mapper.NavMapper;
 import com.light.hexo.business.admin.model.Nav;
+import com.light.hexo.business.admin.model.event.NavEvent;
 import com.light.hexo.business.admin.service.NavService;
 import com.light.hexo.business.portal.constant.PageConstant;
 import com.light.hexo.common.base.BaseMapper;
 import com.light.hexo.common.base.BaseRequest;
 import com.light.hexo.common.base.BaseServiceImpl;
+import com.light.hexo.common.component.event.BaseEvent;
+import com.light.hexo.common.component.event.EventEnum;
+import com.light.hexo.common.component.event.EventPublisher;
 import com.light.hexo.common.exception.GlobalException;
 import com.light.hexo.common.model.NavRequest;
 import com.light.hexo.common.util.EhcacheUtil;
 import com.light.hexo.common.util.ExceptionUtil;
+import com.light.hexo.common.util.SpringContextUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.omg.CORBA.NVList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.WebApplicationContext;
 import tk.mybatis.mapper.entity.Example;
+import tk.mybatis.mapper.util.Sqls;
 
+import javax.servlet.ServletContext;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -32,10 +45,15 @@ import java.util.stream.Collectors;
  */
 @CacheConfig(cacheNames = "navCache")
 @Service
+@Slf4j
 public class NavServiceImpl extends BaseServiceImpl<Nav> implements NavService {
 
     @Autowired
     private NavMapper navMapper;
+
+    @Autowired
+    @Lazy
+    private EventPublisher eventPublisher;
 
     @Override
     public BaseMapper<Nav> getBaseMapper() {
@@ -67,29 +85,18 @@ public class NavServiceImpl extends BaseServiceImpl<Nav> implements NavService {
 
     @Override
     public Nav findByLink(String link) throws GlobalException {
+        List<Nav> navList = this.listNavs();
+        Optional<Nav> first = navList.stream().filter(i -> i.getLink().equals(link)).findFirst();
+        return first.orElseGet(() -> new Nav("tmp", "/tmp", "", "tmp"));
 
-        Example example = new Example(Nav.class);
-        example.createCriteria().andEqualTo("link", "/custom/" + link);
-        Nav nav = this.getBaseMapper().selectOneByExample(example);
-
-        if (nav == null || StateEnum.OFF.getCode().equals(nav.getState())) {
-            ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_NAV_NOT_EXIST);
-        }
-
-        return nav;
     }
 
     @Cacheable(key = "'" + PageConstant.NAV_LIST + "'")
-    @Override
-    public List<Nav> listNavsByIndex() throws GlobalException {
-
+    public List<Nav> listNavs() {
         Example example = Example.builder(Nav.class)
-                .select("id", "name", "link", "code", "icon")
-                .orderBy("sort")
-                .build();
-
-        example.createCriteria().andEqualTo("state", 1);
-
+               .select("id", "name", "link", "code", "icon", "cover", "parentId")
+               .where(Sqls.custom().andEqualTo("state", 1))
+               .orderByAsc("sort").build();
         return this.getBaseMapper().selectByExample(example);
     }
 
@@ -99,6 +106,7 @@ public class NavServiceImpl extends BaseServiceImpl<Nav> implements NavService {
 
         this.removeBatch(idList);
         EhcacheUtil.clearByCacheName("navCache");
+        this.eventPublisher.emit(new NavEvent());
     }
 
     @Override
@@ -110,6 +118,7 @@ public class NavServiceImpl extends BaseServiceImpl<Nav> implements NavService {
         nav.setNavType(2);
         super.saveModel(nav);
         EhcacheUtil.clearByCacheName("navCache");
+        this.eventPublisher.emit(new NavEvent());
     }
 
     @Override
@@ -131,6 +140,16 @@ public class NavServiceImpl extends BaseServiceImpl<Nav> implements NavService {
 
         super.updateModel(nav);
         EhcacheUtil.clearByCacheName("navCache");
+        this.eventPublisher.emit(new NavEvent());
+    }
+
+    @Override
+    public List<Nav> listParentNav() throws GlobalException {
+        Example example = new Example(Nav.class);
+        example.createCriteria().andEqualTo("parentId", 0)
+                .andEqualTo("state", 1);
+        example.orderBy("sort").asc();
+        return this.getBaseMapper().selectByExample(example);
     }
 
     @Override
@@ -138,7 +157,52 @@ public class NavServiceImpl extends BaseServiceImpl<Nav> implements NavService {
         int num = super.updateModel(model);
         if (num > 0) {
             EhcacheUtil.clearByCacheName("navCache");
+            this.eventPublisher.emit(new NavEvent());
         }
         return num;
     }
+
+    @Override
+    public void initNav(ServletContext servletContext) {
+        List<Nav> navList = this.listNavs();
+        List<Nav> firstNav = navList.stream().filter(i -> i.getParentId().equals(0)).collect(Collectors.toList());
+        Map<Integer, List<Nav>> childrenMap = navList.stream().collect(Collectors.groupingBy(Nav::getParentId));
+        for (Nav parent : firstNav) {
+            parent.setChildren(childrenMap.get(parent.getId()));
+        }
+
+        // 用于前端导航显示
+        servletContext.setAttribute("firstNav", firstNav);
+    }
+
+    @Override
+    public Nav findCustomLink(String link) throws GlobalException {
+        Example example = new Example(Nav.class);
+        example.createCriteria().andEqualTo("link", "/custom/" + link);
+        Nav nav = this.getBaseMapper().selectOneByExample(example);
+        if (nav == null) {
+            return new Nav("tmp", "/tmp", "", "tmp");
+        }
+
+        return nav;
+    }
+
+    @Override
+    public EventEnum getEventType() {
+        return EventEnum.NAV;
+    }
+
+    @Override
+    public void dealWithEvent(BaseEvent event) {
+        WebApplicationContext webApplicationContext = (WebApplicationContext) SpringContextUtil.applicationContext;
+        ServletContext servletContext = webApplicationContext.getServletContext();
+        if (servletContext == null) {
+            log.info("===========ConfigService dealWithEvent 获取 servletContext 为空============");
+            return;
+        }
+
+        this.initNav(servletContext);
+    }
+
+
 }

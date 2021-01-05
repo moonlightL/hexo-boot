@@ -25,13 +25,10 @@ import com.light.hexo.common.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.ibatis.annotations.Param;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
-import org.jsoup.select.NodeFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
@@ -39,20 +36,16 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.ResourceUtils;
 import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.util.Sqls;
 
 import java.io.*;
-import java.net.URI;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @Author MoonlightL
@@ -457,13 +450,16 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
 
     @Cacheable(key = "'"+ PageConstant.POST_PAGE + ":' + #pageNum")
     @Override
-    public HexoPageInfo pagePostsByIndex(int pageNum, int pageSize) throws GlobalException {
-        Example example = Example.builder(Post.class)
+    public HexoPageInfo pagePostsByIndex(int pageNum, int pageSize, boolean filterTop) throws GlobalException {
+        Example.Builder builder = Example.builder(Post.class)
                 .select("id", "title", "summary", "summaryHtml", "author", "publishDate", "year", "month", "day", "top", "reprint",
                         "coverUrl", "link", "categoryId", "tags", "readNum", "praiseNum", "commentNum", "topTime", "createTime")
-                .where(Sqls.custom().andEqualTo("publish", true).andEqualTo("delete", false))
-                .orderByDesc("createTime")
-                .build();
+                .where(Sqls.custom().andEqualTo("publish", true).andEqualTo("delete", false));
+        if (filterTop) {
+            builder.andWhere(Sqls.custom().andEqualTo("top", false));
+        }
+
+        Example example = builder.orderByDesc("createTime").build();
         List<Post> postList = this.getBaseMapper().selectByExample(example);
         if (postList.isEmpty()) {
             return new HexoPageInfo(pageNum, pageSize, postList.size(), null);
@@ -471,10 +467,12 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
 
         List<Post> list = new ArrayList<>(pageSize);
         // 置顶文章
-        List<Post> topList = postList.stream().filter(Post::getTop)
-                .sorted(Comparator.comparing(Post::getTopTime).reversed())
-                .collect(Collectors.toList());
-        list.addAll(topList);
+        if (!filterTop) {
+            List<Post> topList = postList.stream().filter(Post::getTop)
+                    .sorted(Comparator.comparing(Post::getTopTime).reversed())
+                    .collect(Collectors.toList());
+            list.addAll(topList);
+        }
 
         // 非置顶文章
         List<Post> remainList = postList.stream().filter(i -> !i.getTop())
@@ -503,6 +501,27 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
         }
 
         return new HexoPageInfo(pageNum, pageSize, list.size(), subList);
+    }
+
+    @Cacheable(key = "'" + PageConstant.POST_ARCHIVE_ALL + "'")
+    @Override
+    public HexoPageInfo archivePostsByIndex() throws GlobalException {
+        Example example = Example.builder(Post.class)
+                .select("id", "title", "author", "publishDate", "year", "month", "day", "top", "reprint",
+                        "coverUrl", "link", "categoryId", "tags", "readNum", "createTime")
+                .where(Sqls.custom().andEqualTo("publish", true).andEqualTo("delete", false))
+                .orderByDesc("createTime")
+                .build();
+        List<Post> postList = this.getBaseMapper().selectByExample(example);
+        if (postList.isEmpty()) {
+            return new HexoPageInfo(0, 10, postList.size(), null);
+        }
+
+        Map<String, List<Post>> map = postList.stream().collect(Collectors.groupingBy(Post::getYear));
+        // key 降序排序
+        Map<String, List<Post>> sortMap = new TreeMap<>(Comparator.reverseOrder());
+        sortMap.putAll(map);
+        return new HexoPageInfo(0, 10, postList.size(), sortMap);
     }
 
     @Cacheable(key = "'" + PageConstant.POST_ARCHIVE + ":' + #pageNum")
@@ -642,6 +661,19 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
 
         PageHelper.startPage(pageNum, pageSize);
         return this.postMapper.selectListByTagId(tag.getId());
+    }
+
+    @Override
+    public List<Post> findTopList() throws GlobalException {
+        Example example = Example.builder(Post.class)
+                .select("id", "title", "author", "publishDate", "year", "month", "day", "top", "reprint",
+                        "coverUrl", "link", "categoryId", "tags", "readNum", "createTime")
+                .where(Sqls.custom()
+                        .andEqualTo("top", true)
+                        .andEqualTo("delete", false))
+                .orderByDesc("topTime")
+                .build();
+        return this.getBaseMapper().selectByExample(example);
     }
 
     @Override
