@@ -22,7 +22,7 @@
     --hover-color: #30a0dc;
     --blog-bg-color: #f0f2f5;
     --content-color: #fff;
-    --text-color: #2e2f2f;
+    --text-color: #333;
     --text-hover-color: #fff;
     --border-color: #37b1f3;
     --shadow-color: #e8e9ea;
@@ -47,11 +47,19 @@ body {
     background-color: var(--blog-bg-color);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    font-family: Mulish,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
-    line-height: 2;
+    font-family: "Poppins", "Open sans", sans-serif;
+    font-size: 14px;
+    line-height: 21px;
+    text-shadow: 0 2px 10px var(--shadow-color);
+}
+
+p {
+    font-family: "Poppins", "Open sans", sans-serif;
+    line-height: 1.8em;
 }
 
 th, td, input, textarea {
+    font-family: "Poppins", "Open sans", sans-serif;
     color: var(--text-color);
     background-color: var(--content-color);
     -webkit-font-smoothing: antialiased;
@@ -86,6 +94,7 @@ body::-webkit-scrollbar-thumb {
 /** 重置 bootstrap start  */
 
 a {
+    font-family: "Poppins", "Open sans", sans-serif;
     color: var(--theme-color);
     text-decoration: none !important;
 }
@@ -214,6 +223,11 @@ strong {
     z-index: 9;
     list-style-type: none;
 }
+
+.navbar ul.menu > li > ul.second-menu li {
+    padding: 4px 2px;
+}
+
 
 .navbar ul.menu > li > ul.second-menu a {
     color: var(--text-color);
@@ -455,6 +469,7 @@ strong {
 
 .post-info .post-title a {
     color: var(--text-color);
+    font-size: 16px;
 }
 
 .post-info .post-title a:hover {
@@ -987,8 +1002,10 @@ h4.friend-link-title {
 }
 
 .post-content p, .post-content blockquote p {
-    font-size: 15px;
+    font-size: 14px;
     margin: 0 0 24px;
+    letter-spacing: 2px;
+    text-shadow: 0 2px 10px #ccc;
 }
 
 .post-content p code {
