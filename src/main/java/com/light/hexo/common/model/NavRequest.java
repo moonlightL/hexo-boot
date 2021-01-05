@@ -62,4 +62,9 @@ public class NavRequest extends BaseRequest<Nav> {
      * 排序
      */
     private String sort;
+
+    /**
+     * 父级 id
+     */
+    private Integer parentId;
 }

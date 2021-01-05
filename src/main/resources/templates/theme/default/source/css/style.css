@@ -6,12 +6,23 @@
     unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2212,U+2215
 }
 
+@keyframes slowUp {
+    0% {
+        opacity: 0;
+        transform: translateY(25px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 :root[mode=light] {
     --theme-color: #37b1f3;
     --hover-color: #30a0dc;
     --blog-bg-color: #f0f2f5;
     --content-color: #fff;
-    --text-color: #6c757d;
+    --text-color: #333;
     --text-hover-color: #fff;
     --border-color: #37b1f3;
     --shadow-color: #e8e9ea;
@@ -36,10 +47,19 @@ body {
     background-color: var(--blog-bg-color);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    font-family: "Poppins", "Open sans", sans-serif;
+    font-size: 14px;
+    line-height: 21px;
+    text-shadow: 0 2px 10px var(--shadow-color);
+}
+
+p {
+    font-family: "Poppins", "Open sans", sans-serif;
+    line-height: 1.8em;
 }
 
 th, td, input, textarea {
-    font-family: "Play", "Microsoft YaHei", sans-serif;
+    font-family: "Poppins", "Open sans", sans-serif;
     color: var(--text-color);
     background-color: var(--content-color);
     -webkit-font-smoothing: antialiased;
@@ -74,6 +94,7 @@ body::-webkit-scrollbar-thumb {
 /** 重置 bootstrap start  */
 
 a {
+    font-family: "Poppins", "Open sans", sans-serif;
     color: var(--theme-color);
     text-decoration: none !important;
 }
@@ -159,21 +180,65 @@ strong {
     background-color: var(--text-hover-color);
 }
 
-.navbar li a {
+.navbar ul.menu li {
+    position: relative;
+}
+
+.navbar ul.menu > li > a {
     position: relative;
     z-index: 0;
-    color: #6c757d !important;
+    /*color: var(--text-color) !important;*/
     padding: 1.6rem;
 }
 
-.navbar li.active a {
+.navbar ul.menu > li a:hover {
+    background-color: var(--theme-color) !important;
+    color: var(--text-hover-color) !important;
+}
+
+.navbar ul.menu > li:hover > ul.second-menu {
+    display: block;
+    opacity: 1;
+}
+
+.navbar ul.menu > li.active a {
     background-color: var(--theme-color) !important;
     color: #fff !important;
 }
 
-.navbar li a:hover {
-    background-color: var(--theme-color) !important;
-    color: var(--text-hover-color) !important;
+.navbar ul.menu > li > ul.second-menu {
+    position: absolute;
+    width: 100%;
+    top: 52px;
+    left: 0;
+    text-align: center;
+    background: var(--content-color);
+    box-shadow: 0 1px 7px 1px var(--shadow-color);
+    border-radius: .625rem 0;
+    padding: 0;
+    margin: 0;
+    display: none;
+    opacity: 0;
+    animation: slowUp 1s;
+    z-index: 9;
+    list-style-type: none;
+}
+
+.navbar ul.menu > li > ul.second-menu li {
+    padding: 4px 2px;
+}
+
+
+.navbar ul.menu > li > ul.second-menu a {
+    color: var(--text-color);
+}
+
+.navbar ul > li:hover {
+    background: var(--theme-color);
+}
+
+.navbar ul li:hover a {
+    color: #fff;
 }
 
 .navbar-brand img {
@@ -220,7 +285,7 @@ strong {
 }
 
 .image-banner .descr a {
-    color: #6c757d !important;
+    color: var(--text-color) !important;
 }
 
 .image-banner .title {
@@ -284,6 +349,7 @@ strong {
     width: 100%;
     height: 215px;
     overflow: hidden;
+    border-radius: 4px 4px 0 0;
 }
 
 .post-info .post-bg:hover i {
@@ -403,6 +469,7 @@ strong {
 
 .post-info .post-title a {
     color: var(--text-color);
+    font-size: 15px;
 }
 
 .post-info .post-title a:hover {
@@ -434,7 +501,7 @@ strong {
 .post-info .post-data {
     padding: 5px 12px;
     max-height: 100px;
-    color: #6c757d;
+    color: var(--text-color);
 }
 
 .post-info hr {
@@ -460,7 +527,7 @@ strong {
     position: relative;
     width: auto;
     height: auto;
-    color: #6c757d;
+    color: var(--text-color);
     font-size: 13px;
     font-weight: 700;
     white-space: nowrap;
@@ -631,7 +698,7 @@ strong {
     line-height: 18px;
     padding: 5px;
     text-decoration: none;
-    color: #aaa;
+    color: var(--text-color);
     border: 2px solid var(--theme-color);
     border-radius: 50%;
 }
@@ -708,7 +775,6 @@ strong {
 .archive-body {
     max-width: 800px;
     margin-left: 35px;
-    padding-left: 40px;
     position: relative;
     border-left: 2px solid #cecece;
 }
@@ -716,7 +782,7 @@ strong {
 .archive-body:before {
     position: absolute;
     left: -10px;
-    top: 0px;
+    top: 0;
     content: "";
     width: 18px;
     height: 18px;
@@ -728,67 +794,46 @@ strong {
 .archive-body:after {
     position: absolute;
     left: -10px;
-    bottom: 0px;
+    bottom: 0;
     content: "";
     width: 18px;
     height: 18px;
     border: 4px solid #daf9f5;
     border-radius: 50%;
     background: var(--theme-color);
+}
+
+.archive-content h3 {
+    margin-left: 10px;
+    padding-left: 32px;
+    padding-bottom: 10px;
+    position: relative;
+    color: var(--text-color);
+    font-weight: 600;
+}
+
+.archives .archives-item {
+    margin-left: 18px;
 }
 
 .archives a {
     position: relative;
     z-index: 1;
     display: inline-block;
-    padding: 10px 0;
-    color: #6c757d;
+    padding: 10px 24px;
+    color: var(--text-color);
     font-style: normal;
     text-decoration:none;
 }
 
-.archives a:hover:before {
-    transform: scaleX(1);
-}
-
-.archives a:before {
-    position: absolute;
-    transition: all .3s;
-    content: "";
-    display: inline-block;
+.archives a:hover {
     background: var(--theme-color);
-    z-index: -1;
-    height: 2px;
-    width: 100%;
-    transform: scaleX(0);
-    bottom:8px;
-    left: 0;
-    right: 0;
-    margin: auto;
+    color: var(--text-hover-color);
+    border-radius: 4px;
 }
 
-
-.archives .time {
-    color: var(--text-color);
-    padding-right: 35px;
-}
-
-.archive-content h3 {
-    padding-bottom: 10px;
-    position: relative;
-    color: var(--text-color);
-}
-
-.archive-content h3:before {
-    position: absolute;
-    left: -50px;
-    content: "";
-    width: 18px;
-    height: 18px;
-    border: 4px solid #daf9f5;
-    border-radius: 50%;
-    background: var(--theme-color);
-    box-sizing: border-box;
+.archives span.title {
+    margin-left: 18px;
 }
 
 /** 归档 end **/
@@ -888,7 +933,6 @@ h4.friend-link-title {
 
 .friend-link-item .remark {
     text-align: left;
-    color: #6c757d;
 }
 
 /** 友链 end  */
@@ -958,8 +1002,10 @@ h4.friend-link-title {
 }
 
 .post-content p, .post-content blockquote p {
-    font-size: 15px;
+    font-size: 14px;
     margin: 0 0 24px;
+    letter-spacing: 2px;
+    text-shadow: 0 2px 10px #ccc;
 }
 
 .post-content p code {
@@ -1370,43 +1416,30 @@ h4.friend-link-title {
         height: 0;
     }
 
-    .archives a {
-        position: relative;
-        z-index: 0;
-        display: block;
-        padding: 5px 0;
-        color: var(--text-color);
-        font-style: normal;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
-    }
-
-    .archives a:hover{
-        color: var(--hover-color);
-        text-decoration: none;
-    }
-
-    .archives .time {
-        color: #888;
-        padding-right: 10px
-    }
-
     .archive-content h3 {
         position: relative;
         padding-bottom: 8px;
         font-size:15px;
     }
 
-    .archive-content h3:before {
-        content: "";
-        width: 0px;
-        height: 0px;
-        border: none;
-        border-radius: 50%;
-        background: var(--theme-color);
-        position: absolute;
-        left: -50px;
+    .archives .archives-item {
+        margin-left: 38px;
+    }
+
+    .archives a {
+        position: relative;
+        z-index: 0;
+        display: block;
+        color: var(--text-color);
+        font-style: normal;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        padding: 5px;
+    }
+
+    .archives span.title {
+        margin-left: 5px;
     }
 
     .archive-content .archive-title {
@@ -1705,10 +1738,13 @@ h4.friend-link-title {
 
 .comment-data-body .comment-data-body-btns .emoji-container .emoji-container-btn {
     color: var(--theme-color);
+    margin-top: 8px !important;
 }
 
 .comment-data-body .comment-data-body-btns .input-container {
     border: 2px solid var(--theme-color) !important;
+    border-radius: 4px;
+    top: 2px !important;
 }
 
 .comment-data-body .comment-data-body-btns .input-container .input-content {
@@ -1758,6 +1794,8 @@ h4.friend-link-title {
 .second-comment-data-body .comment-data-body-btns .send-message-btn{
     background-color: var(--theme-color) !important;
     border: 2px solid var(--border-color) !important;
+    height: 36px;
+    line-height: 18px;
 }
 
 .comment-data-body .comment-data-body-btns .send-message-btn:hover,
@@ -1782,7 +1820,13 @@ h4.friend-link-title {
     border: 2px solid var(--theme-color);
     border-radius: 50% !important;
     color: var(--text-color);
+    line-height: 16px;
 }
+.comment-list .comment-list-page-bar ul li a:hover {
+    background: var(--hover-color);
+    color: var(--text-hover-color) !important;
+}
+
 
 .comment-list .comment-list-page-bar ul li.active a {
     background-color: var(--theme-color) !important;
@@ -1806,6 +1850,10 @@ h4.friend-link-title {
     border: 2px solid var(--border-color) !important;
 }
 
+.comment-list-body .comment-list-item blockquote.original-content {
+    border-radius: 4px;
+}
+
 /** 评论区 end **/
 
 /** 目录 start **/
@@ -1820,4 +1868,14 @@ h4.friend-link-title {
 
 /** 目录 start **/
 
-
+.pace .pace-progress {
+    background: var(--theme-color);
+    height: 3px;
+}
+.pace .pace-progress-inner {
+    box-shadow: 0 0 10px var(--theme-color); , 0 0 5px var(--theme-color);
+}
+.pace .pace-activity {
+    border-top-color: var(--theme-color);
+    border-left-color: var(--theme-color);
+}

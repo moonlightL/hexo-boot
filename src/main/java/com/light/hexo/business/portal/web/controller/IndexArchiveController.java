@@ -1,11 +1,15 @@
 package com.light.hexo.business.portal.web.controller;
 
+import com.light.hexo.business.admin.model.Nav;
+import com.light.hexo.business.admin.model.Post;
+import com.light.hexo.business.admin.model.Theme;
 import com.light.hexo.business.portal.common.CommonController;
 import com.light.hexo.business.portal.model.HexoPageInfo;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -23,19 +27,20 @@ public class IndexArchiveController extends CommonController {
      * @param resultMap
      * @return
      */
-    @GetMapping(value = {"archives", "archives/", "archives/index.html"})
-    public String archives(Map<String, Object> resultMap) {
-        HexoPageInfo pageInfo =  this.postService.archivePostsByIndex(1, PAGE_SIZE);
+    @GetMapping(value = {"archives", "archives/", "archives/index.html", "archives/page/{pageNum}/"})
+    public String archives(@PathVariable(value="pageNum", required = false) Integer pageNum, Map<String, Object> resultMap) {
+        Theme activeTheme = this.themeService.getActiveTheme(true);
+        HexoPageInfo pageInfo;
+        if ("Grace".equals(activeTheme.getName())) {
+            pageInfo = this.postService.archivePostsByIndex();
+        } else {
+            pageNum = pageNum == null ? 1 : pageNum;
+            pageInfo =  this.postService.archivePostsByIndex(pageNum, PAGE_SIZE);
+        }
         resultMap.put("pageInfo", pageInfo);
-        resultMap.put("menu", "archives");
-        return render("archives", false, resultMap);
-    }
 
-    @GetMapping(value = "archives/page/{pageNum}/")
-    public String archivesPage(@PathVariable("pageNum") Integer pageNum, Map<String, Object> resultMap) {
-        HexoPageInfo pageInfo =  this.postService.archivePostsByIndex(pageNum, PAGE_SIZE);
-        resultMap.put("pageInfo", pageInfo);
-        resultMap.put("menu", "archives");
+        resultMap.put("currentNav", this.navService.findByLink("/archives/"));
+
         return render("archives", false, resultMap);
     }
 }

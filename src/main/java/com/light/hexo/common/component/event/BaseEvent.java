@@ -10,6 +10,6 @@ package com.light.hexo.common.component.event;
 public class BaseEvent {
 
     protected EventEnum getEventType() {
-        return null;
+        return EventEnum.NAV;
     }
 }

@@ -71,7 +71,7 @@ public class IndexGuestBookController extends CommonController {
      */
     @PostMapping("auth/sendGuestBook.json")
     @ResponseBody
-    @RequestLimit(cacheName = "guestBookCache", time = 60, msg = "留言操作过于频繁，请等待60秒后再评论")
+    @RequestLimit(cacheName = "guestBookCache", time = 30, msg = "留言操作过于频繁，请等待30秒后再评论")
     public Result sendGuestBook(@Validated(GuestBookRequest.Send.class) GuestBookRequest request, HttpServletRequest httpServletRequest) throws GlobalException {
 
         GuestBook guestBook = request.toDoModel();

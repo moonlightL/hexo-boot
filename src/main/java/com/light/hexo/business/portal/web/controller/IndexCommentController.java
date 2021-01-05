@@ -71,7 +71,7 @@ public class IndexCommentController extends CommonController {
      */
     @PostMapping("auth/sendComment.json")
     @ResponseBody
-    @RequestLimit(cacheName = "commentCache", time = 60, msg = "评论操作过于频繁，请等待60秒后再评论")
+    @RequestLimit(cacheName = "commentCache", time = 30, msg = "评论操作过于频繁，请等待30秒后再评论")
     public Result sendComment(@Validated(PostCommentRequest.Send.class) PostCommentRequest request, HttpServletRequest httpServletRequest) throws GlobalException {
 
         PostComment postComment = request.toDoModel();

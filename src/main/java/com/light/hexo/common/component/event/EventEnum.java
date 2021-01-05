@@ -16,7 +16,8 @@ public enum  EventEnum {
     POST(2, "文章事件"),
     CONFIG(3, "配置事件"),
     VISIT(4, "访问事件"),
-    MESSAGE(5, "消息事件")
+    MESSAGE(5, "消息事件"),
+    NAV(6, "导航事件"),
 
     ;
 

@@ -37,6 +37,11 @@ public class FriendLink implements Serializable {
     private String title;
 
     /**
+     * Logo
+     */
+    private String logo;
+
+    /**
      * 作者
      */
     private String author;
@@ -45,11 +50,6 @@ public class FriendLink implements Serializable {
      * 主页
      */
     private String homeUrl;
-
-    /**
-     * 邮箱
-     */
-    private String email;
 
     /**
      * 排序

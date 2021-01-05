@@ -138,12 +138,11 @@ public class PostComment  implements Serializable {
     /**
      * 头像
      */
-    @Transient
     private String avatar;
 
     /**
      * 是否为博主
      */
-    @Transient
+    @Column(name = "is_blogger")
     private Boolean blogger;
 }

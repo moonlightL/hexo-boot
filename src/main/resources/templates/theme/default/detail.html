@@ -2,7 +2,8 @@
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" layout:decorate="~{theme/default/layout}">
 
 <head>
-    <title th:text="${#servletContext.getAttribute('configMap')['blog_name']} + ' | ' + ${post.title}"></title>
+    <title th:text="${post.title + '-' + #servletContext.getAttribute('configMap')['blog_name']}"></title>
+    <meta name="description" th:content="${post.summary}" />
     <link rel="stylesheet" th:href="@{'/admin/assets/custom/jquery-comment/jquery-comment.css'}">
 </head>
 <body>

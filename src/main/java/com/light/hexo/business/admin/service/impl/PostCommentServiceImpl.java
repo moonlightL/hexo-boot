@@ -262,11 +262,6 @@ public class PostCommentServiceImpl extends BaseServiceImpl<PostComment> impleme
     @Override
     public List<PostComment> listCommentByPostId(Integer postId, Integer pageNum, Integer pageSize) throws GlobalException {
 
-        User blogger = this.userService.getBloggerInfo();
-        if (blogger == null) {
-            return new ArrayList<>();
-        }
-
         Example example = new Example(PostComment.class);
         example.createCriteria().andEqualTo("postId", postId)
                                 .andEqualTo("delete", 0);
@@ -279,11 +274,6 @@ public class PostCommentServiceImpl extends BaseServiceImpl<PostComment> impleme
             return new ArrayList<>();
         }
 
-        // 查询留言用户
-        List<Integer> uidList = postCommentList.stream().map(PostComment::getUserId).collect(Collectors.toList());
-        List<User> userList = this.userService.listUserByIdList(uidList);
-        Map<Integer, User> userMap = userList.stream().collect(Collectors.toMap(User::getId, Function.identity(), (k1, k2)->k1));
-
         // 父级评论
         List<Integer> pidList = postCommentList.stream().map(PostComment::getPId).collect(Collectors.toList());
         Example parentExample = Example.builder(PostComment.class).where(Sqls.custom().andIn("id", pidList)).build();
@@ -292,7 +282,6 @@ public class PostCommentServiceImpl extends BaseServiceImpl<PostComment> impleme
 
         for (PostComment postComment : postCommentList) {
             // 判断是否为博主
-            postComment.setBlogger(postComment.getUserId().equals(blogger.getId()));
             postComment.setIpInfo(IpUtil.getProvinceAndCity(postComment.getIpAddress()));
             postComment.setIpAddress("");
             // 父级评论
@@ -302,12 +291,6 @@ public class PostCommentServiceImpl extends BaseServiceImpl<PostComment> impleme
                 postComment.setParent(parent);
             }
             postComment.setTimeDesc(DateUtil.timeDesc(postComment.getCreateTime()));
-            // 用户头像
-            User user = userMap.get(postComment.getUserId());
-            if (user != null) {
-                postComment.setAvatar(user.getAvatar());
-                postComment.setNickname(user.getNickname());
-            }
         }
 
         return postCommentList;
@@ -315,11 +298,6 @@ public class PostCommentServiceImpl extends BaseServiceImpl<PostComment> impleme
 
     @Override
     public List<PostComment> getCommentListByPostId(Integer postId, Integer pageNum, Integer pageSize) throws GlobalException {
-
-        User blogger = this.userService.getBloggerInfo();
-        if (blogger == null) {
-            return new ArrayList<>();
-        }
 
         Example example = new Example(PostComment.class);
         example.createCriteria().andEqualTo("postId", postId)
@@ -340,42 +318,20 @@ public class PostCommentServiceImpl extends BaseServiceImpl<PostComment> impleme
         List<PostComment> replyList = this.getBaseMapper().selectByExample(replyExample);
         Map<Integer, List<PostComment>> replyMap = replyList.stream().collect(Collectors.groupingBy(PostComment::getBannerId));
 
-        // 查询用户信息
-        List<Integer> uidList = parentList.stream().map(PostComment::getUserId).collect(Collectors.toList());
-        List<Integer> uidList2 = replyList.stream().map(PostComment::getUserId).collect(Collectors.toList());
-        uidList.addAll(uidList2);
-        List<User> userList = this.userService.listUserByIdList(uidList);
-        Map<Integer, User> userMap = userList.stream().collect(Collectors.toMap(User::getId, Function.identity(), (k1, k2)->k1));
-
-
         for (PostComment postComment : parentList) {
-            // 判断是否为博主
-            postComment.setBlogger(postComment.getUserId().equals(blogger.getId()));
             postComment.setIpInfo(IpUtil.getProvinceAndCity(postComment.getIpAddress()));
             postComment.setIpAddress("");
             // 子级评论
             List<PostComment> children = replyMap.get(postComment.getId());
             if (!CollectionUtils.isEmpty(children)) {
                 children.forEach(i -> {
-                    User user = userMap.get(i.getUserId());
-                    if (user != null) {
-                        i.setAvatar(user.getAvatar());
-                    }
                     i.setIpInfo(IpUtil.getProvinceAndCity(i.getIpAddress()));
                     i.setIpAddress("");
                     i.setTimeDesc(DateUtil.timeDesc(i.getCreateTime()));
-                    // 判断是否为博主
-                    i.setBlogger(i.getUserId().equals(blogger.getId()));
                 });
                 postComment.setReplyList(children);
             }
             postComment.setTimeDesc(DateUtil.timeDesc(postComment.getCreateTime()));
-            // 用户头像
-            User user = userMap.get(postComment.getUserId());
-            if (user != null) {
-                postComment.setAvatar(user.getAvatar());
-                postComment.setNickname(user.getNickname());
-            }
         }
 
         return parentList;

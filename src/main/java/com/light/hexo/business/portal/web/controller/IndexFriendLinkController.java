@@ -2,6 +2,7 @@ package com.light.hexo.business.portal.web.controller;
 
 import com.light.hexo.business.admin.model.Category;
 import com.light.hexo.business.admin.model.FriendLink;
+import com.light.hexo.business.admin.model.Nav;
 import com.light.hexo.business.portal.common.CommonController;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,7 +42,7 @@ public class IndexFriendLinkController extends CommonController {
                 .sorted(Comparator.comparing(FriendLink::getSort)).collect(Collectors.toList());
         resultMap.put("webSiteList", webSiteList);
 
-        resultMap.put("menu", "friendLinks");
+        resultMap.put("currentNav", this.navService.findByLink("/friendLinks/"));
         return render("friendLinks", false, resultMap);
     }
 }

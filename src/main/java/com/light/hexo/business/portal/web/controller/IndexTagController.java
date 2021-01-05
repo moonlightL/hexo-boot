@@ -1,6 +1,7 @@
 package com.light.hexo.business.portal.web.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.light.hexo.business.admin.model.Nav;
 import com.light.hexo.business.admin.model.Post;
 import com.light.hexo.business.admin.model.Tag;
 import com.light.hexo.business.portal.common.CommonController;
@@ -31,27 +32,20 @@ public class IndexTagController extends CommonController {
         List<Tag> tagList = this.tagService.listTagsByIndex();
         resultMap.put("tagList", tagList);
         resultMap.put("count", tagList.size());
-        resultMap.put("menu", "tags");
+        resultMap.put("currentNav", this.navService.findByLink("/tags/"));
         return render("tags", false, resultMap);
     }
 
-    @GetMapping(value = "tags/{tagName}/")
-    public String tagsByName(@PathVariable String tagName, Map<String, Object> resultMap) {
-        List<Post> postList = this.postService.listPostsByTagName(tagName, 1, PAGE_SIZE);
-        resultMap.put("pageInfo", new PageInfo<>(postList, PAGE_SIZE));
-        resultMap.put("name", tagName);
-        resultMap.put("type", "标签");
-        resultMap.put("menu", "tags");
-        return render("postList", false, resultMap);
-    }
-
-    @GetMapping(value = "tags/{tagName}/page/{pageNum}/")
-    public String tagsPage(@PathVariable String tagName, @PathVariable Integer pageNum, Map<String, Object> resultMap) {
+    @GetMapping(value = {"tags/{tagName}/", "tags/{tagName}/page/{pageNum}/"})
+    public String tagsByName(@PathVariable String tagName, @PathVariable(value="pageNum", required = false) Integer pageNum, Map<String, Object> resultMap) {
+        pageNum = pageNum == null ? 1 : pageNum;
         List<Post> postList = this.postService.listPostsByTagName(tagName, pageNum, PAGE_SIZE);
         resultMap.put("pageInfo", new PageInfo<>(postList, PAGE_SIZE));
         resultMap.put("name", tagName);
         resultMap.put("type", "标签");
-        resultMap.put("menu", "tags");
+        resultMap.put("link", "tags");
+        resultMap.put("currentNav", this.navService.findByLink("/tags/"));
         return render("postList", false, resultMap);
     }
+
 }

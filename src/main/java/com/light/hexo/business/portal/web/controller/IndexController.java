@@ -1,23 +1,19 @@
 package com.light.hexo.business.portal.web.controller;
 
 import com.light.hexo.business.admin.constant.ConfigEnum;
-import com.light.hexo.business.admin.model.Post;
-import com.light.hexo.business.admin.model.Theme;
-import com.light.hexo.business.admin.model.UserExtend;
+import com.light.hexo.business.admin.model.*;
 import com.light.hexo.business.portal.common.CommonController;
 import com.light.hexo.business.portal.model.HexoPageInfo;
 import com.light.hexo.common.model.Result;
 import com.light.hexo.common.util.IpUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @Author MoonlightL
@@ -34,29 +30,26 @@ public class IndexController extends CommonController {
      * @param resultMap
      * @return
      */
-    @GetMapping(value = {"", "/index.html"})
-    public String index(Map<String, Object> resultMap) {
+    @GetMapping(value = {"", "/index.html", "page/{pageNum}/"})
+    public String index(@PathVariable(value="pageNum", required = false) Integer pageNum, Map<String, Object> resultMap) {
         Theme activeTheme = this.themeService.getActiveTheme(true);
         String pageSizeStr = activeTheme.getConfigMap().get("pageSize");
         if (StringUtils.isBlank(pageSizeStr) || !StringUtils.isNumeric(pageSizeStr)) {
             pageSizeStr = this.configService.getConfigValue(ConfigEnum.POST_PAGE_SIZE.getName());
         }
-        HexoPageInfo pageInfo = this.postService.pagePostsByIndex(1, Integer.parseInt(pageSizeStr));
-        resultMap.put("pageInfo", pageInfo);
-        resultMap.put("menu", "index");
-        return render("index", false, resultMap);
-    }
 
-    @GetMapping("page/{pageNum}/")
-    public String indexPage(@PathVariable Integer pageNum, Map<String, Object> resultMap) {
-        Theme activeTheme = this.themeService.getActiveTheme(true);
-        String pageSizeStr = activeTheme.getConfigMap().get("pageSize");
-        if (StringUtils.isBlank(pageSizeStr) || !StringUtils.isNumeric(pageSizeStr)) {
-            pageSizeStr = this.configService.getConfigValue(ConfigEnum.POST_PAGE_SIZE.getName());
-        }
-        HexoPageInfo pageInfo = this.postService.pagePostsByIndex(pageNum, Integer.parseInt(pageSizeStr));
+        String filterTopStr = activeTheme.getConfigMap().get("filterTop");
+        boolean filterTop = !StringUtils.isBlank(filterTopStr) && (filterTopStr.equals("Yes"));
+        pageNum = pageNum == null ? 1 : pageNum;
+        HexoPageInfo pageInfo = this.postService.pagePostsByIndex(pageNum, Integer.parseInt(pageSizeStr), filterTop);
         resultMap.put("pageInfo", pageInfo);
-        resultMap.put("menu", "index");
+        if (filterTop) {
+            List<Post> topList = this.postService.findTopList();
+            resultMap.put("topList", topList.stream().limit(3).collect(Collectors.toList()));
+        }
+
+        resultMap.put("currentNav", this.navService.findByLink("/"));
+
         return render("index", false, resultMap);
     }
 
@@ -65,32 +58,15 @@ public class IndexController extends CommonController {
      * @param resultMap
      * @return
      */
-    @GetMapping("blogs/")
-    public String blogs(Map<String, Object> resultMap) {
+    @GetMapping(value = {"blogs/", "blogs/page/{pageNum}/"})
+    public String blogs(@PathVariable(value="pageNum", required = false) Integer pageNum, Map<String, Object> resultMap) {
         Theme activeTheme = this.themeService.getActiveTheme(true);
         String pageSizeStr = activeTheme.getConfigMap().get("pageSize");
         if (StringUtils.isBlank(pageSizeStr) || !StringUtils.isNumeric(pageSizeStr)) {
             pageSizeStr = this.configService.getConfigValue(ConfigEnum.POST_PAGE_SIZE.getName());
         }
-        HexoPageInfo pageInfo = this.postService.pagePostsByIndex(1, Integer.parseInt(pageSizeStr));
-        resultMap.put("pageInfo", pageInfo);
-        resultMap.put("menu", "blogs");
-        return render("blogs", false, resultMap);
-    }
-
-    /**
-     * 特殊入口处理
-     * @param resultMap
-     * @return
-     */
-    @GetMapping("blogs/page/{pageNum}/")
-    public String blogs(@PathVariable Integer pageNum, Map<String, Object> resultMap) {
-        Theme activeTheme = this.themeService.getActiveTheme(true);
-        String pageSizeStr = activeTheme.getConfigMap().get("pageSize");
-        if (StringUtils.isBlank(pageSizeStr) || !StringUtils.isNumeric(pageSizeStr)) {
-            pageSizeStr = this.configService.getConfigValue(ConfigEnum.POST_PAGE_SIZE.getName());
-        }
-        HexoPageInfo pageInfo = this.postService.pagePostsByIndex(pageNum, Integer.parseInt(pageSizeStr));
+        pageNum = pageNum == null ? 1 : pageNum;
+        HexoPageInfo pageInfo = this.postService.pagePostsByIndex(pageNum, Integer.parseInt(pageSizeStr), false);
         resultMap.put("pageInfo", pageInfo);
         resultMap.put("menu", "blogs");
         return render("blogs", false, resultMap);
@@ -119,6 +95,7 @@ public class IndexController extends CommonController {
         resultMap.put("post", post);
         resultMap.put("previousPost", previousPost);
         resultMap.put("nextPost", nextPost);
+        resultMap.put("currentNav", new Nav(post.getTitle(), post.getLink(), post.getCoverUrl(), "detail"));
 
         return render("detail", true, resultMap);
     }
@@ -132,8 +109,32 @@ public class IndexController extends CommonController {
     public String about(Map<String, Object> resultMap) {
         UserExtend extend = this.userExtendService.getBloggerInfo();
         resultMap.put("about", extend);
-        resultMap.put("menu", "about");
+        resultMap.put("currentNav", this.navService.findByLink("/about/"));
         return render("about", false, resultMap);
+    }
+
+    /**
+     * 搜索框
+     * @param resultMap
+     * @return
+     */
+    @GetMapping(value = "search/")
+    public String search(Map<String, Object> resultMap) {
+        List<Post> postList = this.postService.listPostByIdList(null);
+        resultMap.put("postList", postList);
+        return render("search", false, resultMap);
+    }
+
+    /**
+     * 自定义页面导航
+     * @param link
+     * @param resultMap
+     * @return
+     */
+    @RequestMapping("/custom/{link}")
+    public String page(@PathVariable String link, Map<String, Object> resultMap) {
+        resultMap.put("currentNav", this.navService.findCustomLink(link));
+        return render("custom", true, resultMap);
     }
 
     /**
