@@ -85,6 +85,7 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category> implements Ca
         int num = super.updateModel(model);
         if (num > 0) {
             EhcacheUtil.clearByCacheName("categoryCache");
+            CacheUtil.remove(CacheKey.INDEX_COUNT_INFO);
         }
         return num;
     }
@@ -177,6 +178,7 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category> implements Ca
     @Override
     public List<Category> listCategoriesByIndex() throws GlobalException {
         Example example = new Example(Category.class);
+        example.createCriteria().andEqualTo("state", true);
         example.orderBy("sort").asc();
         List<Category> list = this.getBaseMapper().selectByExample(example);
         for (Category category : list) {
@@ -191,7 +193,8 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category> implements Ca
     public Category findByCategoryName(String categoryName) throws GlobalException {
 
         Example example = new Example(Category.class);
-        example.createCriteria().andEqualTo("name", categoryName);
+        example.createCriteria().andEqualTo("name", categoryName)
+                                .andEqualTo("state", true);
 
         return this.getBaseMapper().selectOneByExample(example);
     }
