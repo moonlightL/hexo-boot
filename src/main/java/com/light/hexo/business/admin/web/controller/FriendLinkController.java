@@ -67,7 +67,6 @@ public class FriendLinkController extends BaseController {
     public Result add(@Validated(BaseRequest.Save.class) FriendLinkRequest request) {
         FriendLink friendLink = request.toDoModel();
         friendLink.setTitle(friendLink.getTitle().trim());
-        friendLink.setSort(Integer.valueOf(request.getSort()));
         this.friendLinkService.saveFriendLink(friendLink);
         return Result.success();
     }
@@ -82,7 +81,6 @@ public class FriendLinkController extends BaseController {
     public Result edit(@Validated(BaseRequest.Update.class) FriendLinkRequest request) {
         FriendLink friendLink = request.toDoModel();
         friendLink.setTitle(friendLink.getTitle().trim());
-        friendLink.setSort(Integer.valueOf(request.getSort()));
         this.friendLinkService.updateFriendLink(friendLink);
         return Result.success();
     }

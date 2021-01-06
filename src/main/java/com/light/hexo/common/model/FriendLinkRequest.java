@@ -28,6 +28,12 @@ public class FriendLinkRequest extends BaseRequest<FriendLink> {
     @NotEmpty(message = "标题不能为空", groups = {BaseRequest.Save.class, BaseRequest.Update.class})
     private String title;
 
+
+    /**
+     * Logo
+     */
+    private String logo;
+
     /**
      * 主页
      */

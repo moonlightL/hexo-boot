@@ -18,6 +18,9 @@
             <li class="nav-item">
                 <a class="nav-link" href="#pushArea">文章推送</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#twikooArea">Twikoo(评论系统)</a>
+            </li>
         </ul>
         <div class="block-content tab-content overflow-hidden">
             <div class="tab-pane fade fade-left show active" id="photoArea" role="tabpanel">
@@ -129,6 +132,39 @@
                                     <div class="col-12">
                                         <label for="bai_du_push_token">百度推送 Token</label>
                                         <input class="form-control form-control-lg" id="bai_du_push_token" name="bai_du_push_token" type="text"  th:value="${configMap['bai_du_push_token']}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        友情提示: 点击 <a href="https://ziyuan.baidu.com/" target="_blank">百度搜索资源平台</a> 获取 token
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12 text-center">
+                                        <button type="button" class="btn btn-hero btn-alt-primary min-width-175 submit-btn">
+                                            <i class="fa fa-send mr-5"></i> 修改
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade fade-left" id="twikooArea" role="tabpanel">
+                <div class="content content-full">
+                    <div class="row justify-content-center py-30">
+                        <div class="col-lg-8 col-xl-6">
+                            <form class="js-validation-be-contact" id="twikooForm" method="post">
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <label for="bai_du_push_token">twikoo环境 id</label>
+                                        <input class="form-control form-control-lg" id="twikoo_env_id" name="twikoo_env_id" type="text"  th:value="${configMap['twikoo_env_id']}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        友情提示: 点击 <a href="https://twikoo.js.org/quick-start.html" target="_blank">Twikoo 中文文档</a> 获取环境 id
                                     </div>
                                 </div>
                                 <div class="form-group row">
