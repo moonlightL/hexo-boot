@@ -108,7 +108,9 @@ public class MarkdownUtil {
             .attributeProviderFactory(context -> (node, tagName, attributes) -> {
                 if (node instanceof Heading) {
                     Text firstChild = (Text) node.getFirstChild();
-                    String id = firstChild.getLiteral().toLowerCase().replace(" ", "-");
+                    String id = firstChild.getLiteral().replace("(","")
+                                                       .replace(")", "")
+                                                       .replace(" ", "");
                     attributes.put("id", id);
                 } else if (node instanceof TableBlock) {
                     attributes.put("class", "table");

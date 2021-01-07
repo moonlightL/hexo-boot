@@ -51,7 +51,7 @@ public interface ThemeService extends BaseService<Theme> {
      * @param extension
      * @throws GlobalException
      */
-    Integer saveTheme(String themeName, String coverUrl, boolean state, String remark, List<Map<String, String>> extension) throws GlobalException;
+    Integer saveTheme(String themeName, String coverUrl, boolean state, String remark, String version, List<Map<String, String>> extension) throws GlobalException;
 
     /**
      * 批量删除

@@ -29,18 +29,11 @@ public class IndexArchiveController extends CommonController {
      */
     @GetMapping(value = {"archives", "archives/", "archives/index.html", "archives/page/{pageNum}/"})
     public String archives(@PathVariable(value="pageNum", required = false) Integer pageNum, Map<String, Object> resultMap) {
-        Theme activeTheme = this.themeService.getActiveTheme(true);
         HexoPageInfo pageInfo;
-        if ("Grace".equals(activeTheme.getName())) {
-            pageInfo = this.postService.archivePostsByIndex();
-        } else {
-            pageNum = pageNum == null ? 1 : pageNum;
-            pageInfo =  this.postService.archivePostsByIndex(pageNum, PAGE_SIZE);
-        }
+        pageNum = pageNum == null ? 1 : pageNum;
+        pageInfo =  this.postService.archivePostsByIndex(pageNum, PAGE_SIZE);
         resultMap.put("pageInfo", pageInfo);
-
         resultMap.put("currentNav", this.navService.findByLink("/archives/"));
-
         return render("archives", false, resultMap);
     }
 }

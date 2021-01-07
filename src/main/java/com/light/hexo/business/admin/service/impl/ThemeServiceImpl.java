@@ -149,12 +149,13 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
     }
 
     @Override
-    public Integer saveTheme(String name, String coverUrl, boolean state, String remark, List<Map<String, String>> extension) throws GlobalException {
+    public Integer saveTheme(String name, String coverUrl, boolean state, String remark, String version, List<Map<String, String>> extension) throws GlobalException {
         Theme theme = this.getTheme(name);
         if (theme != null) {
             theme.setCoverUrl(coverUrl)
                  .setState(state)
-                 .setRemark(remark);
+                 .setRemark(remark)
+                 .setVersion(version);
            this.updateModel(theme);
         } else {
             theme = new Theme();
@@ -162,7 +163,8 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
                  .setCoverUrl(coverUrl)
                  .setState(state)
                  .setSort(1)
-                 .setRemark(remark);
+                 .setRemark(remark)
+                 .setVersion(version);
             this.saveModel(theme);
         }
 
@@ -377,6 +379,7 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
                     String.format("/theme/%s/preview.png", fileDir),
                     state,
                     Objects.nonNull(map.get("remark")) ? map.get("remark").toString(): "",
+                    Objects.nonNull(map.get("version")) ? map.get("version").toString(): "",
                     (List<Map<String, String>>) map.get("extension")
             );
 
