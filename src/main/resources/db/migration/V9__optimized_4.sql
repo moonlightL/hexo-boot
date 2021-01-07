@@ -1,2 +1,0 @@
-ALTER TABLE `t_theme`
-	ADD COLUMN `version` VARCHAR(10) NOT NULL DEFAULT '' COMMENT '版本号' AFTER `remark`;

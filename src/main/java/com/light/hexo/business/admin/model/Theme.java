@@ -59,11 +59,6 @@ public class Theme implements Serializable {
      */
     private String remark;
 
-    /**
-     * 版本号
-     */
-    private String version;
-
     @CreateTime
     private LocalDateTime createTime;
 

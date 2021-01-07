@@ -45,7 +45,6 @@ public class FileListener extends FileAlterationListenerAdaptor {
                 String.format("/theme/%s/preview.png", fileDir),
                 false,
                 Objects.nonNull(map.get("remark")) ? map.get("remark").toString(): "",
-                Objects.nonNull(map.get("version")) ? map.get("version").toString(): "",
                 (List<Map<String, String>>)map.get("extension")
         );
 
@@ -80,7 +79,6 @@ public class FileListener extends FileAlterationListenerAdaptor {
                 String.format("/theme/%s/preview.png", fileDir),
                 false,
                 Objects.nonNull(map.get("remark")) ? map.get("remark").toString(): "",
-                Objects.nonNull(map.get("version")) ? map.get("version").toString(): "",
                 (List<Map<String, String>>)map.get("extension")
         );
 
