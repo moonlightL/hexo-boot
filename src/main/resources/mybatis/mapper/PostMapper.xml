@@ -59,7 +59,7 @@
         SELECT
             p.id,
             p.title,
-            p.content,
+            p.summary,
             p.author,
             p.cover_url,
             p.link,

@@ -87,12 +87,32 @@ public class DateUtil {
     }
 
     /**
+     * LocalDate 转字符串
+     * @param localDate
+     * @param formatter
+     * @return
+     */
+    public static String ldToStr(LocalDate localDate, DateTimeFormatter formatter) {
+        return formatter.format(localDate);
+    }
+
+    /**
      * LocalDateTime 转字符串
      * @param localDateTime
      * @return
      */
     public static String ldtToStr(LocalDateTime localDateTime) {
         return DATETIME_FORMATTER.format(localDateTime);
+    }
+
+    /**
+     * LocalDateTime 转字符串
+     * @param localDateTime
+     * @param formatter
+     * @return
+     */
+    public static String ldtToStr(LocalDateTime localDateTime, DateTimeFormatter formatter) {
+        return formatter.format(localDateTime);
     }
 
     /**
