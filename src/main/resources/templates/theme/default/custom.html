@@ -2,7 +2,7 @@
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" layout:decorate="~{theme/default/layout}">
 
 <head>
-    <title th:text="${#servletContext.getAttribute('configMap')['blog_name']} + ' | ' + ${currentNav.name}"></title>
+    <title>[[${currentNav.name}]] | [[${#servletContext.getAttribute('configMap')['blog_name']}]]</title>
 </head>
 <body>
 <div layout:fragment="content">

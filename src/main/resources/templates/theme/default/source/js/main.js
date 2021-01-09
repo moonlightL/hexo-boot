@@ -1,4 +1,5 @@
 ;(function() {
+    let base = "/theme";
     let CURRENT_MODE = "current_mode";
 
     let checkTheme = function() {
@@ -71,7 +72,10 @@
 
     // 图片懒加载
     let lazyImage = function() {
-        $("img.lazy").lazyload({effect: "fadeIn"});
+        $("img.lazy").lazyload({
+            placeholder : base + "/default/source/images/loading.jpg",
+            effect: "fadeIn"
+        });
     };
 
     // 滚动
@@ -86,11 +90,8 @@
                         let el = $(this);
                         setTimeout(function () {
                             let effect = el.data('animate-effect');
-                            if (effect) {
-                                el.addClass(effect + ' animated');
-                            } else {
-                                el.addClass('fadeInUp animated');
-                            }
+                            effect = effect || 'fadeInUp';
+                            el.addClass(effect + ' animated visible');
                             el.removeClass('item-animate');
                         }, k * 200, 'easeInOutExpo');
                     });

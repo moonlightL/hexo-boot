@@ -1,7 +1,9 @@
 <!doctype html>
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" layout:decorate="~{theme/default/layout}">
 
-<head></head>
+<head>
+    <title>文章列表 | [[${#servletContext.getAttribute('configMap')['blog_name']}]]</title>
+</head>
 <body>
 <div layout:fragment="content">
     <!-- 图片 -->
@@ -9,8 +11,7 @@
         <div class="image-content"><img th:src="@{${prefix} + '/source/images/postList.png'}" class="magic img-responsive" ></div>
         <div class="descr">
             <a th:href="@{/}">首页  /  </a>
-            <a th:if="${type == '分类'}" th:href="@{/categories/}">分类  /  </a>
-            <a th:if="${type == '标签'}" href="javascript:void(0)">标签  /  </a>
+            <a th:href="@{'/' + ${link} + '/'}">[[${type}]]  /  </a>
             <a href="javascript:void(0)">[[${name}]]</a></div>
         <div class="title">[[${type}]]相关</div>
     </div>
@@ -38,38 +39,23 @@
                 </div>
             </div>
         </div>
-        <nav class="pagination-bar" th:if="${type == '分类'}">
+        <nav class="pagination-bar">
             <span th:if="${pageInfo.hasPreviousPage}">
-                <a class="prev page-numbers" th:href="@{${pageInfo.pageNum-1} == 1 ? '/categories/' + ${name} + '/': '/categories/' + ${name} + '/page/' + ${pageInfo.pageNum-1}+'/'}" ><i class="fa fa-angle-left"></i></a>
+                <a class="prev page-numbers" th:href="@{${pageInfo.pageNum-1} == 1 ? '/' + ${link} + '/' + ${name} + '/': '/' + ${link} + '/' + ${name} + '/page/' + ${pageInfo.pageNum-1}+'/'}" ><i class="fa fa-angle-left"></i></a>
             </span>
             <span th:each="pageNum : ${pageInfo.navigatepageNums}">
             <span th:if="${pageNum == pageInfo.pageNum}">
                 <a href="javascript:void(0)" th:text="${pageNum}" class="page-numbers current"></a>
             </span>
             <span th:if="${pageNum != pageInfo.pageNum}">
-                <a th:href="@{${pageNum} == 1 ? '/categories/' + ${name} + '/': '/categories/' + ${name} + '/page/' + ${pageNum}+'/'}" th:text="${pageNum}" class="page-numbers hidden-xs"></a>
+                <a th:href="@{${pageNum} == 1 ? '/' + ${link} + '/' + ${name} + '/': '/' + ${link} + '/' + ${name} + '/page/' + ${pageNum}+'/'}" th:text="${pageNum}" class="page-numbers hidden-xs"></a>
             </span>
             </span>
             <span th:if="${pageInfo.hasNextPage}">
-                <a class="next page-numbers" th:href="@{'/categories/' + ${name} + '/page/' +  ${pageInfo.pageNum+1}+'/'}" ><i class="fa fa-angle-right"></i></a>
+                <a class="next page-numbers" th:href="@{'/' + ${link} + '/' + ${name} + '/page/' +  ${pageInfo.pageNum+1}+'/'}" ><i class="fa fa-angle-right"></i></a>
             </span>
         </nav>
-        <nav class="pagination-bar" th:if="${type == '标签'}">
-            <span th:if="${pageInfo.hasPreviousPage}">
-                <a class="prev page-numbers" th:href="@{${pageInfo.pageNum-1} == 1 ? '/tags/' + ${name} + '/': '/tags/' + ${name} + '/page/' + ${pageInfo.pageNum-1}+'/'}" ><i class="fa fa-angle-left"></i></a>
-            </span>
-            <span th:each="pageNum : ${pageInfo.navigatepageNums}">
-            <span th:if="${pageNum == pageInfo.pageNum}">
-                <a href="javascript:void(0)" th:text="${pageNum}" class="page-numbers current"></a>
-            </span>
-            <span th:if="${pageNum != pageInfo.pageNum}">
-                <a th:href="@{${pageNum} == 1 ? '/tags/' + ${name} + '/': '/tags/' + ${name} + '/page/' + ${pageNum}+'/'}" th:text="${pageNum}" class="page-numbers hidden-xs"></a>
-            </span>
-            </span>
-            <span th:if="${pageInfo.hasNextPage}">
-                <a class="next page-numbers" th:href="@{'/tags/' + ${name} + '/page/' +  ${pageInfo.pageNum+1}+'/'}" ><i class="fa fa-angle-right"></i></a>
-            </span>
-        </nav>
+
     </div>
 </div>
 </body>

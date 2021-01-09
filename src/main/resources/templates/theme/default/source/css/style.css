@@ -1,10 +1,10 @@
-@font-face{
-    font-family:'Play';
-    font-style:normal;
-    font-weight:400;
-    src:url('../fonts/Play.woff2') format('woff2');
-    unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2212,U+2215
-}
+/*@font-face{*/
+/*    font-family:'Play';*/
+/*    font-style:normal;*/
+/*    font-weight:400;*/
+/*    src:url('../fonts/Play.woff2') format('woff2');*/
+/*    unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2212,U+2215*/
+/*}*/
 
 @keyframes slowUp {
     0% {
@@ -26,8 +26,10 @@
     --text-hover-color: #fff;
     --border-color: #37b1f3;
     --shadow-color: #e8e9ea;
+    --shadow-hover-color: #d0cfcf;
     --gutter-pre-bg-color: #eff2f3;
     --code-pre-bg-color: #f7f7f7;
+    --brightness-value: brightness(1);
 }
 
 :root[mode=dark] {
@@ -39,9 +41,25 @@
     --text-hover-color: #cbd6dc;
     --border-color: #2f9064;
     --shadow-color: #333;
+    --shadow-hover-color: #484646;
     --gutter-pre-bg-color: #2d2d2d;
     --code-pre-bg-color: #1d1f21;
+    --brightness-value: brightness(0.7);
 }
+
+html {
+    filter: var(--brightness-value);
+}
+
+/*html, img {
+    -webkit-filter: grayscale(1);
+    filter: gray;
+    filter: grayscale(1);
+}
+
+html {
+    filter:progid:DXImageTransform.Microsoft.BasicImage(grayscale=1);
+}*/
 
 body {
     background-color: var(--blog-bg-color);
@@ -50,7 +68,6 @@ body {
     font-family: "Poppins", "Open sans", sans-serif;
     font-size: 14px;
     line-height: 21px;
-    text-shadow: 0 2px 10px var(--shadow-color);
 }
 
 p {
@@ -157,12 +174,17 @@ strong {
 /** 重置 bootstrap end  */
 
 /** 主页 start  */
+
 .container {
     max-width: 960px;
 }
 
 .animate-box {
     opacity: 0;
+}
+
+.visible {
+    opacity: 1!important;
 }
 
 .navbar {
@@ -177,11 +199,13 @@ strong {
 .navbar-default .navbar-nav>.active>a,
 .navbar-default .navbar-nav>.active>a:focus,
 .navbar-default .navbar-nav>.active>a:hover {
-    background-color: var(--text-hover-color);
+    background-color: var(--theme-color);
+    color: #fff;
 }
 
 .navbar ul.menu li {
     position: relative;
+    padding: 0 .5rem;
 }
 
 .navbar ul.menu > li > a {
@@ -201,7 +225,7 @@ strong {
     opacity: 1;
 }
 
-.navbar ul.menu > li.active a {
+.navbar ul.menu > li.active {
     background-color: var(--theme-color) !important;
     color: #fff !important;
 }
@@ -304,7 +328,6 @@ strong {
 .image-banner .word_1,.image-banner .word_2 {
     position: absolute;
     font-size: 20px;
-    text-shadow: 0 1px 10px #000;
 }
 
 .image-banner .word_1 {
@@ -428,7 +451,7 @@ strong {
 }
 
 .post-info:hover div.tags {
-    bottom: 40%;
+    bottom: 38%;
     opacity: 1;
 }
 
@@ -686,6 +709,10 @@ strong {
     margin-bottom: 22px;
 }
 
+.pagination-bar span {
+    margin-right: 1rem;
+}
+
 .pagination-bar i {
    font-size: 16px;
 }
@@ -894,6 +921,26 @@ strong {
 
 /** 分类 end  */
 
+/** 标签 start **/
+
+.tags-content {
+    margin-top: 2rem;
+}
+
+.tags-content a {
+    display: inline-block;
+    margin: .625rem;
+    padding: .5rem .625rem;
+    border-radius: 4px;
+}
+
+.tags-content a:hover {
+    box-shadow: 0 1px 3px 1px var(--shadow-color);
+    opacity: .8;
+}
+
+/** 标签 end **/
+
 /** 友链 start  */
 
 h4.friend-link-title {
@@ -906,13 +953,14 @@ h4.friend-link-title {
     position: relative;
     width: 100%;
     margin-bottom: 2em;
+    padding: 1rem;
     transition: all .3s;
-    border: 2px solid var(--theme-color);
     border-radius: 4px;
+    box-shadow: 0 1px 7px 1px var(--shadow-color);
 }
 
 .friend-link-item:hover {
-    box-shadow: 0 1px 10px var(--shadow-color);
+    box-shadow: 0 1px 7px 1px var(--shadow-hover-color);
 }
 
 .friend-link-item .bgColor {
@@ -920,12 +968,22 @@ h4.friend-link-title {
     height: 62px;
 }
 
+.friend-link-item .image {
+    display: block;
+    width: 53px;
+    height: 53px;
+    border-radius: 4px;
+    background-size: contain;
+    flex-shrink: 0;
+    border: none;
+}
+
 .friend-link-item .info {
     position: absolute;
     width: 180px;
     height: 62px;
     top: 5px;
-    left: 72px;
+    left: 90px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1005,7 +1063,6 @@ h4.friend-link-title {
     font-size: 14px;
     margin: 0 0 24px;
     letter-spacing: 2px;
-    text-shadow: 0 2px 10px #ccc;
 }
 
 .post-content p code {
@@ -1738,13 +1795,13 @@ h4.friend-link-title {
 
 .comment-data-body .comment-data-body-btns .emoji-container .emoji-container-btn {
     color: var(--theme-color);
-    margin-top: 8px !important;
+    margin-top: 16px !important;
 }
 
 .comment-data-body .comment-data-body-btns .input-container {
     border: 2px solid var(--theme-color) !important;
     border-radius: 4px;
-    top: 2px !important;
+    top: 4px !important;
 }
 
 .comment-data-body .comment-data-body-btns .input-container .input-content {

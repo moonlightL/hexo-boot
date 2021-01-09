@@ -1,7 +1,6 @@
 package com.light.hexo.business.admin.service.impl;
 
 import com.light.hexo.business.admin.constant.HexoExceptionEnum;
-import com.light.hexo.business.admin.constant.StateEnum;
 import com.light.hexo.business.admin.mapper.NavMapper;
 import com.light.hexo.business.admin.model.Nav;
 import com.light.hexo.business.admin.model.event.NavEvent;
@@ -20,7 +19,6 @@ import com.light.hexo.common.util.ExceptionUtil;
 import com.light.hexo.common.util.SpringContextUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.omg.CORBA.NVList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;

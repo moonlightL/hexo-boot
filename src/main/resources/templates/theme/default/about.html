@@ -2,7 +2,7 @@
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" layout:decorate="~{theme/default/layout}">
 
 <head>
-    <title th:text="${#servletContext.getAttribute('configMap')['blog_name']} + ' | 关于'"></title>
+    <title>关于 | [[${#servletContext.getAttribute('configMap')['blog_name']}]]</title>
     <link rel="stylesheet" th:href="@{'/admin/assets/custom/jquery-comment/jquery-comment.css'}">
 </head>
 <body>

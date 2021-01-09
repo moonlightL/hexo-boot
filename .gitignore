@@ -18,6 +18,7 @@ target/
 *.iws
 *.iml
 *.ipr
+/src/main/resources/templates/theme/Grace/
 
 ### NetBeans ###
 /nbproject/private/
@@ -31,3 +32,4 @@ build/
 
 ### VS Code ###
 .vscode/
+

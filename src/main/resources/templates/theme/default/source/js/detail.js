@@ -62,10 +62,7 @@ let CommentManager = (function ($) {
 
             });
         }
-
     };
-
-
 
     $("#showRewardImg").on("click", function () {
         let rewardImgArea = $("#rewardImgArea");
