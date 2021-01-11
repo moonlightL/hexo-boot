@@ -66,6 +66,13 @@
                     </span>
                 </div>
 
+                <div class="weChat-official-accounts" th:if="${#strings.isEmpty(#servletContext.getAttribute('configMap')['we_chat_official_account']) != true}">
+                    <h4>关注微信公众号</h4>
+                    <img class="lazyload" th:data-original="@{${#servletContext.getAttribute('configMap')['we_chat_official_account']}}">
+                </div>
+
+                <hr>
+
                 <div id="reward" class="reward text-center">
                     <p><b th:text="${#servletContext.getAttribute('configMap')['reward_comment']}"></b></p>
                     <button id="showRewardImg" type="button" class="btn btn-primary">打赏</button>
@@ -120,7 +127,6 @@
                 CommentManager.init([[${post.id}]], [[${post.comment}]]);
             });
         </script>
-        [(${#servletContext.getAttribute('configMap')['script_code']})]
     </div>
 </body>
 </html>

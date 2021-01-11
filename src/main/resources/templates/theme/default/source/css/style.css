@@ -1206,6 +1206,18 @@ h4.friend-link-title {
     padding: 0 !important;
 }
 
+.postContainer .weChat-official-accounts {
+    margin: 1rem auto;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.postContainer .weChat-official-accounts img {
+    width: 160px;
+    height: 160px;
+    object-fit: cover;
+}
+
 .postContainer .reward-img-area {
     margin-top: 32px;
 }
