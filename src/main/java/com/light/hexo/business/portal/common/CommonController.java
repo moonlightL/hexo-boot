@@ -9,6 +9,7 @@ import com.light.hexo.common.constant.CacheKey;
 import com.light.hexo.common.util.CacheUtil;
 import com.light.hexo.common.util.MarkdownUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -88,9 +89,25 @@ public class CommonController {
             resultMap.put("categoryList", categoryList);
         }
 
+        this.settingBasePath(activeTheme, resultMap);
+
         return "theme/" +  themeName + "/" + pageName;
     }
 
+    private void settingBasePath(Theme activeTheme, Map<String, Object> resultMap) {
+        if (activeTheme == null) {
+            return;
+        }
+
+        String themeName = activeTheme.getName();
+        String useCDNStr = activeTheme.getConfigMap().get("useCDN");
+        String version = activeTheme.getConfigMap().get("version");
+        if (StringUtils.isNotBlank(useCDNStr) && StringUtils.isNotBlank(version)) {
+            boolean useCDN = useCDNStr.equals("true");
+            String baseLink = useCDN ? "https://cdn.jsdelivr.net/gh/moonlightL/CDN@" + version + "/" + themeName : "/theme/" + themeName;
+            resultMap.put("baseLink", baseLink);
+        }
+    }
 
 
     private Map<String, Integer> getCountInfo() {

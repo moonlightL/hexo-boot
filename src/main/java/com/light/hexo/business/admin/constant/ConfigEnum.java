@@ -30,6 +30,7 @@ public enum ConfigEnum {
     WX_ACCOUNT("wx_account", "","微信号"),
     QQ_ACCOUNT("qq_account", "","QQ 号"),
     WEI_BO_ACCOUNT("wei_bo_account", "","微博号"),
+    // 暂无用处
     WE_CHAT_OFFICIAL_ACCOUNT("we_chat_official_account", "", "微信公众号"),
 
     /* 参考 FileManageEnum */
