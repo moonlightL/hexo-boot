@@ -164,5 +164,6 @@
         </span>
     </span>
     <script type='text/javascript' th:src="@{${prefix} + '/source/js/main.js'}"></script>
+    [(${#servletContext.getAttribute('configMap')['script_code']})]
 </body>
 </html>
