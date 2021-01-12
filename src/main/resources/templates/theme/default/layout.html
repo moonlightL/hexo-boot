@@ -16,29 +16,15 @@
     <link rel="shortcut icon" th:href="@{${#servletContext.getAttribute('configMap')['favicon_url']}}"/>
     <link th:href="@{'https://fonts.loli.net/css?family=Poppins:400,500,600'}" rel="stylesheet">
     <link th:href="@{'https://fonts.loli.net/css?family=Open+Sans:400,700&amp;subset=latin-ext'}" rel="stylesheet">
-    <span th:if="${activeTheme.configMap['useCDN'] == 'true'}">
-        <link rel="stylesheet" th:href="@{'https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css'}">
-        <link rel="stylesheet" th:href="@{'https://cdn.bootcdn.net/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'}" />
-        <link rel="stylesheet" th:href="@{'/admin/assets/custom/jquery-search/jquery.search.css'}"/>
-        <link rel="stylesheet" th:href="@{'https://cdn.bootcdn.net/ajax/libs/animate.css/3.7.0/animate.min.css'}"/>
-        <link href="https://cdn.bootcdn.net/ajax/libs/pace/1.2.3/themes/blue/pace-theme-minimal.min.css" rel="stylesheet">
-        <script src="https://cdn.bootcdn.net/ajax/libs/pace/1.2.3/pace.min.js"></script>
-    </span>
-    <span th:if="${activeTheme.configMap['useCDN'] == 'false'}">
-        <link rel="stylesheet" th:href="@{${prefix} + '/source/js/bootstrap-3.3.7/css/bootstrap.min.css'}">
-        <link rel="stylesheet" th:href="@{${prefix} + '/source/fonts/font-awesome/css/font-awesome.min.css'}" />
-        <link rel="stylesheet" th:href="@{'/admin/assets/custom/jquery-search/jquery.search.css'}"/>
-        <link rel="stylesheet" th:href="@{${prefix} + '/source/css/animate.css'}"/>
-    </span>
+    <link rel="stylesheet" th:href="@{${baseLink} + '/source/css/bootstrap/css/bootstrap.min.css'}">
+    <link rel="stylesheet" th:href="@{${baseLink} + '/source/fonts/font-awesome/css/font-awesome.min.css'}" />
+    <link rel="stylesheet" th:href="@{${baseLink} + '/source/js/iziModal/css/iziModal.min.css'}">
+    <link rel="stylesheet" th:href="@{${baseLink} + '/source/css/animate.css'}"/>
+<!--    <link href="https://cdn.bootcdn.net/ajax/libs/pace/1.2.3/themes/blue/pace-theme-minimal.min.css" rel="stylesheet">-->
+<!--    <script src="https://cdn.bootcdn.net/ajax/libs/pace/1.2.3/pace.min.js"></script>-->
     <span th:if="${isDetail == true}">
-        <span th:if="${activeTheme.configMap['useCDN'] == 'true'}">
-            <link rel="stylesheet" th:href="@{${prefix} + '/source/js/highlightjs/styles/'+ ${activeTheme.configMap['highlight']} +'.min.css'}"/>
-            <link rel="stylesheet" th:href="@{'https://cdn.bootcdn.net/ajax/libs/lightbox2/2.8.2/css/lightbox.min.css'}"/>
-        </span>
-        <span th:if="${activeTheme.configMap['useCDN'] == 'false'}">
-            <link rel="stylesheet" th:href="@{${prefix} + '/source/js/highlightjs/styles/atom-one-light.min.css'}"/>
-            <link rel="stylesheet" th:href="@{${prefix} + '/source/js/lightbox/css/lightbox.css'}"/>
-        </span>
+        <link rel="stylesheet" th:href="@{${prefix} + '/source/js/highlightjs/styles/'+ ${activeTheme.configMap['highlight']} +'.min.css'}"/>
+        <link rel="stylesheet" th:href="@{${prefix} + '/source/js/fancybox/jquery.fancybox.min.css'}"/>
         <link rel="stylesheet" th:href="@{${prefix} + '/source/js/autoToc/jquery.autoToc.css'}"/>
         <link rel="stylesheet" th:href="@{${prefix} + '/source/js/overshare/css/share.min.css'}"/>
     </span>
@@ -113,57 +99,33 @@
         </div>
         <!-- /container -->
 
-        <div class="real-time-search-container" id="real-time-search-container"></div>
+        <div class="search-container"><button id="searchBtn" type="button"><i class="fa fa-search"></i></button></div>
         <div class="to-top to-hide" id="toTop"><i class="fa fa-arrow-up"></i></div>
         <div class="mode-container"></div>
     </div>
-    <span th:if="${activeTheme.configMap['useCDN'] == 'true'}">
-        <script type='text/javascript' th:src="@{'https://cdn.bootcdn.net/ajax/libs/jquery/2.1.4/jquery.min.js'}"></script>
-        <script type='text/javascript' th:src="@{'https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js'}"></script>
-        <script type='text/javascript' th:src="@{'/admin/assets/custom/jquery-search/jquery.hideseek.min.js'}" ></script>
-        <script type='text/javascript' th:src="@{'/admin/assets/custom/jquery-search/jquery.search.js'}" ></script>
-        <script type='text/javascript' th:src="@{'https://cdn.bootcdn.net/ajax/libs/waypoints/4.0.0/jquery.waypoints.min.js'}"></script>
-        <script type='text/javascript' th:src="@{${prefix} + '/source/js/circleMagic/circleMagic.min.js'}"></script>
-        <script type='text/javascript' th:src="@{'https://cdn.bootcdn.net/ajax/libs/jquery_lazyload/1.9.7/jquery.lazyload.min.js'}"></script>
-        <span th:if="${isDetail == true}">
-            <script type='text/javascript' th:src="@{${prefix} + '/source/js/highlightjs/highlight.pack.js'}"></script>
-            <script type='text/javascript' th:src="@{${prefix} + '/source/js/overshare/js/social-share.min.js'}"></script>
-            <script type='text/javascript' th:src="@{'https://cdn.bootcdn.net/ajax/libs/lightbox2/2.8.2/js/lightbox.min.js'}"></script>
-            <script type='text/javascript' th:src="@{${prefix} + '/source/js/autoToc/jquery.autoToc.js'}"></script>
-            <script type='text/javascript'>
-                $("#tocContainer").autoToc({offsetTop: 520});
-                document.addEventListener('DOMContentLoaded', (event) => {
-                    document.querySelectorAll('figure span').forEach((block) => {
-                        hljs.highlightBlock(block);
-                    });
+    <script th:inline="javascript">
+        let themeName = [[${activeTheme.name}]];
+        let version = [[${activeTheme.configMap['version']}]];
+        let baseLink = [[${baseLink}]];
+    </script>
+    <script type='text/javascript' th:src="@{${baseLink} + '/source/js/plugins.js'}"></script>
+    <script type='text/javascript' th:src="@{${baseLink} + '/source/js/jquery.waypoints.min.js'}"></script>
+    <script type='text/javascript' th:src="@{${baseLink} + '/source/js/circleMagic/circleMagic.min.js'}"></script>
+    <script type='text/javascript' th:src="@{${baseLink} + '/source/js/jquery.lazyload.min.js'}"></script>
+    <span th:if="${isDetail == true}">
+        <script type='text/javascript' th:src="@{${baseLink} + '/source/js/highlightjs/highlight.pack.js'}"></script>
+        <script type='text/javascript' th:src="@{${baseLink} + '/source/js/overshare/js/social-share.min.js'}"></script>
+        <script type='text/javascript' th:src="@{${prefix} + '/source/js/autoToc/jquery.autoToc.js'}"></script>
+        <script type='text/javascript'>
+            $("#tocContainer").autoToc({offsetTop: 520});
+            document.addEventListener('DOMContentLoaded', (event) => {
+                document.querySelectorAll('figure span').forEach((block) => {
+                    hljs.highlightBlock(block);
                 });
-            </script>
-        </span>
+            });
+        </script>
     </span>
-    <span th:if="${activeTheme.configMap['useCDN'] == 'false'}">
-        <script type='text/javascript' th:src="@{${prefix} + '/source/js/jquery.min.js'}"></script>
-        <script type='text/javascript' th:src="@{${prefix} + '/source/js/bootstrap-3.3.7/js/bootstrap.min.js'}"></script>
-        <script type='text/javascript' th:src="@{'/admin/assets/custom/jquery-search/jquery.hideseek.min.js'}" ></script>
-        <script type='text/javascript' th:src="@{'/admin/assets/custom/jquery-search/jquery.search.js'}" ></script>
-        <script type='text/javascript' th:src="@{${prefix} + '/source/js/waypoints/jquery.waypoints.min.js'}"></script>
-        <script type='text/javascript' th:src="@{${prefix} + '/source/js/circleMagic/circleMagic.min.js'}"></script>
-        <script type='text/javascript' th:src="@{${prefix} + '/source/js/jqueryLazyload/jquery.lazyload.min.js'}"></script>
-        <span th:if="${isDetail == true}">
-            <script type='text/javascript' th:src="@{${prefix} + '/source/js/highlightjs/highlight.pack.js'}"></script>
-            <script type='text/javascript' th:src="@{${prefix} + '/source/js/overshare/js/social-share.min.js'}"></script>
-            <script type='text/javascript' th:src="@{${prefix} + '/source/js/lightbox/js/lightbox.min.js'}"></script>
-            <script type='text/javascript' th:src="@{${prefix} + '/source/js/autoToc/jquery.autoToc.js'}"></script>
-            <script type='text/javascript'>
-                $("#tocContainer").autoToc({offsetTop: 520});
-                document.addEventListener('DOMContentLoaded', (event) => {
-                    document.querySelectorAll('figure span').forEach((block) => {
-                        hljs.highlightBlock(block);
-                    });
-                });
-            </script>
-        </span>
-    </span>
-    <script type='text/javascript' th:src="@{${prefix} + '/source/js/main.js'}"></script>
+    <script type='text/javascript' th:src="@{${prefix} + '/source/js/app.js'}"></script>
     [(${#servletContext.getAttribute('configMap')['script_code']})]
 </body>
 </html>

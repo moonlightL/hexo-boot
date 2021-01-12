@@ -10,7 +10,7 @@
     <div layout:fragment="content">
         <!-- 图片 -->
         <div class="image-banner" style="color: #fff">
-            <div class="image-content"><img th:src="@{${prefix} + '/source/images/index.png'}" class="magic img-responsive" ></div>
+            <div class="image-content"><img th:data-original="@{${post.coverUrl}}" class="lazy"></div>
             <div class="descr">
                 <a th:href="@{/}">首页  /  </a>
                 <a href="javascript:void(0)">文章详情  /  </a>
@@ -20,7 +20,7 @@
         </div>
 
         <div class="ml-content">
-            <div id="postContainer" class="postContainer animate-box" data-animate-effect="fadeIn">
+            <div id="postContainer" class="postContainer animated fadeIn">
                 <header class="post-header">
                     <div class="blogger-info">
                         <img class="hidden-xs" th:src="@{${#strings.isEmpty(#servletContext.getAttribute('configMap')['logo_url']) != true ? #servletContext.getAttribute('configMap')['logo_url'] : prefix + '/source/images/logo.png'}}">

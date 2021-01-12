@@ -12,8 +12,10 @@ import com.light.hexo.common.base.BaseServiceImpl;
 import com.light.hexo.common.component.event.BaseEvent;
 import com.light.hexo.common.component.event.EventEnum;
 import com.light.hexo.common.component.event.EventPublisher;
+import com.light.hexo.common.constant.CacheKey;
 import com.light.hexo.common.exception.GlobalException;
 import com.light.hexo.common.model.NavRequest;
+import com.light.hexo.common.util.CacheUtil;
 import com.light.hexo.common.util.EhcacheUtil;
 import com.light.hexo.common.util.ExceptionUtil;
 import com.light.hexo.common.util.SpringContextUtil;
@@ -24,6 +26,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.context.WebApplicationContext;
 import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.util.Sqls;
@@ -89,13 +92,24 @@ public class NavServiceImpl extends BaseServiceImpl<Nav> implements NavService {
 
     }
 
-    @Cacheable(key = "'" + PageConstant.NAV_LIST + "'")
-    public List<Nav> listNavs() {
-        Example example = Example.builder(Nav.class)
-               .select("id", "name", "link", "code", "icon", "cover", "parentId")
-               .where(Sqls.custom().andEqualTo("state", 1))
-               .orderByAsc("sort").build();
-        return this.getBaseMapper().selectByExample(example);
+    /**
+     * 此方法内部调用，@Cacheable 注解会失效，故用 CacheUtil 替代
+     * @return
+     * @throws GlobalException
+     */
+    @Override
+    public List<Nav> listNavs() throws GlobalException {
+        List<Nav> navList = CacheUtil.get(CacheKey.NAV_LIST);
+        if (CollectionUtils.isEmpty(navList)) {
+            Example example = Example.builder(Nav.class)
+                    .select("id", "name", "link", "code", "icon", "cover", "parentId")
+                    .where(Sqls.custom().andEqualTo("state", 1))
+                    .orderByAsc("sort").build();
+            navList = this.getBaseMapper().selectByExample(example);
+            CacheUtil.put(CacheKey.NAV_LIST, navList);
+        }
+
+        return navList;
     }
 
     @Override
@@ -104,6 +118,7 @@ public class NavServiceImpl extends BaseServiceImpl<Nav> implements NavService {
 
         this.removeBatch(idList);
         EhcacheUtil.clearByCacheName("navCache");
+        CacheUtil.remove(CacheKey.NAV_LIST);
         this.eventPublisher.emit(new NavEvent());
     }
 
@@ -116,6 +131,7 @@ public class NavServiceImpl extends BaseServiceImpl<Nav> implements NavService {
         nav.setNavType(2);
         super.saveModel(nav);
         EhcacheUtil.clearByCacheName("navCache");
+        CacheUtil.remove(CacheKey.NAV_LIST);
         this.eventPublisher.emit(new NavEvent());
     }
 
@@ -138,6 +154,7 @@ public class NavServiceImpl extends BaseServiceImpl<Nav> implements NavService {
 
         super.updateModel(nav);
         EhcacheUtil.clearByCacheName("navCache");
+        CacheUtil.remove(CacheKey.NAV_LIST);
         this.eventPublisher.emit(new NavEvent());
     }
 
@@ -155,6 +172,7 @@ public class NavServiceImpl extends BaseServiceImpl<Nav> implements NavService {
         int num = super.updateModel(model);
         if (num > 0) {
             EhcacheUtil.clearByCacheName("navCache");
+            CacheUtil.remove(CacheKey.NAV_LIST);
             this.eventPublisher.emit(new NavEvent());
         }
         return num;
@@ -173,13 +191,14 @@ public class NavServiceImpl extends BaseServiceImpl<Nav> implements NavService {
         servletContext.setAttribute("firstNav", firstNav);
     }
 
+    @Cacheable(key = "'" + PageConstant.NAV_PAGE + ":' + #link")
     @Override
     public Nav findCustomLink(String link) throws GlobalException {
         Example example = new Example(Nav.class);
         example.createCriteria().andEqualTo("link", "/custom/" + link);
         Nav nav = this.getBaseMapper().selectOneByExample(example);
-        if (nav == null) {
-            return new Nav("tmp", "/tmp", "", "tmp");
+        if (nav == null || !nav.getState()) {
+            ExceptionUtil.throwExToPage(HexoExceptionEnum.ERROR_NAV_PAGE_NOT_EXIST);
         }
 
         return nav;

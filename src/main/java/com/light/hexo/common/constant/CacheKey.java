@@ -15,6 +15,11 @@ public final class CacheKey {
     public static final String INDEX_COUNT_INFO = "index:count:info";
 
     /**
+     * 导航列表缓存 key
+     */
+    public static final String NAV_LIST = "nav:list";
+
+    /**
      * 黑名单列表
      */
     public static final String BLACK_LIST = "hexo:black:list";

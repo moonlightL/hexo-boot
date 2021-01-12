@@ -1,8 +1,17 @@
 ;(function() {
-    let base = "/theme";
-    let CURRENT_MODE = "current_mode";
 
-    let checkTheme = function() {
+    let APP = {
+        plugins: {
+            lazyLoad: {
+                js: baseLink + "/source/js/jquery.lazyload.min.js"
+            }
+        }
+    };
+
+    console.log("%c Theme." + themeName + " v" + version + " %c https://www.extlight.com/ ", "color: white; background: #e9546b; padding:5px 0;", "padding:4px;border:1px solid #e9546b;");
+
+    let CURRENT_MODE = "current_mode";
+    const themModeEvent = function() {
         let mode = sessionStorage.getItem(CURRENT_MODE);
         if (!mode) {
             let hour = (new Date()).getHours();
@@ -17,7 +26,7 @@
         }
     };
 
-    let changeMode = function() {
+    const changeModeEvent = function() {
         $("#modeBtn").on("click", function () {
             let $html = $("html");
             let mode = ($html.attr("mode") === "light" ? "dark" : "light");
@@ -31,8 +40,7 @@
         });
     };
 
-    // 返回顶部
-    let goBack = function() {
+    const toTopEvent = function() {
         let toTop = $("#toTop");
         $(window).scroll(function(e) {
             let scrollTop = $(this).scrollTop();
@@ -52,16 +60,7 @@
         });
     };
 
-    // 搜索
-    let search = function () {
-    $("#real-time-search-container").RealTimeSearch({
-        searchId: "search-btn",
-        listUrl: "/postList.json"
-    });
-    };
-
-    // 气泡
-    let circleMagic = function() {
+    const circleMagic = function() {
         $('.image-content').circleMagic({
             radius: 16,
             density: .1,
@@ -70,15 +69,15 @@
         });
     };
 
-    // 图片懒加载
-    let lazyImage = function() {
-        $("img.lazy").lazyload({
-            placeholder : base + "/default/source/images/loading.jpg",
-            effect: "fadeIn"
-        });
+    const loadLazy = function() {
+        $.getScript(APP.plugins.lazyLoad.js, function() {
+            $("img.lazy").lazyload({
+                placeholder : baseLink + "/source/images/loading.jpg",
+                effect: "fadeIn"
+            });
+        })
     };
 
-    // 滚动
     let contentWayPoint = function () {
         let i = 0;
         $('.animate-box').waypoint(function (direction) {
@@ -102,6 +101,25 @@
         });
     };
 
+    const searchEvent = function() {
+        let $body = $("body");
+        let $iframe = $('<div id="modal-iframe" class="iziModal light"></div>');
+        $body.append($iframe);
+
+        $("#modal-iframe").iziModal({
+            iframe: true,
+            headerColor: "rgb(76, 175, 80)",
+            title: '<i class="fa fa-search"></i> 站内搜索' ,
+            width: 620,
+            iframeHeight: 360,
+            iframeURL: "/search/"
+        });
+
+        $("#searchBtn").off("click").on("click", function() {
+            $('#modal-iframe').iziModal('open');
+        });
+    };
+
     let clickEffect = function() {
         let $container = $("#pageContainer");
         $container.on("click", function(e) {
@@ -119,7 +137,7 @@
             $i.animate({
                 "top": y - 180,
                 "opacity": 0
-            }, 1500, function() {
+            }, 800, function() {
                 $i.remove();
             });
 
@@ -128,15 +146,13 @@
     };
 
     $(function() {
-        checkTheme();
-        changeMode();
-        goBack();
-        search();
-        lazyImage();
+        themModeEvent();
+        changeModeEvent();
+        toTopEvent();
         circleMagic();
+        loadLazy();
         contentWayPoint();
+        searchEvent();
         clickEffect();
-  });
-
+    });
 })();
-

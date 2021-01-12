@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh" mode="light" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no">
+    <link rel="dns-prefetch" th:href="@{'//fonts.googleapis.com'}">
+    <link rel="dns-prefetch" th:href="@{'//fonts.loli.net/css'}">
+    <link rel="dns-prefetch" th:href="@{'//cdn.jsdelivr.net'}">
+    <link th:href="@{'https://fonts.loli.net/css?family=Poppins:400,500,600'}" rel="stylesheet">
+    <link th:href="@{'https://fonts.loli.net/css?family=Open+Sans:400,700&amp;subset=latin-ext'}" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{${baseLink} + '/source/css/bootstrap/css/bootstrap.min.css'}">
+    <link rel="stylesheet" th:href="@{${baseLink} + '/source/fonts/font-awesome/css/font-awesome.min.css'}">
+    <link rel="stylesheet" th:href="@{${baseLink} + '/source/css/animate.css'}">
+    <link rel="stylesheet" th:href="@{${prefix} + '/source/css/style.css'}">
+</head>
+
+<body>
+<div class="ml-content">
+    <div class="search-form">
+        <div class="search-query">
+            <input type="text" id="keyword-input" class="input" placeholder="输入关键字" data-list=".highlight_list" autocomplete="off">
+            <ul class="highlight_list" >
+                <li th:each="post,iterStat: ${postList}">
+                    <a class="post-item" href="javascript:void(0)" th:data-url="${post.link}"  th:text="${post.title}"></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script th:src="@{${baseLink} + '/source/js/jquery.min.js'}"></script>
+<script th:src="@{${baseLink} + '/source/js/jquery.hideseek.min.js'}"></script>
+<script>
+    $(function() {
+        // 由于是子窗口，只能不断检测 sessionStorage 的数据，判断父窗口是否修改主题模式
+        setInterval(function() {
+            checkMode();
+        }, 200);
+
+        $("#keyword-input").hideseek({
+            highlight: true,
+            nodata: '没有相应数据'
+        });
+
+        function checkMode() {
+            let CURRENT_MODE = "current_mode";
+            let mode = sessionStorage.getItem(CURRENT_MODE);
+            if (!mode) {
+                let hour = (new Date()).getHours();
+                mode = (hour >= 6 && hour < 18 ? "light" : "dark");
+            }
+            $("html").attr("mode", mode);
+        }
+
+        $("a.post-item").on("click", function () {
+            let link = $(this).data("url");
+            window.parent.location.href = window.location.protocol + "//" + window.location.host + "/" + link;
+        });
+    })
+</script>
+</body>
+
+</html>

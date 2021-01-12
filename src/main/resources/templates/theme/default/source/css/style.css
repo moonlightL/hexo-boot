@@ -9,11 +9,44 @@
 @keyframes slowUp {
     0% {
         opacity: 0;
-        transform: translateY(25px);
+        transform: translateY(25px)
     }
     100% {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateY(0)
+    }
+}
+
+@keyframes slowDown {
+    0% {
+        opacity: 0;
+        transform: translateY(-25px)
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0)
+    }
+}
+
+@keyframes slowRight {
+    0% {
+        opacity: 0;
+        transform: translateX(-25px)
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0)
+    }
+}
+
+@keyframes slowLeft {
+    0% {
+        opacity: 0;
+        transform: translateX(25px)
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0)
     }
 }
 
@@ -41,7 +74,7 @@
     --text-hover-color: #cbd6dc;
     --border-color: #2f9064;
     --shadow-color: #333;
-    --shadow-hover-color: #484646;
+    --shadow-hover-color: #737171;
     --gutter-pre-bg-color: #2d2d2d;
     --code-pre-bg-color: #1d1f21;
     --brightness-value: brightness(0.7);
@@ -300,11 +333,12 @@ strong {
 .image-banner .image-content canvas {
     position: absolute;
     top: 0;
+    left: 0;
 }
 
 .image-banner .descr {
     background-color: var(--content-color);
-    color: #6c757d;
+    color: #f1f1f1;
     padding: 10px 30px;
 }
 
@@ -328,6 +362,8 @@ strong {
 .image-banner .word_1,.image-banner .word_2 {
     position: absolute;
     font-size: 20px;
+    color: #f1f1f1;
+    text-shadow: 0 1px 10px #333;
 }
 
 .image-banner .word_1 {
@@ -726,7 +762,7 @@ strong {
     padding: 5px;
     text-decoration: none;
     color: var(--text-color);
-    border: 2px solid var(--theme-color);
+    border: 1px solid var(--theme-color);
     border-radius: 50%;
 }
 
@@ -851,12 +887,12 @@ strong {
     color: var(--text-color);
     font-style: normal;
     text-decoration:none;
+    transition: all .3s;
 }
 
 .archives a:hover {
-    background: var(--theme-color);
-    color: var(--text-hover-color);
-    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 600;
 }
 
 .archives span.title {
@@ -925,6 +961,7 @@ strong {
 
 .tags-content {
     margin-top: 2rem;
+    animation: slowUp 1s;
 }
 
 .tags-content a {
@@ -943,7 +980,7 @@ strong {
 
 /** 友链 start  */
 
-h4.friend-link-title {
+h3.friend-link-title {
     border-left: 3px solid var(--theme-color);
     padding-left: 5px;
     color: var(--text-color);
@@ -952,7 +989,7 @@ h4.friend-link-title {
 .friend-link-item {
     position: relative;
     width: 100%;
-    margin-bottom: 2em;
+    margin: 1.5rem 0;
     padding: 1rem;
     transition: all .3s;
     border-radius: 4px;
@@ -991,6 +1028,7 @@ h4.friend-link-title {
 
 .friend-link-item .remark {
     text-align: left;
+    color: var(--text-color)
 }
 
 /** 友链 end  */
@@ -1686,27 +1724,34 @@ h4.friend-link-title {
     /** 文章页 end */
 }
 
-.real-time-search-container .real-time-search-btn {
-    background-color: var(--content-color);
-    box-shadow: 0 0 10px 1px var(--shadow-color) !important;
+.search-container {
+    position: fixed;
+    right: 15px;
+    top: 150px;
+    width: 48px;
+    height: 48px;
+    text-align: center;
+    line-height: 48px;
+    cursor: pointer;
+    transition: all .3s;
+    z-index: 999;
+    box-shadow: 0 1px 7px 1px var(--shadow-color);
+}
+
+.search-container button {
+    width: 100%;
     color: var(--text-color);
+    background: var(--content-color);
+    border: 0;
+    outline: none;
 }
 
-.real-time-search-container .real-time-search-btn:hover {
-    background-color: var(--theme-color);
-    color: var(--text-hover-color);
+.search-container button:hover {
+    color: var(--content-color);
+    background: var(--theme-color);
+    box-shadow: 0 1px 7px 1px var(--shadow-hover-color);
 }
 
-.real-time-search-container .real-time-search-body .highlight_list li:hover {
-    background-color: var(--theme-color);
-    color: #fff;
-}
-
-.real-time-search-container .real-time-search-body .highlight_list  a .highlight {
-    background-color: var(--theme-color) !important;
-    color: #fff !important;
-    padding: 5px;
-}
 
 /** 主题模式 start **/
 .mode-container {
@@ -1947,4 +1992,38 @@ h4.friend-link-title {
 .pace .pace-activity {
     border-top-color: var(--theme-color);
     border-left-color: var(--theme-color);
+}
+
+.search-form {
+
+}
+
+.search-form .search-query .input {
+    width: 100%;
+    height: 46px;
+    border-radius: 4px 4px 0 0;
+    border: 2px solid #aaa;
+    outline: 0;
+    padding-left: 1rem;
+    background: var(--panel-color)
+}
+
+.search-form .search-query ul {
+    width: 100%;
+    padding: .5rem;
+    background: var(--panel-color);
+    box-shadow: 0 1px 3px 1px var(--shadow-color)
+}
+
+.search-form .search-query ul li {
+    display: block;
+    padding: .5rem;
+    border-bottom: 1px solid #aaa
+}
+
+.search-form .search-query mark.highlight {
+    font-size: 16px!important;
+    background: var(--theme-color);
+    color: #fff;
+    padding: 0 3px
 }
