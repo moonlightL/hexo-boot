@@ -9,7 +9,7 @@
         <foreach collection="list" item="item" index="index" separator=",">
             (#{item.themeId}, #{item.configName}, #{item.configValue}, #{item.configLabel},#{item.configType},#{item.configOption}, #{item.createTime}, #{item.updateTime})
         </foreach>
-        ON DUPLICATE KEY UPDATE config_label = VALUES(config_label),config_type = VALUES(config_type), config_option = VALUES(config_option),update_time = now()
+        ON DUPLICATE KEY UPDATE config_value = VALUES(config_value),config_label = VALUES(config_label),config_type = VALUES(config_type), config_option = VALUES(config_option),update_time = now()
     </insert>
 
     <update id="updateBatchById" parameterType="java.util.List">
