@@ -5,8 +5,9 @@
 <body>
    <div layout:fragment="content">
        <!-- 图片 -->
-       <div class="image-banner" style="color: #fff">
-           <div class="image-content"><img th:src="@{${prefix} + '/source/images/index.png'}" class="magic img-responsive" ></div>
+       <div class="image-banner">
+           <div class="image-content" th:if="${#strings.startsWith(currentNav.cover,'http') == true}"><img th:data-original="@{${currentNav.cover}}" class="lazy" ></div>
+           <div class="image-content" th:if="${#strings.startsWith(currentNav.cover,'http') == false}"><img th:data-original="@{${prefix} + '/source/images/index.png'}" class="lazy" ></div>
            <div class="descr"><a th:href="@{/}">首页</a></div>
            <div class="word_1 animated fadeInRight">不积跬步，无以至千里</div>
            <div class="word_2 animated fadeInLeft">不积小流，无以成江海</div>
@@ -15,7 +16,7 @@
        <div class="ml-content">
            <div class="row" >
                <div class="post col-md-4 col-sm-6 col-xs-12" th:each="post,iterStat : ${pageInfo.data}">
-                   <div class="post-info animated fadeInUp">
+                   <div class="post-info animate-box" data-animate-effect="zoomIn">
                        <div class="post-bg">
                            <span class="reprint" th:if="${post.reprint}">转载</span>
                            <span class="top" th:if="${post.top}"><img src="/theme/default/source/images/article-top.png" alt="" width="38" height="38"></span>

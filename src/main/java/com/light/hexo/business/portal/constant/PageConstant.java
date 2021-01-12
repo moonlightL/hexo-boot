@@ -20,6 +20,11 @@ public class PageConstant {
     public static final String POST_PAGE = "hexo:page";
 
     /**
+     * 首页列表置顶缓存 key（格式：PageConstant.POST_TOP_PAGE）
+     */
+    public static final String POST_TOP_PAGE = "hexo:top:page";
+
+    /**
      * 首页归档缓存 key（格式：PageConstant.POST_ARCHIVE + #pageNum）
      */
     public static final String POST_ARCHIVE = "hexo:archive";
@@ -52,9 +57,9 @@ public class PageConstant {
     public static final String FRIEND_LINK_LIST = "hexo:friend:link:list";
 
     /**
-     * 导航列表缓存 key
+     * 导航页面
      */
-    public static final String NAV_LIST = "nav:list";
+    public static final String NAV_PAGE = "nav:page";
 
     /**
      * 文章评论列表缓存 key（格式：PageConstant.POST_COMMENT + #postId + #pageNum）

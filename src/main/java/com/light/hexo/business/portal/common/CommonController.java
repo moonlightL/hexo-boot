@@ -96,6 +96,7 @@ public class CommonController {
 
     private void settingBasePath(Theme activeTheme, Map<String, Object> resultMap) {
         if (activeTheme == null) {
+            resultMap.put("baseLink", "/theme/default");
             return;
         }
 
@@ -104,8 +105,9 @@ public class CommonController {
         String version = activeTheme.getConfigMap().get("version");
         if (StringUtils.isNotBlank(useCDNStr) && StringUtils.isNotBlank(version)) {
             boolean useCDN = useCDNStr.equals("true");
-            String baseLink = useCDN ? "https://cdn.jsdelivr.net/gh/moonlightL/CDN@" + version + "/" + themeName : "/theme/" + themeName;
-            resultMap.put("baseLink", baseLink);
+            resultMap.put("baseLink", useCDN ? "https://cdn.jsdelivr.net/gh/moonlightL/CDN@" + version + "/" + themeName : "/theme/" + themeName);
+        } else {
+            resultMap.put("baseLink", "/theme/" + themeName);
         }
     }
 

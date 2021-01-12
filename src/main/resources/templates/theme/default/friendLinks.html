@@ -8,7 +8,8 @@
 <div layout:fragment="content">
     <!-- 图片 -->
     <div class="image-banner" style="color: #fff">
-        <div class="image-content"><img th:src="@{${prefix} + '/source/images/friendLink.png'}" class="magic img-responsive" ></div>
+        <div class="image-content" th:if="${#strings.startsWith(currentNav.cover,'http') == true}"><img th:data-original="@{${currentNav.cover}}" class="lazy"></div>
+        <div class="image-content" th:if="${#strings.startsWith(currentNav.cover,'http') == false}"><img th:data-original="@{${prefix} + '/source/images/friendLink.png'}" class="lazy"></div>
         <div class="descr">
             <a th:href="@{/}">首页  /  </a>
             <a href="javascript:void(0)">友链</a>
@@ -18,9 +19,26 @@
 
     <div class="ml-content">
         <div class="ml-content-body">
-            <h4 class="friend-link-title">博主网址</h4>
+            <h3 class="friend-link-title">常用网址</h3>
             <div class="row">
-                <div class="col-md-4 animate-box" data-animate-effect="fadeInUp" th:each="link,iterStat: ${bloggerList}">
+                <div class="col-md-4 animate-box" data-animate-effect="zoomIn" th:each="link,iterStat: ${webSiteList}">
+                    <div class="friend-link-item">
+                        <img class="lazyload image" th:if="${#strings.isEmpty(link.logo) == false}" th:data-original="@{${link.logo}}">
+                        <span th:if="${#strings.isEmpty(link.logo)}">
+                            <svg t="1610115308931" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5146" width="48" height="48"><path d="M656.79 499.92A241.63 241.63 0 0 0 754 306c0-133.65-108.35-242-242-242S270 172.35 270 306a241.63 241.63 0 0 0 97.21 193.92C190.84 560.12 64 727.25 64 924a36 36 0 0 0 72 0c0-207.66 168.34-376 376-376s376 168.34 376 376a36 36 0 0 0 72 0c0-196.75-126.84-363.88-303.21-424.08zM342 306a170 170 0 1 1 170 170 170 170 0 0 1-170-170z" p-id="5147" fill="#515151"></path></svg>
+                        </span>
+                        <div class="info">
+                            <a th:href="@{${link.homeUrl}}" th:text="${link.title}" target="_blank"></a>
+                            <div class="remark" th:text="${#strings.isEmpty(link.remark) == true? '无' : link.remark}"></div>
+                        </div>
+                    </div>
+                </div>
+                <div th:if="${#lists.isEmpty(webSiteList)}" th:style="'text-align:center;'" th:text="'~~暂时没有推荐的常用网址~~'"></div>
+            </div>
+
+            <h3 class="friend-link-title">博主网址</h3>
+            <div class="row">
+                <div class="col-md-4 animate-box" data-animate-effect="zoomIn" th:each="link,iterStat: ${bloggerList}">
                     <div class="friend-link-item">
                         <img class="lazyload image" th:if="${#strings.isEmpty(link.logo) == false}" th:data-original="@{${link.logo}}">
                         <span th:if="${#strings.isEmpty(link.logo)}">
@@ -35,22 +53,6 @@
                 <div th:if="${#lists.isEmpty(bloggerList)}" th:style="'text-align:center;'" th:text="'~~暂时没有推荐的博主网址~~'"></div>
             </div>
 
-            <h4 class="friend-link-title">常用网址</h4>
-            <div class="row">
-                <div class="col-md-4 animate-box" data-animate-effect="fadeInUp" th:each="link,iterStat: ${webSiteList}">
-                    <div class="friend-link-item">
-                        <img class="lazyload image" th:if="${#strings.isEmpty(link.logo) == false}" th:data-original="@{${link.logo}}">
-                        <span th:if="${#strings.isEmpty(link.logo)}">
-                            <svg t="1610115308931" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5146" width="48" height="48"><path d="M656.79 499.92A241.63 241.63 0 0 0 754 306c0-133.65-108.35-242-242-242S270 172.35 270 306a241.63 241.63 0 0 0 97.21 193.92C190.84 560.12 64 727.25 64 924a36 36 0 0 0 72 0c0-207.66 168.34-376 376-376s376 168.34 376 376a36 36 0 0 0 72 0c0-196.75-126.84-363.88-303.21-424.08zM342 306a170 170 0 1 1 170 170 170 170 0 0 1-170-170z" p-id="5147" fill="#515151"></path></svg>
-                        </span>
-                        <div class="info">
-                            <a th:href="@{${link.homeUrl}}" th:text="${link.title}" target="_blank"></a>
-                            <div class="remark" th:text="${#strings.isEmpty(link.remark) == true? '无' : link.remark}"></div>
-                        </div>
-                    </div>
-                </div>
-                <div th:if="${#lists.isEmpty(webSiteList)}" th:style="'text-align:center;'" th:text="'~~暂时没有推荐的常用网址~~'"></div>
-            </div>
         </div>
     </div>
 </div>

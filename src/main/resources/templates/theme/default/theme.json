@@ -3,6 +3,12 @@
   "remark": "默认主题",
   "extension": [
     {
+      "key": "version",
+      "value": "1.0",
+      "type": "input",
+      "label": "版本号"
+    },
+    {
       "key": "pageSize",
       "value": "9",
       "type": "input",
@@ -10,7 +16,7 @@
     },
     {
       "key": "useCDN",
-      "value": "true",
+      "value": "false",
       "type": "select",
       "option": "true,false",
       "label": "是否开启CDN"

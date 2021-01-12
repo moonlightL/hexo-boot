@@ -663,6 +663,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
         return this.postMapper.selectListByTagId(tag.getId());
     }
 
+    @Cacheable(key = "'" + PageConstant.POST_TOP_PAGE + "'")
     @Override
     public List<Post> findTopList() throws GlobalException {
         Example example = Example.builder(Post.class)
