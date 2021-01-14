@@ -18,42 +18,51 @@
             mode = (hour >= 6 && hour < 18 ? "light" : "dark");
         }
         $("html").attr("mode", mode);
-
-        if (mode === "light") {
-            $(".mode-container").html("<div id='modeBtn' class='mode'><i class='fa fa-moon-o'></i></div>");
-        } else {
-            $(".mode-container").html("<div id='modeBtn' class='mode'><i class='fa fa-sun-o'></i></div>");
-        }
     };
 
-    const changeModeEvent = function() {
-        $("#modeBtn").on("click", function () {
+    const optionEvent = function() {
+        let $body = $("body");
+        let $options = $('<div class="options animated fadeInLeft" id="option"></div>');
+        $body.append($options);
+
+        let elements = [
+            {"class": "search", "icon": "fa fa-search", "title": "搜索"},
+            {"class": "change-mode", "icon": "fa fa-adjust", "title": "黑白模式"},
+            {"class": "up", "icon": "fa fa-arrow-up", "title": "回到顶部"}
+        ];
+
+        let htmArr = [];
+        for (let i = 0; i < elements.length; i++) {
+            let ele = elements[i];
+            htmArr.push('<div class="option-item '+ ele.class +'" title="'+ele.title+'"> <i class="' + ele.icon+'"></i> </div> ');
+        }
+
+        $options.append(htmArr.join(""));
+
+        let $iframe = $('<div id="modal-iframe" class="iziModal light"></div>');
+        $body.append($iframe);
+
+        $("#modal-iframe").iziModal({
+            iframe: true,
+            headerColor: "rgb(76, 175, 80)",
+            title: '<i class="fa fa-search"></i> 站内搜索' ,
+            width: 620,
+            iframeHeight: 360,
+            iframeURL: "/search/"
+        });
+
+        $(".options .search").off("click").on("click", function() {
+            $('#modal-iframe').iziModal('open');
+        });
+
+        $(".options .change-mode").off("click").on("click", function () {
             let $html = $("html");
             let mode = ($html.attr("mode") === "light" ? "dark" : "light");
             sessionStorage.setItem(CURRENT_MODE, mode);
             $html.attr("mode", mode);
-            if (mode === "light") {
-                $(this).html("<i class='fa fa-moon-o'></i>");
-            } else {
-                $(this).html("<i class='fa fa-sun-o'></i>");
-            }
         });
-    };
 
-    const toTopEvent = function() {
-        let toTop = $("#toTop");
-        $(window).scroll(function(e) {
-            let scrollTop = $(this).scrollTop();
-
-            if (scrollTop > 500) {
-                toTop.removeClass("to-hide");
-            } else {
-                if (!toTop.hasClass("to-hide")) {
-                    toTop.addClass("to-hide");
-                }
-            }
-        });
-        toTop.on("click",function() {
+        $(".options .up").off("click").on("click",function() {
             $('html, body').animate({
                 scrollTop: $('html').offset().top
             }, 500);
@@ -71,7 +80,7 @@
 
     const loadLazy = function() {
         $.getScript(APP.plugins.lazyLoad.js, function() {
-            $("img.lazy").lazyload({
+            $("img.lazyload").lazyload({
                 placeholder : baseLink + "/source/images/loading.jpg",
                 effect: "fadeIn"
             });
@@ -101,43 +110,20 @@
         });
     };
 
-    const searchEvent = function() {
-        let $body = $("body");
-        let $iframe = $('<div id="modal-iframe" class="iziModal light"></div>');
-        $body.append($iframe);
-
-        $("#modal-iframe").iziModal({
-            iframe: true,
-            headerColor: "rgb(76, 175, 80)",
-            title: '<i class="fa fa-search"></i> 站内搜索' ,
-            width: 620,
-            iframeHeight: 360,
-            iframeURL: "/search/"
-        });
-
-        $("#searchBtn").off("click").on("click", function() {
-            $('#modal-iframe').iziModal('open');
-        });
-    };
-
     let clickEffect = function() {
         let $container = $("#pageContainer");
         $container.on("click", function(e) {
-            let $i = $('<b></b>').text('❤');
+            // let $i = $('<b></b>').text('❤');
+            let $i = $('<span class="effect animated zoomIn"></span>');
             let x = e.pageX, y = e.pageY;
             $i.css({
-                "z-index": 9999,
-                "top": y - 20,
-                "left": x,
-                "position": "absolute",
-                "color": '#ec4444',
-                "font-size": 14,
+                "top": y -24,
+                "left": x - 24
             });
 
             $i.animate({
-                "top": y - 180,
                 "opacity": 0
-            }, 800, function() {
+            },600, function () {
                 $i.remove();
             });
 
@@ -147,12 +133,10 @@
 
     $(function() {
         themModeEvent();
-        changeModeEvent();
-        toTopEvent();
+        optionEvent();
         circleMagic();
         loadLazy();
         contentWayPoint();
-        searchEvent();
         clickEffect();
     });
 })();

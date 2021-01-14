@@ -117,12 +117,11 @@ public class MarkdownUtil {
                     html.line();
                     String destination = image.getDestination();
                     Map<String, String> attrMap = new HashMap<>();
-                    attrMap.put("class", "lightbox fancybox");
+                    attrMap.put("class", "fancybox");
                     attrMap.put("href", destination);
-                    attrMap.put("data-lightbox", "roadtrip");
                     attrMap.put("data-fancybox", "gallery");
                     html.tag("a", attrMap);
-                    html.tag("img", new HashMap<String, String>(1){{put("src", destination);}});
+                    html.tag("img", new HashMap<String, String>(1){{put("data-original", destination);put("class", "lazyload");}});
                     html.tag("/a");
                     html.line();
                 }

@@ -8,8 +8,8 @@
 <div layout:fragment="content">
     <!-- 图片 -->
     <div class="image-banner" style="color: #fff">
-        <div class="image-content" th:if="${#strings.startsWith(currentNav.cover,'http') == true}"><img th:data-original="@{${currentNav.cover}}" class="lazy"></div>
-        <div class="image-content" th:if="${#strings.startsWith(currentNav.cover,'http') == false}"><img th:data-original="@{${prefix} + '/source/images/category.png'}" class="lazy"></div>
+        <div class="image-content" th:if="${#strings.startsWith(currentNav.cover,'http') == true}"><img th:data-original="@{${currentNav.cover}}" class="lazyload"></div>
+        <div class="image-content" th:if="${#strings.startsWith(currentNav.cover,'http') == false}"><img th:data-original="@{${prefix} + '/source/images/category.png'}" class="lazyload"></div>
         <div class="descr">
             <a th:href="@{/}">首页  /  </a>
             <a href="javascript:void(0)">分类</a>
@@ -21,9 +21,9 @@
         <div class="ml-content-body">
             <div class="row">
                 <div class="col-sm-6 col-md-3" th:each="category,iterStat: ${categoryList}">
-                   <div class="category-item animate-box" data-animate-effect="fadeInUp">
+                   <div class="category-item animate-box">
                        <a th:href="@{'/categories/'+${category.name}+'/'}">
-                           <img th:src="@{${category.coverUrl}}" alt="">
+                           <img th:data-original="@{${category.coverUrl}}" class="lazyload">
                            <div class="mask"><span>[[${category.remark}]]</span></div>
                            <div class="descr">
                                [[${category.name}]]<span>([[${category.postNum}]])</span>

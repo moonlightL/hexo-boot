@@ -8,8 +8,8 @@
 <div layout:fragment="content">
     <!-- 图片 -->
     <div class="image-banner" style="color: #fff">
-        <div class="image-content" th:if="${#strings.startsWith(currentNav.cover,'http') == true}"><img th:data-original="@{${currentNav.cover}}" class="lazy"></div>
-        <div class="image-content" th:if="${#strings.startsWith(currentNav.cover,'http') == false}"><img th:data-original="@{${prefix} + '/source/images/archive.png'}" class="lazy"></div>
+        <div class="image-content" th:if="${#strings.startsWith(currentNav.cover,'http') == true}"><img th:data-original="@{${currentNav.cover}}" class="lazyload"></div>
+        <div class="image-content" th:if="${#strings.startsWith(currentNav.cover,'http') == false}"><img th:data-original="@{${prefix} + '/source/images/archive.png'}" class="lazyload"></div>
         <div class="descr">
             <a th:href="@{/}">首页  /  </a>
             <a href="javascript:void(0)">归档</a>
@@ -40,28 +40,20 @@
                 </div>
             </div>
         </div>
-        <nav class="pagination-bar animate-box" data-animate-effect="fadeInUp" th:if="${#maps.isEmpty(pageInfo.data) eq false}">
-        <span th:if="${pageInfo.hasPreviousPage}">
-            <a class="prev page-numbers" th:href="@{${pageInfo.pageNum-1} == 1 ? '/archives/' : '/archives/page/' + ${pageInfo.pageNum-1}+'/'}" ><i class="fa fa-angle-left"></i></a>
-        </span>
-            <span th:if="${pageInfo.hasPreviousPage == false}">
-            <a class="prev page-numbers" href="javascript:void(0)" ><i class="fa fa-angle-left"></i></a>
-        </span>
+        <div class="pagination animate-box">
+            <span th:if="${pageInfo.hasPreviousPage}" class="page">
+                <a data-pjax class="prev page-numbers" th:href="@{${pageInfo.pageNum-1} == 1 ? '/archives/' : '/archives/page/' + ${pageInfo.pageNum-1}+'/'}" ><i class="fa fa-angle-left"></i></a>
+            </span>
             <span th:each="pageNum : ${pageInfo.navigatepageNums}">
-            <span th:if="${pageNum == pageInfo.pageNum}">
-                <a href="javascript:void(0)" th:text="${pageNum}" class="page-numbers current"></a>
+                <span th:if="${pageNum == pageInfo.pageNum}"  class="page current" th:text="${pageNum}"></span>
+                <span class="page" th:if="${pageNum != pageInfo.pageNum}">
+                    <a data-pjax th:href="@{'/archives/page/' + ${pageNum}+'/'}" th:text="${pageNum}"></a>
+                </span>
             </span>
-            <span th:if="${pageNum != pageInfo.pageNum}">
-                <a th:href="@{${pageNum} == 1 ? '/archives/' : '/archives/page/' + ${pageNum}+'/'}" th:text="${pageNum}" class="page-numbers hidden-xs"></a>
+            <span th:if="${pageInfo.hasNextPage}" class="page">
+                <a data-pjax class="next page-numbers" th:href="@{'/archives/page/' + ${pageInfo.pageNum+1}+'/'}" ><i class="fa fa-angle-right"></i></a>
             </span>
-        </span>
-            <span th:if="${pageInfo.hasNextPage}">
-            <a class="next page-numbers" th:href="@{'/archives/page/' + ${pageInfo.pageNum+1}+'/'}" ><i class="fa fa-angle-right"></i></a>
-        </span>
-            <span th:if="${pageInfo.hasNextPage == false}">
-            <a class="next page-numbers" href="javascript:void(0)" ><i class="fa fa-angle-right"></i></a>
-        </span>
-        </nav>
+        </div>
     </div>
 
 </div>
