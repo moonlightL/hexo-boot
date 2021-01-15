@@ -22,7 +22,7 @@
 
     const optionEvent = function() {
         let $body = $("body");
-        let $options = $('<div class="options animated fadeInLeft" id="option"></div>');
+        let $options = $('<div class="options animated fadeInRight" id="option"></div>');
         $body.append($options);
 
         let elements = [
@@ -113,12 +113,11 @@
     let clickEffect = function() {
         let $container = $("#pageContainer");
         $container.on("click", function(e) {
-            // let $i = $('<b></b>').text('❤');
             let $i = $('<span class="effect animated zoomIn"></span>');
             let x = e.pageX, y = e.pageY;
             $i.css({
-                "top": y -24,
-                "left": x - 24
+                "top": y -36,
+                "left": x - 36
             });
 
             $i.animate({
