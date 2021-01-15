@@ -154,6 +154,10 @@ a:focus, a:hover {
     text-decoration: underline;
 }
 
+button.btn.focus, button.btn:focus {
+    outline: none !important;
+}
+
 strong {
     word-break:break-all
 }
@@ -825,13 +829,12 @@ strong {
 span.effect {
     position: absolute;
     display: inline-block;
-    width: 72px;
-    height: 72px;
+    width: 84px;
+    height: 84px;
     border: 1px solid var(--theme-color);
     border-radius: 50%;
     z-index: 9999;
     transition: all .6s;
-    box-shadow: 0 1px 7px 1px var(--theme-color);
 }
 
 .footer-copyright {
@@ -1380,7 +1383,6 @@ h3.friend-link-title {
 
 .btn-default {
     color: var(--text-color);
-    border: 2px solid var(--theme-color);
     background-color: var(--blog-bg-color);
 }
 
@@ -2042,8 +2044,12 @@ h3.friend-link-title {
 
 .search-form .search-query ul li {
     display: block;
-    padding: .5rem;
     border-bottom: 1px solid #aaa
+}
+
+.search-form .search-query ul li a {
+    display: block;
+    padding: 1rem .5rem;
 }
 
 .search-form .search-query mark.highlight {

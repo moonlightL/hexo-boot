@@ -116,8 +116,8 @@
             let $i = $('<span class="effect animated zoomIn"></span>');
             let x = e.pageX, y = e.pageY;
             $i.css({
-                "top": y -36,
-                "left": x - 36
+                "top": y - 42,
+                "left": x - 42
             });
 
             $i.animate({
