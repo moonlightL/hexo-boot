@@ -23,10 +23,10 @@
 <!--    <link href="https://cdn.bootcdn.net/ajax/libs/pace/1.2.3/themes/blue/pace-theme-minimal.min.css" rel="stylesheet">-->
 <!--    <script src="https://cdn.bootcdn.net/ajax/libs/pace/1.2.3/pace.min.js"></script>-->
     <span th:if="${isDetail == true}">
-        <link rel="stylesheet" th:href="@{${prefix} + '/source/js/highlightjs/styles/'+ ${activeTheme.configMap['highlight']} +'.min.css'}"/>
-        <link rel="stylesheet" th:href="@{${prefix} + '/source/js/fancybox/jquery.fancybox.min.css'}"/>
-        <link rel="stylesheet" th:href="@{${prefix} + '/source/js/autoToc/jquery.autoToc.css'}"/>
-        <link rel="stylesheet" th:href="@{${prefix} + '/source/js/overshare/css/share.min.css'}"/>
+        <link rel="stylesheet" th:href="@{${baseLink} + '/source/js/highlightjs/styles/'+ ${activeTheme.configMap['highlight']} +'.min.css'}"/>
+        <link rel="stylesheet" th:href="@{${baseLink} + '/source/js/fancybox/jquery.fancybox.min.css'}"/>
+        <link rel="stylesheet" th:href="@{${baseLink} + '/source/js/autoToc/jquery.autoToc.css'}"/>
+        <link rel="stylesheet" th:href="@{${baseLink} + '/source/js/overshare/css/share.min.css'}"/>
     </span>
     <link rel="stylesheet" th:href="@{${prefix} + '/source/css/style.css'}"/>
 </head>
@@ -99,9 +99,6 @@
         </div>
         <!-- /container -->
 
-        <div class="search-container"><button id="searchBtn" type="button"><i class="fa fa-search"></i></button></div>
-        <div class="to-top to-hide" id="toTop"><i class="fa fa-arrow-up"></i></div>
-        <div class="mode-container"></div>
     </div>
     <script th:inline="javascript">
         let themeName = [[${activeTheme.name}]];

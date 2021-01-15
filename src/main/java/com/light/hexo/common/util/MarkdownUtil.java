@@ -85,6 +85,28 @@ public class MarkdownUtil {
 
                 @Override
                 public Set<Class<? extends Node>> getNodeTypes() {
+                    return Collections.singleton(Link.class);
+                }
+
+                @Override
+                public void render(Node node) {
+                    HtmlWriter html = context.getWriter();
+                    Link link = (Link) node;
+                    html.line();
+                    Map<String, String> attrMap = new HashMap<>();
+                    attrMap.put("href", link.getDestination());
+                    attrMap.put("target", "_blank");
+                    html.tag("a", attrMap);
+                    Text firstChild = (Text) link.getFirstChild();
+                    html.text(firstChild.getLiteral());
+                    html.tag("/a");
+                    html.line();
+                }
+            })
+            .nodeRendererFactory(context -> new NodeRenderer() {
+
+                @Override
+                public Set<Class<? extends Node>> getNodeTypes() {
                     return Collections.singleton(Image.class);
                 }
 
@@ -95,12 +117,11 @@ public class MarkdownUtil {
                     html.line();
                     String destination = image.getDestination();
                     Map<String, String> attrMap = new HashMap<>();
-                    attrMap.put("class", "lightbox fancybox");
+                    attrMap.put("class", "fancybox");
                     attrMap.put("href", destination);
-                    attrMap.put("data-lightbox", "roadtrip");
                     attrMap.put("data-fancybox", "gallery");
                     html.tag("a", attrMap);
-                    html.tag("img", new HashMap<String, String>(1){{put("src", destination);}});
+                    html.tag("img", new HashMap<String, String>(1){{put("data-original", destination);put("class", "lazyload");}});
                     html.tag("/a");
                     html.line();
                 }

@@ -6,8 +6,8 @@
    <div layout:fragment="content">
        <!-- 图片 -->
        <div class="image-banner">
-           <div class="image-content" th:if="${#strings.startsWith(currentNav.cover,'http') == true}"><img th:data-original="@{${currentNav.cover}}" class="lazy" ></div>
-           <div class="image-content" th:if="${#strings.startsWith(currentNav.cover,'http') == false}"><img th:data-original="@{${prefix} + '/source/images/index.png'}" class="lazy" ></div>
+           <div class="image-content" th:if="${#strings.startsWith(currentNav.cover,'http') == true}"><img th:data-original="@{${currentNav.cover}}" class="lazyload" ></div>
+           <div class="image-content" th:if="${#strings.startsWith(currentNav.cover,'http') == false}"><img th:data-original="@{${prefix} + '/source/images/index.png'}" class="lazyload" ></div>
            <div class="descr"><a th:href="@{/}">首页</a></div>
            <div class="word_1 animated fadeInRight">不积跬步，无以至千里</div>
            <div class="word_2 animated fadeInLeft">不积小流，无以成江海</div>
@@ -20,7 +20,7 @@
                        <div class="post-bg">
                            <span class="reprint" th:if="${post.reprint}">转载</span>
                            <span class="top" th:if="${post.top}"><img src="/theme/default/source/images/article-top.png" alt="" width="38" height="38"></span>
-                           <img class="lazy" th:data-original="@{${post.coverUrl}}" alt="" width="100%" height="100%">
+                           <img class="lazyload" th:data-original="@{${post.coverUrl}}" alt="" width="100%" height="100%">
                            <div class="mask"></div>
                            <div class="category">分类: <a class="jump" th:href="@{'/categories/'+${post.categoryName}+'/'}">[[${post.categoryName}]]</a></div>
                            <div class="tags">标签:
@@ -56,28 +56,29 @@
                    </div>
                </div>
            </div>
-           <nav class="pagination-bar animate-box" data-animate-effect="fadeInUp">
-            <span th:if="${pageInfo.hasPreviousPage}">
-                <a class="prev page-numbers" th:href="@{${pageInfo.pageNum-1} == 1 ? '/' : '/page/' + ${pageInfo.pageNum-1}+'/'}" ><i class="fa fa-angle-left"></i></a>
-            </span>
-               <span th:if="${pageInfo.hasPreviousPage == false}">
-                <a class="prev page-numbers" href="javascript:void(0)" ><i class="fa fa-angle-left"></i></a>
-            </span>
-               <span th:each="pageNum : ${pageInfo.navigatepageNums}" class="page">
-                <span th:if="${pageNum == pageInfo.pageNum}">
-                    <a href="javascript:void(0)" th:text="${pageNum}" class="page-numbers current"></a>
+           <div class="pagination animate-box">
+                <span th:if="${pageInfo.hasPreviousPage}" class="page">
+                    <a class="prev page-numbers" th:href="@{${pageInfo.pageNum - 1} == 1 ? '/' : '/page/' + ${pageInfo.pageNum-1}+'/'}" ><i class="fa fa-angle-left"></i></a>
                 </span>
-                <span th:if="${pageNum != pageInfo.pageNum}">
-                    <a th:href="@{'/page/' + ${pageNum}+'/'}" th:text="${pageNum}" class="page-numbers hidden-xs"></a>
+               <span th:each="pageNum : ${pageInfo.navigatepageNums}" th:if="${pageInfo.navigatepageNums.length} le '4' ">
+                    <span th:if="${pageNum == pageInfo.pageNum}"  class="page current" th:text="${pageNum}"></span>
+                    <span class="page" th:if="${pageNum != pageInfo.pageNum}">
+                        <a th:href="@{'/page/' + ${pageNum}+'/'}" th:text="${pageNum}"></a>
+                    </span>
+               </span>
+               <span th:each="pageNum, iterStat : ${pageInfo.navigatepageNums}" th:if="${pageInfo.navigatepageNums.length} gt '4' ">
+                   <span class="page" th:if="${pageNum == pageInfo.pageNum and iterStat.count gt 2 and iterStat.count le iterStat.size}">...</span>
+                   <span th:if="${pageNum == pageInfo.pageNum}" class="page current" th:text="${pageNum}"></span>
+                   <span class="page" th:if="${pageNum == pageInfo.pageNum and iterStat.count le (iterStat.size - 2)}">...</span>
+                   <span th:if="${pageNum != pageInfo.pageNum}">
+                       <span class="page" th:if="${iterStat.count == 1}" ><a  th:href="@{'/page/1/'}" th:text="1"></a></span>
+                       <span class="page" th:if="${iterStat.count == (iterStat.size)}"><a th:href="@{'/page/' + ${pageNum}+'/'}" th:text="${pageNum}"></a></span>
+                    </span>
+               </span>
+               <span th:if="${pageInfo.hasNextPage}" class="page">
+                    <a class="next page-numbers" th:href="@{'/page/' + ${pageInfo.pageNum + 1}+'/'}" ><i class="fa fa-angle-right"></i></a>
                 </span>
-            </span>
-               <span th:if="${pageInfo.hasNextPage}">
-                <a class="next page-numbers" th:href="@{'/page/' + ${pageInfo.pageNum+1}+'/'}" ><i class="fa fa-angle-right"></i></a>
-            </span>
-               <span th:if="${pageInfo.hasNextPage == false}">
-                <a class="next page-numbers" href="javascript:void(0)" ><i class="fa fa-angle-right"></i></a>
-            </span>
-           </nav>
+           </div>
        </div>
 
    </div>

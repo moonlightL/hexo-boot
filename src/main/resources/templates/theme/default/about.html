@@ -9,8 +9,8 @@
 <div layout:fragment="content">
     <!-- 图片 -->
     <div class="image-banner" style="color: #fff">
-        <div class="image-content" th:if="${#strings.startsWith(currentNav.cover,'http') == true}"><img th:data-original="@{${currentNav.cover}}" class="lazy"></div>
-        <div class="image-content" th:if="${#strings.startsWith(currentNav.cover,'http') == false}"><img th:data-original="@{${prefix} + '/source/images/about.png'}" class="lazy"></div>
+        <div class="image-content" th:if="${#strings.startsWith(currentNav.cover,'http') == true}"><img th:data-original="@{${currentNav.cover}}" class="lazyload"></div>
+        <div class="image-content" th:if="${#strings.startsWith(currentNav.cover,'http') == false}"><img th:data-original="@{${prefix} + '/source/images/about.png'}" class="lazyload"></div>
         <div class="descr">
             <a th:href="@{/}">首页  /  </a>
             <a th:href="@{/about/}">关于</a>

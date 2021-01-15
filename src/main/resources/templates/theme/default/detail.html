@@ -10,7 +10,7 @@
     <div layout:fragment="content">
         <!-- 图片 -->
         <div class="image-banner" style="color: #fff">
-            <div class="image-content"><img th:data-original="@{${post.coverUrl}}" class="lazy"></div>
+            <div class="image-content"><img th:data-original="@{${post.coverUrl}}" class="lazyload"></div>
             <div class="descr">
                 <a th:href="@{/}">首页  /  </a>
                 <a href="javascript:void(0)">文章详情  /  </a>
@@ -46,7 +46,7 @@
 
                 <div id="share" class="shareContainer">
                     <div class="btns">
-                        <button type="button" class="btn btn-default" id="priseBtn"><i class="fa fa-thumbs-o-up"></i> <span id="prizeCount">[[${post.praiseNum}]]</span></button>
+                        <button type="button" class="btn btn-success" id="priseBtn"><i class="fa fa-thumbs-o-up"></i> <span id="prizeCount">[[${post.praiseNum}]]</span></button>
                         <button type="button" class="btn btn-default" id="shareOpenBtn"><i class="fa fa-share-square-o"></i> 分享</button>
                     </div>
                     <div id="shareBtns" class="social-share" data-initialized="true">
@@ -75,7 +75,7 @@
 
                 <div id="reward" class="reward text-center">
                     <p><b th:text="${#servletContext.getAttribute('configMap')['reward_comment']}"></b></p>
-                    <button id="showRewardImg" type="button" class="btn btn-primary">打赏</button>
+                    <button id="showRewardImg" type="button" class="btn btn-danger"><i class="fa fa-heartbeat"></i> 打赏</button>
                     <div id="rewardImgArea" class="reward-img-area hide">
                        <span th:if="${#strings.isEmpty(#servletContext.getAttribute('configMap')['reward_by_ali_pay']) != true}">
                             <a href="javascript:void(0)" class="reward-img">
