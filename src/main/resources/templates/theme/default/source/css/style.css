@@ -1336,6 +1336,7 @@ h3.friend-link-title {
     text-decoration: none;
     display: inline-block;
     transition: all .3s;
+    word-break: break-all;
 }
 
 .post-content a:hover,
