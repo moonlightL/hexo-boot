@@ -4,13 +4,13 @@ import com.light.hexo.business.admin.constant.ConfigEnum;
 import com.light.hexo.business.admin.model.Post;
 import com.light.hexo.business.admin.service.ConfigService;
 import com.light.hexo.business.admin.service.PostService;
-import com.light.hexo.business.portal.model.HexoPageInfo;
 import com.light.hexo.business.portal.model.SiteMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -41,9 +41,11 @@ public class SiteMapController {
         sb.append(new SiteMap(homePage));
 
         List<Post> postList = this.postService.findAll();
+        Collections.reverse(postList);
         for (Post post : postList) {
             sb.append(new SiteMap(homePage + "/" + post.getLink(), post.getUpdateTime().toLocalDate(), CHANGEFREQ_DAILY, "0.9"));
         }
+
         sb.append("</urlset>");
         return sb.toString();
     }

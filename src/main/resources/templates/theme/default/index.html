@@ -1,7 +1,10 @@
 <!doctype html>
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" layout:decorate="~{theme/default/layout}">
 
-<head></head>
+<head>
+    <title th:text="${#servletContext.getAttribute('configMap')['blog_name']}">个人博客</title>
+    <meta name="description" th:content="${#servletContext.getAttribute('configMap')['description']}" />
+</head>
 <body>
    <div layout:fragment="content">
        <!-- 图片 -->

@@ -3,6 +3,7 @@
 
 <head>
     <title>归档 | [[${#servletContext.getAttribute('configMap')['blog_name']}]]</title>
+    <meta name="description" th:content="${#servletContext.getAttribute('configMap')['description']}" />
 </head>
 <body>
 <div layout:fragment="content">
