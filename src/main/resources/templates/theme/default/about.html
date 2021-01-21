@@ -3,6 +3,7 @@
 
 <head>
     <title>关于 | [[${#servletContext.getAttribute('configMap')['blog_name']}]]</title>
+    <meta name="description" th:content="${#servletContext.getAttribute('configMap')['description']}" />
     <link rel="stylesheet" th:href="@{'/admin/assets/custom/jquery-comment/jquery-comment.css'}">
 </head>
 <body>
