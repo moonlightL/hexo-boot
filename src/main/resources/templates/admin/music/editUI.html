@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, initial-scale=1, shrink-to-fit=no">
+    <div th:replace="~{admin/common :: common-link}"></div>
+</head>
+<body>
+
+<div class="content">
+    <div class="block block-fx-shadow">
+        <div class="block-content">
+            <div class="row justify-content-center py-20">
+                <div class="col-xl-6">
+                    <form id="saveForm" th:action="@{${baseUrl} + '/edit.json'}" th:object="${vo}">
+                        <input type="hidden" name="id" th:field="*{id}">
+                        <div class="form-group row">
+                            <label class="col-lg-4 col-form-label" for="name">音乐名称 <span class="text-danger">*</span></label>
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="name" name="name" th:field="*{name}" placeholder="音乐名称" data-bv-notempty="true" data-bv-notempty-message="名称不能为空">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-4 col-form-label" for="name">作者 <span class="text-danger">*</span></label>
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="artist" name="artist" th:field="*{artist}" placeholder="作者" data-bv-notempty="true" data-bv-notempty-message="作者不能为空">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-4 col-form-label" for="name">链接 <span class="text-danger">*</span></label>
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="url" name="url" th:field="*{url}" placeholder="链接,如：http://xxx.mp3" data-bv-notempty="true" data-bv-notempty-message="链接不能为空">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-4 col-form-label" for="name">封面 <span class="text-danger">*</span></label>
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="cover" name="cover" th:field="*{cover}" placeholder="封面" data-bv-notempty="true" data-bv-notempty-message="封面不能为空">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-4 col-form-label" for="name">颜色 </label>
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="color" name="color" th:field="*{color}" placeholder="颜色(十六进制),如：#ebd0c2">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-4 col-form-label" for="state">状态 <span class="text-danger">*</span></label>
+                            <div class="col-lg-8">
+                                <select class="js-select2 form-control" id="state" name="state" th:field="*{state}" style="width: 100%;" data-placeholder="请选择状态" >
+                                    <option value="" disabled>请选择状态</option>
+                                    <option value="1">开启</option>
+                                    <option value="0">关闭</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-4 col-form-label" for="sort">排序 <span class="text-danger">*</span></label>
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="sort" name="sort" th:field="*{sort}" placeholder="排序" data-bv-notempty="true" data-bv-notempty-message="排序不能为空">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-lg-8 text-center">
+                                <button type="reset" class="btn btn-secondary">重置</button>
+                                <button type="submit" class="btn btn-primary" id="submitBtn">提交</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="~{admin/common :: common-script}"></div>
+<script type="text/javascript" th:inline="javascript">
+
+    let CategoryManager = {
+        init: function () {
+            CategoryManager.bindEvent();
+        },
+        bindEvent: function () {
+            $("#submitBtn").on("click", function () {
+                $.hexo.action.save("saveForm");
+            });
+        }
+    };
+
+    CategoryManager.init();
+</script>
+</body>
+</html>

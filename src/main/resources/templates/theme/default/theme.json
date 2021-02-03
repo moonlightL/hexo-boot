@@ -4,7 +4,7 @@
   "extension": [
     {
       "key": "version",
-      "value": "1.6",
+      "value": "2.0",
       "type": "input",
       "label": "版本号"
     },
@@ -20,6 +20,13 @@
       "type": "select",
       "option": "true,false",
       "label": "是否开启CDN"
+    },
+    {
+      "key": "PJAX",
+      "value": "true",
+      "type": "select",
+      "option": "true,false",
+      "label": "是否开启PJAX"
     },
     {
       "key": "highlight",

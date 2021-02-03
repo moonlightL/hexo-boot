@@ -222,3 +222,5 @@ curl -L -o ~/.hexo-boot/application.yml --create-dirs https://gitee.com/moonligh
 2020-12-16 调整默认主题，新增自定义页面功能
 
 2021-01-06 新增二级自定义导航，支持 Twikoo 评论系统
+
+2020-02-03 默认主题支持 pjax 请求，同时新增音乐播放功能
