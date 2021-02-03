@@ -261,9 +261,8 @@
 
     const pjaxEvent = function() {
         $(document).pjax('a[data-pjax]', '#wrap', {fragment: '#wrap', timeout: 8000});
-        $(document).on('pjax:send', function() { NProgress.start(); console.log("开始")});
+        $(document).on('pjax:send', function() { NProgress.start();});
         $(document).on('pjax:complete',   function(e) {
-            console.log("结束")
             loadLazy();
             circleMagic();
             contentWayPoint();
