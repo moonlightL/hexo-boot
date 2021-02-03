@@ -369,7 +369,8 @@ public class PostCommentServiceImpl extends BaseServiceImpl<PostComment> impleme
 
         postComment.setUserId(commentUser.getId())
                    .setNickname(commentUser.getNickname())
-                   .setTitle(post.getTitle().trim());
+                   .setTitle(post.getTitle().trim())
+                   .setAvatar(commentUser.getAvatar());
         this.saveModel(postComment);
 
         this.eventPublisher.emit(new PostEvent( postComment.getPostId(), PostEvent.Type.COMMENT_ADD));

@@ -65,6 +65,9 @@ public class CommonController {
     @Autowired
     protected NavService navService;
 
+    @Autowired
+    protected MusicService musicService;
+
     protected String render(String pageName, boolean isDetail, Map<String, Object> resultMap) {
 
         // 数量

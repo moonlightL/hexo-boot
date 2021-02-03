@@ -2,6 +2,10 @@
 
     let APP = {
         plugins: {
+            APlayer: {
+                css: baseLink + "/source/js/APlayer/APlayer.min.css",
+                js: baseLink + "/source/js/APlayer/APlayer.min.js"
+            },
             about: {
                 js: baseLink + "/source/js/about.js"
             },
@@ -22,6 +26,12 @@
     };
 
     console.log("%c Theme." + themeName + " v" + version + " %c https://www.extlight.com/ ", "color: white; background: #e9546b; padding:5px 0;", "padding:4px;border:1px solid #e9546b;");
+
+    const loadResource = function() {
+        let APlayer = APP.plugins.APlayer;
+        $('head').append('<link href="' + APlayer.css + '" rel="stylesheet" type="text/css" />');
+        $.getScript(APlayer.js);
+    };
 
     let CURRENT_MODE = "current_mode";
     const themModeEvent = function() {
@@ -77,7 +87,37 @@
         });
 
         $(".options .music").off("click").on("click", function () {
-            layer.msg("音乐播放器暂未开放")
+                let $aplayer = $("#aplayer");
+            if ($aplayer.hasClass("inited")) {
+                $aplayer.toggleClass("show");
+                return;
+            }
+
+            $.ajax({
+                url: "/musicList.json",
+                type: "GET",
+                dataType: "JSON",
+                success: function (resp) {
+                    if (resp.success) {
+                        if (resp.data.length === 0) {
+                            layer.msg("博主未上传音乐资源");
+                            return;
+                        }
+
+                        $aplayer.toggleClass("show");
+                        new APlayer({
+                            container: $aplayer.get(0),
+                            fixed: true,
+                            listFolded: true,
+                            listMaxHeight: 90,
+                            audio: resp.data
+                        });
+                        $aplayer.addClass("inited");
+                    } else {
+                        layer.msg("加载数据异常")
+                    }
+                }
+            });
         });
 
         $(".options .up").off("click").on("click",function() {
@@ -246,5 +286,6 @@
         postEvent();
         aboutEvent();
         pjaxEvent();
+        loadResource();
     });
 })();

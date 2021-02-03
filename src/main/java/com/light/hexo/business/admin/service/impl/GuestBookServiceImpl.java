@@ -324,8 +324,7 @@ public class GuestBookServiceImpl extends BaseServiceImpl<GuestBook> implements 
             subject = guestBookUser.getNickname() + "给你留言";
         }
 
-
-        guestBook.setUserId(guestBookUser.getId()).setNickname(guestBookUser.getNickname());
+        guestBook.setUserId(guestBookUser.getId()).setNickname(guestBookUser.getNickname()).setAvatar(guestBookUser.getAvatar());
         this.saveModel(guestBook);
 
         this.eventPublisher.emit(new MessageEvent(this, guestBook.getNickname() + "给你留言了", MessageEvent.Type.GUEST_BOOK));

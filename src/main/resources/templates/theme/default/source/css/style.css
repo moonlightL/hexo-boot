@@ -80,10 +80,6 @@
     --brightness-value: brightness(0.7);
 }
 
-html {
-    /*filter: var(--brightness-value);*/
-}
-
 /*html, img {
     -webkit-filter: grayscale(1);
     filter: gray;
@@ -216,7 +212,7 @@ strong {
     opacity: 1!important
 }
 
-.ml-container {
+.content {
     filter: var(--brightness-value);
 }
 
@@ -1428,7 +1424,7 @@ h3.friend-link-title {
     border: none;
     color: var(--text-color) !important;
     border-radius: 4px;
-    border-left: 3px solid var(--text-color);
+    border-left: 3px solid #f98b43;
 }
 
 .alert-info .alert-link {
@@ -2062,4 +2058,8 @@ h3.friend-link-title {
     background: var(--theme-color);
     color: #fff;
     padding: 0 3px
+}
+
+.aplayer.show {
+    opacity: 1!important
 }

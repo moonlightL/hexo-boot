@@ -14,16 +14,16 @@ import java.time.LocalDateTime;
 
 /**
  * @Author MoonligthL
- * @ClassName: Backup
+ * @ClassName: Music
  * @ProjectName hexo-boot
- * @Description: 备份
- * @DateTime 2020/9/8 18:41
+ * @Description: 音乐
+ * @DateTime 2021/2/3 15:44
  */
 @Data
 @Accessors(chain = true)
 @ToString
-@Table(name = "t_backup")
-public class Backup implements Serializable {
+@Table(name = "t_music")
+public class Music implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -32,29 +32,43 @@ public class Backup implements Serializable {
     private Integer id;
 
     /**
-     * 备份名称
+     * 名称
      */
     private String name;
 
     /**
-     * 备份路径
+     * 作者
      */
-    private String filePath;
+    private String artist;
 
     /**
-     * 文件大小
+     * 链接
      */
-    private Long fileSize;
+    private String url;
 
     /**
-     * 创建时间
+     * 封面
      */
+    private String cover;
+
+    /**
+     * 颜色（十六进制）
+     */
+    private String color;
+
+    /**
+     * 可用状态
+     */
+    private Boolean state;
+
+    /**
+     * 排序
+     */
+    private Integer sort;
+
     @CreateTime
     private LocalDateTime createTime;
 
-    /**
-     * 修改时间
-     */
     @UpdateTime
     private LocalDateTime updateTime;
 }

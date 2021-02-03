@@ -160,4 +160,15 @@ public class IndexController extends CommonController {
         List<Post> list = this.postService.listPostByIdList(null);
         return Result.success(list);
     }
+
+    /**
+     * 音乐列表
+     * @return
+     */
+    @GetMapping("musicList.json")
+    @ResponseBody
+    public Result musicList() {
+        List<Music> list = this.musicService.listMusicByIndex();
+        return Result.success(list);
+    }
 }
