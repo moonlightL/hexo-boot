@@ -264,6 +264,7 @@
         $(document).on('pjax:send', function() { NProgress.start(); });
         $(document).on('pjax:complete',   function(e) {
             loadLazy();
+            circleMagic();
             contentWayPoint();
             postEvent();
             aboutEvent();
