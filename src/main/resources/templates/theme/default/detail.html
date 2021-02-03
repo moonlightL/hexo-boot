@@ -1,20 +1,34 @@
 <!doctype html>
-<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" layout:decorate="~{theme/default/layout}">
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
 
 <head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="author" th:content="${#servletContext.getAttribute('configMap')['blog_author']}">
+    <meta name="referrer" content="no-referrer" />
+    [(${#servletContext.getAttribute('configMap')['meta_code']})]
+    <meta name="keywords" th:content="${#servletContext.getAttribute('configMap')['keywords']}" />
+    <meta name="description" th:content="${post.summary}" />
+    <meta property="og:description" th:content="${#servletContext.getAttribute('configMap')['description']}" />
     <meta property="og:title" th:content="${post.title + ' | ' + #servletContext.getAttribute('configMap')['blog_name']}" />
     <title>[[${post.title}]] | [[${#servletContext.getAttribute('configMap')['blog_name']}]]</title>
-    <meta name="description" th:content="${post.summary}" />
-    <meta property="og:description" th:content="${post.summary}" />
+    <div th:replace="~{theme/default/common :: link}"></div>
     <link rel="stylesheet" th:href="@{'/admin/assets/custom/jquery-comment/jquery-comment.css'}">
 </head>
 <body>
-    <div layout:fragment="content">
+<div class="ml-container" id="pageContainer">
+    <div class="container">
+        <!-- 导航 -->
+        <div th:replace="~{theme/default/common :: nav}"></div>
+
+        <!-- 内容 -->
+        <div id="wrap" class="content">
         <!-- 图片 -->
         <div class="image-banner" style="color: #fff">
             <div class="image-content"><img th:data-original="@{${post.coverUrl}}" class="lazyload"></div>
             <div class="descr">
-                <a th:href="@{/}">首页  /  </a>
+                <a data-pjax th:href="@{/}">首页  /  </a>
                 <a href="javascript:void(0)">文章详情  /  </a>
                 <a href="javascript:void(0)">[[${post.title}]]</a>
             </div>
@@ -109,8 +123,8 @@
                     </ul>
                 </div>
                 <footer class="post-other-info">
-                    <a th:href="${'/' + previousPost.link}" class="prev pull-left" th:if="${#objects.nullSafe(previousPost, null)}">上一篇<span class="hidden-xs">：《[[${previousPost.title}]]》</span></a>
-                    <a th:href="${'/' + nextPost.link}" class="next pull-right" th:if="${#objects.nullSafe(nextPost, null)}">下一篇<span class="hidden-xs">：《[[${nextPost.title}]]》</span></a>
+                    <a data-pjax th:href="${'/' + previousPost.link}" class="prev pull-left" th:if="${#objects.nullSafe(previousPost, null)}">上一篇<span class="hidden-xs">：《[[${previousPost.title}]]》</span></a>
+                    <a data-pjax th:href="${'/' + nextPost.link}" class="next pull-right" th:if="${#objects.nullSafe(nextPost, null)}">下一篇<span class="hidden-xs">：《[[${nextPost.title}]]》</span></a>
                 </footer>
                 <!-- 目录 -->
                 <div class="tocContainer hidden-xs" id="tocContainer"></div>
@@ -118,17 +132,17 @@
         </div>
 
         <!-- 评论 -->
-        <div id="comment-container" class="comment-container"></div>
-
-        <script th:src="@{${prefix} + '/source/js/jquery.min.js'}"></script>
-        <script th:src="@{'/admin/assets/custom/jquery-comment/jquery.cookie.js'}"></script>
-        <script th:src="@{'/admin/assets/custom/jquery-comment/jquery-comment.js'}"></script>
-        <script th:src="@{${prefix} + '/source/js/detail.js'}"></script>
+        <div id="detail-comment" class="comment-container"></div>
         <script type="text/javascript" th:inline="javascript">
-            $(function () {
-                CommentManager.init([[${post.id}]], [[${post.comment}]]);
-            });
+            window.postId = [[${post.id}]];
+            window.canComment = [[${post.comment}]]
         </script>
     </div>
+
+        <!-- footer -->
+        <div th:replace="~{theme/default/common :: footer}"></div>
+    </div>
+    <div th:replace="~{theme/default/common :: script}"></div>
+</div>
 </body>
 </html>

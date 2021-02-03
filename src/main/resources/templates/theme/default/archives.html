@@ -1,71 +1,87 @@
 <!doctype html>
-<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" layout:decorate="~{theme/default/layout}">
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
 
 <head>
+    <div th:replace="~{theme/default/common :: meta}"></div>
+    <meta property="og:title" th:content="${'归档 | ' + #servletContext.getAttribute('configMap')['blog_name']}" />
     <title>归档 | [[${#servletContext.getAttribute('configMap')['blog_name']}]]</title>
-    <meta name="description" th:content="${#servletContext.getAttribute('configMap')['description']}" />
+    <div th:replace="~{theme/default/common :: link}"></div>
 </head>
-<body>
-<div layout:fragment="content">
-    <!-- 图片 -->
-    <div class="image-banner" style="color: #fff">
-        <div class="image-content" th:if="${#strings.startsWith(currentNav.cover,'http') == true}"><img th:data-original="@{${currentNav.cover}}" class="lazyload"></div>
-        <div class="image-content" th:if="${#strings.startsWith(currentNav.cover,'http') == false}"><img th:data-original="@{${prefix} + '/source/images/archive.png'}" class="lazyload"></div>
-        <div class="descr">
-            <a th:href="@{/}">首页  /  </a>
-            <a href="javascript:void(0)">归档</a>
-        </div>
-        <div class="title">归档</div>
-    </div>
 
-    <div class="ml-content">
-        <div class="archive-body" id="archives">
-            <div th:if="${pageInfo.total > 0}">
-                <div class='archive-content' th:each="map,iterStat : ${pageInfo.data}">
-                    <h3 class="animate-box" data-animate-effect="fadeInUp">[[${map.key}]]</h3>
-                    <div class='archives'>
-                        <div class="animate-box archives-item" data-animate-effect="fadeInUp" th:each="vo,iterStat2 : ${map.value}">
-                            <a th:href="@{'/'+${vo.link}}" style="display: block">
-                                <span class="time"><b>[[${vo.month} + '-' + ${vo.day}]]</b></span>
-                                <span class="title">[[${vo.title}]]</span>
-                                <span class="pull-right hidden-xs">([[${vo.readNum}]])</span>
-                            </a>
+<body>
+<div class="ml-container" id="pageContainer">
+    <div class="container">
+        <!-- 导航 -->
+        <div th:replace="~{theme/default/common :: nav}"></div>
+
+        <!-- 内容 -->
+        <div id="wrap" class="content">
+            <!-- 图片 -->
+            <div class="image-banner" style="color: #fff">
+                <div class="image-content" th:if="${#strings.startsWith(currentNav.cover,'http') == true}"><img th:data-original="@{${currentNav.cover}}" class="lazyload"></div>
+                <div class="image-content" th:if="${#strings.startsWith(currentNav.cover,'http') == false}"><img th:data-original="@{${prefix} + '/source/images/archive.png'}" class="lazyload"></div>
+                <div class="descr">
+                    <a data-pjax th:href="@{/}">首页  /  </a>
+                    <a href="javascript:void(0)">归档</a>
+                </div>
+                <div class="title">归档</div>
+            </div>
+
+            <div class="ml-content">
+                <div class="archive-body" id="archives">
+                    <div th:if="${pageInfo.total > 0}">
+                        <div class='archive-content' th:each="map,iterStat : ${pageInfo.data}">
+                            <h3 class="animate-box" data-animate-effect="fadeInUp">[[${map.key}]]</h3>
+                            <div class='archives'>
+                                <div class="animate-box archives-item" data-animate-effect="fadeInUp" th:each="vo,iterStat2 : ${map.value}">
+                                    <a data-pjax th:href="@{'/'+${vo.link}}" style="display: block">
+                                        <span class="time"><b>[[${vo.month} + '-' + ${vo.day}]]</b></span>
+                                        <span class="title">[[${vo.title}]]</span>
+                                        <span class="pull-right hidden-xs">([[${vo.readNum}]])</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class='archive-title' th:if="${pageInfo.total == 0}">
+                        <div style="text-align:center;">
+                            ~~暂无数据~~
                         </div>
                     </div>
                 </div>
-
-            </div>
-            <div class='archive-title' th:if="${pageInfo.total == 0}">
-                <div style="text-align:center;">
-                    ~~暂无数据~~
+                <div class="pagination animate-box">
+                    <span th:if="${pageInfo.hasPreviousPage}" class="page">
+                        <a data-pjax class="prev page-numbers" th:href="@{${pageInfo.pageNum-1} == 1 ? '/archives/' : '/archives/page/' + ${pageInfo.pageNum-1}+'/'}" ><i class="fa fa-angle-left"></i></a>
+                    </span>
+                    <span th:each="pageNum : ${pageInfo.navigatepageNums}" th:if="${pageInfo.navigatepageNums.length} le '4' ">
+                        <span th:if="${pageNum == pageInfo.pageNum}"  class="page current" th:text="${pageNum}"></span>
+                        <span class="page" th:if="${pageNum != pageInfo.pageNum}">
+                            <a data-pjax th:href="@{'/archives/page/' + ${pageNum}+'/'}" th:text="${pageNum}"></a>
+                        </span>
+                    </span>
+                    <span th:each="pageNum, iterStat : ${pageInfo.navigatepageNums}" th:if="${pageInfo.navigatepageNums.length} gt '4' ">
+                       <span class="page" th:if="${pageNum == pageInfo.pageNum and iterStat.count gt 2 and iterStat.count le iterStat.size}">...</span>
+                       <span th:if="${pageNum == pageInfo.pageNum}" class="page current" th:text="${pageNum}"></span>
+                       <span class="page" th:if="${pageNum == pageInfo.pageNum and iterStat.count le (iterStat.size - 2)}">...</span>
+                       <span th:if="${pageNum != pageInfo.pageNum}">
+                           <span class="page" th:if="${iterStat.count == 1}" ><a data-pjax th:href="@{'/archives/page/1/'}" th:text="1"></a></span>
+                           <span class="page" th:if="${iterStat.count == (iterStat.size)}"><a data-pjax th:href="@{'/archives/page/' + ${pageNum}+'/'}" th:text="${pageNum}"></a></span>
+                        </span>
+                   </span>
+                    <span th:if="${pageInfo.hasNextPage}" class="page">
+                        <a data-pjax class="next page-numbers" th:href="@{'/archives/page/' + ${pageInfo.pageNum+1}+'/'}" ><i class="fa fa-angle-right"></i></a>
+                    </span>
                 </div>
             </div>
-        </div>
-        <div class="pagination animate-box">
-            <span th:if="${pageInfo.hasPreviousPage}" class="page">
-                <a class="prev page-numbers" th:href="@{${pageInfo.pageNum-1} == 1 ? '/archives/' : '/archives/page/' + ${pageInfo.pageNum-1}+'/'}" ><i class="fa fa-angle-left"></i></a>
-            </span>
-            <span th:each="pageNum : ${pageInfo.navigatepageNums}" th:if="${pageInfo.navigatepageNums.length} le '4' ">
-                <span th:if="${pageNum == pageInfo.pageNum}"  class="page current" th:text="${pageNum}"></span>
-                <span class="page" th:if="${pageNum != pageInfo.pageNum}">
-                    <a th:href="@{'/archives/page/' + ${pageNum}+'/'}" th:text="${pageNum}"></a>
-                </span>
-            </span>
-            <span th:each="pageNum, iterStat : ${pageInfo.navigatepageNums}" th:if="${pageInfo.navigatepageNums.length} gt '4' ">
-                   <span class="page" th:if="${pageNum == pageInfo.pageNum and iterStat.count gt 2 and iterStat.count le iterStat.size}">...</span>
-                   <span th:if="${pageNum == pageInfo.pageNum}" class="page current" th:text="${pageNum}"></span>
-                   <span class="page" th:if="${pageNum == pageInfo.pageNum and iterStat.count le (iterStat.size - 2)}">...</span>
-                   <span th:if="${pageNum != pageInfo.pageNum}">
-                       <span class="page" th:if="${iterStat.count == 1}" ><a th:href="@{'/archives/page/1/'}" th:text="1"></a></span>
-                       <span class="page" th:if="${iterStat.count == (iterStat.size)}"><a th:href="@{'/archives/page/' + ${pageNum}+'/'}" th:text="${pageNum}"></a></span>
-                    </span>
-               </span>
-            <span th:if="${pageInfo.hasNextPage}" class="page">
-                <a class="next page-numbers" th:href="@{'/archives/page/' + ${pageInfo.pageNum+1}+'/'}" ><i class="fa fa-angle-right"></i></a>
-            </span>
-        </div>
-    </div>
 
+        </div>
+
+        <!-- footer -->
+        <div th:replace="~{theme/default/common :: footer}"></div>
+    </div>
+    <div th:replace="~{theme/default/common :: script}"></div>
 </div>
+
 </body>
 </html>

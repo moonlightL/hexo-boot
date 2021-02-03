@@ -1,55 +1,60 @@
 <!doctype html>
-<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" layout:decorate="~{theme/default/layout}">
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
 
 <head>
+    <div th:replace="~{theme/default/common :: meta}"></div>
+    <meta property="og:title" th:content="${'关于 | ' + #servletContext.getAttribute('configMap')['blog_name']}" />
     <title>关于 | [[${#servletContext.getAttribute('configMap')['blog_name']}]]</title>
-    <meta name="description" th:content="${#servletContext.getAttribute('configMap')['description']}" />
-    <link rel="stylesheet" th:href="@{'/admin/assets/custom/jquery-comment/jquery-comment.css'}">
+    <div th:replace="~{theme/default/common :: link}"></div>
 </head>
+
 <body>
-<div layout:fragment="content">
-    <!-- 图片 -->
-    <div class="image-banner" style="color: #fff">
-        <div class="image-content" th:if="${#strings.startsWith(currentNav.cover,'http') == true}"><img th:data-original="@{${currentNav.cover}}" class="lazyload"></div>
-        <div class="image-content" th:if="${#strings.startsWith(currentNav.cover,'http') == false}"><img th:data-original="@{${prefix} + '/source/images/about.png'}" class="lazyload"></div>
-        <div class="descr">
-            <a th:href="@{/}">首页  /  </a>
-            <a th:href="@{/about/}">关于</a>
-        </div>
-        <div class="title">关于</div>
-    </div>
+<div class="ml-container" id="pageContainer">
+    <div class="container">
+        <!-- 导航 -->
+        <div th:replace="~{theme/default/common :: nav}"></div>
 
-    <div class="ml-content">
-        <div id="postContainer" class="postContainer animated fadeInUp">
-            <div class="post-content"  th:utext="${md.md2html(#objects.nullSafe(about.descr, '懒人一枚~~'))}"></div>
-            <div class="alert alert-info" role="alert">
-                <ul class="post-copyright">
-                    <li>
-                        <strong>本文作者:</strong> <b>[[${#servletContext.getAttribute('configMap')['blog_author']}]]</b>
-                    </li>
-                    <li>
-                        <strong>本文链接:</strong> <a id="shareUrl" class="alert-link" th:href="@{${#servletContext.getAttribute('configMap')['home_page']} + '/about/'}" target="_blank" th:text="${#servletContext.getAttribute('configMap')['home_page']+'/about/'}"></a>
-                    </li>
-                    <li>
-                        <strong>版权声明:</strong>  本博客所有文章除特别声明外均为原创，采用 <a th:href="@{${#servletContext.getAttribute('configMap')['license_url']}}" class="alert-link" target="_blank" th:text="${#servletContext.getAttribute('configMap')['license']}"></a> 许可协议。转载请在文章开头明显位置注明原文链接和作者等相关信息，明确指出修改（如有），并通过 E-mail 等方式告知，谢谢合作！
-                    </li>
-                </ul>
+        <!-- 内容 -->
+        <div id="wrap" class="content">
+            <!-- 图片 -->
+            <div class="image-banner" style="color: #fff">
+                <div class="image-content" th:if="${#strings.startsWith(currentNav.cover,'http') == true}"><img th:data-original="@{${currentNav.cover}}" class="lazyload"></div>
+                <div class="image-content" th:if="${#strings.startsWith(currentNav.cover,'http') == false}"><img th:data-original="@{${prefix} + '/source/images/about.png'}" class="lazyload"></div>
+                <div class="descr">
+                    <a data-pjax th:href="@{/}">首页  /  </a>
+                    <a href="javascript:void(0)">关于</a>
+                </div>
+                <div class="title">关于</div>
             </div>
+
+            <div class="ml-content">
+                <div id="postContainer" class="postContainer animated fadeInUp">
+                    <div class="post-content"  th:utext="${md.md2html(#objects.nullSafe(about.descr, '懒人一枚~~'))}"></div>
+                    <div class="alert alert-info" role="alert">
+                        <ul class="post-copyright">
+                            <li>
+                                <strong>本文作者:</strong> <b>[[${#servletContext.getAttribute('configMap')['blog_author']}]]</b>
+                            </li>
+                            <li>
+                                <strong>本文链接:</strong> <a id="shareUrl" class="alert-link" th:href="@{${#servletContext.getAttribute('configMap')['home_page']} + '/about/'}" target="_blank" th:text="${#servletContext.getAttribute('configMap')['home_page']+'/about/'}"></a>
+                            </li>
+                            <li>
+                                <strong>版权声明:</strong>  本博客所有文章除特别声明外均为原创，采用 <a th:href="@{${#servletContext.getAttribute('configMap')['license_url']}}" class="alert-link" target="_blank" th:text="${#servletContext.getAttribute('configMap')['license']}"></a> 许可协议。转载请在文章开头明显位置注明原文链接和作者等相关信息，明确指出修改（如有），并通过 E-mail 等方式告知，谢谢合作！
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 留言 -->
+            <div id="about-comment" class="comment-container"></div>
+
         </div>
+
+        <!-- footer -->
+        <div th:replace="~{theme/default/common :: footer}"></div>
     </div>
-
-    <!-- 留言 -->
-    <div id="comment-container" class="comment-container"></div>
-
-    <script type='text/javascript' th:src="@{${prefix} + '/source/js/jquery.min.js'}"></script>
-    <script th:src="@{'/admin/assets/custom/jquery-comment/jquery.cookie.js'}"></script>
-    <script th:src="@{'/admin/assets/custom/jquery-comment/jquery-comment.js'}"></script>
-    <script th:src="@{${prefix} + '/source/js/about.js'}"></script>
-    <script type="text/javascript" th:inline="javascript">
-       $(function () {
-           GuestBookManager.init();
-       });
-    </script>
+    <div th:replace="~{theme/default/common :: script}"></div>
 </div>
 </body>
 </html>

@@ -212,6 +212,10 @@ strong {
 
 /** 主页 start  */
 
+.visible {
+    opacity: 1!important
+}
+
 .ml-container {
     filter: var(--brightness-value);
 }
@@ -804,7 +808,7 @@ strong {
     right: 15px;
     bottom: 18rem;
     width: 48px;
-    height: 144px;
+    height: auto;
     text-align: center;
     line-height: 48px;
     background-color: var(--content-color);
