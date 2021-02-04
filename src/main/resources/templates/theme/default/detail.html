@@ -14,7 +14,6 @@
     <meta property="og:title" th:content="${post.title + ' | ' + #servletContext.getAttribute('configMap')['blog_name']}" />
     <title>[[${post.title}]] | [[${#servletContext.getAttribute('configMap')['blog_name']}]]</title>
     <div th:replace="~{theme/default/common :: link}"></div>
-    <link rel="stylesheet" th:href="@{'/admin/assets/custom/jquery-comment/jquery-comment.css'}">
 </head>
 <body>
 <div class="ml-container" id="pageContainer">
