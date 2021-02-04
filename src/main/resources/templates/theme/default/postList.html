@@ -22,7 +22,7 @@
                 <div class="image-content" th:if="${#strings.startsWith(currentNav.cover,'http') == false}"><img th:data-original="@{${prefix} + '/source/images/postList.png'}" class="lazyload"></div>
                 <div class="descr">
                     <a data-pjax th:href="@{/}">首页  /  </a>
-                    <a th:href="@{'/' + ${link} + '/'}">[[${type}]]  /  </a>
+                    <a data-pjax th:href="@{'/' + ${link} + '/'}">[[${type}]]  /  </a>
                     <a href="javascript:void(0)">[[${name}]]</a></div>
                 <div class="title">[[${type}]]相关</div>
             </div>
