@@ -43,7 +43,8 @@
                         </div>
                         <div class="optionArea">
                             <div class="row">
-                                <span class="dropzone" id="dropz" style="border: 1px solid #D4DAE3;margin: 0 15px 15px 15px;width:300px;border-radius: 5px;"></span>
+                                <img id="postCover" src="/admin/assets/custom/images/post/default_post.jpg" alt="文章封面" width="300" height="150" style="border: 1px solid #D4DAE3;margin: 0 15px 15px 15px;border-radius: 5px;">
+                                <div id="btnArr" style="margin: 0 15px 15px 15px"></div>
                             </div>
                             <div class="form-group row">
                                 <label class="col-md-3 col-form-label" for="title">分类</label>
@@ -168,40 +169,63 @@
             }
         });
 
-        $("#dropz").dropzone({
-            method: "POST",
-            url: "/admin/file/upload.json", //上传地址
-            addRemoveLinks: true,
-            maxFiles: 1,// 一次性上传的文件数量上限
-            maxFilesize: 10, // 单个上传文件大小，单位：MB
-            previewsContainer: null,
-            uploadMultiple: false, // 允许批量上传
-            parallelUploads: 1, // 每次上传的文件数量，默认值 2
-            autoProcessQueue: true, // 是否自动上传
-            acceptedFiles: ".jpg, .jpeg, .png, .gif, .webp",
-            dictDefaultMessage: '文章封面<br>(支持上传的文件类型*.jpg,*.jpeg,*.png,*.webp)',
-            dictMaxFilesExceeded: "每次最多只能上传1个文件！",
-            dictResponseError: '文件上传失败!',
-            dictInvalidFileType: "支持上传的文件类型*.jpg,*.jpeg,*.png, *.gif,*.webp",
-            dictFallbackMessage: "浏览器不支持",
-            dictFileTooBig: "最大支持10MB文件上传",
-            dictRemoveFile: "删除",
-            dictUploadCanceled: "取消",
-            thumbnailWidth:"120",
-            thumbnailHeight:"120",
-            init: function () {
-                this.on("error", function (data, message) {
-                    if (message.status == 400) {
-                        $.hexo.modal.msg("上传失败: 源文件接收失败");
+        let FileManager = {
+            initUploadEvent: function () {
+                $("#btnArr").html('<a id="uploadBtn" href="javascript:void(0)">选择文件</a>&nbsp;&nbsp;<a id="randomBtn" href="javascript:void(0)">随机获取</a>');
+                $("#uploadBtn").dropzone({
+                    method: "POST",
+                    url: "/admin/file/upload.json", //上传地址
+                    addRemoveLinks: true,
+                    maxFiles: 1,// 一次性上传的文件数量上限
+                    maxFilesize: 10, // 单个上传文件大小，单位：MB
+                    previewsContainer: false,
+                    uploadMultiple: false, // 允许批量上传
+                    parallelUploads: 1, // 每次上传的文件数量，默认值 2
+                    autoProcessQueue: true, // 是否自动上传
+                    acceptedFiles: ".jpg, .jpeg, .png, .gif, .webp",
+                    dictDefaultMessage: '文章封面<br>(支持上传的文件类型*.jpg,*.jpeg,*.png,*.webp)',
+                    dictMaxFilesExceeded: "每次最多只能上传1个文件！",
+                    dictResponseError: '文件上传失败!',
+                    dictInvalidFileType: "支持上传的文件类型*.jpg,*.jpeg,*.png, *.gif,*.webp",
+                    dictFallbackMessage: "浏览器不支持",
+                    dictFileTooBig: "最大支持10MB文件上传",
+                    init: function () {
+                        this.on("error", function (data, message) {
+                            if (message.status == 400) {
+                                $.hexo.modal.msg("上传失败: 源文件接收失败");
+                            }
+                            FileManager.initUploadEvent();
+                        });
+
+                        this.on("success", function (data, message) {
+                            if (message.success) {
+                                $("#postCover").attr("src", message.data);
+                                $("#coverUrl").val(message.data);
+                            }
+                            FileManager.initUploadEvent();
+                        });
                     }
                 });
-                this.on("success", function (data, message) {
-                    if (message.success) {
-                        $("#coverUrl").val(message.data);
-                    }
+
+                $("#randomBtn").off("click").on("click", function () {
+                    $.ajax({
+                        type: "POST",
+                        url: "/admin/file/randomPic.json",
+                        dataType: "JSON",
+                        success: function(resp) {
+                            if (resp.success == 1) {
+                                $("#postCover").attr("src", "").attr("src", resp.url);
+                                $("#coverUrl").val(resp.url);
+                            } else {
+                                $.hexo.modal.tip(resp.message, "error");
+                            }
+                        }
+                    })
                 });
             }
-        });
+        };
+
+        FileManager.initUploadEvent();
 
     });
 </script>

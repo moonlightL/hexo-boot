@@ -5,7 +5,10 @@ import com.light.hexo.common.exception.GlobalException;
 import com.light.hexo.common.exception.GlobalExceptionEnum;
 import com.light.hexo.common.model.FileResult;
 import com.light.hexo.common.model.Result;
+import com.light.hexo.common.model.bing.BingPic;
 import com.light.hexo.common.util.ExceptionUtil;
+import com.light.hexo.common.util.HttpClientUtil;
+import com.light.hexo.common.util.JsonUtil;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author MoonlightL
@@ -141,4 +145,17 @@ public class FileController {
         return FileResult.fail("上传失败");
     }
 
+    @RequestMapping(value = "/randomPic.json", method = RequestMethod.POST)
+    @ResponseBody
+    public FileResult randomPic() throws GlobalException {
+        String result = HttpClientUtil.sendGet("https://bing.ioliu.cn/v1/rand?w=1366&h=768&type=json");
+        BingPic bingPic = JsonUtil.string2Obj(result, BingPic.class);
+        if (bingPic != null) {
+            if (bingPic.getStatus().getCode().equals(200)) {
+                return FileResult.success(bingPic.getData().getUrl());
+            }
+        }
+
+        return FileResult.fail("获取失败，请重新拉取");
+    }
 }
