@@ -105,12 +105,11 @@
         let openPjax = [[${activeTheme.configMap['PJAX']}]];
     </script>
     <script type='text/javascript' th:src="@{${baseLink} + '/source/js/plugins.js'}"></script>
-    <script type='text/javascript' th:src="@{${baseLink} + '/source/js/jquery.waypoints.min.js'}"></script>
-    <script type='text/javascript' th:src="@{${baseLink} + '/source/js/circleMagic/circleMagic.min.js'}"></script>
-    <script type='text/javascript' th:src="@{${baseLink} + '/source/js/jquery.lazyload.min.js'}"></script>
-    <script type='text/javascript' th:src="@{${baseLink} + '/source/js/layer/layer.js'}"></script>
     <script type='text/javascript' th:src="@{${baseLink} + '/source/js/jquery-comment/jquery.cookie.js'}"></script>
     <script type='text/javascript' th:src="@{${baseLink} + '/source/js/jquery-comment/jquery-comment.js'}"></script>
+    <script type='text/javascript' th:src="@{${baseLink} + '/source/js/fancybox/jquery.fancybox.min.js'}"></script>
+    <script type='text/javascript' th:src="@{${baseLink} + '/source/js/circleMagic/circleMagic.min.js'}"></script>
+    <script type='text/javascript' th:src="@{${baseLink} + '/source/js/layer/layer.js'}"></script>
     <script type='text/javascript' th:src="@{${prefix} + '/source/js/app.js'}"></script>
     [(${#servletContext.getAttribute('configMap')['script_code']})]
 </div>

@@ -1,4 +1,4 @@
-;(function() {
+;(function($) {
 
     let APP = {
         plugins: {
@@ -21,6 +21,12 @@
             toc: {
                 css: baseLink + "/source/js/autoToc/jquery.autoToc.css",
                 js: baseLink + "/source/js/autoToc/jquery.autoToc.js"
+            },
+            wayPoints: {
+                js: baseLink + "/source/js/jquery.waypoints.min.js"
+            },
+            jQueryComment: {
+                js: baseLink + "/source/js/jquery-comment/jquery-comment.js"
             }
         }
     };
@@ -146,25 +152,27 @@
     };
 
     const contentWayPoint = function () {
-        let i = 0;
-        $('.animate-box').waypoint(function (direction) {
-            if (direction === 'down' && !$(this.element).hasClass('animated')) {
-                i++;
-                $(this.element).addClass('item-animate');
-                setTimeout(function () {
-                    $('body .animate-box.item-animate').each(function (k) {
-                        let el = $(this);
-                        setTimeout(function () {
-                            let effect = el.data('animate-effect');
-                            effect = effect || 'fadeInUp';
-                            el.addClass(effect + ' animated visible');
-                            el.removeClass('item-animate');
-                        }, k * 200, 'easeInOutExpo');
-                    });
-                }, 100);
-            }
-        }, {
-            offset: '85%'
+        $.getScript(APP.plugins.wayPoints.js, function() {
+            let i = 0;
+            $('.animate-box').waypoint(function (direction) {
+                if (direction === 'down' && !$(this.element).hasClass('animated')) {
+                    i++;
+                    $(this.element).addClass('item-animate');
+                    setTimeout(function () {
+                        $('body .animate-box.item-animate').each(function (k) {
+                            let el = $(this);
+                            setTimeout(function () {
+                                let effect = el.data('animate-effect');
+                                effect = effect || 'fadeInUp';
+                                el.addClass(effect + ' animated visible');
+                                el.removeClass('item-animate');
+                            }, k * 200, 'easeInOutExpo');
+                        });
+                    }, 100);
+                }
+            }, {
+                offset: '85%'
+            });
         });
     };
 
@@ -291,4 +299,4 @@
         }
         loadResource();
     });
-})();
+})(jQuery);
