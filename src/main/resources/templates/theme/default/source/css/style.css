@@ -883,6 +883,8 @@ span.effect {
 
 .archives .archives-item {
     margin-left: 18px;
+    padding: .75rem;
+    border-bottom: 1px dashed #aaa;
 }
 
 .archives a {
