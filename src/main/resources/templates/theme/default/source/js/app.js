@@ -24,9 +24,6 @@
             },
             wayPoints: {
                 js: baseLink + "/source/js/jquery.waypoints.min.js"
-            },
-            jQueryComment: {
-                js: baseLink + "/source/js/jquery-comment/jquery-comment.js"
             }
         }
     };
@@ -116,6 +113,7 @@
                             fixed: true,
                             listFolded: true,
                             listMaxHeight: 90,
+                            autoplay: true,
                             audio: resp.data
                         });
                         $aplayer.addClass("inited");
@@ -235,6 +233,7 @@
             $.getScript(APP.plugins.detail.js, function () {
                 initComment(window.postId, window.canComment);
             });
+
         }
     };
 
@@ -256,7 +255,7 @@
             contentWayPoint();
             postEvent();
             aboutEvent();
-            let $navBar = $("#navBar");
+            let $navBar = $("#navbar");
             let $arr = $navBar.find("ul.menu>li");
             $arr.removeClass("active");
             let $target = $navBar.find("ul.menu>li>a").filter("[href='" + window.location.pathname + "']");

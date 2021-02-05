@@ -30,7 +30,7 @@
     },
     {
       "key": "animated",
-      "value": "true",
+      "value": "false",
       "type": "select",
       "option": "true,false",
       "label": "是否开启动画"

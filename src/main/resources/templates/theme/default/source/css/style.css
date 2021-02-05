@@ -296,6 +296,7 @@ strong {
 
 .navbar ul.menu > li > ul.second-menu a {
     color: var(--text-color);
+    display: block;
 }
 
 .navbar ul > li:hover {
@@ -753,7 +754,6 @@ strong {
     width: 100%;
     text-align: center;
     display: inline-block;
-    opacity: 0
 }
 
 .pagination .page {
@@ -1495,6 +1495,18 @@ h3.friend-link-title {
 
     header .navbar-header {
       height: 58px;
+    }
+
+    .navbar ul.menu > li > ul.second-menu {
+        position: relative;
+        top: 0;
+        border-radius: 0;
+        animation: none;
+    }
+
+    .navbar ul.menu > li > ul.second-menu li {
+        padding: 1.6rem;
+        text-align: left;
     }
 
     .footer-copyright span, .footer-copyright a{

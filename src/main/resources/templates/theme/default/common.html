@@ -34,46 +34,43 @@
 </div>
 
 <div th:fragment="canvas">
-    <div th:if="${activeTheme.configMap['animated'] == 'true'}" id="particles-js" style="position: fixed;width: 100%; height: 100%">
-        <script type='text/javascript' th:src="@{${prefix} + '/source/js/lizi.js'}"></script>
-        <canvas class="particles-js-canvas-el"></canvas>
+    <div th:if="${activeTheme.configMap['animated'] == 'true'}">
+        <script type='text/javascript' th:src="@{${prefix} + '/source/js/ribbon.js'}"></script>
     </div>
 </div>
 
 <div th:fragment="nav">
-    <header class="row">
-        <div class="col-md-12">
-            <nav class="navbar navbar-default">
-                <div class="container-fluid">
-                    <div class="navbar-header">
-                        <a class="navbar-brand" href="#">
-                            <img alt="Brand" th:src="@{${#strings.isEmpty(#servletContext.getAttribute('configMap')['logo_url']) != true ? #servletContext.getAttribute('configMap')['logo_url'] : prefix + '/source/images/logo.png'}}">
-                        </a>
-                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                            <span class="sr-only">Toggle navigation</span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                        </button>
-                        <a class="navbar-brand" href="#">[[${#servletContext.getAttribute('configMap')['blog_name']}]]</a>
-                    </div>
-                    <div id="navBar" class="navbar-collapse collapse">
-                        <ul class="nav menu navbar-nav navbar-right">
-                            <li th:each="nav : ${#servletContext.getAttribute('firstNav')}" th:class="${currentNav.code eq nav.code ? 'item active' : 'item'}">
-                                <a data-pjax th:href="@{${#lists.isEmpty(nav.children) ? nav.link : 'javascript:void(0)'}}" th:data-link="${nav.link}">
-                                    <i th:class="${nav.icon}"></i> [[${nav.name}]]
-                                </a>
-                                <ul class="second-menu" th:if="${#lists.isEmpty(nav.children) == false}">
-                                    <li class="item" th:each="child : ${nav.children}">
-                                        <a data-pjax th:href="@{${child.link}}"><i th:class="${child.icon}"></i> [[${child.name}]]</a>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
+    <header>
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">
+                        <img alt="Brand" th:src="@{${#strings.isEmpty(#servletContext.getAttribute('configMap')['logo_url']) != true ? #servletContext.getAttribute('configMap')['logo_url'] : prefix + '/source/images/logo.png'}}">
+                    </a>
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">[[${#servletContext.getAttribute('configMap')['blog_name']}]]</a>
                 </div>
-            </nav>
-        </div>
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="nav menu navbar-nav navbar-right">
+                        <li th:each="nav : ${#servletContext.getAttribute('firstNav')}" th:class="${currentNav.code eq nav.code ? 'item active' : 'item'}">
+                            <a data-pjax th:href="@{${#lists.isEmpty(nav.children) ? nav.link : 'javascript:void(0)'}}" th:data-link="${nav.link}">
+                                <i th:class="${nav.icon}"></i> [[${nav.name}]]
+                            </a>
+                            <ul class="second-menu" th:if="${#lists.isEmpty(nav.children) == false}">
+                                <li class="item" th:each="child : ${nav.children}">
+                                    <a data-pjax th:href="@{${child.link}}"><i th:class="${child.icon}"></i> [[${child.name}]]</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
     </header>
 </div>
 
@@ -114,8 +111,9 @@
     <script type='text/javascript' th:src="@{${baseLink} + '/source/js/plugins.js'}"></script>
     <script type='text/javascript' th:src="@{${baseLink} + '/source/js/jquery-comment/jquery.cookie.js'}"></script>
     <script type='text/javascript' th:src="@{${baseLink} + '/source/js/jquery-comment/jquery-comment.js'}"></script>
+    <script type='text/javascript' th:src="@{${baseLink} + '/source/css/bootstrap/js/bootstrap.min.js'}"></script>
     <script type='text/javascript' th:src="@{${baseLink} + '/source/js/fancybox/jquery.fancybox.min.js'}"></script>
-    <script type='text/javascript' th:src="@{${baseLink} + '/source/js/circleMagic/circleMagic.min.js'}"></script>
+<!--    <script type='text/javascript' th:src="@{${baseLink} + '/source/js/circleMagic/circleMagic.min.js'}"></script>-->
     <script type='text/javascript' th:src="@{${baseLink} + '/source/js/layer/layer.js'}"></script>
     <script type='text/javascript' th:src="@{${prefix} + '/source/js/app.js'}"></script>
     [(${#servletContext.getAttribute('configMap')['script_code']})]
