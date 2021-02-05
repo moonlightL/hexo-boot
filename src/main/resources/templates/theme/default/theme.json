@@ -29,6 +29,13 @@
       "label": "是否开启PJAX"
     },
     {
+      "key": "animated",
+      "value": "false",
+      "type": "select",
+      "option": "true,false",
+      "label": "是否开启动画"
+    },
+    {
       "key": "highlight",
       "value": "atom-one-light",
       "type": "select",

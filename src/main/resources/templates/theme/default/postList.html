@@ -9,6 +9,7 @@
 </head>
 
 <body>
+<div th:replace="~{theme/default/common :: canvas}"></div>
 <div class="ml-container" id="pageContainer">
     <div class="container">
         <!-- 导航 -->
@@ -50,7 +51,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="pagination animate-box">
+                <div class="pagination">
                     <span th:if="${pageInfo.hasPreviousPage}" class="page">
                         <a data-pjax class="prev page-numbers" th:href="@{${pageInfo.pageNum-1} == 1 ? '/' + ${link} + '/' + ${name} + '/': '/' + ${link} + '/' + ${name} + '/page/' + ${pageInfo.pageNum-1}+'/'}" ><i class="fa fa-angle-left"></i></a>
                     </span>

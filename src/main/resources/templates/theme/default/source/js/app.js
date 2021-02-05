@@ -24,9 +24,6 @@
             },
             wayPoints: {
                 js: baseLink + "/source/js/jquery.waypoints.min.js"
-            },
-            jQueryComment: {
-                js: baseLink + "/source/js/jquery-comment/jquery-comment.js"
             }
         }
     };
@@ -116,6 +113,7 @@
                             fixed: true,
                             listFolded: true,
                             listMaxHeight: 90,
+                            autoplay: true,
                             audio: resp.data
                         });
                         $aplayer.addClass("inited");
@@ -174,26 +172,6 @@
                 offset: '85%'
             });
         });
-    };
-
-    const clickEffect = function() {
-        let $container = $("#pageContainer");
-        $container.on("click", function(e) {
-            let $i = $('<span class="effect animated zoomIn"></span>');
-            let x = e.pageX, y = e.pageY;
-            $i.css({
-                "top": y - 42,
-                "left": x - 42
-            });
-
-            $i.animate({
-                "opacity": 0
-            },600, function () {
-                $i.remove();
-            });
-
-            $("body").append($i);
-        })
     };
 
     const postEvent = function() {
@@ -255,6 +233,7 @@
             $.getScript(APP.plugins.detail.js, function () {
                 initComment(window.postId, window.canComment);
             });
+
         }
     };
 
@@ -276,7 +255,7 @@
             contentWayPoint();
             postEvent();
             aboutEvent();
-            let $navBar = $("#navBar");
+            let $navBar = $("#navbar");
             let $arr = $navBar.find("ul.menu>li");
             $arr.removeClass("active");
             let $target = $navBar.find("ul.menu>li>a").filter("[href='" + window.location.pathname + "']");
@@ -291,7 +270,6 @@
         circleMagic();
         loadLazy();
         contentWayPoint();
-        clickEffect();
         postEvent();
         aboutEvent();
         if (openPjax === "true") {
