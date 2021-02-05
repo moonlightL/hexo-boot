@@ -176,26 +176,6 @@
         });
     };
 
-    const clickEffect = function() {
-        let $container = $("#pageContainer");
-        $container.on("click", function(e) {
-            let $i = $('<span class="effect animated zoomIn"></span>');
-            let x = e.pageX, y = e.pageY;
-            $i.css({
-                "top": y - 42,
-                "left": x - 42
-            });
-
-            $i.animate({
-                "opacity": 0
-            },600, function () {
-                $i.remove();
-            });
-
-            $("body").append($i);
-        })
-    };
-
     const postEvent = function() {
         let $detailComment = $("#detail-comment");
         if ($detailComment.length > 0) {
@@ -291,7 +271,6 @@
         circleMagic();
         loadLazy();
         contentWayPoint();
-        clickEffect();
         postEvent();
         aboutEvent();
         if (openPjax === "true") {
