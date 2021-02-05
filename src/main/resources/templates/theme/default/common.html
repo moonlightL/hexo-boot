@@ -33,12 +33,6 @@
     <link rel="stylesheet" th:href="@{${prefix} + '/source/css/style.css'}"/>
 </div>
 
-<div th:fragment="canvas">
-    <div th:if="${activeTheme.configMap['animated'] == 'true'}">
-        <script type='text/javascript' th:src="@{${prefix} + '/source/js/ribbon.js'}"></script>
-    </div>
-</div>
-
 <div th:fragment="nav">
     <header>
         <nav class="navbar navbar-default">
@@ -113,7 +107,6 @@
     <script type='text/javascript' th:src="@{${baseLink} + '/source/js/jquery-comment/jquery-comment.js'}"></script>
     <script type='text/javascript' th:src="@{${baseLink} + '/source/css/bootstrap/js/bootstrap.min.js'}"></script>
     <script type='text/javascript' th:src="@{${baseLink} + '/source/js/fancybox/jquery.fancybox.min.js'}"></script>
-<!--    <script type='text/javascript' th:src="@{${baseLink} + '/source/js/circleMagic/circleMagic.min.js'}"></script>-->
     <script type='text/javascript' th:src="@{${baseLink} + '/source/js/layer/layer.js'}"></script>
     <script type='text/javascript' th:src="@{${prefix} + '/source/js/app.js'}"></script>
     [(${#servletContext.getAttribute('configMap')['script_code']})]
