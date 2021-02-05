@@ -9,7 +9,9 @@
 </head>
 
 <body>
-<div th:replace="~{theme/default/common :: canvas}"></div>
+<div id="animate" th:if="${activeTheme.configMap['animated'] == 'true'}" style="position: fixed;width: 100%; height: 100%">
+    <script type='text/javascript' th:src="@{${prefix} + '/source/js/ribbon.js'}"></script>
+</div>
 <div class="ml-container" id="pageContainer">
     <div class="container">
         <!-- 导航 -->
