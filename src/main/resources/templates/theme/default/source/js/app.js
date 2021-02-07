@@ -30,6 +30,10 @@
 
     console.log("%c Theme." + themeName + " v" + version + " %c https://www.extlight.com/ ", "color: white; background: #e9546b; padding:5px 0;", "padding:4px;border:1px solid #e9546b;");
 
+    $.ajaxSetup({
+        cache: true
+    });
+
     const loadResource = function() {
         let APlayer = APP.plugins.APlayer;
         $('head').append('<link href="' + APlayer.css + '" rel="stylesheet" type="text/css" />');
