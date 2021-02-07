@@ -2,6 +2,7 @@ package com.light.hexo.common.model.bing;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * @Author MoonlightL
@@ -12,9 +13,15 @@ import lombok.Setter;
  */
 @Setter
 @Getter
-public class BingPic {
+@ToString
+public class WebPic {
 
-    private Status status;
+    private String code;
 
-    private Data data;
+    private String imgurl;
+
+    private String width;
+
+    private String height;
+
 }

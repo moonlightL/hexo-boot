@@ -1,11 +1,14 @@
 package com.light.hexo.business.admin.web.controller;
 
+import cn.hutool.json.JSONObject;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.light.hexo.common.component.file.*;
 import com.light.hexo.common.exception.GlobalException;
 import com.light.hexo.common.exception.GlobalExceptionEnum;
 import com.light.hexo.common.model.FileResult;
 import com.light.hexo.common.model.Result;
-import com.light.hexo.common.model.bing.BingPic;
+import com.light.hexo.common.model.bing.WebPic;
 import com.light.hexo.common.util.ExceptionUtil;
 import com.light.hexo.common.util.HttpClientUtil;
 import com.light.hexo.common.util.JsonUtil;
@@ -148,14 +151,13 @@ public class FileController {
     @RequestMapping(value = "/randomPic.json", method = RequestMethod.POST)
     @ResponseBody
     public FileResult randomPic() throws GlobalException {
-        String result = HttpClientUtil.sendGet("https://bing.ioliu.cn/v1/rand?w=1366&h=768&type=json");
-        BingPic bingPic = JsonUtil.string2Obj(result, BingPic.class);
-        if (bingPic != null) {
-            if (bingPic.getStatus().getCode().equals(200)) {
-                return FileResult.success(bingPic.getData().getUrl());
-            }
+        String result = HttpClientUtil.sendGet("https://api.ixiaowai.cn/gqapi/gqapi.php?return=json");
+        Gson gson = new Gson();
+        WebPic webPic = gson.fromJson(result, WebPic.class);
+        if (webPic == null || !"200".equals(webPic.getCode())) {
+            return FileResult.fail("获取失败，请重新拉取");
         }
 
-        return FileResult.fail("获取失败，请重新拉取");
+        return FileResult.success(webPic.getImgurl());
     }
 }

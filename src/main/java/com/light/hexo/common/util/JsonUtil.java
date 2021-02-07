@@ -44,7 +44,6 @@ public class JsonUtil {
 
         // 允许使用单引号
         objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
-
     }
 
     /**
