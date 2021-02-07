@@ -80,15 +80,9 @@
     --brightness-value: brightness(0.7);
 }
 
-/*html, img {
-    -webkit-filter: grayscale(1);
-    filter: gray;
-    filter: grayscale(1);
-}
-
-html {
-    filter:progid:DXImageTransform.Microsoft.BasicImage(grayscale=1);
-}*/
+/*html {*/
+/*    filter:progid:DXImageTransform.Microsoft.BasicImage(grayscale=1);*/
+/*}*/
 
 body {
     background-color: var(--blog-bg-color);
