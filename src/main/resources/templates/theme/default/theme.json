@@ -36,6 +36,13 @@
       "label": "是否开启动画"
     },
     {
+      "key": "mourn",
+      "value": "false",
+      "type": "select",
+      "option": "true,false",
+      "label": "是否开启哀悼"
+    },
+    {
       "key": "highlight",
       "value": "atom-one-light",
       "type": "select",

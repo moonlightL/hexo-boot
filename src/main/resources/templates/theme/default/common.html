@@ -31,6 +31,14 @@
     <link rel="stylesheet" th:href="@{${baseLink} + '/source/js/overshare/css/share.min.css'}"/>
     <link rel="stylesheet" th:href="@{${baseLink} + '/source/js/jquery-comment/jquery-comment.css'}"/>
     <link rel="stylesheet" th:href="@{${prefix} + '/source/css/style.css'}"/>
+    <style th:if="${activeTheme.configMap['mourn'] == 'true'}">
+        #animate,.footer-copyright,.content,.options,#nprogress .bar, #nprogress .spinner-icon{
+            filter: grayscale(1);
+        }
+        .navbar ul.menu > li.active,.navbar-default .navbar-nav>.active>a,.navbar ul > li:hover,.navbar ul.menu > li a:hover {
+            background-color: #aaa !important;
+        }
+    </style>
 </div>
 
 <div th:fragment="nav">
