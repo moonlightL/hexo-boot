@@ -751,6 +751,7 @@ strong {
 }
 
 .pagination {
+    margin-top: 4rem;
     width: 100%;
     text-align: center;
     display: inline-block;
@@ -873,8 +874,6 @@ span.effect {
 /** 归档 start **/
 
 .archive-content h3 {
-    margin-left: 10px;
-    padding-left: 32px;
     padding-bottom: 10px;
     position: relative;
     color: var(--text-color);
@@ -882,8 +881,7 @@ span.effect {
 }
 
 .archives .archives-item {
-    margin-left: 18px;
-    padding: .75rem;
+    padding: .75rem 0;
     border-bottom: 1px dashed #aaa;
 }
 
@@ -891,7 +889,7 @@ span.effect {
     position: relative;
     z-index: 1;
     display: inline-block;
-    padding: 10px 24px;
+    padding: 1rem;
     color: var(--text-color);
     font-style: normal;
     text-decoration:none;
@@ -1551,8 +1549,9 @@ h3.friend-link-title {
 
     .archive-content h3 {
         position: relative;
+        margin-left: 3.75rem;
         padding-bottom: 8px;
-        font-size:15px;
+        font-size: 18px;
     }
 
     .archives .archives-item {
