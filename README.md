@@ -47,7 +47,9 @@ Hexo Boot 是基于 Spring Boot + MySQL 开发的一套开源的博客系统。�
 
 ## 三、预览效果
 
-[网站演示](https://www.extlight.com/)
+[网站演示1](https://www.extlight.com/) 
+
+[网站演示2](https://www.liuyj.top/) 
 
 ### 3.1 后台管理预览图
 
