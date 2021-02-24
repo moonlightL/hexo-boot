@@ -82,6 +82,10 @@ public class ThemeExtendServiceImpl extends BaseServiceImpl<ThemeExtend> impleme
             list.add(themeExtend);
         }
 
+        if (CollectionUtils.isEmpty(list)) {
+            return;
+        }
+
         this.themeExtendMapper.updateBatchByConfigName(list);
     }
 
