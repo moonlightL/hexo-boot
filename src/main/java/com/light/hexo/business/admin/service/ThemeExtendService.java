@@ -1,6 +1,7 @@
 package com.light.hexo.business.admin.service;
 
 import com.light.hexo.business.admin.model.ThemeExtend;
+import com.light.hexo.business.admin.model.extend.ThemeFileExtension;
 import com.light.hexo.common.base.BaseService;
 import com.light.hexo.common.exception.GlobalException;
 
@@ -22,7 +23,7 @@ public interface ThemeExtendService extends BaseService<ThemeExtend> {
      * @param extension
      * @throws GlobalException
      */
-    void saveThemeExtend(Integer themeId, List<Map<String, String>> extension) throws GlobalException;
+    void saveThemeExtend(Integer themeId, List<ThemeFileExtension> extension) throws GlobalException;
 
     /**
      * 保存主题配置

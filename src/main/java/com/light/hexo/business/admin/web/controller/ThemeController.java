@@ -2,7 +2,6 @@ package com.light.hexo.business.admin.web.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.light.hexo.business.admin.constant.HexoExceptionEnum;
-import com.light.hexo.business.admin.model.Attachment;
 import com.light.hexo.business.admin.model.Theme;
 import com.light.hexo.business.admin.model.ThemeExtend;
 import com.light.hexo.business.admin.service.ThemeExtendService;

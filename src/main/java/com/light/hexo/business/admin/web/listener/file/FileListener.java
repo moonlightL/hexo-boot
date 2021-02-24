@@ -1,12 +1,14 @@
 package com.light.hexo.business.admin.web.listener.file;
 
 import com.light.hexo.business.admin.model.Theme;
+import com.light.hexo.business.admin.model.extend.ThemeFile;
 import com.light.hexo.business.admin.service.ThemeService;
 import com.light.hexo.common.util.JsonUtil;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.monitor.FileAlterationListenerAdaptor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 import java.io.File;
 import java.util.*;
@@ -37,15 +39,15 @@ public class FileListener extends FileAlterationListenerAdaptor {
         log.info("===================== onFileCreate start ==============================");
         // 读取内容
         String content = FileUtils.readFileToString(file, "UTF-8");
-        Map<String, Object> map = JsonUtil.string2Obj(content, Map.class);
+        ThemeFile themeFile = JsonUtil.string2Obj(content, ThemeFile.class);
 
         String fileDir = file.getParentFile().getName();
         Integer themeId = this.themeService.saveTheme(
-                map.get("name").toString(),
+                themeFile.getName(),
                 String.format("/theme/%s/preview.png", fileDir),
                 false,
-                Objects.nonNull(map.get("remark")) ? map.get("remark").toString(): "",
-                (List<Map<String, String>>)map.get("extension")
+                StringUtils.isNotBlank(themeFile.getRemark()) ? themeFile.getRemark(): "",
+                themeFile.getExtension()
         );
 
         Theme activeTheme = this.themeService.getActiveTheme(false);
@@ -69,20 +71,24 @@ public class FileListener extends FileAlterationListenerAdaptor {
             return;
         }
 
+        Theme activeTheme = this.themeService.getActiveTheme(false);
+
        // 读取内容
         String content = FileUtils.readFileToString(file, "UTF-8");
-        Map<String, Object> map = JsonUtil.string2Obj(content, Map.class);
+        ThemeFile themeFile = JsonUtil.string2Obj(content, ThemeFile.class);
+
+        boolean state = activeTheme.getName().equals(themeFile.getName());
 
         String fileDir = file.getParentFile().getName();
         Integer themeId = this.themeService.saveTheme(
-                map.get("name").toString(),
+                themeFile.getName(),
                 String.format("/theme/%s/preview.png", fileDir),
-                false,
-                Objects.nonNull(map.get("remark")) ? map.get("remark").toString(): "",
-                (List<Map<String, String>>)map.get("extension")
+                state,
+                StringUtils.isNotBlank(themeFile.getRemark()) ? themeFile.getRemark(): "",
+                themeFile.getExtension()
         );
 
-        Theme activeTheme = this.themeService.getActiveTheme(false);
+        activeTheme = this.themeService.getActiveTheme(false);
         if (activeTheme == null) {
             this.themeService.useTheme(themeId);
         }

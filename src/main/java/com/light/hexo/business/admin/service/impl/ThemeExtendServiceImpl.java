@@ -2,6 +2,7 @@ package com.light.hexo.business.admin.service.impl;
 
 import com.light.hexo.business.admin.mapper.ThemeExtendMapper;
 import com.light.hexo.business.admin.model.ThemeExtend;
+import com.light.hexo.business.admin.model.extend.ThemeFileExtension;
 import com.light.hexo.business.admin.service.ThemeExtendService;
 import com.light.hexo.common.base.BaseMapper;
 import com.light.hexo.common.base.BaseRequest;
@@ -11,6 +12,7 @@ import com.light.hexo.common.exception.GlobalException;
 import com.light.hexo.common.util.CacheUtil;
 import com.light.hexo.common.util.EhcacheUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -46,9 +48,9 @@ public class ThemeExtendServiceImpl extends BaseServiceImpl<ThemeExtend> impleme
     }
 
     @Override
-    public void saveThemeExtend(Integer themeId, List<Map<String, String>> extension) throws GlobalException {
+    public void saveThemeExtend(Integer themeId, List<ThemeFileExtension> extensionList) throws GlobalException {
 
-        if (CollectionUtils.isEmpty(extension)) {
+        if (CollectionUtils.isEmpty(extensionList)) {
             return;
         }
 
@@ -60,8 +62,8 @@ public class ThemeExtendServiceImpl extends BaseServiceImpl<ThemeExtend> impleme
 
         List<ThemeExtend> list = new ArrayList<>();
 
-        for (Map<String, String> objectMap : extension) {
-            String key = objectMap.get("key");
+        for (ThemeFileExtension extension : extensionList) {
+            String key = extension.getKey();
             ThemeExtend te = extendMap.get(key);
             // 已存在的参数（非version字段）不进行修改
             if (te != null && !key.equals("version")) {
@@ -70,10 +72,10 @@ public class ThemeExtendServiceImpl extends BaseServiceImpl<ThemeExtend> impleme
 
             ThemeExtend themeExtend = new ThemeExtend();
             themeExtend.setConfigName(key)
-                       .setConfigValue(objectMap.get("value"))
-                       .setConfigType(objectMap.get("type"))
-                       .setConfigLabel(objectMap.get("label"))
-                       .setConfigOption(Objects.nonNull(objectMap.get("option")) ? objectMap.get("option") : "")
+                       .setConfigValue(extension.getValue())
+                       .setConfigType(extension.getType())
+                       .setConfigLabel(extension.getLabel())
+                       .setConfigOption(StringUtils.isNotBlank(extension.getOption()) ? extension.getOption() : "")
                        .setThemeId(themeId)
                        .setCreateTime(LocalDateTime.now())
                        .setUpdateTime(themeExtend.getCreateTime());
