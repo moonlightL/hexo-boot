@@ -674,7 +674,24 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
                         .andEqualTo("delete", false))
                 .orderByDesc("topTime")
                 .build();
-        return this.getBaseMapper().selectByExample(example);
+        List<Post> postList = this.getBaseMapper().selectByExample(example);
+        if (CollectionUtils.isEmpty(postList)) {
+            return postList;
+        }
+
+        // 查询分类
+        List<Integer> categoryIdList = postList.stream().map(Post::getCategoryId).collect(Collectors.toList());
+        List<Category> categoryList = this.categoryService.listCategory(categoryIdList);
+        Map<Integer, Category> categoryMap = categoryList.stream().collect(Collectors.toMap(Category::getId, Function.identity(), (k1, k2)->k1));
+
+        for (Post post : postList) {
+            Category category = categoryMap.get(post.getCategoryId());
+            if (category != null) {
+                post.setCategoryName(category.getName());
+            }
+        }
+
+        return postList;
     }
 
     @Override
