@@ -1,11 +1,12 @@
 package com.light.hexo.business.admin.service.impl;
 
 import cn.hutool.core.io.FileUtil;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.light.hexo.business.admin.config.BlogProperty;
 import com.light.hexo.business.admin.constant.HexoExceptionEnum;
 import com.light.hexo.business.admin.mapper.ThemeMapper;
 import com.light.hexo.business.admin.model.Theme;
+import com.light.hexo.business.admin.model.extend.ThemeFileExtension;
+import com.light.hexo.business.admin.model.extend.ThemeFile;
 import com.light.hexo.business.admin.service.ThemeExtendService;
 import com.light.hexo.business.admin.service.ThemeService;
 import com.light.hexo.common.base.BaseMapper;
@@ -22,12 +23,10 @@ import com.light.hexo.common.util.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -37,11 +36,8 @@ import tk.mybatis.mapper.entity.Example;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.channels.FileChannel;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
@@ -149,7 +145,7 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
     }
 
     @Override
-    public Integer saveTheme(String name, String coverUrl, boolean state, String remark, List<Map<String, String>> extension) throws GlobalException {
+    public Integer saveTheme(String name, String coverUrl, boolean state, String remark, List<ThemeFileExtension> extensionList) throws GlobalException {
         Theme theme = this.getTheme(name);
         if (theme != null) {
             theme.setCoverUrl(coverUrl)
@@ -166,7 +162,7 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
             this.saveModel(theme);
         }
 
-        this.themeExtendService.saveThemeExtend(theme.getId(), extension);
+        this.themeExtendService.saveThemeExtend(theme.getId(), extensionList);
 
         return theme.getId();
     }
@@ -336,9 +332,11 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
             return;
         }
 
+        Theme activeTheme = this.getActiveTheme(false);
+
         // 实际存在的主题名称
         List<String> themeNameList = new ArrayList<>();
-        for (File file : dir.listFiles()) {
+        for (File file : Objects.requireNonNull(dir.listFiles())) {
 
             File[] jsonFiles = file.listFiles((i, name) -> name.equals("theme.json"));
             if (jsonFiles == null) {
@@ -347,17 +345,15 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
 
             File jsonFile = jsonFiles[0];
 
-            Theme activeTheme = this.getActiveTheme(false);
-
             // 读取内容
             String content = FileUtils.readFileToString(jsonFile, "UTF-8");
-            Map<String, Object> map = JsonUtil.string2Obj(content, new TypeReference<Map<String, Object>>() {});
+            ThemeFile themeFile = JsonUtil.string2Obj(content, ThemeFile.class);
 
-            if (Objects.isNull(map.get("name"))) {
+            String themeName = themeFile.getName();
+            if (StringUtils.isBlank(themeName)) {
                 continue;
             }
 
-            String themeName = map.get("name").toString();
             themeNameList.add(themeName);
 
             boolean state = false;
@@ -376,8 +372,8 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
                     themeName,
                     String.format("/theme/%s/preview.png", fileDir),
                     state,
-                    Objects.nonNull(map.get("remark")) ? map.get("remark").toString(): "",
-                    (List<Map<String, String>>) map.get("extension")
+                    StringUtils.isNotBlank(themeFile.getRemark()) ? themeFile.getRemark(): "",
+                    themeFile.getExtension()
             );
 
             if (state) {

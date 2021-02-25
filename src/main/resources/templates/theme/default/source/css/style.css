@@ -163,6 +163,18 @@ strong {
     border-color: #30a0dc;
 }
 
+.btn-success {
+    color: #fff;
+    background-color: #56c356;
+    border-color: #56c356;
+}
+
+.btn-danger {
+    color: #fff;
+    background-color: #e46561;
+    border-color: #e46561;
+}
+
 .form-control {
     border-radius: 0;
     outline-style: none;
@@ -1312,6 +1324,7 @@ h3.friend-link-title {
 .post-other-info a.prev:before {
     position: absolute;
     font-family: FontAwesome;
+    content: "\f0a8";
     left: -10px;
     transform: scale(0);
     transition: all .2s;
@@ -1330,7 +1343,7 @@ h3.friend-link-title {
 .post-other-info a.next:before {
     position: absolute;
     font-family:FontAwesome;
-    content: "\f178";
+    content: "\f0a9";
     right: -10px;
     transform: scale(0);
     transition: all .2s;

@@ -42,11 +42,11 @@
                 <header class="post-header">
                     <div class="blogger-info">
                         <img class="hidden-xs" th:src="@{${#strings.isEmpty(#servletContext.getAttribute('configMap')['logo_url']) != true ? #servletContext.getAttribute('configMap')['logo_url'] : prefix + '/source/images/logo.png'}}">
-                        <span class="blog-author"><img th:src="@{${prefix} + '/source/images/detail/detail_bloger.png'}" width="20" height="20">  [[${#servletContext.getAttribute('configMap')['blog_author']}]]</span>
-                        <span class="post-date"><img th:src="@{${prefix} + '/source/images/detail/detail_date.png'}" width="20" height="20">  [[${post.year} + ' 年 ' + ${post.month} + ' 月 ' + ${post.day} + ' 日']]</span>
+                        <span class="blog-author">😊 [[${#servletContext.getAttribute('configMap')['blog_author']}]]</span>
+                        <span class="post-date">📅 [[${post.year} + ' 年 ' + ${post.month} + ' 月 ' + ${post.day} + ' 日']]</span>
                         <div class="post-nums">
-                            <span><img th:src="@{${prefix} + '/source/images/detail/detail_read.png'}" width="20" height="20">  [[${post.readNum}]]</span>&nbsp;&nbsp;
-                            <span><img th:src="@{${prefix} + '/source/images/detail/detail_comment.png'}" width="20" height="20">  [[${post.commentNum}]]</span>
+                            <span>🔥 [[${post.readNum}]]</span>&nbsp;&nbsp;
+                            <span>💬 [[${post.commentNum}]]</span>
                         </div>
                     </div>
                 </header>

@@ -38,7 +38,7 @@
                             <div class='archives'>
                                 <div class="animate-box archives-item" data-animate-effect="fadeInUp" th:each="vo,iterStat2 : ${map.value}">
                                     <a data-pjax th:href="@{'/'+${vo.link}}" style="display: block">
-                                        <span class="time"><b>[[${vo.month} + '-' + ${vo.day}]]</b></span>
+                                        📚 <span class="time">[[${vo.month} + '-' + ${vo.day}]]</span>
                                         <span class="title">[[${vo.title}]]</span>
                                         <span class="pull-right hidden-xs">([[${vo.readNum}]])</span>
                                     </a>

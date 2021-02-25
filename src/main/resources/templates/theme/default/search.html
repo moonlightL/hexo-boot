@@ -23,7 +23,7 @@
             <input type="text" id="keyword-input" class="input" placeholder="输入关键字" data-list=".highlight_list" autocomplete="off">
             <ul class="highlight_list" >
                 <li th:each="post,iterStat: ${postList}">
-                    <a class="post-item" href="javascript:void(0)" th:data-url="${post.link}"  th:text="${post.title}"></a>
+                    <a class="post-item" href="javascript:void(0)" th:data-url="${post.link}">📚 [[${post.title}]]</a>
                 </li>
             </ul>
         </div>

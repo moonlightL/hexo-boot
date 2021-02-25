@@ -1,11 +1,8 @@
 package com.light.hexo.business.admin.service.impl;
 
-import com.alibaba.druid.support.json.JSONUtils;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.light.hexo.business.admin.constant.ConfigEnum;
 import com.light.hexo.business.admin.mapper.ThemeExtendMapper;
-import com.light.hexo.business.admin.model.Config;
 import com.light.hexo.business.admin.model.ThemeExtend;
+import com.light.hexo.business.admin.model.extend.ThemeFileExtension;
 import com.light.hexo.business.admin.service.ThemeExtendService;
 import com.light.hexo.common.base.BaseMapper;
 import com.light.hexo.common.base.BaseRequest;
@@ -14,7 +11,6 @@ import com.light.hexo.common.constant.CacheKey;
 import com.light.hexo.common.exception.GlobalException;
 import com.light.hexo.common.util.CacheUtil;
 import com.light.hexo.common.util.EhcacheUtil;
-import com.light.hexo.common.util.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +20,8 @@ import tk.mybatis.mapper.entity.Example;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * @Author MoonlightL
@@ -50,25 +48,42 @@ public class ThemeExtendServiceImpl extends BaseServiceImpl<ThemeExtend> impleme
     }
 
     @Override
-    public void saveThemeExtend(Integer themeId, List<Map<String, String>> extension) throws GlobalException {
+    public void saveThemeExtend(Integer themeId, List<ThemeFileExtension> extensionList) throws GlobalException {
 
-        if (CollectionUtils.isEmpty(extension)) {
+        if (CollectionUtils.isEmpty(extensionList)) {
             return;
         }
 
+        // 查询现有的参数
+        Example example = new Example(ThemeExtend.class);
+        example.createCriteria().andEqualTo("themeId", themeId);
+        List<ThemeExtend> extendList = this.getBaseMapper().selectByExample(example);
+        Map<String, ThemeExtend> extendMap = extendList.stream().collect(Collectors.toMap(ThemeExtend::getConfigName, Function.identity(), (k1, k2)->k1));
+
         List<ThemeExtend> list = new ArrayList<>();
 
-        for (Map<String, String> objectMap : extension) {
+        for (ThemeFileExtension extension : extensionList) {
+            String key = extension.getKey();
+            ThemeExtend te = extendMap.get(key);
+            // 已存在的参数（非version字段）不进行修改
+            if (te != null && !key.equals("version")) {
+                continue;
+            }
+
             ThemeExtend themeExtend = new ThemeExtend();
-            themeExtend.setConfigName(objectMap.get("key"))
-                       .setConfigValue(objectMap.get("value"))
-                       .setConfigType(objectMap.get("type"))
-                       .setConfigLabel(objectMap.get("label"))
-                       .setConfigOption(Objects.nonNull(objectMap.get("option")) ? objectMap.get("option") : "")
+            themeExtend.setConfigName(key)
+                       .setConfigValue(extension.getValue())
+                       .setConfigType(extension.getType())
+                       .setConfigLabel(extension.getLabel())
+                       .setConfigOption(StringUtils.isNotBlank(extension.getOption()) ? extension.getOption() : "")
                        .setThemeId(themeId)
                        .setCreateTime(LocalDateTime.now())
                        .setUpdateTime(themeExtend.getCreateTime());
             list.add(themeExtend);
+        }
+
+        if (CollectionUtils.isEmpty(list)) {
+            return;
         }
 
         this.themeExtendMapper.updateBatchByConfigName(list);
