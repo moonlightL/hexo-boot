@@ -2053,3 +2053,7 @@ h3.friend-link-title {
 .aplayer.show {
     opacity: 1!important
 }
+
+#animate {
+    z-index: -1!important;
+}
