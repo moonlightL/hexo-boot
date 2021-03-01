@@ -25,12 +25,8 @@
             <div class="row mx-0 bg-black-op">
                 <div class="hero-static col-md-6 col-xl-8 d-none d-md-flex align-items-md-end">
                     <div class="p-30 invisible" data-toggle="appear">
-                        <p class="font-size-h3 font-w600 text-white">
-                            [[${#servletContext.getAttribute('configMap')['blog_name']}]]
-                        </p>
-                        <p class="font-italic text-white-op">
-                            [[${#servletContext.getAttribute('configMap')['power_by']}]]
-                        </p>
+                        <p class="font-size-h3 font-w600 text-white" th:utext="${#servletContext.getAttribute('configMap')['blog_name']}"></p>
+                        <p class="font-italic text-white-op" th:utext="${#servletContext.getAttribute('configMap')['power_by']}"></p>
                     </div>
                 </div>
                 <div class="hero-static col-md-6 col-xl-4 d-flex align-items-center bg-white invisible" data-toggle="appear" data-class="animated fadeInRight">
