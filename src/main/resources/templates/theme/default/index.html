@@ -80,7 +80,7 @@
                         <a data-pjax th:href="@{'/page/' + ${pageNum}+'/'}" th:text="${pageNum}"></a>
                     </span>
                </span>
-                   <span th:each="pageNum, iterStat : ${pageInfo.navigatepageNums}" th:if="${pageInfo.navigatepageNums.length} gt '4' ">
+                    <span th:each="pageNum, iterStat : ${pageInfo.navigatepageNums}" th:if="${pageInfo.navigatepageNums.length} gt '4' ">
                    <span class="page" th:if="${pageNum == pageInfo.pageNum and iterStat.count gt 2 and iterStat.count le iterStat.size}">...</span>
                    <span th:if="${pageNum == pageInfo.pageNum}" class="page current" th:text="${pageNum}"></span>
                    <span class="page" th:if="${pageNum == pageInfo.pageNum and iterStat.count le (iterStat.size - 2)}">...</span>

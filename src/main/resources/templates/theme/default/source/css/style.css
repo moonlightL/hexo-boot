@@ -401,11 +401,11 @@ strong {
 }
 
 .ml-content-title {
-  margin-bottom:25px;
+    margin-bottom:25px;
 }
 
 .ml-content .post {
-  margin-bottom: 2em;
+    margin-bottom: 2em;
 }
 
 .post-info {
@@ -1466,12 +1466,12 @@ h3.friend-link-title {
     }
 
     .footer-copyright {
-      padding: 1.5em 0;
-      text-align:center;
+        padding: 1.5em 0;
+        text-align:center;
     }
 
     header .navbar-header {
-      height: 58px;
+        height: 58px;
     }
 
     .navbar ul.menu > li > ul.second-menu {
@@ -1487,12 +1487,12 @@ h3.friend-link-title {
     }
 
     .footer-copyright span, .footer-copyright a{
-       float: none !important;
-       font-size: 12px;
+        float: none !important;
+        font-size: 12px;
     }
 
     .image-banner img {
-       height: 180px;
+        height: 180px;
     }
 
     .image-banner .image-content {
@@ -1628,7 +1628,7 @@ h3.friend-link-title {
     }
 
     .post-content a img {
-         width:100% !important;
+        width:100% !important;
     }
 
     .post-content blockquote {
@@ -1736,18 +1736,18 @@ h3.friend-link-title {
     }
 
     .post-copyright {
-       list-style: none;
-       padding: 0;
+        list-style: none;
+        padding: 0;
     }
 
     .post-other-info {
-      border-top: 1px dashed #ccc;
-      padding:1em 0;
+        border-top: 1px dashed #ccc;
+        padding:1em 0;
     }
 
     .post-other-info a {
-      float: none !important;
-      margin-bottom: 1em;
+        float: none !important;
+        margin-bottom: 1em;
     }
 
     .post-other-info a.pull-right {
@@ -2052,4 +2052,8 @@ h3.friend-link-title {
 
 .aplayer.show {
     opacity: 1!important
+}
+
+#animate {
+    z-index: -1!important;
 }

@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, initial-scale=1, shrink-to-fit=no">
     <div th:replace="~{admin/common :: common-link}"></div>
     <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/zTree_v3/css/zTreeStyle/zTreeStyle.css'}">
+    <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/codemirror/lib/codemirror.css'}">
+    <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/codemirror/theme/tomorrow-night-bright.css'}">
     <style>
 
         .catalog-container {
@@ -35,6 +37,10 @@
             outline:none;
             background-color: #000;
             color: #9d9fa7;
+        }
+
+        .CodeMirror {
+            height: calc(100vh - 200px);
         }
     </style>
 </head>
@@ -70,11 +76,15 @@
 </div>
 <div th:replace="~{admin/common :: common-script}"></div>
 <script th:src="@{'/admin/assets/js/plugins/zTree_v3/js/jquery.ztree.all.js'}"></script>
-<script th:src="@{'/admin/assets/js/plugins/textarea-line-number/js/auto-line-number.js'}"></script>
+<script th:src="@{'/admin/assets/js/plugins/codemirror/lib/codemirror.js'}"></script>
+<script th:src="@{'/admin/assets/js/plugins/codemirror/mode/javascript/javascript.js'}"></script>
+<script th:src="@{'/admin/assets/js/plugins/codemirror/addon/selection/active-line.js'}"></script>
+<script th:src="@{'/admin/assets/js/plugins/codemirror/addon/edit/matchbrackets.js'}"></script>
 <script type="text/javascript" th:inline="javascript">
     let zNodes = [[${catalogList}]];
     let ThemeManager = {
         path: "",
+        editor: null,
         init: function (zNodes) {
             ThemeManager.initCatalogTree(zNodes);
             ThemeManager.bindEvent();
@@ -91,14 +101,15 @@
                             dataType: "JSON",
                             success: function (resp) {
                                 if (resp.success) {
-                                    let $codeContent = $("#code-content");
-                                    $codeContent.val(resp.data);
-                                    $codeContent.setTextareaCount({
-                                        width: "40px",
-                                        bgColor: "#000",
-                                        color: "#9d9fa7",
-                                        display: "block"
-                                    });
+                                    if (ThemeManager.editor == null) {
+                                        ThemeManager.editor = CodeMirror.fromTextArea(document.getElementById("code-content"), {
+                                            lineNumbers: true,
+                                            styleActiveLine: true,
+                                            matchBrackets: true
+                                        });
+                                        ThemeManager.editor.setOption("theme", "tomorrow-night-bright");
+                                    }
+                                    ThemeManager.editor.setValue(resp.data);
                                 }
                             }
                         });
@@ -113,7 +124,7 @@
                     $.ajax({
                         type: "POST",
                         url: BASE_URL + "/editCode.json",
-                        data: {"path": ThemeManager.path, "content": $("#code-content").val()},
+                        data: {"path": ThemeManager.path, "content": ThemeManager.editor.getValue()},
                         dataType: "JSON",
                         success: function (resp) {
                             $.hexo.modal.tip("请求成功", resp.msg);

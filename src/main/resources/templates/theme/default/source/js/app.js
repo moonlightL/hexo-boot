@@ -94,7 +94,7 @@
         });
 
         $(".options .music").off("click").on("click", function () {
-                let $aplayer = $("#aplayer");
+            let $aplayer = $("#aplayer");
             if ($aplayer.hasClass("inited")) {
                 $aplayer.toggleClass("show");
                 return;
