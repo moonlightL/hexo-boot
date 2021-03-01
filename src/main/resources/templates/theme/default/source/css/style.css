@@ -401,11 +401,11 @@ strong {
 }
 
 .ml-content-title {
-  margin-bottom:25px;
+    margin-bottom:25px;
 }
 
 .ml-content .post {
-  margin-bottom: 2em;
+    margin-bottom: 2em;
 }
 
 .post-info {
@@ -851,6 +851,7 @@ span.effect {
     border: 2px solid var(--content-color);
     box-shadow: 0 0 5px var(--shadow-color);
     padding: 40px 10px;
+    color: var(--text-color);
 }
 
 .footer-copyright a {
@@ -1176,10 +1177,7 @@ h3.friend-link-title {
 .postContainer .highlight {
     border-radius: 1px;
     font-family: "Nunito Sans",-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
-    background-color: #ecf6f7;
-    position: relative;
-    padding-top: 32px;
-    box-shadow: 0 1px 10px 3px var(--shadow-color);
+    background-color: var(--code-pre-bg-color);
 }
 
 .postContainer .highlight table {
@@ -1468,12 +1466,12 @@ h3.friend-link-title {
     }
 
     .footer-copyright {
-      padding: 1.5em 0;
-      text-align:center;
+        padding: 1.5em 0;
+        text-align:center;
     }
 
     header .navbar-header {
-      height: 58px;
+        height: 58px;
     }
 
     .navbar ul.menu > li > ul.second-menu {
@@ -1489,12 +1487,12 @@ h3.friend-link-title {
     }
 
     .footer-copyright span, .footer-copyright a{
-       float: none !important;
-       font-size: 12px;
+        float: none !important;
+        font-size: 12px;
     }
 
     .image-banner img {
-       height: 180px;
+        height: 180px;
     }
 
     .image-banner .image-content {
@@ -1630,7 +1628,7 @@ h3.friend-link-title {
     }
 
     .post-content a img {
-         width:100% !important;
+        width:100% !important;
     }
 
     .post-content blockquote {
@@ -1738,18 +1736,18 @@ h3.friend-link-title {
     }
 
     .post-copyright {
-       list-style: none;
-       padding: 0;
+        list-style: none;
+        padding: 0;
     }
 
     .post-other-info {
-      border-top: 1px dashed #ccc;
-      padding:1em 0;
+        border-top: 1px dashed #ccc;
+        padding:1em 0;
     }
 
     .post-other-info a {
-      float: none !important;
-      margin-bottom: 1em;
+        float: none !important;
+        margin-bottom: 1em;
     }
 
     .post-other-info a.pull-right {
@@ -2054,90 +2052,4 @@ h3.friend-link-title {
 
 .aplayer.show {
     opacity: 1!important
-}
-
-.options .scroll-progress {
-    position: relative;
-}
-
-.options .scroll-progress .progress-line {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    height: 2px;
-    background: var(--theme-color);
-}
-
-.postContainer table {
-    box-shadow: 0 1px 10px 1px var(--shadow-color);
-}
-
-.postContainer table th {
-    background: #4373ca;
-    color: #fff
-}
-
-.postContainer figure.highlight::before {
-    content: " ";
-    position: absolute;
-    border-radius: 50%;
-    background: #fc625d;
-    width: 12px;
-    height: 12px;
-    top: 12px;
-    left: 12px;
-    box-shadow: 20px 0 #fdbc40, 40px 0 #35cd4b;
-    z-index: 2
-}
-
-.postContainer figure table {
-    margin: 0;
-    width: 100%;
-    border: none;
-    box-shadow: none!important;
-}
-
-.postContainer .highlight td.code {
-    width: 100%;
-}
-
-.footer-copyright .badge-subject {
-    display: inline-block;
-    background-color: #4d4d4d;
-    padding: 4px 4px 4px 6px;
-    border-top-left-radius: 4px;
-    border-bottom-left-radius: 4px;
-    color: #fff;
-}
-
-.footer-copyright .badge-value {
-    display: inline-block;
-    padding: 4px 6px 4px 4px;
-    border-top-right-radius: 4px;
-    border-bottom-right-radius: 4px;
-    color: #fff;
-}
-
-.footer-copyright .bg-blue {
-    background-color: #007ec6
-}
-
-.footer-copyright .bg-orange {
-    background-color: #ffa500
-}
-
-.footer-copyright .bg-red {
-    background-color: #f00
-}
-
-.footer-copyright .bg-green {
-    background-color: #3bca6e
-}
-
-.footer-copyright .bg-purple {
-    background-color: #ab34e9
-}
-
-#animate {
-    z-index: -1!important;
 }
