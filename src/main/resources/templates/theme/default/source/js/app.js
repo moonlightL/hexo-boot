@@ -68,6 +68,7 @@
             htmArr.push('<div class="option-item '+ ele.class +'" title="'+ele.title+'"> <i class="' + ele.icon+'"></i> </div> ');
         }
 
+        htmArr.push('<div class="option-item scroll-progress" title="滚动条进度"><span id="progress-line" class="progress-line"></span><span id="progress-value">0%</span></div> ');
         $options.append(htmArr.join(""));
 
         let $iframe = $('<div id="modal-iframe" class="iziModal light"></div>');
@@ -134,6 +135,25 @@
             }, 500);
         });
     };
+
+    const scrollIndicator = function () {
+        let $window = $(window);
+        let $progressLine = $("#progress-line");
+        let $progressValue = $("#progress-value");
+        let winTop = $window.scrollTop(), docHeight = $(document).height(), winHeight = $(window).height();
+        calcProcess(winTop, docHeight, winHeight, $progressLine, $progressValue);
+
+        $window.on('scroll', function() {
+            let winTop = $window.scrollTop(), docHeight = $(document).height(), winHeight = $(window).height();
+            calcProcess(winTop, docHeight, winHeight, $progressLine, $progressValue);
+        });
+    };
+
+    function calcProcess(winTop, docHeight, winHeight, progressLine, progressValue) {
+        let scrolled =  (winTop / (docHeight - winHeight)) * 100;
+        progressLine.css({"width": scrolled + '%'});
+        progressValue.html(parseInt(scrolled + "") + '%');
+    }
 
     const circleMagic = function() {
         $('.image-content').circleMagic({
@@ -254,6 +274,7 @@
         $(document).pjax('a[data-pjax]', '#wrap', {fragment: '#wrap', timeout: 8000});
         $(document).on('pjax:send', function() { NProgress.start();});
         $(document).on('pjax:complete',   function(e) {
+            scrollIndicator();
             loadLazy();
             circleMagic();
             contentWayPoint();
@@ -271,6 +292,7 @@
     $(function() {
         themModeEvent();
         optionEvent();
+        scrollIndicator();
         circleMagic();
         loadLazy();
         contentWayPoint();
