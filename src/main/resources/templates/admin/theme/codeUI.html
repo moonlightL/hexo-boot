@@ -7,6 +7,9 @@
     <div th:replace="~{admin/common :: common-link}"></div>
     <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/zTree_v3/css/zTreeStyle/zTreeStyle.css'}">
     <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/codemirror/lib/codemirror.css'}">
+    <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/codemirror/addon/fold/foldgutter.css'}">
+    <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/codemirror/addon/hint/show-hint.css'}">
+    <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/codemirror/addon/lint/lint.css'}">
     <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/codemirror/theme/tomorrow-night-bright.css'}">
     <style>
 
@@ -79,7 +82,16 @@
 <script th:src="@{'/admin/assets/js/plugins/codemirror/lib/codemirror.js'}"></script>
 <script th:src="@{'/admin/assets/js/plugins/codemirror/mode/javascript/javascript.js'}"></script>
 <script th:src="@{'/admin/assets/js/plugins/codemirror/addon/selection/active-line.js'}"></script>
+<script th:src="@{'/admin/assets/js/plugins/codemirror/addon/edit/closebrackets.js'}"></script>
 <script th:src="@{'/admin/assets/js/plugins/codemirror/addon/edit/matchbrackets.js'}"></script>
+<script th:src="@{'/admin/assets/js/plugins/lint/csslint.js'}"></script>
+<script th:src="@{'/admin/assets/js/plugins/lint/jshint.js'}"></script>
+<script th:src="@{'/admin/assets/js/plugins/lint/jsonlint.js'}"></script>
+<script th:src="@{'/admin/assets/js/plugins/codemirror/addon/lint/lint.js'}"></script>
+<!--<script th:src="@{'/admin/assets/js/plugins/codemirror/addon/lint/html-lint.js'}"></script>-->
+<script th:src="@{'/admin/assets/js/plugins/codemirror/addon/lint/css-lint.js'}"></script>
+<script th:src="@{'/admin/assets/js/plugins/codemirror/addon/lint/javascript-lint.js'}"></script>
+<script th:src="@{'/admin/assets/js/plugins/codemirror/addon/lint/json-lint.js'}"></script>
 <script type="text/javascript" th:inline="javascript">
     let zNodes = [[${catalogList}]];
     let ThemeManager = {
@@ -103,11 +115,17 @@
                                 if (resp.success) {
                                     if (ThemeManager.editor == null) {
                                         ThemeManager.editor = CodeMirror.fromTextArea(document.getElementById("code-content"), {
-                                            lineNumbers: true,
-                                            styleActiveLine: true,
-                                            matchBrackets: true
+                                            theme: "tomorrow-night-bright",
+                                            lineNumbers: true, // 显示行号
+                                            lineWrapping:true, //是否强制换行
+                                            smartIndent: true, //智能缩进
+                                            styleActiveLine: true, // 显示选中行的样式
+                                            matchBrackets: true, // 匹配结束符号，比如"]、}"
+                                            gutters: ["CodeMirror-lint-markers"],
+                                            lint: true,  // 语法检测
+                                            autofocus: true,  //自动聚焦
+                                            autoCloseBrackets: true , // 自动闭合符号
                                         });
-                                        ThemeManager.editor.setOption("theme", "tomorrow-night-bright");
                                     }
                                     ThemeManager.editor.setValue(resp.data);
                                 }
