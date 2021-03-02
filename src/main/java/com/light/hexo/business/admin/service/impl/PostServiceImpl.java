@@ -110,7 +110,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
 
         String title = postRequest.getTitle();
         if (StringUtils.isNotBlank(title)) {
-            criteria.andLike("title", title.trim() + "%");
+            criteria.andLike("title", "%" + title.trim() + "%");
         }
 
         Integer categoryId = postRequest.getCategoryId();

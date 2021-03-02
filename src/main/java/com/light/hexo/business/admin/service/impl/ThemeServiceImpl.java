@@ -293,7 +293,7 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
 
             if ("jar".equalsIgnoreCase(uri.getScheme())) {
                 dir = ResourceUtils.getFile(ResourceUtils.FILE_URL_PREFIX + this.blogProperty.getThemeDir());
-                if (!dir.exists() || sync) {
+                if (!dir.exists()) {
                     FileSystem fileSystem = FileSystems.newFileSystem(uri, Collections.emptyMap());
                     Path source = fileSystem.getPath("/BOOT-INF/classes/" + THEME_DIR);
                     Path target = dir.toPath();

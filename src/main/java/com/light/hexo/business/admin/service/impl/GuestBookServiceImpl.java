@@ -87,12 +87,12 @@ public class GuestBookServiceImpl extends BaseServiceImpl<GuestBook> implements 
 
         String nickname = guestBookRequest.getNickname();
         if (StringUtils.isNotBlank(nickname)) {
-            criteria.andLike("nickname", nickname.trim() + "%");
+            criteria.andLike("nickname", "%" + nickname.trim() + "%");
         }
 
         String ipAddress = guestBookRequest.getIpAddress();
         if (StringUtils.isNotBlank(ipAddress)) {
-            criteria.andLike("ipAddress", ipAddress + "%");
+            criteria.andLike("ipAddress", "%" + ipAddress + "%");
         }
 
         example.orderBy("id").desc();
