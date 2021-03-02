@@ -159,11 +159,17 @@ systemctl stop hexo-boot
 
 步骤1 和 步骤2 可以使用如下命令代替
 
+**注意 jar 版本号，请使用最新版本**
+
+**注意 jar 版本号，请使用最新版本**
+
+**注意 jar 版本号，请使用最新版本**
+
 【GitHub】资源
 
 ```
 # 下载安装包
-curl -L https://github.com/moonlightL/hexo-boot/releases/download/1.4.0/hexo-boot-1.4.0.jar --output ~/.hexo-boot/hexo-boot.jar
+curl -L https://github.com/moonlightL/hexo-boot/releases/download/2.3/hexo-boot-2.3.0.jar --output ~/.hexo-boot/hexo-boot.jar
 
 # 下载 spring boot 配置文件，记得要修改数据库配置
 curl -L -o ~/.hexo-boot/application.yml --create-dirs https://github.com/moonlightL/hexo-boot/releases/download/1.4.0/application.yml
@@ -173,7 +179,7 @@ curl -L -o ~/.hexo-boot/application.yml --create-dirs https://github.com/moonlig
 
 ```
 # 下载安装包
-curl -L https://gitee.com/moonlightL/hexo-boot/attach_files/537531/download/hexo-boot-1.4.0.jar --output ~/.hexo-boot/hexo-boot.jar
+curl -L https://gitee.com/moonlightL/hexo-boot/attach_files/620620/download/hexo-boot-2.3.0.jar --output ~/.hexo-boot/hexo-boot.jar
 
 # 下载 spring boot 配置文件，记得要修改数据库配置
 curl -L -o ~/.hexo-boot/application.yml --create-dirs https://gitee.com/moonlightL/hexo-boot/attach_files/537532/download/application.yml
