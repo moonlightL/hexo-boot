@@ -7,8 +7,6 @@
     <div th:replace="~{admin/common :: common-link}"></div>
     <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/zTree_v3/css/zTreeStyle/zTreeStyle.css'}">
     <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/codemirror/lib/codemirror.css'}">
-    <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/codemirror/addon/fold/foldgutter.css'}">
-    <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/codemirror/addon/hint/show-hint.css'}">
     <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/codemirror/addon/lint/lint.css'}">
     <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/codemirror/theme/tomorrow-night-bright.css'}">
     <style>
@@ -80,19 +78,26 @@
 <div th:replace="~{admin/common :: common-script}"></div>
 <script th:src="@{'/admin/assets/js/plugins/zTree_v3/js/jquery.ztree.all.js'}"></script>
 <script th:src="@{'/admin/assets/js/plugins/codemirror/lib/codemirror.js'}"></script>
-<script th:src="@{'/admin/assets/js/plugins/codemirror/mode/javascript/javascript.js'}"></script>
 <script th:src="@{'/admin/assets/js/plugins/codemirror/addon/selection/active-line.js'}"></script>
 <script th:src="@{'/admin/assets/js/plugins/codemirror/addon/edit/closebrackets.js'}"></script>
 <script th:src="@{'/admin/assets/js/plugins/codemirror/addon/edit/matchbrackets.js'}"></script>
-<script th:src="@{'/admin/assets/js/plugins/lint/csslint.js'}"></script>
+<script th:src="@{'/admin/assets/js/plugins/codemirror/mode/xml/xml.js'}"></script>
+<script th:src="@{'/admin/assets/js/plugins/codemirror/mode/javascript/javascript.js'}"></script>
+<script th:src="@{'/admin/assets/js/plugins/codemirror/mode/css/css.js'}"></script>
+<script th:src="@{'/admin/assets/js/plugins/codemirror/mode/htmlmixed/htmlmixed.js'}"></script>
 <script th:src="@{'/admin/assets/js/plugins/lint/jshint.js'}"></script>
 <script th:src="@{'/admin/assets/js/plugins/lint/jsonlint.js'}"></script>
+<script th:src="@{'/admin/assets/js/plugins/lint/csslint.js'}"></script>
 <script th:src="@{'/admin/assets/js/plugins/codemirror/addon/lint/lint.js'}"></script>
-<!--<script th:src="@{'/admin/assets/js/plugins/codemirror/addon/lint/html-lint.js'}"></script>-->
-<script th:src="@{'/admin/assets/js/plugins/codemirror/addon/lint/css-lint.js'}"></script>
 <script th:src="@{'/admin/assets/js/plugins/codemirror/addon/lint/javascript-lint.js'}"></script>
 <script th:src="@{'/admin/assets/js/plugins/codemirror/addon/lint/json-lint.js'}"></script>
+<script th:src="@{'/admin/assets/js/plugins/codemirror/addon/lint/css-lint.js'}"></script>
 <script type="text/javascript" th:inline="javascript">
+    let modeArr = [];
+    modeArr["js"] = "javascript";
+    modeArr["css"] = "css";
+    modeArr["html"] = "text/html";
+    modeArr["json"] = "application/json";
     let zNodes = [[${catalogList}]];
     let ThemeManager = {
         path: "",
@@ -125,6 +130,12 @@
                                             lint: true,  // 语法检测
                                             autofocus: true,  //自动聚焦
                                             autoCloseBrackets: true , // 自动闭合符号
+                                        });
+
+                                        ThemeManager.editor.on("change", function() {
+                                            let index = ThemeManager.path.lastIndexOf(".");
+                                            let suffix = ThemeManager.path.substring(index + 1);
+                                            ThemeManager.editor.setOption("mode", modeArr[suffix]);
                                         });
                                     }
                                     ThemeManager.editor.setValue(resp.data);
