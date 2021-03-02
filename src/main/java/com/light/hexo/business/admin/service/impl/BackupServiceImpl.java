@@ -53,7 +53,7 @@ public class BackupServiceImpl extends BaseServiceImpl<Backup> implements Backup
 
         String name = backupRequest.getName();
         if (StringUtils.isNotBlank(name)) {
-            criteria.andLike("name", name + "%");
+            criteria.andLike("name", "%" + name + "%");
         }
 
         example.orderBy("id").desc();

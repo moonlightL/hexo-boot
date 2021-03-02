@@ -58,7 +58,7 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category> implements Ca
 
         String name = categoryRequest.getName();
         if (StringUtils.isNotBlank(name)) {
-            criteria.andLike("name", name.trim() + "%");
+            criteria.andLike("name", "%" + name.trim() + "%");
         }
 
         Boolean state = categoryRequest.getState();

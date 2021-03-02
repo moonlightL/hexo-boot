@@ -86,17 +86,17 @@ public class PostCommentServiceImpl extends BaseServiceImpl<PostComment> impleme
 
         String nickname = postCommentRequest.getNickname();
         if (StringUtils.isNotBlank(nickname)) {
-            criteria.andLike("nickname", nickname.trim() + "%");
+            criteria.andLike("nickname", "%" + nickname.trim() + "%");
         }
 
         String ipAddress = postCommentRequest.getIpAddress();
         if (StringUtils.isNotBlank(ipAddress)) {
-            criteria.andLike("ipAddress", ipAddress.trim() + "%");
+            criteria.andLike("ipAddress", "%" + ipAddress.trim() + "%");
         }
 
         String title = postCommentRequest.getTitle();
         if (StringUtils.isNotBlank(title)) {
-            criteria.andLike("title", title.trim() + "%");
+            criteria.andLike("title", "%" + title.trim() + "%");
         }
 
         example.orderBy("id").desc();
