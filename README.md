@@ -45,34 +45,42 @@ Hexo Boot 是基于 Spring Boot + MySQL 开发的一套开源的博客系统。�
 支持自动和手动备份SQL数据，防患数据丢失
 ```
 
+### 2.7 音乐播放
+
+```
+支持音乐配置管理以及在线播放，切换页面不中断
+```
+
 ## 三、预览效果
 
-[网站演示1](https://www.extlight.com/) 
+[网站演示1（默认主题）](https://www.liuyj.top/) 
 
-[网站演示2](https://www.liuyj.top/) 
+[网站演示2（私人订制）](https://www.extlight.com/) 
+
 
 ### 3.1 后台管理预览图
 
-![](https://images.extlight.com/hexo-boot-00.jpg)
+![安装页面](https://images.extlight.com/hexo-boot-00.jpg)
 
-![](https://images.extlight.com/hexo-boot-01.jpg)
+![仪表盘页面](https://images.extlight.com/hexo-boot-01.jpg)
 
-![](https://images.extlight.com/hexo-boot-02.jpg)
+![文章页面](https://images.extlight.com/hexo-boot-02.jpg)
 
-![](https://images.extlight.com/hexo-boot-03.jpg)
+![评论页面](https://images.extlight.com/hexo-boot-03.jpg)
 
-![](https://images.extlight.com/hexo-boot-04.jpg)
+![参数配置页面](https://images.extlight.com/hexo-boot-04.jpg)
 
-![](https://images.extlight.com/hexo-boot-05.jpg)
+![个人详情页面](https://images.extlight.com/hexo-boot-05.jpg)
 
-![](https://images.extlight.com/hexo-boot-06.jpg)
+![数据备份页面](https://images.extlight.com/hexo-boot-06.jpg)
 
-![](https://images.extlight.com/hexo-boot-07.jpg)
+![黑名单页面](https://images.extlight.com/hexo-boot-07.jpg)
 
-![](https://images.extlight.com/hexo-boot-08.jpg)
+![附件页面](https://images.extlight.com/hexo-boot-08.jpg)
 
-![](https://images.extlight.com/hexo-boot-09.jpg)
+![主题列表页面](https://images.extlight.com/hexo-boot-09.jpg)
 
+![修改主题源码页面](https://images.extlight.com/hexo-boot-10.jpg)
 
 ### 3.2 前端预览图(默认主题)
 
