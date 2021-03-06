@@ -167,6 +167,7 @@ public class InstallService {
                    .setContent("欢迎大家来评论~~")
                    .setUserId(user.getId())
                    .setNickname(user.getNickname())
+                   .setAvatar(user.getAvatar())
                    .setBrowser(browserName)
                    .setIpAddress(ipAddr);
         this.postCommentService.saveModel(postComment);
@@ -177,6 +178,7 @@ public class InstallService {
         guestBook.setContent("欢迎大家踊跃留言~~")
                  .setUserId(user.getId())
                  .setNickname(user.getNickname())
+                 .setAvatar(user.getAvatar())
                  .setBrowser(browserName)
                  .setIpAddress(ipAddr);
         this.guestBookService.saveModel(guestBook);
