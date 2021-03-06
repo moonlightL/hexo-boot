@@ -67,4 +67,10 @@ public class NavRequest extends BaseRequest<Nav> {
      * 父级 id
      */
     private Integer parentId;
+    
+    
+    /**
+     * 封面
+     */
+    private String cover;
 }
