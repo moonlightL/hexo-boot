@@ -5,7 +5,9 @@ import com.light.hexo.business.admin.model.*;
 import com.light.hexo.business.portal.common.CommonController;
 import com.light.hexo.business.portal.model.HexoPageInfo;
 import com.light.hexo.common.model.Result;
+import com.light.hexo.common.util.HttpClientUtil;
 import com.light.hexo.common.util.IpUtil;
+import com.light.hexo.common.util.JsonUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -170,5 +172,16 @@ public class IndexController extends CommonController {
     public Result musicList() {
         List<Music> list = this.musicService.listMusicByIndex();
         return Result.success(list);
+    }
+
+    /**
+     * 鸡汤
+     * @return
+     */
+    @GetMapping("chickenSoup.json")
+    @ResponseBody
+    public Result chickenSoup() {
+        String result = HttpClientUtil.sendGet("http://api.lkblog.net/ws/api.php");
+        return Result.success(JsonUtil.string2Obj(result, Map.class));
     }
 }
