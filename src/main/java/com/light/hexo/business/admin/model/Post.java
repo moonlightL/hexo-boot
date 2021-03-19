@@ -155,6 +155,12 @@ public class Post implements Serializable {
      */
     private LocalDateTime topTime;
 
+    @Transient
+    private Post prevPost;
+
+    @Transient
+    private Post nextPost;
+
     @CreateTime
     private LocalDateTime createTime;
 

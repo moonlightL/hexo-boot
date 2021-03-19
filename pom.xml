@@ -290,6 +290,20 @@
             <version>5.9.0.202009080501-r</version>
         </dependency>
 
+        <!-- 压缩页面 -->
+        <dependency>
+            <groupId>com.googlecode.htmlcompressor</groupId>
+            <artifactId>htmlcompressor</artifactId>
+            <version>1.5.2</version>
+        </dependency>
+
+        <!-- 压缩静态资源 -->
+        <dependency>
+            <groupId>com.yahoo.platform.yui</groupId>
+            <artifactId>yuicompressor</artifactId>
+            <version>2.4.8</version>
+        </dependency>
+
     </dependencies>
 
     <build>

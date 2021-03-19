@@ -91,12 +91,10 @@ public class IndexController extends CommonController {
                        Map<String, Object> resultMap) {
         String link = year + "/" + month + "/" + day + "/" + title + "/";
         Post post = this.postService.getDetailInfo(link);
-        Post previousPost = this.postService.getPreviousInfo(post.getId());
-        Post nextPost = this.postService.getNextInfo(post.getId());
 
         resultMap.put("post", post);
-        resultMap.put("previousPost", previousPost);
-        resultMap.put("nextPost", nextPost);
+        resultMap.put("previousPost", post.getPrevPost());
+        resultMap.put("nextPost", post.getNextPost());
         resultMap.put("currentNav", new Nav(post.getTitle(), post.getLink(), post.getCoverUrl(), "detail"));
 
         return render("detail", true, resultMap);

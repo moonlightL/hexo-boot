@@ -11,16 +11,16 @@ import java.util.Vector;
 
 /**
  * @Author: MoonlightL
- * @ClassName: XSSHttpServletRequestWrapper
+ * @ClassName: XssHttpServletRequestWrapper
  * @ProjectName: hexo-boot
  * @Description: 重写 HttpServletRequestWrapper
  * @DateTime: 2020/10/4 09:53
  */
-public class XSSHttpServletRequestWrapper extends HttpServletRequestWrapper {
+public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
 
     private Map<String, String[]> parameterMap;
 
-    public XSSHttpServletRequestWrapper(HttpServletRequest request) {
+    public XssHttpServletRequestWrapper(HttpServletRequest request) {
         super(request);
         this.parameterMap = request.getParameterMap();
     }

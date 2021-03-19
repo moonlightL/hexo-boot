@@ -32,6 +32,11 @@ public class PageConstant {
     public static final String POST_ARCHIVE_ALL = "hexo:archive:all";
 
     /**
+     * 文章详情页缓存 key（格式：PageConstant.POST_DETAIL_INFO + #link）
+     */
+    public static final String POST_DETAIL_INFO = "hexo:post:detail:info";
+
+    /**
      * 文章详情页上一页缓存 key（格式：PageConstant.POST_DETAIL_PREVIOUS + #id）
      */
     public static final String POST_DETAIL_PREVIOUS = "hexo:post:detail:previous";

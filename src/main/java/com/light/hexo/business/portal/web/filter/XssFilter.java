@@ -1,7 +1,5 @@
 package com.light.hexo.business.portal.web.filter;
 
-import org.springframework.stereotype.Component;
-
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.annotation.WebInitParam;
@@ -24,17 +22,7 @@ public class XssFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        XSSHttpServletRequestWrapper req = new XSSHttpServletRequestWrapper((HttpServletRequest)request);
+        XssHttpServletRequestWrapper req = new XssHttpServletRequestWrapper((HttpServletRequest)request);
         chain.doFilter(req, response);
-    }
-
-    @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-
-    }
-
-    @Override
-    public void destroy() {
-
     }
 }

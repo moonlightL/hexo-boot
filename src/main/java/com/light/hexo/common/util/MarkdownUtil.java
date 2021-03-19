@@ -155,7 +155,7 @@ public class MarkdownUtil {
         String result = CacheUtil.get(key);
         if (StringUtils.isBlank(result)) {
             Node document = PARSER.parse(markdown);
-            result = RENDERER.render(document);
+            result = RENDERER.render(document).trim();
             CacheUtil.put(key, result, 3 * 60 * 1000);
         }
 

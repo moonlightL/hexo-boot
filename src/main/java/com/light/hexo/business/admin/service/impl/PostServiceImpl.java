@@ -569,6 +569,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
         return postList.subList(start, end);
     }
 
+    @Cacheable(key = "'" + PageConstant.POST_DETAIL_INFO + ":' + #link")
     @Override
     public Post getDetailInfo(String link) throws GlobalException {
 
@@ -584,6 +585,14 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
         if (category != null) {
             post.setCategoryName(StringUtils.isNotBlank(category.getName()) ? category.getName() : "默认");
         }
+
+        Integer postId = post.getId();
+
+        Post prevPost = this.postMapper.selectPreviousInfo(postId);
+        post.setPrevPost(prevPost);
+
+        Post nextPost = this.postMapper.selectNextInfo(postId);
+        post.setNextPost(nextPost);
 
         this.eventPublisher.emit(new PostEvent(post.getId(), PostEvent.Type.READ));
 
