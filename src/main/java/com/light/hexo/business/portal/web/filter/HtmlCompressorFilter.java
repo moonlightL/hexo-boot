@@ -6,6 +6,7 @@ import org.springframework.boot.web.servlet.ServletComponentScan;
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.annotation.WebInitParam;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -20,8 +21,7 @@ import java.io.PrintWriter;
 @Slf4j
 @WebFilter(
         filterName = "HtmlCompressorInterceptor",
-        urlPatterns = "/*",
-        initParams = { @WebInitParam(name="exclusions", value="/admin/*")}
+        urlPatterns = "/*"
 )
 public class HtmlCompressorFilter implements Filter {
 
@@ -39,11 +39,20 @@ public class HtmlCompressorFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+
+        HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+        if (httpServletRequest.getRequestURI().contains(".json")) {
+            chain.doFilter(request, response);
+            return;
+        }
+
         ResponseWrapper wrapper = new ResponseWrapper((HttpServletResponse) response);
         chain.doFilter(request, wrapper);
         response.setContentLength(-1);
         PrintWriter out = response.getWriter();
-        out.write(htmlCompressor.compress(wrapper.getResult()));
+        String compress = htmlCompressor.compress(wrapper.getResult());
+        System.out.println(compress);
+        out.write(compress);
         out.flush();
     }
 }
