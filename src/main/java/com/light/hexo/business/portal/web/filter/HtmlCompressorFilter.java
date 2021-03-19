@@ -50,9 +50,7 @@ public class HtmlCompressorFilter implements Filter {
         chain.doFilter(request, wrapper);
         response.setContentLength(-1);
         PrintWriter out = response.getWriter();
-        String compress = htmlCompressor.compress(wrapper.getResult());
-        System.out.println(compress);
-        out.write(compress);
+        out.write(htmlCompressor.compress(wrapper.getResult()));
         out.flush();
     }
 }
