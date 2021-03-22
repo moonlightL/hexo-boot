@@ -2,10 +2,8 @@ package com.light.hexo.business.portal.web.filter;
 
 import com.googlecode.htmlcompressor.compressor.HtmlCompressor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.web.servlet.ServletComponentScan;
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
-import javax.servlet.annotation.WebInitParam;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -41,16 +39,20 @@ public class HtmlCompressorFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-        if (httpServletRequest.getRequestURI().contains(".json")) {
-            chain.doFilter(request, response);
-            return;
+        String requestURI = httpServletRequest.getRequestURI();
+        if (requestURI.startsWith("/admin") || requestURI.startsWith("/theme") || requestURI.contains(".json")) {
+           chain.doFilter(request, response);
+           return;
         }
 
         ResponseWrapper wrapper = new ResponseWrapper((HttpServletResponse) response);
         chain.doFilter(request, wrapper);
         response.setContentLength(-1);
-        PrintWriter out = response.getWriter();
-        out.write(htmlCompressor.compress(wrapper.getResult()));
-        out.flush();
+
+        if (!response.isCommitted()) {
+            PrintWriter out = response.getWriter();
+            out.write(htmlCompressor.compress(wrapper.getResult()));
+            out.flush();
+        }
     }
 }

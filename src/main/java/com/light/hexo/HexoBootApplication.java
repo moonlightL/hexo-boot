@@ -2,6 +2,7 @@ package com.light.hexo;
 
 import com.light.hexo.common.util.IpUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration;
@@ -15,13 +16,13 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import tk.mybatis.spring.annotation.MapperScan;
 
+@ServletComponentScan(basePackages= {"com.light.hexo.business.portal.web.filter"})
 @MapperScan(basePackages = {"com.light.hexo.business.admin.mapper"})
 @EnableScheduling
 @EnableCaching
 @EnableAsync
-@ServletComponentScan
 @Slf4j
-@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class, FlywayAutoConfiguration.class})
+@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class, FlywayAutoConfiguration.class, MybatisAutoConfiguration.class})
 public class HexoBootApplication extends SpringBootServletInitializer {
 
     @Override

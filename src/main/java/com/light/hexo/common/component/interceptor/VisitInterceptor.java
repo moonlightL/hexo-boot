@@ -49,7 +49,7 @@ public class VisitInterceptor extends HandlerInterceptorAdapter {
 
         // 后台请求不需要走访问埋点
         String requestURI = request.getRequestURI();
-        if (!requestURI.contains("/admin") && !requestURI.contains(".json")) {
+        if (!requestURI.contains("/admin") && !requestURI.contains(".json") && !requestURI.contains("/favicon.ico")) {
             this.eventPublisher.emit(new VisitEvent(IpUtil.getIpAddr(request), BrowserUtil.getBrowserName(request)));
         }
 
