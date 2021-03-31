@@ -9,14 +9,25 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.config.Registry;
+import org.apache.http.config.RegistryBuilder;
 import org.apache.http.conn.HttpClientConnectionManager;
+import org.apache.http.conn.socket.ConnectionSocketFactory;
+import org.apache.http.conn.socket.PlainConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.*;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.util.EntityUtils;
+
+import javax.net.ssl.SSLContext;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -32,10 +43,27 @@ public class HttpClientUtil { private HttpClientUtil() { }
 
     private static PoolingHttpClientConnectionManager cm;
 
+    private static SSLConnectionSocketFactory sf;
+
     static {
-        cm = new PoolingHttpClientConnectionManager();
+
+        try {
+            SSLContext sslc = new SSLContextBuilder().loadTrustMaterial(null, (chain, authType) -> true).build();
+            sf = new SSLConnectionSocketFactory(sslc);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Registry<ConnectionSocketFactory> sfr = RegistryBuilder.<ConnectionSocketFactory>create()
+                .register("http", PlainConnectionSocketFactory.getSocketFactory())
+                .register("https", null != sf ? sf : SSLConnectionSocketFactory.getSocketFactory())
+                .build();
+
+        cm = new PoolingHttpClientConnectionManager(sfr);
         cm.setMaxTotal(100);
         cm.setDefaultMaxPerRoute(20);
+
         // 启动该线程，负责清理无效连接
         new IdleConnectionEvictor(cm).start();
     }
@@ -76,6 +104,7 @@ public class HttpClientUtil { private HttpClientUtil() { }
     public static String sendGet(String url) {
         // 创建 httpClient
         CloseableHttpClient httpclient = HttpClients.custom()
+                .setSSLSocketFactory(sf)
                 .setConnectionManager(cm)
                 .build();
         // 创建 http 请求
@@ -94,6 +123,7 @@ public class HttpClientUtil { private HttpClientUtil() { }
     public static String sendPost(String url, Map<String, Object> paramMap) {
         // 创建 httpClient
         CloseableHttpClient httpclient = HttpClients.custom()
+                .setSSLSocketFactory(sf)
                 .setConnectionManager(cm)
                 .build();
         // 创建 http 请求
@@ -115,6 +145,7 @@ public class HttpClientUtil { private HttpClientUtil() { }
     public static String sendPost(String url, String content) {
         // 创建 httpClient
         CloseableHttpClient httpclient = HttpClients.custom()
+                .setSSLSocketFactory(sf)
                 .setConnectionManager(cm)
                 .build();
         // 创建 http 请求

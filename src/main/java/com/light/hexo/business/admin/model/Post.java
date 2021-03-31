@@ -80,6 +80,11 @@ public class Post implements Serializable {
     private String coverUrl;
 
     /**
+     * 封面布局 1：全封面 2：无封面 3：左侧 4：顶部
+     */
+    private Integer coverType;
+
+    /**
      * 是否发布
      */
     @Column(name="is_publish")
