@@ -119,7 +119,7 @@ public class NavServiceImpl extends BaseServiceImpl<Nav> implements NavService {
         this.removeBatch(idList);
         EhcacheUtil.clearByCacheName("navCache");
         CacheUtil.remove(CacheKey.NAV_LIST);
-        this.eventPublisher.emit(new NavEvent());
+        this.eventPublisher.emit(new NavEvent(NavEvent.Type.LOAD));
     }
 
     @Override
@@ -132,7 +132,7 @@ public class NavServiceImpl extends BaseServiceImpl<Nav> implements NavService {
         super.saveModel(nav);
         EhcacheUtil.clearByCacheName("navCache");
         CacheUtil.remove(CacheKey.NAV_LIST);
-        this.eventPublisher.emit(new NavEvent());
+        this.eventPublisher.emit(new NavEvent(NavEvent.Type.LOAD));
     }
 
     @Override
@@ -155,7 +155,7 @@ public class NavServiceImpl extends BaseServiceImpl<Nav> implements NavService {
         super.updateModel(nav);
         EhcacheUtil.clearByCacheName("navCache");
         CacheUtil.remove(CacheKey.NAV_LIST);
-        this.eventPublisher.emit(new NavEvent());
+        this.eventPublisher.emit(new NavEvent(NavEvent.Type.LOAD));
     }
 
     @Override
@@ -173,7 +173,7 @@ public class NavServiceImpl extends BaseServiceImpl<Nav> implements NavService {
         if (num > 0) {
             EhcacheUtil.clearByCacheName("navCache");
             CacheUtil.remove(CacheKey.NAV_LIST);
-            this.eventPublisher.emit(new NavEvent());
+            this.eventPublisher.emit(new NavEvent(NavEvent.Type.LOAD));
         }
         return num;
     }
@@ -200,7 +200,6 @@ public class NavServiceImpl extends BaseServiceImpl<Nav> implements NavService {
         if (nav == null || !nav.getState()) {
             ExceptionUtil.throwExToPage(HexoExceptionEnum.ERROR_NAV_PAGE_NOT_EXIST);
         }
-
         return nav;
     }
 
@@ -211,14 +210,25 @@ public class NavServiceImpl extends BaseServiceImpl<Nav> implements NavService {
 
     @Override
     public void dealWithEvent(BaseEvent event) {
-        WebApplicationContext webApplicationContext = (WebApplicationContext) SpringContextUtil.applicationContext;
-        ServletContext servletContext = webApplicationContext.getServletContext();
-        if (servletContext == null) {
-            log.info("===========ConfigService dealWithEvent 获取 servletContext 为空============");
-            return;
+
+        NavEvent navEvent = (NavEvent) event;
+        if (NavEvent.Type.LOAD.getCode().equals(navEvent.getType().getCode())) {
+            WebApplicationContext webApplicationContext = (WebApplicationContext) SpringContextUtil.applicationContext;
+            ServletContext servletContext = webApplicationContext.getServletContext();
+            if (servletContext == null) {
+                log.info("===========NavService dealWithEvent 获取 servletContext 为空============");
+                return;
+            }
+
+            this.initNav(servletContext);
+        } else if (NavEvent.Type.READ.getCode().equals(navEvent.getType().getCode())) {
+            Nav nav = this.findById(navEvent.getId());
+            if (nav != null) {
+                nav.setReadNum(nav.getReadNum() + 1);
+                this.updateModel(nav);
+            }
         }
 
-        this.initNav(servletContext);
     }
 
 

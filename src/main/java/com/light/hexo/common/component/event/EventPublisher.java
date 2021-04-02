@@ -21,7 +21,7 @@ public class EventPublisher {
     @Autowired
     private EventServiceFactory eventServiceFactory;
 
-    private Queue eventQueue = new LinkedBlockingQueue();
+    private Queue<BaseEvent> eventQueue = new LinkedBlockingQueue<>();
 
     /**
      * 发送事件
@@ -35,9 +35,8 @@ public class EventPublisher {
     @Scheduled(fixedRate = 500)
     public void dealWithEvent() {
 
-        Object obj = this.eventQueue.poll();
-        if (obj != null) {
-            BaseEvent event = (BaseEvent) obj;
+        BaseEvent event = this.eventQueue.poll();
+        if (event != null) {
             EventService eventService = this.eventServiceFactory.getInstance(event.getEventType());
             eventService.dealWithEvent(event);
         }

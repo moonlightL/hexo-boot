@@ -3,6 +3,7 @@ package com.light.hexo.business.admin.service.impl;
 import com.light.hexo.business.admin.mapper.TagMapper;
 import com.light.hexo.business.admin.model.Tag;
 import com.light.hexo.business.admin.service.TagService;
+import com.light.hexo.business.portal.constant.PageConstant;
 import com.light.hexo.common.base.BaseMapper;
 import com.light.hexo.common.base.BaseRequest;
 import com.light.hexo.common.base.BaseServiceImpl;
@@ -10,6 +11,8 @@ import com.light.hexo.common.exception.GlobalException;
 import com.light.hexo.common.model.TagRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
@@ -26,6 +29,7 @@ import java.util.stream.Collectors;
  * @Description: 标签 Service 实现
  * @DateTime 2020/8/3 16:30
  */
+@CacheConfig(cacheNames = "tagCache")
 @Service
 public class TagServiceImpl extends BaseServiceImpl<Tag> implements TagService {
 
@@ -94,6 +98,7 @@ public class TagServiceImpl extends BaseServiceImpl<Tag> implements TagService {
         return this.getBaseMapper().selectCount(null);
     }
 
+    @Cacheable(key = "'" + PageConstant.TAG_LIST + "'")
     @Override
     public List<Tag> listTagsByIndex() throws GlobalException {
         List<Tag> list = super.findAll();

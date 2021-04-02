@@ -35,19 +35,19 @@ public class InitListener implements ApplicationListener<ContextRefreshedEvent> 
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
-        WebApplicationContext webApplicationContext = (WebApplicationContext)contextRefreshedEvent.getApplicationContext();
+        WebApplicationContext webApplicationContext = (WebApplicationContext) contextRefreshedEvent.getApplicationContext();
         ServletContext servletContext = webApplicationContext.getServletContext();
         if (servletContext == null) {
-            log.info("==========ConfigMapInitListener 获取 ServletContext 为空===========");
+            log.info("==========InitListener 获取 ServletContext 为空===========");
             return;
         }
 
         List<Config> configList = this.configService.findAll();
         Map<String, String> configMap = configList.stream().collect(Collectors.toMap(Config::getConfigKey, Config::getConfigValue,  (v1, v2) -> v2));
         servletContext.setAttribute("configMap", configMap);
-        log.info("==========ConfigMapInitListener 初始化[全局参数]===========");
+        log.info("==========InitListener 初始化[全局参数]===========");
 
         this.navService.initNav(servletContext);
-        log.info("==========ConfigMapInitListener 初始化[导航数据]===========");
+        log.info("==========InitListener 初始化[导航数据]===========");
     }
 }

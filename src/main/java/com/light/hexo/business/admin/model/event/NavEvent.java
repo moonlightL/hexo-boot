@@ -18,6 +18,40 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class NavEvent extends BaseEvent {
 
+    /**
+     * 导航 id
+     */
+    private Integer id;
+
+    /**
+     * 类型
+     */
+    private Type type;
+
+    @Getter
+    public enum Type {
+
+        LOAD(1, "加载"),
+        READ(2, "浏览");
+
+        Integer code;
+        String remark;
+
+        Type(int code, String remark) {
+            this.code = code;
+            this.remark = remark;
+        }
+    }
+
+    public NavEvent(Type type) {
+        this.type = type;
+    }
+
+    public NavEvent(Integer id, Type type) {
+        this.id = id;
+        this.type = type;
+    }
+
     @Override
     protected EventEnum getEventType() {
         return EventEnum.NAV;

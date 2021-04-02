@@ -52,9 +52,19 @@ public class PageConstant {
     public static final String POST_BY_CATEGORY_NAME = "hexo:post:by:category:name";
 
     /**
+     * 标签名称相关的文章列表缓存 key（格式：PageConstant.POST_BY_TAG_NAME + #tagName + #pageNum）
+     */
+    public static final String POST_BY_TAG_NAME = "hexo:post:by:tag:name";
+
+    /**
      * 首页分类列表缓存 key（格式：PageConstant.CATEGORY_LIST）
      */
     public static final String CATEGORY_LIST = "hexo:category:list";
+
+    /**
+     * 首页标签列表缓存 key（格式：PageConstant.TAG_LIST）
+     */
+    public static final String TAG_LIST = "hexo:tag:list";
 
     /**
      * 首页友链列表缓存 key（格式：PageConstant.FRIEND_LINK_LIST）

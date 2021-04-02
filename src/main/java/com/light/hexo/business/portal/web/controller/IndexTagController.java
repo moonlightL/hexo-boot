@@ -4,6 +4,7 @@ import com.github.pagehelper.PageInfo;
 import com.light.hexo.business.admin.model.Nav;
 import com.light.hexo.business.admin.model.Post;
 import com.light.hexo.business.admin.model.Tag;
+import com.light.hexo.business.admin.model.event.NavEvent;
 import com.light.hexo.business.portal.common.CommonController;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,7 +33,9 @@ public class IndexTagController extends CommonController {
         List<Tag> tagList = this.tagService.listTagsByIndex();
         resultMap.put("tagList", tagList);
         resultMap.put("count", tagList.size());
-        resultMap.put("currentNav", this.navService.findByLink("/tags/"));
+        Nav nav = this.navService.findByLink("/tags/");
+        resultMap.put("currentNav", nav);
+        this.eventPublisher.emit(new NavEvent(nav.getId(), NavEvent.Type.READ));
         return render("tags", false, resultMap);
     }
 

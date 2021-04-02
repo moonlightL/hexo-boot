@@ -5,6 +5,7 @@ import com.light.hexo.business.admin.model.FriendLink;
 import com.light.hexo.business.admin.model.Nav;
 import com.light.hexo.business.admin.model.Theme;
 import com.light.hexo.business.admin.service.*;
+import com.light.hexo.common.component.event.EventPublisher;
 import com.light.hexo.common.constant.CacheKey;
 import com.light.hexo.common.util.CacheUtil;
 import com.light.hexo.common.util.MarkdownUtil;
@@ -67,6 +68,9 @@ public class CommonController {
 
     @Autowired
     protected MusicService musicService;
+
+    @Autowired
+    protected EventPublisher eventPublisher;
 
     protected String render(String pageName, boolean isDetail, Map<String, Object> resultMap) {
 

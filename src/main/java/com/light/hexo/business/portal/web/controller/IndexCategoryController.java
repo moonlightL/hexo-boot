@@ -4,6 +4,7 @@ import com.github.pagehelper.PageInfo;
 import com.light.hexo.business.admin.model.Category;
 import com.light.hexo.business.admin.model.Nav;
 import com.light.hexo.business.admin.model.Post;
+import com.light.hexo.business.admin.model.event.NavEvent;
 import com.light.hexo.business.portal.common.CommonController;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,7 +33,9 @@ public class IndexCategoryController extends CommonController {
         List<Category> categoryList = this.categoryService.listCategoriesByIndex();
         resultMap.put("categoryList", categoryList);
         resultMap.put("categoryNum", categoryList.size());
-        resultMap.put("currentNav", this.navService.findByLink("/categories/"));
+        Nav nav = this.navService.findByLink("/categories/");
+        resultMap.put("currentNav", nav);
+        this.eventPublisher.emit(new NavEvent(nav.getId(), NavEvent.Type.READ));
         return render("categories", false, resultMap);
     }
 

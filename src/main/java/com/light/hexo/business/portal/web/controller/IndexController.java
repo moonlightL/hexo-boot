@@ -2,6 +2,8 @@ package com.light.hexo.business.portal.web.controller;
 
 import com.light.hexo.business.admin.constant.ConfigEnum;
 import com.light.hexo.business.admin.model.*;
+import com.light.hexo.business.admin.model.event.NavEvent;
+import com.light.hexo.business.admin.model.event.PostEvent;
 import com.light.hexo.business.portal.common.CommonController;
 import com.light.hexo.business.portal.model.HexoPageInfo;
 import com.light.hexo.common.model.Result;
@@ -50,8 +52,9 @@ public class IndexController extends CommonController {
             resultMap.put("topList", topList.stream().limit(3).collect(Collectors.toList()));
         }
 
-        resultMap.put("currentNav", this.navService.findByLink("/"));
-
+        Nav nav = this.navService.findByLink("/");
+        resultMap.put("currentNav", nav);
+        this.eventPublisher.emit(new NavEvent(nav.getId(), NavEvent.Type.READ));
         return render("index", false, resultMap);
     }
 
@@ -91,12 +94,11 @@ public class IndexController extends CommonController {
                        Map<String, Object> resultMap) {
         String link = year + "/" + month + "/" + day + "/" + title + "/";
         Post post = this.postService.getDetailInfo(link);
-
         resultMap.put("post", post);
         resultMap.put("previousPost", post.getPrevPost());
         resultMap.put("nextPost", post.getNextPost());
         resultMap.put("currentNav", new Nav(post.getTitle(), post.getLink(), post.getCoverUrl(), "detail"));
-
+        this.eventPublisher.emit(new PostEvent(post.getId(), PostEvent.Type.READ));
         return render("detail", true, resultMap);
     }
 
@@ -109,7 +111,9 @@ public class IndexController extends CommonController {
     public String about(Map<String, Object> resultMap) {
         UserExtend extend = this.userExtendService.getBloggerInfo();
         resultMap.put("about", extend);
-        resultMap.put("currentNav", this.navService.findByLink("/about/"));
+        Nav nav = this.navService.findByLink("/about/");
+        resultMap.put("currentNav", nav);
+        this.eventPublisher.emit(new NavEvent(nav.getId(), NavEvent.Type.READ));
         return render("about", false, resultMap);
     }
 
@@ -133,7 +137,9 @@ public class IndexController extends CommonController {
      */
     @RequestMapping("/custom/{link}")
     public String page(@PathVariable String link, Map<String, Object> resultMap) {
-        resultMap.put("currentNav", this.navService.findCustomLink(link));
+        Nav nav = this.navService.findCustomLink(link);
+        resultMap.put("currentNav", nav);
+        this.eventPublisher.emit(new NavEvent(nav.getId(), NavEvent.Type.READ));
         return render("custom", true, resultMap);
     }
 

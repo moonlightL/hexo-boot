@@ -594,8 +594,6 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
         Post nextPost = this.postMapper.selectNextInfo(postId);
         post.setNextPost(nextPost);
 
-        this.eventPublisher.emit(new PostEvent(post.getId(), PostEvent.Type.READ));
-
         return post;
     }
 
@@ -660,6 +658,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
         return this.getBaseMapper().selectByExample(example);
     }
 
+    @Cacheable(key = "'" + PageConstant.POST_BY_TAG_NAME + "' + #tagName + ':' + #pageNum")
     @Override
     public List<Post> listPostsByTagName(String tagName, Integer pageNum, Integer pageSize) throws GlobalException {
 
