@@ -32,6 +32,7 @@ import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.util.Sqls;
 
 import javax.servlet.ServletContext;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -224,8 +225,9 @@ public class NavServiceImpl extends BaseServiceImpl<Nav> implements NavService {
         } else if (NavEvent.Type.READ.getCode().equals(navEvent.getType().getCode())) {
             Nav nav = this.findById(navEvent.getId());
             if (nav != null) {
-                nav.setReadNum(nav.getReadNum() + 1);
-                this.updateModel(nav);
+                Nav tmp = new Nav();
+                tmp.setId(nav.getId()).setReadNum(nav.getReadNum() + 1).setUpdateTime(LocalDateTime.now());
+                super.updateModel(tmp);
             }
         }
 
