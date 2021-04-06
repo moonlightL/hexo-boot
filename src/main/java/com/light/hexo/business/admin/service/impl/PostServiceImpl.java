@@ -485,8 +485,8 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
 
         // 非置顶文章
         List<Post> remainList = postList.stream().filter(i -> !i.getTop())
-                .sorted(Comparator.comparing(Post::getPublishDate).reversed())
-                .sorted(Comparator.comparing(Post::getCreateTime).reversed())
+                .sorted(Comparator.comparing(Post::getPublishDate).reversed().thenComparing(
+                        Comparator.comparing(Post::getCreateTime).reversed()))
                 .collect(Collectors.toList());
         list.addAll(remainList);
 
