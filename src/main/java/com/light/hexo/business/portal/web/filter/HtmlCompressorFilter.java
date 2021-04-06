@@ -45,8 +45,6 @@ public class HtmlCompressorFilter implements Filter {
            return;
         }
 
-        System.out.println("url: " + requestURI + " response:" + response);
-
         ResponseWrapper wrapper = new ResponseWrapper((HttpServletResponse) response);
         chain.doFilter(request, wrapper);
         response.setContentLength(-1);
