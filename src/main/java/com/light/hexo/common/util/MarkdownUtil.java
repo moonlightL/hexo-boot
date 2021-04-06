@@ -5,8 +5,6 @@ import fr.brouillard.oss.commonmark.ext.notifications.NotificationsExtension;
 import org.apache.commons.lang3.StringUtils;
 import org.commonmark.Extension;
 import org.commonmark.ext.gfm.tables.TableBlock;
-import org.commonmark.ext.gfm.tables.TableBody;
-import org.commonmark.ext.gfm.tables.TableRow;
 import org.commonmark.ext.gfm.tables.TablesExtension;
 import org.commonmark.ext.heading.anchor.HeadingAnchorExtension;
 import org.commonmark.node.*;
@@ -129,9 +127,10 @@ public class MarkdownUtil {
             .attributeProviderFactory(context -> (node, tagName, attributes) -> {
                 if (node instanceof Heading) {
                     Text firstChild = (Text) node.getFirstChild();
-                    String id = firstChild.getLiteral().replace("(","")
-                                                       .replace(")", "")
-                                                       .replace(" ", "");
+                    String id = firstChild.getLiteral().replace("(","-")
+                                                       .replace(")", "-")
+                                                       .replace("/","-")
+                                                       .replace(" ", "-");
                     attributes.put("id", id);
                 } else if (node instanceof TableBlock) {
                     attributes.put("class", "table");

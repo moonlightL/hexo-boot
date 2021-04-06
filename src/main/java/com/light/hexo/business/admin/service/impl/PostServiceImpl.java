@@ -217,6 +217,9 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
 
         if (post.getTop() != null) {
             post.setTopTime(now);
+            if (post.getTop()) {
+                post.setCoverType(1);
+            }
         }
 
         if (post.getComment() == null) {
@@ -284,6 +287,9 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
 
         if (post.getTop() != null && !dbPost.getTop()) {
             post.setTopTime(now);
+            if (post.getTop()) {
+                post.setCoverType(1);
+            }
         }
 
         if (post.getComment() == null) {
@@ -377,6 +383,9 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
 
         if (post.getTop() != null) {
             post.setTopTime(LocalDateTime.now());
+            if (post.getTop()) {
+                post.setCoverType(1);
+            }
         }
 
         this.updateModel(post);
