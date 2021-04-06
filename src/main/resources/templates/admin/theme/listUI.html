@@ -96,7 +96,7 @@
                         });
                     });
                 } else if ($target.hasClass("config-btn")) {
-                    $.hexo.modal._window("主题配置", BASE_URL + "/configUI.html?id=" + $target.data("id"), 780, 540, false);
+                    $.hexo.modal._window("主题配置", BASE_URL + "/configUI.html?id=" + $target.data("id"), 780, 540, true);
                 } else if ($target.hasClass("code-btn")) {
                     $.hexo.modal._window("源码修改", BASE_URL + "/codeUI.html?id=" + $target.data("id"), 780, 540, true);
                 } else if ($target.hasClass("remove-btn")) {
