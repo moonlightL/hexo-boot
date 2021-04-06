@@ -86,6 +86,11 @@ public class Nav implements Serializable {
      */
     private String cover;
 
+    /**
+     * 浏览数
+     */
+    private Integer readNum;
+
     @CreateTime
     private LocalDateTime createTime;
 

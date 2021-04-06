@@ -50,6 +50,11 @@ public class PostRequest extends BaseRequest<Post> {
     private String coverUrl;
 
     /**
+     * 封面类型
+     */
+    private Integer coverType;
+
+    /**
      * 是否发布
      */
     private Boolean publish;

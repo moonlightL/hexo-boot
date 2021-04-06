@@ -217,6 +217,9 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
 
         if (post.getTop() != null) {
             post.setTopTime(now);
+            if (post.getTop()) {
+                post.setCoverType(1);
+            }
         }
 
         if (post.getComment() == null) {
@@ -284,6 +287,9 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
 
         if (post.getTop() != null && !dbPost.getTop()) {
             post.setTopTime(now);
+            if (post.getTop()) {
+                post.setCoverType(1);
+            }
         }
 
         if (post.getComment() == null) {
@@ -377,6 +383,9 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
 
         if (post.getTop() != null) {
             post.setTopTime(LocalDateTime.now());
+            if (post.getTop()) {
+                post.setCoverType(1);
+            }
         }
 
         this.updateModel(post);
@@ -453,7 +462,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
     public HexoPageInfo pagePostsByIndex(int pageNum, int pageSize, boolean filterTop) throws GlobalException {
         Example.Builder builder = Example.builder(Post.class)
                 .select("id", "title", "summary", "summaryHtml", "author", "publishDate", "year", "month", "day", "top", "reprint",
-                        "coverUrl", "link", "categoryId", "tags", "readNum", "praiseNum", "commentNum", "topTime", "createTime")
+                        "coverUrl", "coverType", "link", "categoryId", "tags", "readNum", "praiseNum", "commentNum", "topTime", "createTime")
                 .where(Sqls.custom().andEqualTo("publish", true).andEqualTo("delete", false));
         if (filterTop) {
             builder.andWhere(Sqls.custom().andEqualTo("top", false));
@@ -508,7 +517,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
     public HexoPageInfo archivePostsByIndex() throws GlobalException {
         Example example = Example.builder(Post.class)
                 .select("id", "title", "author", "publishDate", "year", "month", "day", "top", "reprint",
-                        "coverUrl", "link", "categoryId", "tags", "readNum", "createTime")
+                        "coverUrl", "coverType", "link", "categoryId", "tags", "readNum", "createTime")
                 .where(Sqls.custom().andEqualTo("publish", true).andEqualTo("delete", false))
                 .orderByDesc("createTime")
                 .build();
@@ -529,7 +538,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
     public HexoPageInfo archivePostsByIndex(Integer pageNum, Integer pageSize) throws GlobalException {
         Example example = Example.builder(Post.class)
                 .select("id", "title", "author", "publishDate", "year", "month", "day", "top", "reprint",
-                        "coverUrl", "link", "categoryId", "tags", "readNum", "createTime")
+                        "coverUrl", "coverType", "link", "categoryId", "tags", "readNum", "createTime")
                 .where(Sqls.custom().andEqualTo("publish", true).andEqualTo("delete", false))
                 .orderByDesc("createTime")
                 .build();
@@ -594,8 +603,6 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
         Post nextPost = this.postMapper.selectNextInfo(postId);
         post.setNextPost(nextPost);
 
-        this.eventPublisher.emit(new PostEvent(post.getId(), PostEvent.Type.READ));
-
         return post;
     }
 
@@ -650,7 +657,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
         PageHelper.startPage(pageNum, pageSize);
         Example example = Example.builder(Post.class)
                 .select("id", "title", "summary", "author", "publishDate", "year", "month", "day", "top", "reprint",
-                        "coverUrl", "link", "categoryId", "tags", "readNum", "praiseNum", "createTime")
+                        "coverUrl", "coverType", "link", "categoryId", "tags", "readNum", "praiseNum", "createTime")
                 .where(Sqls.custom()
                         .andEqualTo("categoryId", category.getId())
                         .andEqualTo("publish", true)
@@ -660,6 +667,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
         return this.getBaseMapper().selectByExample(example);
     }
 
+    @Cacheable(key = "'" + PageConstant.POST_BY_TAG_NAME + "' + #tagName + ':' + #pageNum")
     @Override
     public List<Post> listPostsByTagName(String tagName, Integer pageNum, Integer pageSize) throws GlobalException {
 
@@ -677,7 +685,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
     public List<Post> findTopList() throws GlobalException {
         Example example = Example.builder(Post.class)
                 .select("id", "title", "author", "publishDate", "year", "month", "day", "top", "reprint",
-                        "coverUrl", "link", "categoryId", "tags", "readNum", "createTime")
+                        "coverUrl", "coverType", "link", "categoryId", "tags", "readNum", "createTime")
                 .where(Sqls.custom()
                         .andEqualTo("top", true)
                         .andEqualTo("delete", false))

@@ -14,7 +14,10 @@
             max-width: 500px;
         }
         img {
-            object-fit: cover;
+            box-shadow: 0 1px 20px 8px #EEE;
+        }
+        p {
+            padding-bottom: 1rem;
         }
     </style>
 </head>
@@ -25,13 +28,16 @@
         <div class="block-content">
             <form id="saveForm" method="post" th:object="${vo}">
                 <div class="row justify-content-center py-20">
-                    <div class="col-md-12">
+                    <div class="col-md-4">
                         <div class="form-group row">
-                            <div class="col-md-2">预览图</div>
-                            <div class="col-md-10">
-                                <img th:src="@{*{coverUrl}}" width="400" height="150" alt="">
+                            <div class="col-md-12">
+                                <p>预览图:</p>
+                                <img th:src="@{*{coverUrl}}" width="400" height="350" alt="">
                             </div>
                         </div>
+                    </div>
+                    <div class="col-md-7 offset-1">
+                        <p>主题参数:</p>
                         <div class="form-group row">
                             <div class="col-md-2">主题名</div>
                             <div class="col-md-10">
@@ -48,11 +54,11 @@
                             <div class="col-md-2" th:text="${config.configLabel}"></div>
                             <div class="col-md-10">
                                 <span th:if="${config.configType eq 'input'}">
-                                    <input type="text" name="configValue" class="form-control theme-config" style="width: 485px;" th:value="${config.configValue}" th:data-id="${config.id}">
+                                    <input type="text" name="configValue" class="form-control theme-config" style="width: 300px;" th:value="${config.configValue}" th:data-id="${config.id}">
                                 </span>
                                 <span th:if="${config.configType eq 'select'}">
                                     <span th:if="${#strings.isEmpty(config.configOption) == false}">
-                                        <select name="configValue" class="form-control theme-config" style="width: 485px;" th:data-id="${config.id}">
+                                        <select name="configValue" class="form-control theme-config" style="width: 300px;" th:data-id="${config.id}">
                                             <option th:each="op : ${#strings.arraySplit(config.configOption, ',')}" th:text="${op}" th:value="${op}" th:attr="selected=${op eq config.configValue}"></option>
                                         </select>
                                     </span>

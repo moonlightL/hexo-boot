@@ -18,6 +18,9 @@
             lazyLoad: {
                 js: baseLink + "/source/js/jquery.lazyload.min.js"
             },
+            share: {
+                js: baseLink + "/source/js/overshare/js/social-share.min.js"
+            },
             toc: {
                 css: baseLink + "/source/js/autoToc/jquery.autoToc.css",
                 js: baseLink + "/source/js/autoToc/jquery.autoToc.js"
@@ -225,13 +228,15 @@
             });
 
             // 分享
-            $("#shareOpenBtn").on("click",function () {
-                let shareBtns = $("#shareBtns");
-                if (shareBtns.hasClass("share-open")) {
-                    shareBtns.removeClass("share-open");
-                } else {
-                    shareBtns.addClass("share-open");
-                }
+            $.getScript(APP.plugins.share.js, function () {
+                $("#shareOpenBtn").on("click",function () {
+                    let shareBtns = $("#shareBtns");
+                    if (shareBtns.hasClass("share-open")) {
+                        shareBtns.removeClass("share-open");
+                    } else {
+                        shareBtns.addClass("share-open");
+                    }
+                });
             });
 
             $.getScript(APP.plugins.detail.js, function () {

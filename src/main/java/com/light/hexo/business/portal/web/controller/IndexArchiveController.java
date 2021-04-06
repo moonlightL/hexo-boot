@@ -3,6 +3,7 @@ package com.light.hexo.business.portal.web.controller;
 import com.light.hexo.business.admin.model.Nav;
 import com.light.hexo.business.admin.model.Post;
 import com.light.hexo.business.admin.model.Theme;
+import com.light.hexo.business.admin.model.event.NavEvent;
 import com.light.hexo.business.portal.common.CommonController;
 import com.light.hexo.business.portal.model.HexoPageInfo;
 import org.springframework.stereotype.Controller;
@@ -33,7 +34,9 @@ public class IndexArchiveController extends CommonController {
         pageNum = pageNum == null ? 1 : pageNum;
         pageInfo =  this.postService.archivePostsByIndex(pageNum, PAGE_SIZE);
         resultMap.put("pageInfo", pageInfo);
-        resultMap.put("currentNav", this.navService.findByLink("/archives/"));
+        Nav nav = this.navService.findByLink("/archives/");
+        resultMap.put("currentNav", nav);
+        this.eventPublisher.emit(new NavEvent(nav.getId(), NavEvent.Type.READ));
         return render("archives", false, resultMap);
     }
 }

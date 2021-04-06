@@ -48,8 +48,20 @@
                                 <div id="btnArr" style="margin: 0 15px 15px 15px"></div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-md-3 col-form-label" for="title">分类</label>
-                                <div class="col-md-9">
+                                <label class="col-md-4 col-form-label" for="title">封面布局</label>
+                                <div class="col-md-8">
+                                    <select class="custom-select" id="coverType" name="coverType">
+                                        <option th:text="顶部封面" th:value="4" th:attr="selected=${4 eq vo.coverType}"></option>
+                                        <option th:text="全封面" th:value="1" th:attr="selected=${1 eq vo.coverType}"></option>
+                                        <option th:text="无封面" th:value="2" th:attr="selected=${2 eq vo.coverType}"></option>
+                                        <option th:text="左侧封面" th:value="3" th:attr="selected=${3 eq vo.coverType}"></option>
+                                    </select>
+                                    (仅针对 Pure 主题生效)
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label" for="title">分类</label>
+                                <div class="col-md-8">
                                     <select class="custom-select" id="categoryId" name="categoryId" data-bv-notempty="true" data-bv-notempty-message="分类不能为空" th:field="*{categoryId}">
                                         <option value="" disabled selected>分类 *</option>
                                         <option th:each="category:${categoryList}" th:value="${category.id}" th:text="${category.name}"></option>
@@ -57,14 +69,14 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-md-3 col-form-label" for="title">标签</label>
-                                <div class="col-md-9">
+                                <label class="col-md-4 col-form-label" for="title">标签</label>
+                                <div class="col-md-8">
                                     <input type="text" id="tags" name="tags" class="js-tags-input form-control" placeholder="标签" data-height="32px" th:field="*{tags}">
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-md-3 col-form-label" for="title">转载</label>
-                                <div class="col-md-9">
+                                <label class="col-md-4 col-form-label" for="title">转载</label>
+                                <div class="col-md-8">
                                     <select class="custom-select" id="reprint" name="reprint" th:field="*{reprint}">
                                         <option value="" disabled selected>是否转载</option>
                                         <option value="0">否</option>
@@ -73,8 +85,8 @@
                                 </div>
                                 <div class="col-md-12" id="anchorInfo" th:attr="style='display:' + ${vo.reprint ? 'block' : 'none'}">
                                     <div class="form-group row">
-                                        <label class="col-md-3 col-form-label" for="title">作者</label>
-                                        <div class="col-md-9">
+                                        <label class="col-md-4 col-form-label" for="title">作者</label>
+                                        <div class="col-md-8">
                                             <input type="text" class="form-control" placeholder="原作者" name="author" th:field="*{author}">
                                         </div>
                                     </div>
@@ -98,7 +110,7 @@
                             <div class="col-lg-4 col-md-4 col-sm-4">
                                 <div class="form-group">
                                     <label class="css-control css-control-success css-switch css-control-sm css-switch-square">
-                                        <input type="checkbox" class="css-control-input" name="publish" checked>
+                                        <input type="checkbox" class="css-control-input" name="publish" th:attr="checked=${vo.publish}">
                                         <span class="css-control-indicator"></span> 是否发表
                                     </label>
                                 </div>
@@ -106,7 +118,7 @@
                             <div class="col-lg-4 col-md-4 col-sm-4">
                                 <div class="form-group">
                                     <label class="css-control css-control-success css-switch css-control-sm css-switch-square">
-                                        <input type="checkbox" class="css-control-input" name="comment" checked>
+                                        <input type="checkbox" class="css-control-input" name="comment" th:attr="checked=${vo.comment}">
                                         <span class="css-control-indicator"></span> 是否允许评论
                                     </label>
                                 </div>
@@ -114,7 +126,7 @@
                             <div class="col-lg-4 col-md-4 col-sm-4">
                                 <div class="form-group">
                                     <label class="css-control css-control-success css-switch css-control-sm css-switch-square">
-                                        <input type="checkbox" class="css-control-input" name="top">
+                                        <input type="checkbox" class="css-control-input" name="top" th:attr="checked=${vo.top}">
                                         <span class="css-control-indicator"></span> 是否置顶
                                     </label>
                                 </div>

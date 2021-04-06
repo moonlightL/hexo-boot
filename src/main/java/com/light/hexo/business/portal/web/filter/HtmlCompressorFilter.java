@@ -40,19 +40,18 @@ public class HtmlCompressorFilter implements Filter {
 
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         String requestURI = httpServletRequest.getRequestURI();
-        if (requestURI.startsWith("/admin") || requestURI.startsWith("/theme") || requestURI.contains(".json")) {
+        if (requestURI.startsWith("/admin") || requestURI.contains(".json")
+                || requestURI.endsWith(".css") || requestURI.endsWith(".js") || requestURI.endsWith(".map")) {
            chain.doFilter(request, response);
            return;
         }
 
-        ResponseWrapper wrapper = new ResponseWrapper((HttpServletResponse) response);
-        chain.doFilter(request, wrapper);
+        HtmlResponseWrapper responseWrapper = new HtmlResponseWrapper((HttpServletResponse) response);
+        chain.doFilter(request, responseWrapper);
         response.setContentLength(-1);
 
         if (!response.isCommitted()) {
-            PrintWriter out = response.getWriter();
-            out.write(htmlCompressor.compress(wrapper.getResult()));
-            out.flush();
+            response.getWriter().write(htmlCompressor.compress(responseWrapper.toString()));
         }
     }
 }

@@ -17,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -151,7 +152,7 @@ public class FileController {
     @RequestMapping(value = "/randomPic.json", method = RequestMethod.POST)
     @ResponseBody
     public FileResult randomPic() throws GlobalException {
-        String result = HttpClientUtil.sendGet("https://api.ixiaowai.cn/gqapi/gqapi.php?return=json");
+        String result = HttpClientUtil.sendPost("https://api.ixiaowai.cn/gqapi/gqapi.php?return=json", "");
         Gson gson = new Gson();
         WebPic webPic = gson.fromJson(result, WebPic.class);
         if (webPic == null || !"200".equals(webPic.getCode())) {
