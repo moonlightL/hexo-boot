@@ -32,7 +32,7 @@ public class EventPublisher {
         this.eventQueue.offer(baseEvent);
     }
 
-    @Scheduled(fixedRate = 500)
+    @Scheduled(fixedRate = 1000)
     public void dealWithEvent() {
 
         BaseEvent event = this.eventQueue.poll();

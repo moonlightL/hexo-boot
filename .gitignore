@@ -36,3 +36,4 @@ build/
 ### VS Code ###
 .vscode/
 
+/src/main/resources/public/service-worker.js

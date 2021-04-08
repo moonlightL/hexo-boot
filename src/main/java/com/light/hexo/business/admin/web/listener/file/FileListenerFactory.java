@@ -42,7 +42,7 @@ public class FileListenerFactory {
         observer.addListener(fileListener);
 
         // 返回监听者
-        return new FileAlterationMonitor(1, observer);
+        return new FileAlterationMonitor(1000, observer);
     }
 
 }
