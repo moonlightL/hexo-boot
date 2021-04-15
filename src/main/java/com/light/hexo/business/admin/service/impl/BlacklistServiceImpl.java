@@ -13,10 +13,10 @@ import com.light.hexo.common.util.CacheUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 import tk.mybatis.mapper.entity.Example;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -61,6 +61,13 @@ public class BlacklistServiceImpl extends BaseServiceImpl<Blacklist> implements 
     }
 
     @Override
+    public int saveModel(Blacklist model) throws GlobalException {
+        int result = super.saveModel(model);
+        CacheUtil.remove(CacheKey.BLACK_LIST);
+        return result;
+    }
+
+    @Override
     public int updateModel(Blacklist model) throws GlobalException {
         int result = super.updateModel(model);
         CacheUtil.remove(CacheKey.BLACK_LIST);
@@ -88,4 +95,5 @@ public class BlacklistServiceImpl extends BaseServiceImpl<Blacklist> implements 
         super.saveModel(blacklist);
         CacheUtil.remove(CacheKey.BLACK_LIST);
     }
+
 }
