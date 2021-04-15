@@ -31,7 +31,8 @@
 </div>
 <script th:src="@{${baseLink} + '/source/js/jquery.min.js'}"></script>
 <script th:src="@{${baseLink} + '/source/js/jquery.hideseek.min.js'}"></script>
-<script>
+<script th:inline="javascript">
+    let openPjax = [[${activeTheme.configMap['PJAX']}]];
     $(function() {
         // 由于是子窗口，只能不断检测 sessionStorage 的数据，判断父窗口是否修改主题模式
         setInterval(function() {
@@ -55,7 +56,11 @@
 
         $("a.post-item").on("click", function () {
             let link = $(this).data("url");
-            window.parent.location.href = window.location.protocol + "//" + window.location.host + "/" + link;
+            if (openPjax === "true") {
+                window.parent.$.pjax({url: "/" + link, container: '#wrap', fragment: '#wrap'});
+            } else {
+                window.parent.location.href = window.location.protocol + "//" + window.location.host + "/" + link;
+            }
         });
     })
 </script>

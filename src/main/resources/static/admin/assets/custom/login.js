@@ -5,8 +5,10 @@
     }
 
     $("#verify-code-img").on("click", function() {
-        $(this).attr("src", $(this).attr("src") + "?id=" + Math.random());
+        $(this).attr("src", "/admin/captcha.jpg?id=" + Math.random());
     });
+
+    $("#verify-code-img").trigger("click");
 
     $("#loginForm").validate({
         errorClass: 'invalid-feedback animated fadeInDown',
