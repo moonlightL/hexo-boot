@@ -39,13 +39,4 @@ public class ExceptionUtil {
         throw new GlobalException(globalExceptionMap, false);
     }
 
-    /**
-     * 抛异常，转向 html 页面
-     * @param message
-     */
-    public static void throwEx(String message) {
-        throw new GlobalException(message);
-    }
-
-
 }
