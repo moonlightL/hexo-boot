@@ -902,6 +902,7 @@ span.effect {
     color: var(--text-color);
     font-style: normal;
     text-decoration:none;
+    font-size: 15px;
     transition: all .3s;
 }
 
