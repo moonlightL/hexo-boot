@@ -22,6 +22,12 @@
       "label": "是否开启CDN"
     },
     {
+      "key": "CDNAddress",
+      "value": "",
+      "type": "input",
+      "label": "CDN地址"
+    },
+    {
       "key": "PJAX",
       "value": "true",
       "type": "select",

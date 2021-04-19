@@ -1,10 +1,10 @@
-/*@font-face{*/
-/*    font-family:'Play';*/
-/*    font-style:normal;*/
-/*    font-weight:400;*/
-/*    src:url('../fonts/Play.woff2') format('woff2');*/
-/*    unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2212,U+2215*/
-/*}*/
+@font-face{
+    font-family:'Play';
+    font-style:normal;
+    font-weight:400;
+    src:url('../fonts/Play.woff2') format('woff2');
+    unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2212,U+2215
+}
 
 @keyframes slowUp {
     0% {
@@ -62,6 +62,7 @@
     --shadow-hover-color: #d0cfcf;
     --gutter-pre-bg-color: #eff2f3;
     --code-pre-bg-color: #f7f7f7;
+    --text-shadow-color: #e1dfdf;
     --brightness-value: brightness(1);
 }
 
@@ -77,6 +78,7 @@
     --shadow-hover-color: #737171;
     --gutter-pre-bg-color: #2d2d2d;
     --code-pre-bg-color: #1d1f21;
+    --text-shadow-color: #646363;
     --brightness-value: brightness(0.7);
 }
 
@@ -88,18 +90,19 @@ body {
     background-color: var(--blog-bg-color);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    font-family: "Poppins", "Open sans", sans-serif;
+    font-family: "Play", "Open sans", sans-serif;
     font-size: 14px;
     line-height: 21px;
+    text-shadow: 0 1px 3px var(--text-shadow-color);
 }
 
 p {
-    font-family: "Poppins", "Open sans", sans-serif;
+    font-family: "Play", "Open sans", sans-serif;
     line-height: 1.8em;
 }
 
 th, td, input, textarea {
-    font-family: "Poppins", "Open sans", sans-serif;
+    font-family: "Play", "Open sans", sans-serif;
     color: var(--text-color);
     background-color: var(--content-color);
     -webkit-font-smoothing: antialiased;
@@ -134,7 +137,7 @@ body::-webkit-scrollbar-thumb {
 /** 重置 bootstrap start  */
 
 a {
-    font-family: "Poppins", "Open sans", sans-serif;
+    font-family: "Play", "Open sans", sans-serif;
     color: var(--theme-color);
     text-decoration: none !important;
 }
@@ -296,7 +299,7 @@ strong {
 }
 
 .navbar ul.menu > li > ul.second-menu li {
-    padding: 4px 2px;
+    padding: 1rem;
 }
 
 
@@ -993,16 +996,27 @@ span.effect {
 /** 友链 start  */
 
 h3.friend-link-title {
-    border-left: 3px solid var(--theme-color);
-    padding-left: 5px;
-    color: var(--text-color);
+    padding: 1.5rem;
+    font-size: 20px;
+    border-radius: 4px;
+    text-shadow: none;
+}
+
+h3.friend-link-title.tool {
+    border-left: 3px solid #428bca;
+    background: #eef7fa;
+}
+
+h3.friend-link-title.blogger {
+    border-left: 3px solid #f0ad4e;
+    background: #fdf8ea;
 }
 
 .friend-link-item {
     position: relative;
     width: 100%;
-    margin: 1.5rem 0;
-    padding: 1rem;
+    margin: 2rem 0;
+    padding: 2rem 1rem;
     transition: all .3s;
     border-radius: 4px;
     box-shadow: 0 1px 7px 1px var(--shadow-color);
@@ -1031,16 +1045,18 @@ h3.friend-link-title {
     position: absolute;
     width: 180px;
     height: 62px;
-    top: 5px;
+    top: 19px;
     left: 90px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    font-size: 15px;
 }
 
 .friend-link-item .remark {
+    margin-top: 1rem;
     text-align: left;
-    color: var(--text-color)
+    color: var(--text-color);
 }
 
 /** 友链 end  */
@@ -1074,6 +1090,7 @@ h3.friend-link-title {
     width: 100%;
     background-color: var(--content-color);
     color: var(--text-color);
+    animation: slowUp 1s;
 }
 
 .post-content h2,
@@ -1111,8 +1128,7 @@ h3.friend-link-title {
 
 .post-content p, .post-content blockquote p {
     font-size: 14px;
-    margin: 0 0 24px;
-    letter-spacing: 2px;
+    letter-spacing: 1px;
 }
 
 .post-content p code {
@@ -1258,6 +1274,7 @@ h3.friend-link-title {
     display: inline !important;
     background: none !important;
     padding: 0 !important;
+    text-shadow: none;
 }
 
 .postContainer .weChat-official-accounts {
@@ -1272,14 +1289,14 @@ h3.friend-link-title {
     object-fit: cover;
 }
 
-.postContainer .reward-img-area {
-    margin-top: 32px;
-}
-
 .postContainer .reward {
     margin: 12px 0;
     padding: 10px 0;
     color: var(--text-color);
+}
+
+.postContainer .reward p {
+    margin: 1rem auto;
 }
 
 .postContainer .reward .reward-img {

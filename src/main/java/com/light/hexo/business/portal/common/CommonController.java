@@ -109,10 +109,15 @@ public class CommonController {
 
         String themeName = activeTheme.getName();
         String useCDNStr = activeTheme.getConfigMap().get("useCDN");
+        String CDNAddress = activeTheme.getConfigMap().get("CDNAddress");
         String version = activeTheme.getConfigMap().get("version");
         if (StringUtils.isNotBlank(useCDNStr) && StringUtils.isNotBlank(version)) {
             boolean useCDN = useCDNStr.equals("true");
-            resultMap.put("baseLink", useCDN ? "https://cdn.jsdelivr.net/gh/moonlightL/CDN@" + version + "/" + themeName : "/theme/" + themeName);
+            if (useCDN) {
+                resultMap.put("baseLink", StringUtils.isBlank(CDNAddress) ? "https://cdn.jsdelivr.net/gh/moonlightL/CDN@" + version + "/" + themeName : CDNAddress);
+            } else {
+                resultMap.put("baseLink", "/theme/" + themeName);
+            }
         } else {
             resultMap.put("baseLink", "/theme/" + themeName);
         }

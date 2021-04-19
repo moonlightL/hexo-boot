@@ -64,8 +64,8 @@
 
                 <div id="share" class="shareContainer">
                     <div class="btns">
-                        <button type="button" class="btn btn-success" id="priseBtn"><i class="fa fa-thumbs-o-up"></i> <span id="prizeCount">[[${post.praiseNum}]]</span></button>
-                        <button type="button" class="btn btn-default" id="shareOpenBtn"><i class="fa fa-share-square-o"></i> 分享</button>
+                        <button type="button" class="btn btn-success" id="priseBtn"><i class="fa fa-thumbs-o-up"></i> &nbsp;<span id="prizeCount">[[${post.praiseNum}]]</span></button>
+                        <button type="button" class="btn btn-default" id="shareOpenBtn" style="margin-left: 1rem;"><i class="fa fa-share-square-o"></i> 分享</button>
                     </div>
                     <div id="shareBtns" class="social-share" data-initialized="true">
                         <a href="#" class="social-share-icon icon-weibo"></a>
@@ -89,11 +89,9 @@
                     <img class="lazyload" th:data-original="@{${#servletContext.getAttribute('configMap')['we_chat_official_account']}}">
                 </div>
 
-                <hr>
-
                 <div id="reward" class="reward text-center">
-                    <p><b th:text="${#servletContext.getAttribute('configMap')['reward_comment']}"></b></p>
                     <button id="showRewardImg" type="button" class="btn btn-danger"><i class="fa fa-heartbeat"></i> 打赏</button>
+                    <p><b th:text="${#servletContext.getAttribute('configMap')['reward_comment']}"></b></p>
                     <div id="rewardImgArea" class="reward-img-area hide">
                        <span th:if="${#strings.isEmpty(#servletContext.getAttribute('configMap')['reward_by_ali_pay']) != true}">
                             <a href="javascript:void(0)" class="reward-img">
@@ -114,10 +112,10 @@
                 <div class="alert alert-info" role="alert">
                     <ul class="post-copyright">
                         <li>
-                            <strong>本文作者:</strong> <b>[[${#servletContext.getAttribute('configMap')['blog_author']}]]</b>
+                            <strong>本文作者:</strong> <b> [[${#servletContext.getAttribute('configMap')['blog_author']}]]</b>
                         </li>
                         <li>
-                            <strong>本文链接:</strong> <a id="shareUrl" class="alert-link" th:href="@{${#servletContext.getAttribute('configMap')['home_page']} + '/'+${post.link}}" target="_blank" th:text="${#servletContext.getAttribute('configMap')['home_page']+'/'+ post.link}"></a>
+                            <strong>本文链接:</strong>&nbsp;<a id="shareUrl" class="alert-link" th:href="@{${#servletContext.getAttribute('configMap')['home_page']} + '/'+${post.link}}" target="_blank" th:text="${#servletContext.getAttribute('configMap')['home_page']+'/'+ post.link}"></a>
                         </li>
                         <li>
                             <strong>版权声明:</strong>  本博客所有文章除特别声明外均为原创，采用 <a th:href="@{${#servletContext.getAttribute('configMap')['license_url']}}" class="alert-link" target="_blank" th:text="${#servletContext.getAttribute('configMap')['license']}"></a> 许可协议。转载请在文章开头明显位置注明原文链接和作者等相关信息，明确指出修改（如有），并通过 E-mail 等方式告知，谢谢合作！
