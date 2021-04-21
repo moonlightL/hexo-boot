@@ -25,6 +25,7 @@ public enum ConfigEnum {
     POWER_BY("power_by", "Copyright©2020. Design by MoonlightL","版权信息"),
 
     BLOG_AUTHOR("blog_author", "","博主名称"),
+    BLOG_AVATAR("blog_avatar", "","博主头像"),
     EMAIL("email", "","邮箱地址"),
     GIT_HUB_ACCOUNT("git_hub_account", "","GitHub 地址"),
     WX_ACCOUNT("wx_account", "","微信号"),

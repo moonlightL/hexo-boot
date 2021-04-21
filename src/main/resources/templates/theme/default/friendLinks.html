@@ -32,7 +32,7 @@
 
             <div class="ml-content">
                 <div class="ml-content-body">
-                    <h3 class="friend-link-title">常用网址</h3>
+                    <h3 class="friend-link-title tool">常用网址</h3>
                     <div class="row">
                         <div class="col-md-4 animate-box" data-animate-effect="zoomIn" th:each="link,iterStat: ${webSiteList}">
                             <div class="friend-link-item">
@@ -49,7 +49,7 @@
                         <div th:if="${#lists.isEmpty(webSiteList)}" th:style="'text-align:center;'" th:text="'~~暂时没有推荐的常用网址~~'"></div>
                     </div>
 
-                    <h3 class="friend-link-title">博主网址</h3>
+                    <h3 class="friend-link-title blogger">博主网址</h3>
                     <div class="row">
                         <div class="col-md-4 animate-box" data-animate-effect="zoomIn" th:each="link,iterStat: ${bloggerList}">
                             <div class="friend-link-item">

@@ -4,7 +4,7 @@
   "extension": [
     {
       "key": "version",
-      "value": "2.3",
+      "value": "2.9",
       "type": "input",
       "label": "版本号"
     },
@@ -20,6 +20,12 @@
       "type": "select",
       "option": "true,false",
       "label": "是否开启CDN"
+    },
+    {
+      "key": "CDNAddress",
+      "value": "",
+      "type": "input",
+      "label": "CDN地址"
     },
     {
       "key": "PJAX",

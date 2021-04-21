@@ -18,8 +18,8 @@
     <link rel="dns-prefetch" th:href="@{'//fonts.loli.net/css'}">
     <link rel="dns-prefetch" th:href="@{'//cdn.jsdelivr.net'}">
     <link rel="shortcut icon" th:href="@{${#servletContext.getAttribute('configMap')['favicon_url']}}"/>
-    <link th:href="@{'https://fonts.loli.net/css?family=Poppins:400,500,600'}" rel="stylesheet">
-    <link th:href="@{'https://fonts.loli.net/css?family=Open+Sans:400,700&amp;subset=latin-ext'}" rel="stylesheet">
+<!--    <link th:href="@{'https://fonts.loli.net/css?family=Poppins:400,500,600'}" rel="stylesheet">-->
+<!--    <link th:href="@{'https://fonts.loli.net/css?family=Open+Sans:400,700&amp;subset=latin-ext'}" rel="stylesheet">-->
     <link rel="stylesheet" th:href="@{${baseLink} + '/source/css/bootstrap/css/bootstrap.min.css'}">
     <link rel="stylesheet" th:href="@{${baseLink} + '/source/fonts/font-awesome/css/font-awesome.min.css'}" />
     <link rel="stylesheet" th:href="@{${baseLink} + '/source/js/iziModal/css/iziModal.min.css'}">
@@ -30,7 +30,7 @@
     <link rel="stylesheet" th:href="@{${baseLink} + '/source/js/autoToc/jquery.autoToc.css'}"/>
     <link rel="stylesheet" th:href="@{${baseLink} + '/source/js/overshare/css/share.min.css'}"/>
     <link rel="stylesheet" th:href="@{${baseLink} + '/source/js/jquery-comment/jquery-comment.css'}"/>
-    <link rel="stylesheet" th:href="@{${prefix} + '/source/css/style.css'}"/>
+    <link rel="stylesheet" th:href="@{${prefix} + '/source/css/style.css?v=' + ${activeTheme.configMap['version']}}"/>
     <style th:if="${activeTheme.configMap['mourn'] == 'true'}">
         #animate,.footer-copyright,.content,.options,#nprogress .bar, #nprogress .spinner-icon{
             filter: grayscale(1);
@@ -118,6 +118,6 @@
     <script type='text/javascript' th:src="@{${baseLink} + '/source/css/bootstrap/js/bootstrap.min.js'}"></script>
     <script type='text/javascript' th:src="@{${baseLink} + '/source/js/fancybox/jquery.fancybox.min.js'}"></script>
     <script type='text/javascript' th:src="@{${baseLink} + '/source/js/layer/layer.js'}"></script>
-    <script type='text/javascript' th:src="@{${prefix} + '/source/js/app.js'}"></script>
+    <script type='text/javascript' th:src="@{${prefix} + '/source/js/app.js?v=' + ${activeTheme.configMap['version']}}"></script>
     [(${#servletContext.getAttribute('configMap')['script_code']})]
 </div>
