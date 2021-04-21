@@ -1,7 +1,9 @@
 package com.light.hexo.business.admin.web.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.light.hexo.business.admin.constant.ConfigEnum;
 import com.light.hexo.business.admin.model.UserExtend;
+import com.light.hexo.business.admin.service.ConfigService;
 import com.light.hexo.business.admin.service.UserExtendService;
 import com.light.hexo.common.constant.HexoConstant;
 import com.light.hexo.business.admin.constant.HexoExceptionEnum;
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -44,6 +47,9 @@ public class UserController extends BaseController {
 
     @Autowired
     private UserExtendService userExtendService;
+
+    @Autowired
+    private ConfigService configService;
 
     /**
      * 个人详情页
@@ -92,6 +98,12 @@ public class UserController extends BaseController {
         tmp.setNickname(userRequest.getNickname());
         tmp.setEmail(userRequest.getEmail());
         this.userService.updateInfo(tmp);
+
+        Map<String, String> paramMap = new HashMap<>();
+        paramMap.put(ConfigEnum.BLOG_AUTHOR.getName(), tmp.getNickname());
+        paramMap.put(ConfigEnum.BLOG_AVATAR.getName(), tmp.getAvatar());
+        paramMap.put(ConfigEnum.EMAIL.getName(), tmp.getEmail());
+        this.configService.saveConfig(paramMap);
 
         user.setAvatar(userRequest.getAvatar());
         user.setNickname(userRequest.getNickname());

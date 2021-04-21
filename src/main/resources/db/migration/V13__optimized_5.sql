@@ -1,0 +1,1 @@
+INSERT INTO `hexo-boot`.`t_config` (`config_key`, `config_value`, `remark`) VALUES ('blog_avatar', '', '博主头像');

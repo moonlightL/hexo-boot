@@ -41,7 +41,8 @@
             <div id="postContainer" class="postContainer animated fadeIn">
                 <header class="post-header">
                     <div class="blogger-info">
-                        <img class="hidden-xs" th:src="@{${#strings.isEmpty(#servletContext.getAttribute('configMap')['logo_url']) != true ? #servletContext.getAttribute('configMap')['logo_url'] : prefix + '/source/images/logo.png'}}">
+                        <img class="hidden-xs" th:src="@{${#strings.isEmpty(#servletContext.getAttribute('configMap')['blog_avatar']) != true ? #servletContext.getAttribute('configMap')['blog_avatar'] :
+                        (#strings.isEmpty(#servletContext.getAttribute('configMap')['logo_url']) !=true ? #servletContext.getAttribute('configMap')['logo_url'] : prefix + '/source/images/logo.png')}}">
                         <span class="blog-author">😊 [[${#servletContext.getAttribute('configMap')['blog_author']}]]</span>
                         <span class="post-date">📅 [[${post.year} + ' 年 ' + ${post.month} + ' 月 ' + ${post.day} + ' 日']]</span>
                         <div class="post-nums">

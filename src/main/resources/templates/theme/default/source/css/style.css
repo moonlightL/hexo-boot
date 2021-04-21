@@ -1091,6 +1091,7 @@ h3.friend-link-title.blogger {
     width: 100%;
     background-color: var(--content-color);
     color: var(--text-color);
+    margin-bottom: 2rem;
     animation: slowUp 1s;
 }
 
