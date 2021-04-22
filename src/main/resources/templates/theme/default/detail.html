@@ -54,10 +54,10 @@
                 <div class="alert alert-danger" th:if="${post.reprint == true}">
                     <ul class="post-copyright">
                         <li>
-                            <strong>原作者:</strong> <b>[[${post.author}]]</b>
+                            <strong>原作者:</strong> <b> [[${post.author}]]</b>
                         </li>
                         <li>
-                            <strong>原文链接:</strong> <a class="alert-link" th:href="@{${post.reprintLink}}" target="_blank" th:text="${post.reprintLink}"></a>
+                            <strong>原文链接:</strong>&nbsp;<a class="alert-link" th:href="@{${post.reprintLink}}" target="_blank" th:text="${post.reprintLink}"></a>
                         </li>
                     </ul>
                 </div>
@@ -119,7 +119,7 @@
                             <strong>本文链接:</strong>&nbsp;<a id="shareUrl" class="alert-link" th:href="@{${#servletContext.getAttribute('configMap')['home_page']} + '/'+${post.link}}" target="_blank" th:text="${#servletContext.getAttribute('configMap')['home_page']+'/'+ post.link}"></a>
                         </li>
                         <li>
-                            <strong>版权声明:</strong>  本博客所有文章除特别声明外均为原创，采用 <a th:href="@{${#servletContext.getAttribute('configMap')['license_url']}}" class="alert-link" target="_blank" th:text="${#servletContext.getAttribute('configMap')['license']}"></a> 许可协议。转载请在文章开头明显位置注明原文链接和作者等相关信息，明确指出修改（如有），并通过 E-mail 等方式告知，谢谢合作！
+                            <strong>版权声明:</strong> 本博客所有文章除特别声明外均为原创，采用 <a th:href="@{${#servletContext.getAttribute('configMap')['license_url']}}" class="alert-link" target="_blank" th:text="${#servletContext.getAttribute('configMap')['license']}"></a> 许可协议。转载请在文章开头明显位置注明原文链接和作者等相关信息，明确指出修改（如有），并通过 E-mail 等方式告知，谢谢合作！
                         </li>
                     </ul>
                 </div>

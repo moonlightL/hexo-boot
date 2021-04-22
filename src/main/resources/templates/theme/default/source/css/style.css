@@ -78,8 +78,8 @@
     --shadow-hover-color: #737171;
     --gutter-pre-bg-color: #2d2d2d;
     --code-pre-bg-color: #1d1f21;
-    --text-shadow-color: #646363;
-    --brightness-value: brightness(0.7);
+    --text-shadow-color: #505050;
+    --brightness-value: brightness(0.9);
 }
 
 /*html {*/
@@ -97,16 +97,24 @@ body {
 }
 
 p {
-    font-family: "Play", "Open sans", sans-serif;
-    line-height: 1.8em;
+    line-height: 1.7em;
+    margin: 2rem 0;
 }
 
 th, td, input, textarea {
-    font-family: "Play", "Open sans", sans-serif;
     color: var(--text-color);
     background-color: var(--content-color);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+}
+
+ol {
+    margin: 0;
+    padding: 0 2rem;
+}
+
+ul li, ol li {
+    margin: .5rem 0;
 }
 
 body::-webkit-scrollbar {
@@ -137,7 +145,6 @@ body::-webkit-scrollbar-thumb {
 /** 重置 bootstrap start  */
 
 a {
-    font-family: "Play", "Open sans", sans-serif;
     color: var(--theme-color);
     text-decoration: none !important;
 }
@@ -543,11 +550,11 @@ strong {
     overflow: hidden;
     white-space: nowrap;
     font-weight: 600;
+    font-size: 16px;
 }
 
 .post-info .post-title a {
     color: var(--text-color);
-    font-size: 15px;
 }
 
 .post-info .post-title a:hover {
@@ -1017,7 +1024,7 @@ h3.friend-link-title.blogger {
     position: relative;
     width: 100%;
     margin: 2rem 0;
-    padding: 2rem 1rem;
+    padding: 1.6rem 1rem;
     transition: all .3s;
     border-radius: 4px;
     box-shadow: 0 1px 7px 1px var(--shadow-color);
@@ -1129,7 +1136,7 @@ h3.friend-link-title.blogger {
 }
 
 .post-content p, .post-content blockquote p {
-    font-size: 14px;
+    font-size: 15px;
     letter-spacing: 1px;
 }
 
