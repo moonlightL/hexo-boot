@@ -60,6 +60,9 @@
                         <li th:each="nav : ${#servletContext.getAttribute('firstNav')}" th:class="${currentNav.code eq nav.code ? 'item active' : 'item'}">
                             <a data-pjax th:href="@{${#lists.isEmpty(nav.children) ? nav.link : 'javascript:void(0)'}}" th:data-link="${nav.link}">
                                 <i th:class="${nav.icon}"></i> [[${nav.name}]]
+                                <span th:if="${#lists.isEmpty(nav.children) == false}">
+                                    <i class="fa fa-caret-down"></i>
+                                </span>
                             </a>
                             <ul class="second-menu" th:if="${#lists.isEmpty(nav.children) == false}">
                                 <li class="item" th:each="child : ${nav.children}">

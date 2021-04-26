@@ -98,7 +98,6 @@ body {
 
 p {
     line-height: 1.7em;
-    margin: 2rem 0;
 }
 
 th, td, input, textarea {
@@ -111,10 +110,6 @@ th, td, input, textarea {
 ol {
     margin: 0;
     padding: 0 2rem;
-}
-
-ul li, ol li {
-    margin: .5rem 0;
 }
 
 body::-webkit-scrollbar {
@@ -262,7 +257,6 @@ strong {
 
 .navbar ul.menu li {
     position: relative;
-    padding: 0 .5rem;
 }
 
 .navbar ul.menu > li > a {
@@ -295,12 +289,11 @@ strong {
     text-align: center;
     background: var(--content-color);
     box-shadow: 0 1px 7px 1px var(--shadow-color);
-    border-radius: .625rem 0;
     padding: 0;
     margin: 0;
     display: none;
     opacity: 0;
-    animation: slowUp 1s;
+    animation: slowUp .5s;
     z-index: 9;
     list-style-type: none;
 }
@@ -1005,7 +998,7 @@ span.effect {
 
 h3.friend-link-title {
     padding: 1.5rem;
-    font-size: 20px;
+    font-size: 18px;
     border-radius: 4px;
     text-shadow: none;
 }
@@ -1138,11 +1131,15 @@ h3.friend-link-title.blogger {
 .post-content p, .post-content blockquote p {
     font-size: 15px;
     letter-spacing: 1px;
+    line-height: 1.75em;
+    margin: 1.5rem 0;
 }
 
 .post-content p code {
     margin-left: 5px;
     margin-right: 4px;
+    font-family: "Play", "Open sans", sans-serif;
+    font-size: 15px;
 }
 
 .post-content hr {
