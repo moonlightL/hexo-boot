@@ -1,6 +1,5 @@
 package com.light.hexo.business.admin.service.impl;
 
-import cn.hutool.core.io.FileUtil;
 import com.light.hexo.business.admin.config.BlogProperty;
 import com.light.hexo.business.admin.constant.HexoExceptionEnum;
 import com.light.hexo.business.admin.mapper.ThemeMapper;
@@ -248,8 +247,8 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
             ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_THEME_URL_WRONG);
         }
 
-        String ext = FileUtil.extName(themeUrl);
-        if (!"git".equals(ext)) {
+        int extIndex = themeUrl.lastIndexOf(".git");
+        if (extIndex < 0) {
             ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_THEME_URL_WRONG);
         }
 

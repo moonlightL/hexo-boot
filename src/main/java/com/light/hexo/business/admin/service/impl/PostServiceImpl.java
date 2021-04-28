@@ -127,16 +127,6 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
     }
 
     @Override
-    public int saveModel(Post model) throws GlobalException {
-        return super.saveModel(model);
-    }
-
-    @Override
-    public int updateModel(Post model) throws GlobalException {
-        return super.updateModel(model);
-    }
-
-    @Override
     public PageInfo<Post> findPage(BaseRequest<Post> request) throws GlobalException {
 
         PageInfo<Post> pageInfo = super.findPage(request);
@@ -200,9 +190,18 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
             post.setCoverUrl(coverUrl);
         }
 
+        boolean isMarkdown = this.configService.getConfigValue(ConfigEnum.EDITOR_TYPE.getName()).equals("markdown");
+        String content = post.getContent();
+
         // 摘要
-        post.setSummary(this.interceptContent(post.getContent()))
-            .setSummaryHtml(this.interceptContentHtml(post.getContent()));
+        post.setSummary(this.interceptContent(content, isMarkdown))
+            .setSummaryHtml(this.interceptContentHtml(content, isMarkdown));
+
+        if (isMarkdown) {
+            post.setContentHtml(MarkdownUtil.md2html(post.getContent()));
+        } else {
+            post.setContentHtml(this.transformHtml(post.getContent()));
+        }
 
         LocalDateTime now = LocalDateTime.now();
         if (post.getPublish() != null) {
@@ -263,9 +262,18 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
             ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_POST_TITLE_REPEAT);
         }
 
+        boolean isMarkdown = this.configService.getConfigValue(ConfigEnum.EDITOR_TYPE.getName()).equals("markdown");
+        String content = post.getContent();
+
         // 摘要
-        post.setSummary(this.interceptContent(post.getContent()))
-            .setSummaryHtml(this.interceptContentHtml(post.getContent()));
+        post.setSummary(this.interceptContent(content, isMarkdown))
+            .setSummaryHtml(this.interceptContentHtml(content, isMarkdown));
+
+        if (isMarkdown) {
+            post.setContentHtml(MarkdownUtil.md2html(post.getContent()));
+        } else {
+            post.setContentHtml(this.transformHtml(post.getContent()));
+        }
 
         LocalDateTime now = LocalDateTime.now();
         if (post.getPublish() != null) {
@@ -712,6 +720,15 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
     }
 
     @Override
+    public List<Post> listEmptyHtml() throws GlobalException {
+        Example example = Example.builder(Post.class)
+                .select("id", "content")
+                .where(Sqls.custom().andEqualTo("contentHtml", ""))
+                .build();
+        return this.getBaseMapper().selectByExample(example);
+    }
+
+    @Override
     public EventEnum getEventType() {
         return EventEnum.POST;
     }
@@ -739,7 +756,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
         this.updateModel(data);
     }
 
-    private String interceptContent(String content) {
+    private String interceptContent(String content, boolean isMarkdown) {
         StringBuilder sb = new StringBuilder();
         int index = content.indexOf("<!---->");
         if (index > -1) {
@@ -749,7 +766,8 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
             }
         }
 
-        String html = MarkdownUtil.md2html(content);
+        String html = isMarkdown ? MarkdownUtil.md2html(content) : content;
+
         Elements elements = Jsoup.parse(html).select("p");
         if (elements.size() > 3) {
             List<Element> elementList = elements.subList(0, 3);
@@ -770,7 +788,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
         return result;
     }
 
-    private String interceptContentHtml(String content) {
+    private String interceptContentHtml(String content, boolean isMarkdown) {
         StringBuilder sb = new StringBuilder();
         int index = content.indexOf("<!---->");
         if (index > -1) {
@@ -780,11 +798,11 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
             }
         }
 
-        String html = MarkdownUtil.md2html(content);
+        String html = isMarkdown ? MarkdownUtil.md2html(content) : content;
         Document document = Jsoup.parse(html);
         Elements elements = document.select("body");
-        Element element = elements.get(0);
-        Elements children = element.children();
+        Element body = elements.get(0);
+        Elements children = body.children();
         if (children.size() > 3) {
             List<Element> elementList = children.subList(0, 3);
             elementList.forEach(i -> {
@@ -797,6 +815,94 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
         }
 
         return sb.toString();
+    }
+
+    private String transformHtml(String html) {
+        Document document = Jsoup.parse(html);
+
+        // 转换 img
+        Elements imgElements = document.select("img");
+        for (Element img : imgElements) {
+            String src = img.attr("src");
+            img.removeAttr("src").attr("data-original", src).addClass("lazyload");
+            img.wrap("<a class='fancybox' href='" + src + "' data-fancybox='gallery'></a>");
+        }
+
+        // 转换 table
+        Elements tableElements = document.select("table");
+        for (Element table : tableElements) {
+            table.attr("class", "table");
+            Elements trs = table.select("tr");
+            int index = 0;
+            StringBuilder sb = new StringBuilder();
+            for (Element tr : trs) {
+                Elements tds = tr.select("td");
+                if (index == 0) {
+                    // thead
+                    sb.append("<thead><tr>");
+                    for (Element td : tds) {
+                        sb.append("<th>").append(td.text()).append("</th>");
+                    }
+                    sb.append("</tr></thead><tbody>");
+                } else {
+                    // 处理 tbody
+                    sb.append("<tr>");
+                    for (Element td : tds) {
+                        sb.append("<td>").append(td.text()).append("</td>");
+                    }
+                    sb.append("</tr>");
+                }
+                index++;
+            }
+            sb.append("</tbody>");
+            table.html(sb.toString());
+        }
+
+        // 转换 pre
+        Elements preElements = document.select("pre");
+        for (Element pre : preElements) {
+
+            String data = pre.text().replaceAll("\r", "");
+            String[] split = data.split("\n");
+            int linNum = 1;
+
+            Element figure = new Element("figure");
+            figure.attr("class", "highlight");
+            Element table = new Element("table");
+            Element tbody = new Element("tbody");
+            Element tr = new Element("tr");
+
+            Element lineTd = new Element("td");
+            lineTd.attr("class", "gutter");
+            Element linePre = new Element("pre");
+            for (String s : split) {
+                Element span = new Element("span");
+                span.attr("class", "line");
+                span.text((linNum++) + "");
+                linePre.appendChild(span).appendElement("br");
+            }
+            lineTd.appendChild(linePre);
+            tr.appendChild(lineTd);
+
+            Element contentTd = new Element("td");
+            contentTd.attr("class", "code");
+            Element contentPre = new Element("pre");
+            for (String s : split) {
+                Element span = new Element("span");
+                span.attr("class", "line");
+                span.text(s);
+                contentPre.appendChild(span).appendElement("br");
+            }
+            contentTd.appendChild(contentPre);
+            tr.appendChild(contentTd);
+
+            tbody.appendChild(tr);
+            table.appendChild(tbody);
+            figure.appendChild(table);
+            pre.replaceWith(figure);
+        }
+
+        return document.toString();
     }
 
     private void saveTags(Post post, boolean isEdit) {
@@ -833,8 +939,8 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
             post.setTitle(objectMap.get("title").toString())
                     .setAuthor(author)
                     .setContent(objectMap.get("content").toString())
-                    .setSummary(this.interceptContent(post.getContent()))
-                    .setSummaryHtml(this.interceptContentHtml(post.getContent()));
+                    .setSummary(this.interceptContent(post.getContent(), true))
+                    .setSummaryHtml(this.interceptContentHtml(post.getContent(), true));
 
             // 设置封面
             int num = new Random().nextInt(COVER_NUM);
@@ -911,8 +1017,8 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
                 post.setTitle(titleStr.substring(titleStr.indexOf(":") + 1).trim())
                     .setAuthor(author)
                     .setContent(sb.toString())
-                    .setSummary(this.interceptContent(post.getContent()))
-                    .setSummaryHtml(this.interceptContentHtml(post.getContent()));
+                    .setSummary(this.interceptContent(post.getContent(), true))
+                    .setSummaryHtml(this.interceptContentHtml(post.getContent(), true));
 
                 // 设置封面
                 int num = new Random().nextInt(COVER_NUM);

@@ -5,11 +5,16 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, initial-scale=1, shrink-to-fit=no">
     <div th:replace="~{admin/common :: common-link}"></div>
+    <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/bootstrap/css/bootstrap.min.css'}">
     <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/editor.md/css/editormd.min.css'}">
     <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/jquery-tags-input/jquery.tagsinput.min.css'}">
     <link th:href="@{'/admin/assets/js/plugins/dropzonejs/dist/min/dropzone.min.css'}" rel="stylesheet">
     <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/dropzonejs/dist/min/basic.min.css'}">
+    <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/summernote/summernote.min.css'}">
     <style>
+        .note-editor .dropdown-toggle::after {
+            display: none;
+        }
         .editorArea {
             display: inline-block;
             width: calc(100% - 320px);
@@ -140,11 +145,15 @@
     </div>
 </div>
 <div th:replace="~{admin/common :: common-script}"></div>
+<script th:src="@{'/admin/assets/js/plugins/bootstrap/js/bootstrap.min.js'}"></script>
 <script th:src="@{'/admin/assets/js/plugins/dropzonejs/dist/min/dropzone.min.js'}"></script>
 <script th:src="@{'/admin/assets/js/plugins/editor.md/editormd.min.js'}"></script>
+<script th:src="@{'/admin/assets/js/plugins/summernote/summernote.min.js'}"></script>
+<script th:src="@{'/admin/assets/js/plugins/summernote/lang/summernote-zh-CN.min.js'}"></script>
 <script th:src="@{'/admin/assets/js/plugins/jquery-tags-input/jquery.tagsinput.min.js'}"></script>
 <script type="text/javascript" th:inline="javascript">
-
+    let editorType = [[${#servletContext.getAttribute('configMap')['editor_type']}]];
+    let MyEditor;
     Dropzone.autoDiscover = false;
     $(function(){
 
@@ -159,28 +168,79 @@
 
         Codebase.helpers(['tags-inputs']);
         $("#submitBtn").on("click", function () {
-            $("#content").val(MyEditor.getMarkdown());
+            if (editorType === "markdown") {
+                $("#content").val(MyEditor.getMarkdown());
+            } else if (editorType === "html") {
+                $("#content").val(MyEditor.summernote('code'));
+            }
             $.hexo.action.save("saveForm");
         });
 
-        let MyEditor = editormd("postEditor", {
-            width   : "100%",
-            height  :  $(window.parent).height(),
-            syncScrolling : "single",
-            path    : "/admin/assets/js/plugins/editor.md/lib/",
-            placeholder: "写点内容吧~~",
-            toolbarIcons : function() {
-                return ["undo","redo","bold","del","italic","quote","ucwords","uppercase","lowercase","h1","h2","h3","h4","h5","h6","list-ul","list-ol","hr","link","reference-link","image","code","preformatted-text","code-block","table","datetime","pagebreak","watch","unwatch","preview","clear","search"]
-            },
-            codeFold : true,
-            imageUpload : true,
-            watch : false,
-            imageFormats : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
-            imageUploadURL : "/admin/file/mdUploadFile.json",
-            onload: function () {
-                $("#postEditor").height($(window.parent).height() - 70)
-            }
-        });
+        if (editorType === "markdown") {
+            MyEditor = editormd("postEditor", {
+                width   : "100%",
+                height  :  $(window.parent).height(),
+                syncScrolling : "single",
+                path    : "/admin/assets/js/plugins/editor.md/lib/",
+                placeholder: "写点内容吧~~",
+                toolbarIcons : function() {
+                    return ["undo","redo","bold","del","italic","quote","ucwords","uppercase","lowercase","h1","h2","h3","h4","h5","h6","list-ul","list-ol","hr","link","reference-link","image","code","preformatted-text","code-block","table","datetime","pagebreak","watch","unwatch","preview","clear","search"]
+                },
+                codeFold : true,
+                imageUpload : true,
+                watch : false,
+                imageFormats : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+                imageUploadURL : "/admin/file/mdUploadFile.json",
+                onload: function () {
+                    $("#postEditor").height($(window.parent).height() - 270)
+                }
+            });
+
+        } else if (editorType === "html") {
+            let EmptyButton = function (context) {
+                let ui = $.summernote.ui;
+                let button = ui.button({
+                    contents: '<i class="fa fa-trash"/>',
+                    tooltip: '清除全部内容',
+                    click: function () {
+                        context.invoke('editor.empty');
+                    }
+                });
+                return button.render();
+            };
+
+            MyEditor = $('#postEditor').summernote({
+                lang: "zh-CN",
+                placeholder: "写点内容吧~~",
+                tabsize: 4,
+                height: $(window.parent).height() - 270,
+                minHeight: $(window.parent).height() - 270,
+                maxHeight: $(window.parent).height() - 270,
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'underline', 'clear']],
+                    ['fontsize', ['fontsize']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['fullscreen', 'codeview', 'help']],
+                    ['empty', ['empty']],
+                    ['clearStyle', ['clearStyle']],
+                ],
+                buttons: {empty: EmptyButton},
+                callbacks: {
+                    onPaste: function (ne) {
+                        let bufferText = ((ne.originalEvent || ne).clipboardData || window.clipboardData).getData('Text/plain');
+                        ne.preventDefault ? ne.preventDefault() : (ne.returnValue = false);
+                        // Firefox fix
+                        setTimeout(function () {
+                            document.execCommand("insertText", false, bufferText);
+                        }, 10);
+                    }
+                }
+            });
+        }
 
         let FileManager = {
             initUploadEvent: function () {

@@ -276,13 +276,6 @@
             <version>1.13.1</version>
         </dependency>
 
-        <!-- Hutool -->
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-all</artifactId>
-            <version>5.4.7</version>
-        </dependency>
-
         <!-- git 命令相关 -->
         <dependency>
             <groupId>org.eclipse.jgit</groupId>

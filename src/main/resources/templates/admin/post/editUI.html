@@ -5,11 +5,16 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, initial-scale=1, shrink-to-fit=no">
     <div th:replace="~{admin/common :: common-link}"></div>
+    <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/bootstrap/css/bootstrap.min.css'}">
     <link th:href="@{'/admin/assets/js/plugins/dropzonejs/dist/min/dropzone.min.css'}" rel="stylesheet">
     <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/dropzonejs/dist/min/basic.min.css'}">
     <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/editor.md/css/editormd.min.css'}">
     <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/jquery-tags-input/jquery.tagsinput.min.css'}">
+    <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/summernote/summernote.min.css'}">
     <style>
+        .note-editor .dropdown-toggle::after {
+            display: none;
+        }
         .editorArea {
             display: inline-block;
             width: calc(100% - 320px);
@@ -31,7 +36,7 @@
                 <div class="col-xl-12">
                     <form id="saveForm" th:action="@{${baseUrl} + '/edit.json'}" th:object="${vo}">
                         <input type="hidden" name="id" th:field="*{id}" />
-                        <input id="content" type="hidden" name="content" />
+                        <input id="content" type="hidden" name="content"/>
                         <input id="coverUrl" type="hidden" name="coverUrl" th:field="*{coverUrl}"/>
                         <div class="editorArea">
                             <div class="form-group row">
@@ -139,31 +144,41 @@
         </div>
     </div>
 </div>
-    <div th:replace="~{admin/common :: common-script}"></div>
-    <script th:src="@{'/admin/assets/js/plugins/dropzonejs/dist/min/dropzone.min.js'}"></script>
-    <script th:src="@{'/admin/assets/js/plugins/editor.md/editormd.min.js'}"></script>
-    <script th:src="@{'/admin/assets/js/plugins/jquery-tags-input/jquery.tagsinput.min.js'}"></script>
-    <script type="text/javascript" th:inline="javascript">
-        let vo = [[${vo}]];
-        Dropzone.autoDiscover = false;
-        $(function(){
+<div th:replace="~{admin/common :: common-script}"></div>
+<script th:src="@{'/admin/assets/js/plugins/dropzonejs/dist/min/dropzone.min.js'}"></script>
+<script th:src="@{'/admin/assets/js/plugins/editor.md/editormd.min.js'}"></script>
+<script th:src="@{'/admin/assets/js/plugins/wangEditor/wangEditor.min.js'}"></script>
+<script th:src="@{'/admin/assets/js/plugins/summernote/summernote.min.js'}"></script>
+<script th:src="@{'/admin/assets/js/plugins/summernote/lang/summernote-zh-CN.min.js'}"></script>
+<script th:src="@{'/admin/assets/js/plugins/jquery-tags-input/jquery.tagsinput.min.js'}"></script>
+<script type="text/javascript" th:inline="javascript">
+    let vo = [[${vo}]];
+    let editorType = [[${#servletContext.getAttribute('configMap')['editor_type']}]];
+    let MyEditor;
+    Dropzone.autoDiscover = false;
+    $(function(){
 
-            $("#reprint").on("change", function () {
-                let val = $(this).val();
-                if (val === "1") {
-                    $("#anchorInfo").show();
-                } else {
-                    $("#anchorInfo").hide();
-                }
-            });
+        $("#reprint").on("change", function () {
+            let val = $(this).val();
+            if (val === "1") {
+                $("#anchorInfo").show();
+            } else {
+                $("#anchorInfo").hide();
+            }
+        });
 
-            Codebase.helpers(['tags-inputs']);
-            $("#submitBtn").on("click", function () {
+        Codebase.helpers(['tags-inputs']);
+        $("#submitBtn").on("click", function () {
+            if (editorType === "markdown") {
                 $("#content").val(MyEditor.getMarkdown());
-                $.hexo.action.save("saveForm");
-            });
+            } else if (editorType === "html") {
+                $("#content").val(MyEditor.summernote('code'));
+            }
+            $.hexo.action.save("saveForm");
+        });
 
-            let MyEditor = editormd("postEditor", {
+        if (editorType === "markdown") {
+            MyEditor = editormd("postEditor", {
                 width   : "100%",
                 height  :  $(window.parent).height(),
                 syncScrolling : "single",
@@ -182,66 +197,110 @@
                     MyEditor.setMarkdown(vo.content);
                 }
             });
-
-            let FileManager = {
-                initUploadEvent: function () {
-                    $("#btnArr").html('<a id="uploadBtn" href="javascript:void(0)">选择文件</a>&nbsp;&nbsp;<a id="randomBtn" href="javascript:void(0)">随机获取</a><p>(如不设置封面,则保存文章后系统随机生成)</p>');
-                    $("#uploadBtn").dropzone({
-                        method: "POST",
-                        url: "/admin/file/upload.json", //上传地址
-                        addRemoveLinks: true,
-                        maxFiles: 1,// 一次性上传的文件数量上限
-                        maxFilesize: 10, // 单个上传文件大小，单位：MB
-                        previewsContainer: false,
-                        uploadMultiple: false, // 允许批量上传
-                        parallelUploads: 1, // 每次上传的文件数量，默认值 2
-                        autoProcessQueue: true, // 是否自动上传
-                        acceptedFiles: ".jpg, .jpeg, .png, .gif, .webp",
-                        dictDefaultMessage: '文章封面<br>(支持上传的文件类型*.jpg,*.jpeg,*.png,*.webp)',
-                        dictMaxFilesExceeded: "每次最多只能上传1个文件！",
-                        dictResponseError: '文件上传失败!',
-                        dictInvalidFileType: "支持上传的文件类型*.jpg,*.jpeg,*.png, *.gif,*.webp",
-                        dictFallbackMessage: "浏览器不支持",
-                        dictFileTooBig: "最大支持10MB文件上传",
-                        init: function () {
-                            this.on("error", function (data, message) {
-                                if (message.status == 400) {
-                                    $.hexo.modal.msg("上传失败: 源文件接收失败");
-                                }
-                                FileManager.initUploadEvent();
-                            });
-
-                            this.on("success", function (data, message) {
-                                if (message.success) {
-                                    $("#postCover").attr("src", message.data);
-                                    $("#coverUrl").val(message.data);
-                                }
-                                FileManager.initUploadEvent();
-                            });
-                        }
-                    });
-
-                    $("#randomBtn").off("click").on("click", function () {
-                        $.ajax({
-                            type: "POST",
-                            url: "/admin/file/randomPic.json",
-                            dataType: "JSON",
-                            success: function(resp) {
-                                if (resp.success == 1) {
-                                    $("#postCover").attr("src", "").attr("src", resp.url);
-                                    $("#coverUrl").val(resp.url);
-                                } else {
-                                    $.hexo.modal.tip(resp.message, "error");
-                                }
-                            }
-                        })
-                    });
-                }
+        } else if (editorType === "html") {
+            let EmptyButton = function (context) {
+                let ui = $.summernote.ui;
+                let button = ui.button({
+                    contents: '<i class="fa fa-trash"/>',
+                    tooltip: '清除全部内容',
+                    click: function () {
+                        context.invoke('editor.empty');
+                    }
+                });
+                return button.render();
             };
 
-            FileManager.initUploadEvent();
+            MyEditor = $('#postEditor').summernote({
+                lang: "zh-CN",
+                placeholder: "写点内容吧~~",
+                tabsize: 4,
+                height: $(window.parent).height() - 270,
+                minHeight: $(window.parent).height() - 270,
+                maxHeight: $(window.parent).height() - 270,
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'underline', 'clear']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['fullscreen', 'codeview', 'help']],
+                    ['empty', ['empty']],
+                ],
+                buttons: {empty: EmptyButton},
+                callbacks: {
+                    onPaste: function (ne) {
+                        let bufferText = ((ne.originalEvent || ne).clipboardData || window.clipboardData).getData('Text/plain');
+                        ne.preventDefault ? ne.preventDefault() : (ne.returnValue = false);
+                        // Firefox fix
+                        setTimeout(function () {
+                            document.execCommand("insertText", false, bufferText);
+                        }, 10);
+                    }
+                }
+            });
+            MyEditor.summernote('code', vo.content);
+        }
 
-        });
-    </script>
+        let FileManager = {
+            initUploadEvent: function () {
+                $("#btnArr").html('<a id="uploadBtn" href="javascript:void(0)">选择文件</a>&nbsp;&nbsp;<a id="randomBtn" href="javascript:void(0)">随机获取</a><p>(如不设置封面,则保存文章后系统随机生成)</p>');
+                $("#uploadBtn").dropzone({
+                    method: "POST",
+                    url: "/admin/file/upload.json", //上传地址
+                    addRemoveLinks: true,
+                    maxFiles: 1,// 一次性上传的文件数量上限
+                    maxFilesize: 10, // 单个上传文件大小，单位：MB
+                    previewsContainer: false,
+                    uploadMultiple: false, // 允许批量上传
+                    parallelUploads: 1, // 每次上传的文件数量，默认值 2
+                    autoProcessQueue: true, // 是否自动上传
+                    acceptedFiles: ".jpg, .jpeg, .png, .gif, .webp",
+                    dictDefaultMessage: '文章封面<br>(支持上传的文件类型*.jpg,*.jpeg,*.png,*.webp)',
+                    dictMaxFilesExceeded: "每次最多只能上传1个文件！",
+                    dictResponseError: '文件上传失败!',
+                    dictInvalidFileType: "支持上传的文件类型*.jpg,*.jpeg,*.png, *.gif,*.webp",
+                    dictFallbackMessage: "浏览器不支持",
+                    dictFileTooBig: "最大支持10MB文件上传",
+                    init: function () {
+                        this.on("error", function (data, message) {
+                            if (message.status == 400) {
+                                $.hexo.modal.msg("上传失败: 源文件接收失败");
+                            }
+                            FileManager.initUploadEvent();
+                        });
+
+                        this.on("success", function (data, message) {
+                            if (message.success) {
+                                $("#postCover").attr("src", message.data);
+                                $("#coverUrl").val(message.data);
+                            }
+                            FileManager.initUploadEvent();
+                        });
+                    }
+                });
+
+                $("#randomBtn").off("click").on("click", function () {
+                    $.ajax({
+                        type: "POST",
+                        url: "/admin/file/randomPic.json",
+                        dataType: "JSON",
+                        success: function(resp) {
+                            if (resp.success == 1) {
+                                $("#postCover").attr("src", "").attr("src", resp.url);
+                                $("#coverUrl").val(resp.url);
+                            } else {
+                                $.hexo.modal.tip(resp.message, "error");
+                            }
+                        }
+                    })
+                });
+            }
+        };
+
+        FileManager.initUploadEvent();
+
+    });
+</script>
 </body>
 </html>

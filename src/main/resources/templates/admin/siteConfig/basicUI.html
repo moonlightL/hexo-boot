@@ -23,6 +23,9 @@
             <li class="nav-item">
                 <a class="nav-link" href="#emailArea">邮件配置</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#otherArea">其他配置</a>
+            </li>
         </ul>
         <div class="block-content tab-content overflow-hidden">
             <div class="tab-pane fade fade-left show active" id="siteArea" role="tabpanel">
@@ -150,12 +153,6 @@
                             <form class="js-validation-be-contact" id="postForm" method="post">
                                 <div class="form-group row">
                                     <div class="col-12">
-                                        <label for="post_page_size">文章列表数量（主页）</label>
-                                        <input class="form-control form-control-lg" id="post_page_size" name="post_page_size" type="number" th:value="${configMap['post_page_size']}">
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <div class="col-12">
                                         <label for="license">文章版权协议</label>
                                         <input class="form-control form-control-lg" id="license" name="license" type="text" th:value="${configMap['license']}">
                                     </div>
@@ -241,6 +238,41 @@
                                     <div class="col-12">
                                         <label for="email_password" title="非登录密码，需开启邮箱中的pop3/stmp服务"><i class="fa fa-info-circle"></i> 发送邮件授权码</label>
                                         <input class="form-control form-control-lg" id="email_password" name="email_password" type="text" th:value="${configMap['email_password']}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12 text-center">
+                                        <button type="button" class="btn btn-hero btn-alt-primary min-width-175 submit-btn">
+                                            <i class="fa fa-send mr-5"></i> 修改
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade fade-left" id="otherArea" role="tabpanel">
+                <div class="content content-full">
+                    <div class="row justify-content-center py-30">
+                        <div class="col-lg-8 col-xl-6">
+                            <form class="js-validation-be-contact" id="otherForm" method="post">
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <label for="post_page_size">文章列表数量（主页）</label>
+                                        <input class="form-control form-control-lg" id="post_page_size" name="post_page_size" type="number" th:value="${configMap['post_page_size']}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <label for="editor_type">文章编辑器</label>
+                                        <select class="form-control form-control-lg" id="editor_type" name="editor_type">
+                                            <option th:text="editor.md + '（' + markdown + ' 编辑器）'" th:value="markdown" th:attr="selected=${'markdown' eq configMap['editor_type']}"></option>
+                                            <option th:text="summernote + '（' + html + ' 富文本编辑器）'" th:value="html" th:attr="selected=${'html' eq configMap['editor_type']}"></option>
+                                        </select>
+                                        <div style="margin: 1rem 0">
+                                            <b>注意：针对同一篇文章，editor.md 与 summernote 不要混合切换使用，否则文章显示样式会失效</b>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="form-group row">

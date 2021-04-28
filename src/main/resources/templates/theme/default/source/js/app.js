@@ -198,7 +198,6 @@
                 $("#tocContainer").autoToc({offsetTop: 520});
             });
 
-
             // 点赞
             $("#priseBtn").on("click",function () {
                 if (sessionStorage.getItem("hasPrize" + postId)) {

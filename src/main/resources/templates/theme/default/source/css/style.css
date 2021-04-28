@@ -1095,6 +1095,10 @@ h3.friend-link-title.blogger {
     animation: slowUp 1s;
 }
 
+.post-content div {
+    margin: 2rem 0;
+}
+
 .post-content h2,
 .post-content h3,
 .post-content h4 {
@@ -1106,11 +1110,11 @@ h3.friend-link-title.blogger {
 }
 
 .post-content h3 {
-    font-size: 16px;
+    font-size: 18px;
 }
 
 .post-content h4 {
-    font-size: 14px;
+    font-size: 15px;
 }
 
 .post-content img {
@@ -1150,20 +1154,22 @@ h3.friend-link-title.blogger {
 }
 
 .post-content a.fancybox {
-    display: block !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
-
 
 .post-content .sequence-diagram, .post-content .flowchart{
     margin: 0 auto;
     text-align: center;
 }
+
 .post-content .sequence-diagram svg, .post-content .flowchart svg{
     margin: 0 auto;
 }
 .post-content .sequence-diagram text, .post-content .flowchart text {
     font-size: 15px !important;
-    font-family: Play,"Microsoft YaHei";
+    font-family: Play, "Microsoft YaHei", sans-serif;
 }
 
 .postContainer h1.post-title {
@@ -1219,13 +1225,18 @@ h3.friend-link-title.blogger {
 }
 
 .postContainer pre {
-    padding: 10px;
-    border: 2px solid var(--theme-color);
+    padding: 2rem;
+    border: 0;
+    box-shadow: 0 1px 3px 1px var(--shadow-color);
 }
 
 .postContainer .highlight td {
     border: none;
     padding: 0;
+}
+
+.postContainer .highlight td.code {
+    width: 100%;
 }
 
 .postContainer pre::-webkit-scrollbar, .highlight::-webkit-scrollbar {

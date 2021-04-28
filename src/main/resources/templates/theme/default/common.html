@@ -112,6 +112,7 @@
         let version = [[${activeTheme.configMap['version']}]];
         let baseLink = [[${baseLink}]];
         let openPjax = [[${activeTheme.configMap['PJAX']}]];
+        let editorType = [[${#servletContext.getAttribute('configMap')['editor_type']}]];
     </script>
     <script type='text/javascript' th:src="@{${baseLink} + '/source/js/plugins.js'}"></script>
     <script type='text/javascript' th:src="@{${baseLink} + '/source/js/jquery-comment/jquery.cookie.js'}"></script>

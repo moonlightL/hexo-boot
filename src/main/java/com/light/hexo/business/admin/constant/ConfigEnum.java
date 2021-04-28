@@ -75,7 +75,8 @@ public enum ConfigEnum {
     EMAIL_USERNAME("email_username", "", "发送邮件用户名"),
     EMAIL_PASSWORD("email_password", "", "发送邮件密码"),
 
-    TWIKOO_ENV_ID("twikoo_env_id", "", "twikoo环境 id")
+    TWIKOO_ENV_ID("twikoo_env_id", "", "twikoo环境 id"),
+    EDITOR_TYPE("editor_type", "markdown", "编辑器类型"),
     ;
 
     private String name;
