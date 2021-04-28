@@ -50,6 +50,11 @@ public class Post implements Serializable {
     private String content;
 
     /**
+     * 文章内容（html 格式）
+     */
+    private String contentHtml;
+
+    /**
      * 作者
      */
     private String author;

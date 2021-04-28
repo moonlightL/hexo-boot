@@ -52,12 +52,12 @@
 
 :root[mode=light] {
     --theme-color: #37b1f3;
-    --hover-color: #30a0dc;
+    --hover-color: #fff;
     --blog-bg-color: #f0f2f5;
     --content-color: #fff;
-    --text-color: #333;
+    --text-color: #4d5156;
     --text-hover-color: #fff;
-    --border-color: #37b1f3;
+    --border-color: #96C2F1;
     --shadow-color: #e8e9ea;
     --shadow-hover-color: #d0cfcf;
     --gutter-pre-bg-color: #eff2f3;
@@ -68,7 +68,7 @@
 
 :root[mode=dark] {
     --theme-color: #2f9064;
-    --hover-color: #20d6b2;
+    --hover-color: #fff;
     --blog-bg-color: #202020;
     --content-color: #0e0f10;
     --text-color: #d8d8d8;
@@ -98,7 +98,6 @@ body {
 
 p {
     line-height: 1.7em;
-    margin: 2rem 0;
 }
 
 th, td, input, textarea {
@@ -106,15 +105,6 @@ th, td, input, textarea {
     background-color: var(--content-color);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-}
-
-ol {
-    margin: 0;
-    padding: 0 2rem;
-}
-
-ul li, ol li {
-    margin: .5rem 0;
 }
 
 body::-webkit-scrollbar {
@@ -257,24 +247,22 @@ strong {
 .navbar-default .navbar-nav>.active>a:focus,
 .navbar-default .navbar-nav>.active>a:hover {
     background-color: var(--theme-color);
-    color: #fff;
+    color: var(--hover-color);
 }
 
 .navbar ul.menu li {
     position: relative;
-    padding: 0 .5rem;
 }
 
 .navbar ul.menu > li > a {
     position: relative;
     z-index: 0;
-    /*color: var(--text-color) !important;*/
     padding: 1.6rem;
 }
 
 .navbar ul.menu > li a:hover {
     background-color: var(--theme-color) !important;
-    color: var(--text-hover-color) !important;
+    color: var(--hover-color);
 }
 
 .navbar ul.menu > li:hover > ul.second-menu {
@@ -295,12 +283,11 @@ strong {
     text-align: center;
     background: var(--content-color);
     box-shadow: 0 1px 7px 1px var(--shadow-color);
-    border-radius: .625rem 0;
     padding: 0;
     margin: 0;
     display: none;
     opacity: 0;
-    animation: slowUp 1s;
+    animation: slowUp .5s;
     z-index: 9;
     list-style-type: none;
 }
@@ -315,12 +302,16 @@ strong {
     display: block;
 }
 
+.navbar ul.menu > li > ul.second-menu li:hover a {
+    color: var(--hover-color);
+}
+
 .navbar ul > li:hover {
     background: var(--theme-color);
 }
 
 .navbar ul li:hover a {
-    color: #fff;
+    color: var(--hover-color);
 }
 
 .navbar-brand img {
@@ -665,7 +656,6 @@ strong {
 
 .post-info .show-btn .button:hover::after {
     width: 100%;
-    background: var(--hover-color);
     transition: width .2s cubic-bezier(.2, .3, .25, .9) 0s, background .2s cubic-bezier(.2, .3, .25, .9) 0s;
 }
 
@@ -803,17 +793,13 @@ strong {
     height: 100%;
 }
 
-.pagination .page:hover {
-    background: var(--theme-color)
+.pagination .page:hover, .pagination span.current  {
+    background: var(--theme-color);
+    color: var(--hover-color);
 }
 
 .pagination .page:hover a {
-    color: #fff
-}
-
-.pagination span.current {
-    background: var(--theme-color);
-    color: #fff
+    color: var(--hover-color);
 }
 
 .options {
@@ -840,7 +826,7 @@ strong {
 
 .options .option-item:hover {
     background-color: var(--theme-color);
-    color: #fff;
+    color: var(--hover-color);
 }
 
 span.effect {
@@ -1005,7 +991,7 @@ span.effect {
 
 h3.friend-link-title {
     padding: 1.5rem;
-    font-size: 20px;
+    font-size: 18px;
     border-radius: 4px;
     text-shadow: none;
 }
@@ -1087,19 +1073,68 @@ h3.friend-link-title.blogger {
     position: relative;
     margin-bottom:12px;
     padding: 0 0 10px 0;
-    border-bottom: 1px solid #f1f1f1;
+    border-bottom: 1px solid var(--blog-bg-color);
     color: var(--text-color);
 }
 
 .post-content {
+    line-height: 2;
     text-align: left;
     font-size: 14px;
-    line-height: 1.6;
     width: 100%;
     background-color: var(--content-color);
     color: var(--text-color);
     margin-bottom: 2rem;
     animation: slowUp 1s;
+}
+
+.post-content div {
+    margin: 2rem 0;
+}
+
+.post-content ol {
+    padding: 0;
+    list-style-type: none;
+    counter-increment: list;
+}
+
+.post-content ol li::before {
+    content: counter(list);
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    float: left;
+    margin: 5px 12px 0 0;
+    color: #fff;
+    font-size: 12px;
+    font-style: normal;
+    background-color: #5aaefd;
+    border-radius: 50%;
+    text-align: center;
+    transition: all .5s;
+}
+
+.post-content ol li:hover::before {
+    transform: scale(1.1);
+}
+
+.post-content ul li::before {
+    content: "";
+    width: 16px;
+    height: 16px;
+    float: left;
+    margin: 8px 12px 0 0;
+    color: #fff;
+    font-size: 12px;
+    font-style: normal;
+    border: 2px solid #5aaefd;
+    border-radius: 50%;
+    text-align: center;
+    transition: all .5s;
+}
+
+.post-content ul li:hover::before {
+    background-color: #5aaefd;
 }
 
 .post-content h2,
@@ -1113,17 +1148,22 @@ h3.friend-link-title.blogger {
 }
 
 .post-content h3 {
-    font-size: 16px;
+    font-size: 18px;
 }
 
 .post-content h4 {
-    font-size: 14px;
+    font-size: 15px;
 }
 
 .post-content img {
     width: auto;
     height: auto;
     max-width: 100%;
+    box-shadow: 0 1px 3px 1px var(--shadow-color);
+}
+
+.post-content table {
+    box-shadow: 0 1px 3px 1px var(--shadow-color);
 }
 
 .post-content blockquote {
@@ -1133,16 +1173,21 @@ h3.friend-link-title.blogger {
     margin-left: 0;
     margin-bottom: 20px;
     font-size: 14px;
+    background-color: var(--blog-bg-color);
 }
 
 .post-content p, .post-content blockquote p {
     font-size: 15px;
     letter-spacing: 1px;
+    line-height: 1.75em;
+    margin: 1.5rem 0;
 }
 
 .post-content p code {
     margin-left: 5px;
     margin-right: 4px;
+    font-family: "Play", "Open sans", sans-serif;
+    font-size: 15px;
 }
 
 .post-content hr {
@@ -1153,20 +1198,22 @@ h3.friend-link-title.blogger {
 }
 
 .post-content a.fancybox {
-    display: block !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
-
 
 .post-content .sequence-diagram, .post-content .flowchart{
     margin: 0 auto;
     text-align: center;
 }
+
 .post-content .sequence-diagram svg, .post-content .flowchart svg{
     margin: 0 auto;
 }
 .post-content .sequence-diagram text, .post-content .flowchart text {
     font-size: 15px !important;
-    font-family: Play,"Microsoft YaHei";
+    font-family: Play, "Microsoft YaHei", sans-serif;
 }
 
 .postContainer h1.post-title {
@@ -1222,13 +1269,18 @@ h3.friend-link-title.blogger {
 }
 
 .postContainer pre {
-    padding: 10px;
-    border: 2px solid var(--theme-color);
+    padding: 2rem;
+    border: 0;
+    box-shadow: 0 1px 3px 1px var(--shadow-color);
 }
 
 .postContainer .highlight td {
     border: none;
     padding: 0;
+}
+
+.postContainer .highlight td.code {
+    width: 100%;
 }
 
 .postContainer pre::-webkit-scrollbar, .highlight::-webkit-scrollbar {
@@ -1961,7 +2013,7 @@ h3.friend-link-title.blogger {
 .comment-data-body .comment-data-body-btns .send-message-btn,
 .second-comment-data-body .comment-data-body-btns .send-message-btn{
     background-color: var(--theme-color) !important;
-    border: 2px solid var(--border-color) !important;
+    border: 0;
     height: 36px;
     line-height: 18px;
 }

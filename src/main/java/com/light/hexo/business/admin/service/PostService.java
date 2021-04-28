@@ -194,4 +194,10 @@ public interface PostService extends BaseService<Post>, EventService {
      */
     List<Post> findTopList() throws GlobalException;
 
+    /**
+     * 获取 contentHtml 为空的文章列表（定时器任务专用）
+     * @return
+     * @throws GlobalException
+     */
+    List<Post> listEmptyHtml() throws GlobalException;
 }

@@ -29,7 +29,7 @@ public class PostRequest extends BaseRequest<Post> {
     private String title;
 
     /**
-     * 文章内容（markdown 格式）
+     * 文章内容（原始数据，markdown 或 html 格式）
      */
     @NotEmpty(message = "文章内容不能为空", groups = {BaseRequest.Save.class, BaseRequest.Update.class})
     private String content;

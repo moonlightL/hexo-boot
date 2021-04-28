@@ -61,7 +61,8 @@
                         </li>
                     </ul>
                 </div>
-                <div id="post-content" class="post-content" th:utext="${md.md2html(post.id, post.content, 2)}"></div>
+
+                <div id="post-content" class="post-content" th:utext="${post.contentHtml}"></div>
 
                 <div id="share" class="shareContainer">
                     <div class="btns">
