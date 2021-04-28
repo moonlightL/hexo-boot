@@ -227,6 +227,8 @@ curl -L -o ~/.hexo-boot/application.yml --create-dirs https://gitee.com/moonligh
 
 ## 六、更新日志
 
+2021-04-28 新增富文本编辑器（已支持 editor.md 和 summernote 两套编辑器）
+
 2021-03-24 实现 html 内容压缩渲染
 
 2021-03-03 调整管理后台主题源码修改编辑区，新增代码高亮、关键字查询和行数定位功能
