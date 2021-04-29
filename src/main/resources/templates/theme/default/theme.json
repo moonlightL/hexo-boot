@@ -57,7 +57,7 @@
     },
     {
       "key": "highlight",
-      "value": "github-gist",
+      "value": "atom-one-light",
       "type": "select",
       "option": "atom-one-light,atom-one-dark,github-gist",
       "label": "代码高亮主题",
