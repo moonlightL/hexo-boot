@@ -1,10 +1,10 @@
-@font-face{
-    font-family:'Play';
-    font-style:normal;
-    font-weight:400;
-    src:url('../fonts/Play.woff2') format('woff2');
-    unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2212,U+2215
-}
+/*@font-face{*/
+/*    font-family:'Play';*/
+/*    font-style:normal;*/
+/*    font-weight:400;*/
+/*    src:url('../fonts/Play.woff2') format('woff2');*/
+/*    unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2212,U+2215*/
+/*}*/
 
 @keyframes slowUp {
     0% {
@@ -63,6 +63,7 @@
     --gutter-pre-bg-color: #eff2f3;
     --code-pre-bg-color: #f7f7f7;
     --text-shadow-color: #e1dfdf;
+    --table-border-color: #ddd;
     --brightness-value: brightness(1);
 }
 
@@ -79,12 +80,9 @@
     --gutter-pre-bg-color: #2d2d2d;
     --code-pre-bg-color: #1d1f21;
     --text-shadow-color: #505050;
+    --table-border-color: #5d5c5c;
     --brightness-value: brightness(0.9);
 }
-
-/*html {*/
-/*    filter:progid:DXImageTransform.Microsoft.BasicImage(grayscale=1);*/
-/*}*/
 
 body {
     background-color: var(--blog-bg-color);
@@ -93,14 +91,13 @@ body {
     font-family: "Play", "Open sans", sans-serif;
     font-size: 14px;
     line-height: 21px;
-    text-shadow: 0 1px 3px var(--text-shadow-color);
 }
 
 p {
     line-height: 1.7em;
 }
 
-th, td, input, textarea {
+input, textarea {
     color: var(--text-color);
     background-color: var(--content-color);
     -webkit-font-smoothing: antialiased;
@@ -150,6 +147,63 @@ button.btn.focus, button.btn:focus {
 
 strong {
     word-break:break-all
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin: 20px 0 10px;
+    padding: 0;
+    font-weight: bold;
+    line-height: 1.5;
+}
+
+h1 {
+    font-size: 24px;
+}
+
+h2 {
+    font-size: 22px;
+}
+
+h3 {
+    font-size: 20px;
+}
+
+h4 {
+    font-size: 18px;
+}
+
+h5 {
+    font-size: 16px;
+}
+
+h6 {
+    font-size: 14px;
+}
+
+@media (max-width: 767px) {
+    h1 {
+        font-size: 20px;
+    }
+
+    h2 {
+        font-size: 18px;
+    }
+
+    h3 {
+        font-size: 16px;
+    }
+
+    h4 {
+        font-size: 14px;
+    }
+
+    h5 {
+        font-size: 12px;
+    }
+
+    h6 {
+        font-size: 10px;
+    }
 }
 
 .btn-primary {
@@ -241,6 +295,7 @@ strong {
     font-weight: bold;
     box-shadow: 0 0 5px var(--shadow-color);
     padding: 0 1rem;
+    font-size: 14px;
 }
 
 .navbar-default .navbar-nav>.active>a,
@@ -373,7 +428,7 @@ strong {
     padding: 10px 20px;
     background: rgba(0, 0, 0, .4);
     color: #fff;
-    font-size: 18px;
+    font-size: 26px;
 }
 
 .image-banner .word_1,.image-banner .word_2 {
@@ -1095,11 +1150,14 @@ h3.friend-link-title.blogger {
 .post-content ol {
     padding: 0;
     list-style-type: none;
-    counter-increment: list;
+}
+
+.post-content ol li {
+    counter-increment: row;
 }
 
 .post-content ol li::before {
-    content: counter(list);
+    content: counter(row);
     width: 20px;
     height: 20px;
     line-height: 20px;
@@ -1137,24 +1195,6 @@ h3.friend-link-title.blogger {
     background-color: #5aaefd;
 }
 
-.post-content h2,
-.post-content h3,
-.post-content h4 {
-    font-weight: 600;
-}
-
-.post-content h2 {
-    font-size: 22px;
-}
-
-.post-content h3 {
-    font-size: 18px;
-}
-
-.post-content h4 {
-    font-size: 15px;
-}
-
 .post-content img {
     width: auto;
     height: auto;
@@ -1162,8 +1202,18 @@ h3.friend-link-title.blogger {
     box-shadow: 0 1px 3px 1px var(--shadow-color);
 }
 
-.post-content table {
-    box-shadow: 0 1px 3px 1px var(--shadow-color);
+.post-content >  table {
+    border: 1px solid var(--table-border-color);
+}
+
+.post-content > table th,
+.post-content > table td {
+    padding: 12px !important;
+    border-right: 1px solid var(--table-border-color);
+}
+
+.post-content table>tbody>tr:nth-of-type(odd) {
+    background-color: var(--blog-bg-color);
 }
 
 .post-content blockquote {
@@ -1271,7 +1321,7 @@ h3.friend-link-title.blogger {
 .postContainer pre {
     padding: 2rem;
     border: 0;
-    box-shadow: 0 1px 3px 1px var(--shadow-color);
+    background: var(--code-pre-bg-color);
 }
 
 .postContainer .highlight td {
@@ -1329,7 +1379,7 @@ h3.friend-link-title.blogger {
 }
 
 .postContainer .highlight .hljs {
-    font-size: 14px;
+    font-size: 13px;
     color: #6c757d;
     font-family: "Nunito Sans",-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
     display: inline !important;
@@ -1734,12 +1784,6 @@ h3.friend-link-title.blogger {
         border: none;
         border-top: 1px solid #ddd;
         background: none;
-    }
-
-    .post-content pre {
-        border: 2px solid var(--theme-color);
-        border-radius:0;
-        padding: 10px;
     }
 
     .post-content pre, .post-content code, .post-content kbd {

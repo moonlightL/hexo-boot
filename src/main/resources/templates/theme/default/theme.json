@@ -6,61 +6,70 @@
       "key": "version",
       "value": "3.0",
       "type": "input",
-      "label": "版本号"
+      "label": "版本号",
+      "update": true
     },
     {
       "key": "pageSize",
       "value": "9",
       "type": "input",
-      "label": "页面大小"
+      "label": "页面大小",
+      "update": false
     },
     {
       "key": "useCDN",
       "value": "false",
       "type": "select",
       "option": "true,false",
-      "label": "是否开启CDN"
+      "label": "是否开启CDN",
+      "update": false
     },
     {
       "key": "CDNAddress",
       "value": "",
       "type": "input",
-      "label": "CDN地址"
+      "label": "CDN地址",
+      "update": false
     },
     {
       "key": "PJAX",
       "value": "true",
       "type": "select",
       "option": "true,false",
-      "label": "是否开启PJAX"
+      "label": "是否开启PJAX",
+      "update": false
     },
     {
       "key": "animated",
       "value": "false",
       "type": "select",
       "option": "true,false",
-      "label": "是否开启动画"
+      "label": "是否开启动画",
+      "update": false
     },
     {
       "key": "mourn",
       "value": "false",
       "type": "select",
       "option": "true,false",
-      "label": "是否开启哀悼"
+      "label": "是否开启哀悼",
+      "update": false
     },
     {
       "key": "highlight",
-      "value": "atom-one-light",
+      "value": "github-gist",
       "type": "select",
-      "option": "atom-one-light,atom-one-dark",
-      "label": "代码高亮主题"
+      "option": "atom-one-light,atom-one-dark,github-gist",
+      "label": "代码高亮主题",
+      "update": true
     },
     {
       "key": "commentShowType",
       "value": "singleRow",
       "type": "select",
       "option": "singleRow,multiRow",
-      "label": "评论列表展示"
+      "label": "评论列表展示",
+      "update": false
     }
   ]
 }

@@ -65,8 +65,8 @@ public class ThemeExtendServiceImpl extends BaseServiceImpl<ThemeExtend> impleme
         for (ThemeFileExtension extension : extensionList) {
             String key = extension.getKey();
             ThemeExtend te = extendMap.get(key);
-            // 已存在的参数（非version字段）不进行修改
-            if (te != null && !key.equals("version")) {
+            // 已存在的参数
+            if (te != null && !extension.isUpdate()) {
                 continue;
             }
 

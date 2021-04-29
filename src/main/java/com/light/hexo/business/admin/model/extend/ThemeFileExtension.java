@@ -45,4 +45,8 @@ public class ThemeFileExtension implements Serializable {
      */
     private String label;
 
+    /**
+     * 启动项目后是否同步到数据库
+     */
+    private boolean update;
 }
