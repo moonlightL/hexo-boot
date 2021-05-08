@@ -270,6 +270,7 @@
             $target.parent("li").addClass("active");
             NProgress.done();
         });
+        $(document).on('pjax:end', function() { loadLazy(); contentWayPoint(); });
     };
 
     $(function() {
