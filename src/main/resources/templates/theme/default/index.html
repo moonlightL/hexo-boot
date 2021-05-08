@@ -29,7 +29,7 @@
 
             <div class="ml-content">
                 <div class="row" >
-                    <div class="post col-md-4 col-sm-6 col-xs-12" th:each="post,iterStat : ${pageInfo.data}">
+                    <div class="post col-md-4 col-sm-6 col-xs-12" th:if="${activeTheme.configMap['layout'] == 'grid'}" th:each="post,iterStat : ${pageInfo.data}">
                         <div class="post-info animate-box" data-animate-effect="zoomIn">
                             <div class="post-bg">
                                 <span class="reprint" th:if="${post.reprint}">转载</span>
@@ -66,6 +66,35 @@
                                     <span>全</span>
                                     <span>文</span>
                                 </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="post col-md-12" th:if="${activeTheme.configMap['layout'] == 'full'}" th:each="post,iterStat : ${pageInfo.data}">
+                        <div class="post-info full animate-box" data-animate-effect="fadeIn">
+                            <div class="cover">
+                                <span class="top" th:if="${post.top}"><img src="/theme/default/source/images/article-top.png" alt="" width="38" height="38"></span>
+                                <a data-pjax th:href="@{'/' + ${post.link}}"><img class="lazyload" th:data-original="@{${post.coverUrl}}" alt=""></a>
+                            </div>
+                            <div class="info">
+                                <h3>
+                                    <span class="reprint" th:if="${post.reprint}">转载</span>
+                                   <span class="declare">
+                                       <a data-pjax th:href="@{'/categories/'+${post.categoryName}+'/'}">[[${post.categoryName}]]</a>
+                                   </span>
+                                    <a data-pjax th:href="@{'/' + ${post.link}}" th:text="${post.title}"></a>
+                                </h3>
+                                <p class="summary" th:text="${post.summary}"></p>
+                                <div class="meta">
+                                    <ul>
+                                        <li><i class="fa fa-user-circle-o"></i> [[${post.author}]]</li>
+                                        <li><i class="fa fa-calendar"></i> [[${post.publishDate}]]</li>
+                                        <li class="hidden-xs"> <i class="fa fa-heartbeat"></i> 热度 [[${post.readNum}]] </li>
+                                    </ul>
+                                    <span class="hidden-xs article-item-tags" th:if="${#strings.isEmpty(post.tags) == false}">
+                                       <a data-pjax class="tag" th:href="@{'/tags/'+${tag}+'/'}" rel="tag" th:each="tag,status : ${#strings.arraySplit(post.tags, ',')}"><i class="fa fa-tag"></i> [[${tag}]] &nbsp;</a>
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>

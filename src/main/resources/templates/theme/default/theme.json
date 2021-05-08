@@ -70,6 +70,14 @@
       "option": "singleRow,multiRow",
       "label": "评论列表展示",
       "update": false
+    },
+    {
+      "key": "layout",
+      "value": "grid",
+      "type": "select",
+      "option": "grid,full",
+      "label": "文章布局",
+      "update": true
     }
   ]
 }
