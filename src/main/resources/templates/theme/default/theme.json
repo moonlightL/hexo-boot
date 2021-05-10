@@ -77,7 +77,7 @@
       "type": "select",
       "option": "grid,full",
       "label": "文章布局",
-      "update": true
+      "update": false
     }
   ]
 }
