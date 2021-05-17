@@ -18,9 +18,6 @@ target/
 *.iws
 *.iml
 *.ipr
-/src/main/resources/templates/theme/Grace/
-/src/main/resources/templates/theme/Pure/
-/src/main/resources/public/ads.txt
 
 ### NetBeans ###
 /nbproject/private/
@@ -34,5 +31,3 @@ build/
 
 ### VS Code ###
 .vscode/
-
-/src/main/resources/public/service-worker.js
