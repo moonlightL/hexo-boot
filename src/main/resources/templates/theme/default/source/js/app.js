@@ -119,7 +119,7 @@
                             container: $aplayer.get(0),
                             fixed: true,
                             listFolded: true,
-                            listMaxHeight: 90,
+                            listMaxHeight: "120px",
                             autoplay: true,
                             audio: resp.data
                         });
