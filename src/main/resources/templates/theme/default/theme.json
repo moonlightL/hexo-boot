@@ -21,7 +21,7 @@
       "value": "false",
       "type": "select",
       "option": "true,false",
-      "label": "是否开启CDN",
+      "label": "启用CDN",
       "update": false
     },
     {
@@ -36,7 +36,7 @@
       "value": "true",
       "type": "select",
       "option": "true,false",
-      "label": "是否开启PJAX",
+      "label": "启用PJAX",
       "update": false
     },
     {
@@ -44,7 +44,7 @@
       "value": "false",
       "type": "select",
       "option": "true,false",
-      "label": "是否开启动画",
+      "label": "背景动画",
       "update": false
     },
     {
@@ -52,7 +52,7 @@
       "value": "false",
       "type": "select",
       "option": "true,false",
-      "label": "是否开启哀悼",
+      "label": "开启哀悼",
       "update": false
     },
     {

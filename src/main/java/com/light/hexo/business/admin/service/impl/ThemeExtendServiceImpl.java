@@ -64,11 +64,6 @@ public class ThemeExtendServiceImpl extends BaseServiceImpl<ThemeExtend> impleme
 
         for (ThemeFileExtension extension : extensionList) {
             String key = extension.getKey();
-            ThemeExtend te = extendMap.get(key);
-            // 已存在的参数
-            if (te != null && !extension.isUpdate()) {
-                continue;
-            }
 
             ThemeExtend themeExtend = new ThemeExtend();
             themeExtend.setConfigName(key)
@@ -79,6 +74,13 @@ public class ThemeExtendServiceImpl extends BaseServiceImpl<ThemeExtend> impleme
                        .setThemeId(themeId)
                        .setCreateTime(LocalDateTime.now())
                        .setUpdateTime(themeExtend.getCreateTime());
+
+            // 已存在的参数
+            ThemeExtend te = extendMap.get(key);
+            if (te != null && !extension.isUpdate()) {
+                themeExtend.setConfigValue(te.getConfigValue());
+            }
+
             list.add(themeExtend);
         }
 
