@@ -1,11 +1,8 @@
 package com.light.hexo.common.component.valid;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Component;
-
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import java.math.BigDecimal;
 
 /**
  * @Author MoonlightL

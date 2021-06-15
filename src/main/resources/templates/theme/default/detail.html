@@ -10,7 +10,7 @@
     [(${#servletContext.getAttribute('configMap')['meta_code']})]
     <meta name="keywords" th:content="${#servletContext.getAttribute('configMap')['keywords']}" />
     <meta name="description" th:content="${post.summary}" />
-    <meta property="og:description" th:content="${#servletContext.getAttribute('configMap')['description']}" />
+    <meta property="og:description" th:content="${post.summary}" />
     <meta property="og:title" th:content="${post.title + ' | ' + #servletContext.getAttribute('configMap')['blog_name']}" />
     <title>[[${post.title}]] | [[${#servletContext.getAttribute('configMap')['blog_name']}]]</title>
     <div th:replace="~{theme/default/common :: link}"></div>

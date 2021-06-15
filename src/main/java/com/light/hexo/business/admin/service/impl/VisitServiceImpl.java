@@ -1,7 +1,6 @@
 package com.light.hexo.business.admin.service.impl;
 
 import com.aliyun.oss.ServiceException;
-import com.aliyuncs.ecs.model.v20140526.CreateImageRequest;
 import com.light.hexo.business.admin.mapper.VisitMapper;
 import com.light.hexo.business.admin.model.Visit;
 import com.light.hexo.business.admin.model.event.VisitEvent;
@@ -14,13 +13,8 @@ import com.light.hexo.common.component.event.EventEnum;
 import com.light.hexo.common.exception.GlobalException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
-
-import java.awt.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;

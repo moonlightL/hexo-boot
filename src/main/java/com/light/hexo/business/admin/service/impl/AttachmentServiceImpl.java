@@ -1,10 +1,8 @@
 package com.light.hexo.business.admin.service.impl;
 
-import com.light.hexo.business.admin.constant.ConfigEnum;
 import com.light.hexo.business.admin.mapper.AttachmentMapper;
 import com.light.hexo.business.admin.model.Attachment;
 import com.light.hexo.business.admin.service.AttachmentService;
-import com.light.hexo.business.admin.service.ConfigService;
 import com.light.hexo.common.base.BaseMapper;
 import com.light.hexo.common.base.BaseRequest;
 import com.light.hexo.common.base.BaseServiceImpl;

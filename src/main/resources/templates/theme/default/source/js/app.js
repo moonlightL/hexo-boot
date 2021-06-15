@@ -7,10 +7,10 @@
                 js: baseLink + "/source/js/APlayer/APlayer.min.js"
             },
             about: {
-                js: baseLink + "/source/js/about.js"
+                js: baseLink + "/source/js/about.js?v=" + version
             },
             detail: {
-                js: baseLink + "/source/js/detail.js"
+                js: baseLink + "/source/js/detail.js?v=" + version
             },
             highlight: {
                 js: baseLink + "/source/js/highlightjs/highlight.pack.js"

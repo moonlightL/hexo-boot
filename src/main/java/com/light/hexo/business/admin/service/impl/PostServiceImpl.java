@@ -546,7 +546,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
     public HexoPageInfo archivePostsByIndex(Integer pageNum, Integer pageSize) throws GlobalException {
         Example example = Example.builder(Post.class)
                 .select("id", "title", "author", "publishDate", "year", "month", "day", "top", "reprint",
-                        "coverUrl", "coverType", "link", "categoryId", "tags", "readNum", "createTime")
+                        "coverUrl", "coverType", "link", "categoryId", "tags", "readNum", "praiseNum", "createTime")
                 .where(Sqls.custom().andEqualTo("publish", true).andEqualTo("delete", false))
                 .orderByDesc("createTime")
                 .build();

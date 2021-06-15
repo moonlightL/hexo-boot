@@ -2,30 +2,18 @@ package com.light.hexo.common.config;
 
 import nz.net.ultraq.thymeleaf.LayoutDialect;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
-import org.springframework.core.io.Resource;
-import org.thymeleaf.IEngineConfiguration;
 import org.thymeleaf.dialect.IDialect;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
-import org.thymeleaf.spring5.templateresource.SpringResourceTemplateResource;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
-import org.thymeleaf.standard.expression.StandardExpressionParser;
 import org.thymeleaf.templatemode.TemplateMode;
-import org.thymeleaf.templateresolver.AbstractConfigurableTemplateResolver;
-import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 import org.thymeleaf.templateresolver.FileTemplateResolver;
 import org.thymeleaf.templateresolver.ITemplateResolver;
-import org.thymeleaf.templateresource.ITemplateResource;
-import org.thymeleaf.util.StringUtils;
-
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 /**

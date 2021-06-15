@@ -16,8 +16,6 @@
 <div th:fragment="link">
     <link rel="dns-prefetch" th:href="@{'//cdn.jsdelivr.net'}">
     <link rel="shortcut icon" th:href="@{${#servletContext.getAttribute('configMap')['favicon_url']}}"/>
-<!--    <link th:href="@{'https://fonts.loli.net/css?family=Poppins:400,500,600'}" rel="stylesheet">-->
-<!--    <link th:href="@{'https://fonts.loli.net/css?family=Open+Sans:400,700&amp;subset=latin-ext'}" rel="stylesheet">-->
     <link rel="stylesheet" th:href="@{${baseLink} + '/source/css/bootstrap/css/bootstrap.min.css'}">
     <link rel="stylesheet" th:href="@{${baseLink} + '/source/fonts/font-awesome/css/font-awesome.min.css'}" />
     <link rel="stylesheet" th:href="@{${baseLink} + '/source/js/iziModal/css/iziModal.min.css'}">
@@ -112,7 +110,6 @@
         let version = [[${activeTheme.configMap['version']}]];
         let baseLink = [[${baseLink}]];
         let openPjax = [[${activeTheme.configMap['PJAX']}]];
-        let editorType = [[${#servletContext.getAttribute('configMap')['editor_type']}]];
     </script>
     <script type='text/javascript' th:src="@{${baseLink} + '/source/js/plugins.js'}"></script>
     <script type='text/javascript' th:src="@{${baseLink} + '/source/js/jquery-comment/jquery.cookie.js'}"></script>

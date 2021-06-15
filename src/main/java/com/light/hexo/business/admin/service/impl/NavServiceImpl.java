@@ -30,7 +30,6 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.context.WebApplicationContext;
 import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.util.Sqls;
-
 import javax.servlet.ServletContext;
 import java.time.LocalDateTime;
 import java.util.List;

@@ -1,6 +1,5 @@
 package com.light.hexo.business.admin.component;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.light.hexo.business.admin.config.BlogProperty;
 import com.light.hexo.business.admin.constant.HexoExceptionEnum;
 import com.light.hexo.business.admin.model.*;
@@ -10,16 +9,11 @@ import com.light.hexo.business.admin.constant.ConfigEnum;
 import com.light.hexo.common.model.InstallRequest;
 import com.light.hexo.common.util.DateUtil;
 import com.light.hexo.common.util.ExceptionUtil;
-import com.light.hexo.common.util.JsonUtil;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
-import org.springframework.util.ResourceUtils;
-import java.io.File;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -57,9 +51,6 @@ public class InstallService {
 
     @Autowired
     private FriendLinkService friendLinkService;
-
-    @Autowired
-    private ThemeService themeService;
 
     @Autowired
     private BlogProperty blogProperty;

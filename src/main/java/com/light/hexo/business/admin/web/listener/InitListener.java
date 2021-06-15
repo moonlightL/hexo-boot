@@ -1,7 +1,6 @@
 package com.light.hexo.business.admin.web.listener;
 
 import com.light.hexo.business.admin.model.Config;
-import com.light.hexo.business.admin.model.Nav;
 import com.light.hexo.business.admin.service.ConfigService;
 import com.light.hexo.business.admin.service.NavService;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +9,6 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
-
 import javax.servlet.ServletContext;
 import java.util.List;
 import java.util.Map;

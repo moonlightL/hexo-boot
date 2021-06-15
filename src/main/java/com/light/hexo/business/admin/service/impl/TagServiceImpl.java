@@ -15,7 +15,6 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;

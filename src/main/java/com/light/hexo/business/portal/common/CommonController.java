@@ -2,7 +2,6 @@ package com.light.hexo.business.portal.common;
 
 import com.light.hexo.business.admin.model.Category;
 import com.light.hexo.business.admin.model.FriendLink;
-import com.light.hexo.business.admin.model.Nav;
 import com.light.hexo.business.admin.model.Theme;
 import com.light.hexo.business.admin.service.*;
 import com.light.hexo.common.component.event.EventPublisher;
@@ -13,12 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
-import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

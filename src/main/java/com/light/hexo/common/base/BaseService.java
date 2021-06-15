@@ -1,7 +1,6 @@
 package com.light.hexo.common.base;
 
 import com.github.pagehelper.PageInfo;
-import com.light.hexo.business.admin.model.Tag;
 import com.light.hexo.common.exception.GlobalException;
 
 import java.io.Serializable;

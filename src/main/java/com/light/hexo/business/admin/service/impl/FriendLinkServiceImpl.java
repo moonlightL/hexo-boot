@@ -1,7 +1,6 @@
 package com.light.hexo.business.admin.service.impl;
 
 import com.light.hexo.business.admin.mapper.FriendLinkMapper;
-import com.light.hexo.business.admin.model.Category;
 import com.light.hexo.business.admin.model.FriendLink;
 import com.light.hexo.business.admin.model.Tag;
 import com.light.hexo.business.admin.service.FriendLinkService;
@@ -19,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.List;
