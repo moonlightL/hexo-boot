@@ -9,6 +9,7 @@ import com.light.hexo.business.admin.constant.ConfigEnum;
 import com.light.hexo.common.model.InstallRequest;
 import com.light.hexo.common.util.DateUtil;
 import com.light.hexo.common.util.ExceptionUtil;
+import com.light.hexo.common.util.MarkdownUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -134,6 +135,7 @@ public class InstallService {
                     "\tSystem.out.println(\"Hello World\");\n" +
                     "}\n" +
                     "```")
+            .setContentHtml(MarkdownUtil.md2html(post.getContent()))
             .setAuthor(user.getNickname())
             .setPublishDate(DateUtil.ldToStr(now))
             .setCoverUrl(HexoConstant.DEFAULT_POST_COVER)
