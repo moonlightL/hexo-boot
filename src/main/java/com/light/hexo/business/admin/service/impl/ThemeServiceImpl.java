@@ -1,5 +1,7 @@
 package com.light.hexo.business.admin.service.impl;
 
+import cn.hutool.core.io.file.FileNameUtil;
+import cn.hutool.core.util.ZipUtil;
 import com.light.hexo.business.admin.config.BlogProperty;
 import com.light.hexo.business.admin.constant.HexoExceptionEnum;
 import com.light.hexo.business.admin.mapper.ThemeMapper;
@@ -23,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.aspectj.util.FileUtil;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,11 +34,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ResourceUtils;
 import tk.mybatis.mapper.entity.Example;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+
+import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
@@ -281,6 +284,29 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
             log.info(e.getMessage());
         }
 
+    }
+
+    @Override
+    public void unzipTheme(String originalFilename, InputStream inputStream) throws GlobalException {
+
+        String zipName = FileNameUtil.mainName(originalFilename);
+        String themeName = FileNameUtil.mainName(originalFilename.substring(originalFilename.lastIndexOf("-") + 1));
+
+        File file = this.getThemeCatalog(false);
+        File themedir = new File(file.getAbsolutePath(), themeName);
+        if (themedir.exists() && themedir.isDirectory()) {
+            FileUtils.deleteQuietly(themedir);
+        }
+
+        String tmpPath = System.getProperty("java.io.tmpdir");
+        File tmpDir = new File(tmpPath);
+        ZipUtil.unzip(inputStream, tmpDir, Charset.defaultCharset());
+
+        try {
+            FileUtil.copyDir(new File(tmpDir, zipName), themedir);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.light.hexo.business.admin.web.controller;
 
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileNameUtil;
 import com.github.pagehelper.PageInfo;
 import com.light.hexo.business.admin.constant.HexoExceptionEnum;
 import com.light.hexo.business.admin.model.Theme;
@@ -9,6 +11,7 @@ import com.light.hexo.business.admin.service.ThemeService;
 import com.light.hexo.common.base.BaseController;
 import com.light.hexo.common.base.BaseRequest;
 import com.light.hexo.common.exception.GlobalException;
+import com.light.hexo.common.exception.GlobalExceptionEnum;
 import com.light.hexo.common.model.Result;
 import com.light.hexo.common.model.ThemeRequest;
 import com.light.hexo.common.model.TreeNode;
@@ -17,8 +20,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -47,6 +51,16 @@ public class ThemeController extends BaseController {
     @GetMapping("/fetchUI.html")
     public String fetchUI(Map<String,Object> resultMap) {
         return render("fetchUI", resultMap);
+    }
+
+    /**
+     * 解压主题
+     * @param resultMap
+     * @return
+     */
+    @GetMapping("/unzipUI.html")
+    public String unzipUI(Map<String,Object> resultMap) {
+        return render("unzipUI", resultMap);
     }
 
     /**
@@ -114,6 +128,35 @@ public class ThemeController extends BaseController {
     @ResponseBody
     public Result fetchTheme(@RequestParam String themeUrl) {
         this.themeService.fetchTheme(themeUrl);
+        return Result.success();
+    }
+
+    /**
+     * 解压主题
+     * @param file
+     * @return
+     */
+    @RequestMapping("/unzipTheme.json")
+    @ResponseBody
+    public Result unzipTheme(MultipartFile file) {
+
+        if (file == null) {
+            ExceptionUtil.throwEx(GlobalExceptionEnum.ERROR_PARAM);
+        }
+
+        String contentType = file.getContentType();
+        if (!"application/x-zip-compressed".equals(contentType)) {
+            ExceptionUtil.throwEx(GlobalExceptionEnum.ERROR_PARAM);
+        }
+
+        try {
+            String originalFilename = file.getOriginalFilename();
+            InputStream inputStream = file.getInputStream();
+            this.themeService.unzipTheme(originalFilename, inputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         return Result.success();
     }
 

@@ -70,8 +70,8 @@
                 return;
             }
 
-            let split = themeUrl.split("-");
-            let tmp = split[split.length - 1];
+            let splits = themeUrl.split("-");
+            let tmp = splits[splits.length - 1];
             let themeName = tmp.split(".")[0];
 
             $(that).prop("disabled", true);

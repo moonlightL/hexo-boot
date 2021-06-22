@@ -8,6 +8,7 @@ import com.light.hexo.common.model.TreeNode;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -93,6 +94,14 @@ public interface ThemeService extends BaseService<Theme> {
     void fetchTheme(String themeUrl) throws GlobalException;
 
     /**
+     * 解压主题
+     * @param originalFilename
+     * @param inputStream
+     * @throws GlobalException
+     */
+    void unzipTheme(String originalFilename, InputStream inputStream) throws GlobalException;
+
+    /**
      * 获取主题目录
      * @return
      * @throws GlobalException
@@ -111,4 +120,5 @@ public interface ThemeService extends BaseService<Theme> {
      * @throws GlobalException
      */
     void removeTheme(Integer id) throws GlobalException;
+
 }
