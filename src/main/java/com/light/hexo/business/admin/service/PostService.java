@@ -128,10 +128,11 @@ public interface PostService extends BaseService<Post>, EventService {
     /**
      * 获取文章详情
      * @param link
+     * @param linkType 链接方式 1:原始 2：自定义
      * @return
      * @throws GlobalException
      */
-    Post getDetailInfo(String link) throws GlobalException;
+    Post getDetailInfo(String link, Integer linkType) throws GlobalException;
 
     /**
      * 获取上一页文章信息

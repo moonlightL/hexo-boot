@@ -89,4 +89,9 @@ public class PostRequest extends BaseRequest<Post> {
      * 标签，多个标签使用逗号拼接
      */
     private String tags;
+
+    /**
+     * 自定义文章链接
+     */
+    private String customLink;
 }

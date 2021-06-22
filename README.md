@@ -234,6 +234,8 @@ curl -L -o ~/.hexo-boot/application.yml --create-dirs https://gitee.com/moonligh
 
 [hexo-boot-theme-next](https://github.com/moonlightL/hexo-boot-theme-next)
 
+[hexo-boot-theme-wuxia](https://github.com/moonlightL/hexo-boot-theme-wuxia)
+
 如果网络不佳，无法访问 GitHub，也可以访问 [码云](https://gitee.com/moonlightL) ，找到主题进行下载。
 
 ### 5.3 自定义主题
@@ -245,6 +247,8 @@ curl -L -o ~/.hexo-boot/application.yml --create-dirs https://gitee.com/moonligh
 [码云 Wiki](https://gitee.com/moonlightL/hexo-boot/wikis/%E8%87%AA%E5%AE%9A%E4%B9%89%E4%B8%BB%E9%A2%98?sort_id=3151185)
 
 ## 六、更新日志
+
+2021-06-22 新增自定义文章链接
 
 2021-04-28 新增富文本编辑器（已支持 editor.md 和 summernote 两套编辑器）
 

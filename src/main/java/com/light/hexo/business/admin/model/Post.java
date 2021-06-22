@@ -146,6 +146,11 @@ public class Post implements Serializable {
     private String link;
 
     /**
+     * 自定义文章链接
+     */
+    private String customLink;
+
+    /**
      * 浏览数
      */
     private Integer readNum;

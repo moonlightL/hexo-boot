@@ -26,6 +26,13 @@
             width: 300px;
             height: 100%;
         }
+        .input-group-prepend {
+            margin-right: 0;
+            height: 34px;
+        }
+        .input-group-text {
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -40,8 +47,17 @@
                         <div class="editorArea">
                             <div class="form-group row">
                                 <label class="col-md-1 col-form-label" for="title">标题名</label>
-                                <div class="col-md-11">
+                                <div class="col-md-5">
                                     <input type="text" id="title" class="form-control" placeholder="标题名 *" name="title" data-bv-notempty="true" data-bv-notempty-message="标题不能为空">
+                                </div>
+                                <label class="col-md-1 col-form-label" for="link">链接</label>
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <input type="text" id="customLink" class="form-control" placeholder="自定义链接" name="customLink">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">.html</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div id="postEditor"></div>

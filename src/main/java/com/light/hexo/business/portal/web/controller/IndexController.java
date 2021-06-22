@@ -93,7 +93,18 @@ public class IndexController extends CommonController {
                        @PathVariable("title") String title,
                        Map<String, Object> resultMap) {
         String link = year + "/" + month + "/" + day + "/" + title + "/";
-        Post post = this.postService.getDetailInfo(link);
+        Post post = this.postService.getDetailInfo(link, 1);
+        resultMap.put("post", post);
+        resultMap.put("previousPost", post.getPrevPost());
+        resultMap.put("nextPost", post.getNextPost());
+        resultMap.put("currentNav", new Nav(post.getTitle(), post.getLink(), post.getCoverUrl(), "detail"));
+        this.eventPublisher.emit(new PostEvent(post.getId(), PostEvent.Type.READ));
+        return render("detail", true, resultMap);
+    }
+
+    @GetMapping("{link}.html")
+    public String post(@PathVariable("link") String link, Map<String, Object> resultMap) {
+        Post post = this.postService.getDetailInfo(link, 2);
         resultMap.put("post", post);
         resultMap.put("previousPost", post.getPrevPost());
         resultMap.put("nextPost", post.getNextPost());
