@@ -9,5 +9,7 @@ CREATE TABLE `t_dynamic` (
 	INDEX `idx_create_time` (`create_time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='动态';
 
+INSERT INTO `hexo-boot`.`t_dynamic` (`content`, `color`) VALUES ('美好的一天', '#1ABC9C');
+
 INSERT INTO `hexo-boot`.`t_nav` (`name`, `link`, `code`, `icon`, `nav_type`, `sort`) VALUES ('动态', '/dynamics/', 'dynamics', 'fa fa-heart-o', '1', '6');
 
