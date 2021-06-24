@@ -690,7 +690,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
 
     @Override
     public int praisePost(String ipAddr, Integer postId) throws GlobalException {
-        String cacheKey = "prizeCache" + ipAddr + ":" + postId;
+        String cacheKey = "prizePostCache" + ipAddr + ":" + postId;
         Object obj = CacheUtil.get(cacheKey);
         if (obj != null) {
             ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_REPEAT_PRAISE_POST);

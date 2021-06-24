@@ -29,7 +29,7 @@ public class IndexFriendLinkController extends CommonController {
      * @return
      */
     @GetMapping(value = {"friendLinks", "friendLinks/", "friendLinks/index.html"})
-    public String categories(Map<String, Object> resultMap) {
+    public String friendLinks(Map<String, Object> resultMap) {
         List<FriendLink> friendLinkList = this.friendLinkService.listFriendLinkByIndex();
         resultMap.put("friendLinkNum", friendLinkList.size());
 

@@ -155,7 +155,7 @@ public class IndexController extends CommonController {
     }
 
     /**
-     * 文章点赞
+     * 点赞文章
      * @param postId
      * @return
      */

@@ -79,4 +79,13 @@
            timeToLiveSeconds="120"
            overflowToDisk="false"
            memoryStoreEvictionPolicy="LRU"/>
+
+    <!-- 动态缓存 -->
+    <cache name="dynamicCache"
+           maxElementsInMemory="1000"
+           eternal="false"
+           timeToIdleSeconds="120"
+           timeToLiveSeconds="120"
+           overflowToDisk="false"
+           memoryStoreEvictionPolicy="LRU"/>
 </ehcache>

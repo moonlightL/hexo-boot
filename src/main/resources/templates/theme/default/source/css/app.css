@@ -1222,11 +1222,42 @@ h3.friend-link-title.blogger {
 
 /** 友链 end  */
 
-/**留言start **/
+/** 动态 start  */
 
+.dynamic-item {
+    color: var(--text-color);
+    box-shadow: 0 0 5px var(--shadow-color);
+    margin-bottom: 2rem;
+    border-radius: 4px;
+    box-sizing: border-box;
+    border: 2px solid transparent;
+}
 
+.dynamic-item .info {
+    padding: 2rem;
+    border-radius: 4px 4px 0 0;
+}
 
-/** 留言 end */
+.dynamic-item .info .content {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.dynamic-item .meta {
+    padding: 1rem 2rem;
+    border-radius: 0 0 4px 4px;
+}
+
+.dynamic-item .meta span {
+    display: inline-block;
+}
+
+.dynamic-item .meta a.praise {
+    float: right;
+    color: var(--text-color);
+}
+
+/** 动态 end  */
 
 /** 文章页 start */
 

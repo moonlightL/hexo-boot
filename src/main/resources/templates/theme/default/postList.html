@@ -34,7 +34,7 @@
                 <div class="ml-content-body">
                     <div class="archive-body" id="archives">
                         <div th:if="${pageInfo.total > 0}">
-                            <div class='archive-content'th:each="post,iterStat : ${pageInfo.list}">
+                            <div class='archive-content' th:each="post,iterStat : ${pageInfo.list}">
                                 <div class="archives">
                                     <div class="animate-box archives-item" data-animate-effect="fadeInUp">
                                         <a data-pjax th:href="@{'/'+${post.link}}" style="display: block">

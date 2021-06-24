@@ -85,4 +85,9 @@ public class PageConstant {
      * 留言板缓存 key（格式：PageConstant.GUEST_BOOK + #pageNum）
      */
     public static final String GUEST_BOOK = "hexo:guestBook";
+
+    /**
+     * 首页动态缓存 key（格式：PageConstant.DYNAMIC_LIST + #pageNum）
+     */
+    public static final String DYNAMIC_LIST = "hexo:dynamic:list";
 }

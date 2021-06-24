@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, initial-scale=1, shrink-to-fit=no">
+    <div th:replace="~{admin/common :: common-link}"></div>
+    <style>
+        .content {
+            margin: 22px auto;
+        }
+
+        .color-turquoise {
+            background-color: #1ABC9C;
+            color: #fff;
+        }
+
+        .color-emerald {
+            background-color: #2ECC71;
+            color: #fff;
+        }
+
+        .color-peter-river {
+            background-color: #3498DB;
+            color: #fff;
+        }
+
+        .color-amethyst {
+            background-color: #9B59B6;
+            color: #fff;
+        }
+
+        .color-wet-asphalt {
+            background-color: #34495E;
+            color: #fff;
+        }
+
+        .color-sun-flower {
+            background-color: #F1C40F;
+            color: #fff;
+        }
+
+        .color-carrot {
+            background-color: #E67E22;
+            color: #fff;
+        }
+
+        .color-alizarin {
+            background-color: #E74C3C;
+            color: #fff;
+        }
+
+        .color-clouds {
+            background-color: #ECF0F1;
+            color: #bdc3c7;
+        }
+
+        .color-concrete {
+            background-color: #95A5A6;
+            color: #fff;
+        }
+
+        .colors {
+            line-height: 34px;
+        }
+
+        .bg-color-items {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            cursor: pointer;
+        }
+
+        .bg-color-items li {
+            float: left;
+            padding: 0 10px;
+        }
+
+        .bg-color {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="content">
+    <div class="block block-fx-shadow">
+        <div class="block-content">
+            <form id="saveForm" class="js-validation-bootstrap" th:action="@{${baseUrl} + '/add.json'}" method="post">
+                <div class="form-group row">
+                    <label class="col-lg-4 col-form-label" for="content">动态内容 <span class="text-danger">*</span> </label>
+                    <div class="col-lg-8">
+                        <textarea id="content" name="content" class="form-control" aria-label="With textarea" rows="4" style="resize: none" placeholder="内容" data-bv-notempty="true" data-bv-notempty-message="内容不能为空"></textarea>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <input type="hidden" name="color" id="color">
+                    <div class="colors">
+                        <ul class="bg-color-items">
+                            <li data-color="#1ABC9C"><span class="bg-color color-turquoise"></span></li>
+                            <li data-color="#2ECC71"><span class="bg-color color-emerald"></span></li>
+                            <li data-color="#3498DB"><span class="bg-color color-peter-river"></span></li>
+                            <li data-color="#9B59B6"><span class="bg-color color-amethyst"></span></li>
+                            <li data-color="#34495E"><span class="bg-color color-wet-asphalt"></span></li>
+                            <li data-color="#F1C40F"><span class="bg-color color-sun-flower"></span></li>
+                            <li data-color="#E67E22"><span class="bg-color color-carrot"></span></li>
+                            <li data-color="#E74C3C"><span class="bg-color color-alizarin"></span></li>
+                            <li data-color="#95A5A6"><span class="bg-color color-concrete"></span></li>
+                        </ul>
+                    </div>
+                    <button type="submit" class="btn btn-alt-primary" style="position: absolute;right: 32px" data-dismiss="modal" id="submitBtn">
+                        <i class="fa fa-send mr-5"></i> 发送
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div th:replace="~{admin/common :: common-script}"></div>
+<script th:src="@{'/admin/assets/custom/jquery-comment/jquery-emoji.js'}"></script>
+<script type="text/javascript" th:inline="javascript">
+    $(function() {
+        $("#submitBtn").on("click", function () {
+            $.hexo.action.save("saveForm", null, function (resp) {
+                $.hexo.modal.tip("发布成功", "success", function () {
+                    window.parent.$.hexo.modal.close();
+                    window.parent.DynamicManager.query();
+                });
+            });
+        });
+
+        $(".bg-color-items").find("li").on("click", function () {
+            $(".bg-color").css("border", "none");
+            $("#color").val($(this).data("color"));
+            $(this).children().css("border", "2px solid #000")
+        });
+    })
+</script>
+</body>
+</html>

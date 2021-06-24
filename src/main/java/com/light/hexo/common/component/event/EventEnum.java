@@ -18,6 +18,7 @@ public enum  EventEnum {
     VISIT(4, "访问事件"),
     MESSAGE(5, "消息事件"),
     NAV(6, "导航事件"),
+    DYNAMIC(7, "动态事件"),
 
     ;
 

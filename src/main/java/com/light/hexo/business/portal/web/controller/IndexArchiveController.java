@@ -30,9 +30,8 @@ public class IndexArchiveController extends CommonController {
      */
     @GetMapping(value = {"archives", "archives/", "archives/index.html", "archives/page/{pageNum}/"})
     public String archives(@PathVariable(value="pageNum", required = false) Integer pageNum, Map<String, Object> resultMap) {
-        HexoPageInfo pageInfo;
         pageNum = pageNum == null ? 1 : pageNum;
-        pageInfo =  this.postService.archivePostsByIndex(pageNum, PAGE_SIZE);
+        HexoPageInfo pageInfo =  this.postService.archivePostsByIndex(pageNum, PAGE_SIZE);
         resultMap.put("pageInfo", pageInfo);
         Nav nav = this.navService.findByLink("/archives/");
         resultMap.put("currentNav", nav);

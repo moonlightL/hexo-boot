@@ -4,7 +4,7 @@
   "extension": [
     {
       "key": "version",
-      "value": "3.1",
+      "value": "3.2",
       "type": "input",
       "label": "版本号",
       "update": true

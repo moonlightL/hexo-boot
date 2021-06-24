@@ -63,6 +63,9 @@ public class CommonController {
     protected MusicService musicService;
 
     @Autowired
+    protected DynamicService dynamicService;
+
+    @Autowired
     protected EventPublisher eventPublisher;
 
     protected String render(String pageName, boolean isDetail, Map<String, Object> resultMap) {

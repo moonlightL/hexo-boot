@@ -248,6 +248,8 @@ curl -L -o ~/.hexo-boot/application.yml --create-dirs https://gitee.com/moonligh
 
 ## 六、更新日志
 
+2021-06-24 新增动态功能
+
 2021-06-22 新增自定义文章链接，支持上传zip包安装博客主题
 
 2021-04-28 新增富文本编辑器（已支持 editor.md 和 summernote 两套编辑器）
