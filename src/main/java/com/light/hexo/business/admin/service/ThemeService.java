@@ -95,11 +95,10 @@ public interface ThemeService extends BaseService<Theme> {
 
     /**
      * 解压主题
-     * @param originalFilename
      * @param inputStream
      * @throws GlobalException
      */
-    void unzipTheme(String originalFilename, InputStream inputStream) throws GlobalException;
+    String unzipTheme(InputStream inputStream) throws GlobalException;
 
     /**
      * 获取主题目录

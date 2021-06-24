@@ -149,15 +149,15 @@ public class ThemeController extends BaseController {
             ExceptionUtil.throwEx(GlobalExceptionEnum.ERROR_PARAM);
         }
 
+        String themeName = "";
         try {
-            String originalFilename = file.getOriginalFilename();
             InputStream inputStream = file.getInputStream();
-            this.themeService.unzipTheme(originalFilename, inputStream);
+            themeName = this.themeService.unzipTheme(inputStream);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return Result.success();
+        return Result.success(themeName);
     }
 
     /**

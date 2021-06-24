@@ -17,10 +17,7 @@ import com.light.hexo.common.constant.CacheKey;
 import com.light.hexo.common.exception.GlobalException;
 import com.light.hexo.common.model.ThemeRequest;
 import com.light.hexo.common.model.TreeNode;
-import com.light.hexo.common.util.CacheUtil;
-import com.light.hexo.common.util.EhcacheUtil;
-import com.light.hexo.common.util.ExceptionUtil;
-import com.light.hexo.common.util.JsonUtil;
+import com.light.hexo.common.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -32,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.FileSystemUtils;
 import org.springframework.util.ResourceUtils;
 import tk.mybatis.mapper.entity.Example;
 
@@ -41,6 +39,7 @@ import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -287,26 +286,48 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
     }
 
     @Override
-    public void unzipTheme(String originalFilename, InputStream inputStream) throws GlobalException {
-
-        String zipName = FileNameUtil.mainName(originalFilename);
-        String themeName = FileNameUtil.mainName(originalFilename.substring(originalFilename.lastIndexOf("-") + 1));
-
-        File file = this.getThemeCatalog(false);
-        File themedir = new File(file.getAbsolutePath(), themeName);
-        if (themedir.exists() && themedir.isDirectory()) {
-            FileUtils.deleteQuietly(themedir);
-        }
+    public String unzipTheme(InputStream inputStream) throws GlobalException {
 
         String tmpPath = System.getProperty("java.io.tmpdir");
-        File tmpDir = new File(tmpPath);
-        ZipUtil.unzip(inputStream, tmpDir, Charset.defaultCharset());
+        File tmpDir = new File(tmpPath, "themeDir");
+        if (tmpDir.exists()) {
+            FileUtils.deleteQuietly(tmpDir);
+        }
 
+        File unzipThemeCog = ZipUtil.unzip(inputStream, tmpDir, Charset.defaultCharset());
+
+        // 获取刚解压的主题文件夹
+        File[] childrenFile = unzipThemeCog.listFiles();
+        if (childrenFile == null || childrenFile.length == 0) {
+            ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_THEME_UNZIP_WRONG);
+        }
+
+        File newThemeDir = childrenFile[0];
+
+        // 读取 theme.json 文件
+        File[] jsonFiles = newThemeDir.listFiles((dir, name) -> name.equals("theme.json"));
+        if (jsonFiles == null || jsonFiles.length == 0) {
+            ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_THEME_COG_WRONG);
+        }
+
+        File jsonFile = jsonFiles[0];
+        String themeName = "";
         try {
-            FileUtil.copyDir(new File(tmpDir, zipName), themedir);
+            // 读取内容
+            String content = FileUtils.readFileToString(jsonFile, "UTF-8");
+            ThemeFile themeFile = JsonUtil.string2Obj(content, ThemeFile.class);
+            File file = this.getThemeCatalog(false);
+            themeName = themeFile.getName();
+            File themeDir = new File(file.getAbsolutePath(), themeName);
+            if (themeDir.exists() && themeDir.isDirectory()) {
+                FileUtils.deleteQuietly(themeDir);
+            }
+            FileUtil.copyDir(newThemeDir, themeDir);
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        return themeName;
     }
 
     @Override
