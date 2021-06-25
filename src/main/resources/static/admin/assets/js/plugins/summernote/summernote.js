@@ -5460,7 +5460,6 @@ var Editor_Editor = /*#__PURE__*/function () {
       var $target = external_root_jQuery_commonjs2_jquery_commonjs_jquery_amd_jquery_default()(_this.restoreTarget());
       $target.toggleClass('note-float-left', value === 'left');
       $target.toggleClass('note-float-right', value === 'right');
-      $target.css('float', value === 'none' ? '' : value);
     });
     /**
      * resize overlay element

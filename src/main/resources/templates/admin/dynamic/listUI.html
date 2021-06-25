@@ -6,10 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, initial-scale=1, shrink-to-fit=no">
     <div th:replace="~{admin/common :: common-link}"></div>
     <style>
-        .row {
+        .block-content .row {
             background: #FFF;
             margin-bottom: 20px;
             box-shadow: 0 0 36px #d8dde5;
+        }
+
+        .block-content .row p img {
+            float: none !important;
         }
     </style>
 </head>
@@ -18,7 +22,7 @@
 <div class="content animated fadeIn">
     <h2 class="content-heading" id="toolbar">
         <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-refresh"><i class="fa fa-refresh mr-5"></i> 刷新</button>
-        <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-add" title="发布动态" data-width="550" data-height="280"><i class="fa fa-plus-square text-primary mr-5"></i> 发表</button>
+        <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-add" title="发布动态" data-width="1024" data-height="560"><i class="fa fa-plus-square text-primary mr-5"></i> 发表</button>
         <i class="fa fa fa-comment-o"></i> 动态列表 <span id="totalNum"></span>
     </h2>
 
@@ -90,10 +94,10 @@
                     contentArr.push('<p class="font-size-sm mb-10">');
                     contentArr.push(obj.content);
                     contentArr.push('</p>');
-                    contentArr.push('<p class="font-size-sm text-muted mb-0">' + obj.createTime + '</p>');
+                    contentArr.push('<p class="font-size-sm text-muted mb-0"><i class="fa fa-clock-o"></i> ' + obj.createTime + '</p>');
                     contentArr.push('</div>');
                     contentArr.push('<div class="col-sm-6 py-10 text-md-right">');
-                    contentArr.push('<a class="btn btn-sm btn-outline-secondary btn-rounded mr-5 my-5 g-btn edit-btn" href="javascript:void(0)" data-id="' + obj.id + '" data-width="550" data-height="280"><i class="fa fa-wrench mr-1"></i>编辑 </a>');
+                    contentArr.push('<a class="btn btn-sm btn-outline-secondary btn-rounded mr-5 my-5 g-btn edit-btn" href="javascript:void(0)" data-id="' + obj.id + '" data-width="1024" data-height="560"><i class="fa fa-wrench mr-1"></i>编辑 </a>');
                     contentArr.push('<a class="btn btn-sm btn-outline-danger btn-rounded mr-5 my-5 g-btn remove-btn" href="javascript:void(0)" data-id="' + obj.id + '"><i class="fa fa-times mr-1"></i>删除 </a>');
                     contentArr.push('</div>');
                     contentArr.push('</div>');

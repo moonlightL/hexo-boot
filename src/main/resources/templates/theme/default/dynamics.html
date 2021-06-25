@@ -31,7 +31,7 @@
 
             <div class="ml-content">
                 <div class="dynamic-content" id="dynamic-content">
-                    <div class="dynamic-item" th:each="dynamic : ${pageInfo.list}" th:data-color="${dynamic.color}">
+                    <div class="dynamic-item animate-box" th:each="dynamic : ${pageInfo.list}" th:data-color="${dynamic.color}">
                         <div class="info">
                             <div class="row">
                                 <div class="col-md-1">
@@ -45,7 +45,7 @@
                         </div>
                         <div class="meta">
                             <span class="date">
-                                发布于 [[${dynamic.timeDesc}]]
+                                <i class="fa fa-clock-o"></i> 发布于 [[${dynamic.timeDesc}]]
                             </span>
                             <a class="praise" href="javascript:void(0)" th:data-id="${dynamic.id}">
                                 <i class="fa fa-heart-o"></i>&nbsp;<span class="praise-num">[[${dynamic.praiseNum}]]</span>
