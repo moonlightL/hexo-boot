@@ -3627,6 +3627,7 @@ function readFileAsDataURL(file) {
 function createImage(url) {
   return external_root_jQuery_commonjs2_jquery_commonjs_jquery_amd_jquery_default.a.Deferred(function (deferred) {
     var $img = external_root_jQuery_commonjs2_jquery_commonjs_jquery_amd_jquery_default()('<img>');
+
     $img.one('load', function () {
       $img.off('error abort');
       deferred.resolve($img);
@@ -3635,7 +3636,7 @@ function createImage(url) {
       deferred.reject($img);
     }).css({
       display: 'none'
-    }).appendTo(document.body).attr('src', url);
+    }).appendTo(document.body).attr('src', url).addClass("custom-img");
   }).promise();
 }
 // CONCATENATED MODULE: ./src/js/base/editing/History.js
@@ -5460,6 +5461,7 @@ var Editor_Editor = /*#__PURE__*/function () {
       var $target = external_root_jQuery_commonjs2_jquery_commonjs_jquery_amd_jquery_default()(_this.restoreTarget());
       $target.toggleClass('note-float-left', value === 'left');
       $target.toggleClass('note-float-right', value === 'right');
+      $target.addClass("custom-img");
     });
     /**
      * resize overlay element

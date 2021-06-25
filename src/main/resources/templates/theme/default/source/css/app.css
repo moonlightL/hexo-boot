@@ -1243,6 +1243,12 @@ h3.friend-link-title.blogger {
     font-weight: bold;
 }
 
+.dynamic-item .info .content img.custom-img,
+.dynamic-item .info .content video {
+    max-width: 720px !important;
+    max-height: 368px !important;
+}
+
 .dynamic-item .info .content a {
     color: var(--theme-color);
     text-decoration: underline !important;
@@ -2052,6 +2058,16 @@ h3.friend-link-title.blogger {
     }
 
     /** 文章页 end */
+
+    .dynamic-item .info .content img.custom-img {
+        width: 100% !important;
+        height: 146px;
+    }
+
+    .dynamic-item .info .content video {
+        width: 270px;
+        height: 146px;
+    }
 }
 
 .search-container {
