@@ -1243,6 +1243,11 @@ h3.friend-link-title.blogger {
     font-weight: bold;
 }
 
+.dynamic-item .info .content a {
+    color: var(--theme-color);
+    text-decoration: underline !important;
+}
+
 .dynamic-item .meta {
     padding: 1rem 2rem;
     border-radius: 0 0 4px 4px;
