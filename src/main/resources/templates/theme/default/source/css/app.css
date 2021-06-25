@@ -1244,7 +1244,8 @@ h3.friend-link-title.blogger {
 }
 
 .dynamic-item .info .content img.custom-img,
-.dynamic-item .info .content video {
+.dynamic-item .info .content video,
+.dynamic-item .info .content iframe {
     max-width: 720px !important;
     max-height: 368px !important;
 }
@@ -2067,6 +2068,10 @@ h3.friend-link-title.blogger {
     .dynamic-item .info .content video {
         width: 270px;
         height: 146px;
+    }
+
+    .dynamic-item .info .content iframe {
+        width: 270px;
     }
 }
 
