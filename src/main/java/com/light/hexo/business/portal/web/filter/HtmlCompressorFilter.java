@@ -39,7 +39,7 @@ public class HtmlCompressorFilter implements Filter {
 
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         String requestURI = httpServletRequest.getRequestURI();
-        if (requestURI.startsWith("/admin") || requestURI.contains(".json")
+        if (requestURI.startsWith("/admin") || requestURI.startsWith("/druid") || requestURI.contains(".json")
                 || requestURI.endsWith(".css") || requestURI.endsWith(".js") || requestURI.endsWith(".map")) {
            chain.doFilter(request, response);
            return;
