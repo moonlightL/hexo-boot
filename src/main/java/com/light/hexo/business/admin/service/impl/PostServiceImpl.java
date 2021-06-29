@@ -94,7 +94,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
         PostRequest postRequest = (PostRequest) request;
         Example example = Example.builder(Post.class)
                 .select("id", "title", "link", "customLink", "customLink", "coverUrl", "categoryId",
-                        "readNum", "commentNum", "praiseNum",
+                        "readNum", "commentNum", "praiseNum", "authCode",
                         "publishDate","publish", "comment", "top").orderByDesc("createTime").build();
         Example.Criteria criteria = example.createCriteria();
 
@@ -121,6 +121,15 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
         String publishDate = postRequest.getPublishDate();
         if (StringUtils.isNotBlank(publishDate)) {
             criteria.andEqualTo("publishDate", publishDate.trim());
+        }
+
+        String authCode = postRequest.getAuthCode();
+        if (StringUtils.isNotBlank(authCode)) {
+            if ("1".equals(authCode)) {
+                criteria.andNotEqualTo("authCode", "");
+            } else {
+                criteria.andEqualTo("authCode", "");
+            }
         }
 
         return example;
@@ -510,7 +519,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
     @Override
     public HexoPageInfo pagePostsByIndex(int pageNum, int pageSize, boolean filterTop) throws GlobalException {
         Example.Builder builder = Example.builder(Post.class)
-                .select("id", "title", "summary", "summaryHtml", "author", "publishDate", "year", "month", "day", "top", "reprint",
+                .select("id", "title", "summary", "summaryHtml", "author", "publishDate", "year", "month", "day", "top", "reprint", "authCode",
                         "coverUrl", "coverType", "link", "customLink", "categoryId", "tags", "readNum", "praiseNum", "commentNum", "topTime", "createTime")
                 .where(Sqls.custom().andEqualTo("publish", true).andEqualTo("delete", false));
         if (filterTop) {
@@ -647,16 +656,18 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
     @Override
     public Post getDetailInfo(String link, Integer linkType) throws GlobalException {
 
-        Example example = new Example(Post.class);
+        Example.Builder builder = Example.builder(Post.class)
+                .select("id", "title", "author", "contentHtml", "publishDate", "year", "month", "day", "top", "reprint", "reprintLink",
+                        "coverUrl", "coverType", "link", "customLink", "categoryId", "tags", "readNum", "praiseNum", "commentNum", "authCode",
+                        "topTime", "createTime");
         if (linkType.equals(1)) {
-            example.createCriteria().andEqualTo("link", link);
+            builder.where(Sqls.custom().andEqualTo("link", link).andEqualTo("delete", false));
         } else {
-            example.createCriteria().andEqualTo("customLink", link);
+            builder.where(Sqls.custom().andEqualTo("customLink", link).andEqualTo("delete", false));
         }
 
-        Post post = this.getBaseMapper().selectOneByExample(example);
-
-        if (post == null || post.getDelete()) {
+        Post post = this.getBaseMapper().selectOneByExample(builder.build());
+        if (post == null) {
             ExceptionUtil.throwExToPage(HexoExceptionEnum.ERROR_POST_NOT_EXIST);
         }
 

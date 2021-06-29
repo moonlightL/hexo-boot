@@ -166,6 +166,11 @@ public class Post implements Serializable {
     private Integer commentNum;
 
     /**
+     * 访问密码
+     */
+    private String authCode;
+
+    /**
      * 置顶时间
      */
     private LocalDateTime topTime;

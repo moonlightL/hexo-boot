@@ -1248,6 +1248,7 @@ h3.friend-link-title.blogger {
 .dynamic-item .info .content iframe {
     max-width: 720px !important;
     max-height: 368px !important;
+    object-fit: cover;
 }
 
 .dynamic-item .info .content a {

@@ -17,7 +17,7 @@ import java.io.IOException;
  */
 @Slf4j
 @WebFilter(
-        filterName = "HtmlCompressorInterceptor",
+        filterName = "HtmlCompressorFilter",
         urlPatterns = "/*"
 )
 public class HtmlCompressorFilter implements Filter {

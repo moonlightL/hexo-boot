@@ -58,6 +58,7 @@ public class EmailService {
 
            Context con = new Context();
            con.setVariable("content", content);
+           con.setVariable("homePage", this.configService.getConfigValue(ConfigEnum.HOME_PAGE.getName()));
            String emailTemplate = templateEngine.process("admin/email.html", con);
            MimeMessage message = sender.createMimeMessage();
            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");

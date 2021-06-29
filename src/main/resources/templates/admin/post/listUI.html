@@ -50,6 +50,17 @@
                         <option value="0">未置顶</option>
                     </select>
                 </div>
+                <label class="sr-only" for="publish">访问限制</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <button type="button" class="btn btn-secondary">访问限制</button>
+                    </div>
+                    <select class="form-control mb-2 mr-sm-2 mb-sm-0" id="authCode" name="authCode">
+                        <option value="">全部</option>
+                        <option value="1">限制</option>
+                        <option value="0">未限制</option>
+                    </select>
+                </div>
                 <label class="sr-only" for="publishDate">发布时间</label>
                 <div class="input-group">
                     <div class="input-group-prepend">
@@ -100,7 +111,8 @@
     }
 
     function titleFormatter(val, row) {
-        return "<a href='/" + row.link + "' target='_blank' style='color: rgba(0,0,0,0.6)'>" + row.title + "</a>";
+        let lock = row.authCode ? '<i class="fa fa-lock"></i>' : '';
+        return lock + " <a href='/" + row.link + "' target='_blank' style='color: rgba(0,0,0,0.6)'>" + row.title + "</a>";
     }
 
     function commentFormatter(val, row) {

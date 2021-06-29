@@ -94,4 +94,9 @@ public class PostRequest extends BaseRequest<Post> {
      * 自定义文章链接
      */
     private String customLink;
+
+    /**
+     * 访问密码
+     */
+    private String authCode;
 }

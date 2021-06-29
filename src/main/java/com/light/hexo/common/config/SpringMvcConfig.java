@@ -92,6 +92,7 @@ public class SpringMvcConfig implements WebMvcConfigurer {
                         "/admin/logout.json",
                         "/admin/install.html",
                         "/admin/install.json",
+                        "/admin/postAuth.html",
                         "/error");
     }
 

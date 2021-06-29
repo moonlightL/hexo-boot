@@ -78,42 +78,6 @@ public class IndexController extends CommonController {
     }
 
     /**
-     * 文章内容，URL 的配置格式是为了兼容 hexo
-     * @param year
-     * @param month
-     * @param day
-     * @param title
-     * @param resultMap
-     * @return
-     */
-    @GetMapping("{year}/{month}/{day}/{title}/")
-    public String post(@PathVariable("year") String year,
-                       @PathVariable("month") String month,
-                       @PathVariable("day") String day,
-                       @PathVariable("title") String title,
-                       Map<String, Object> resultMap) {
-        String link = year + "/" + month + "/" + day + "/" + title + "/";
-        Post post = this.postService.getDetailInfo(link, 1);
-        resultMap.put("post", post);
-        resultMap.put("previousPost", post.getPrevPost());
-        resultMap.put("nextPost", post.getNextPost());
-        resultMap.put("currentNav", new Nav(post.getTitle(), post.getLink(), post.getCoverUrl(), "detail"));
-        this.eventPublisher.emit(new PostEvent(post.getId(), PostEvent.Type.READ));
-        return render("detail", true, resultMap);
-    }
-
-    @GetMapping("{link}.html")
-    public String post(@PathVariable("link") String link, Map<String, Object> resultMap) {
-        Post post = this.postService.getDetailInfo(link, 2);
-        resultMap.put("post", post);
-        resultMap.put("previousPost", post.getPrevPost());
-        resultMap.put("nextPost", post.getNextPost());
-        resultMap.put("currentNav", new Nav(post.getTitle(), post.getLink(), post.getCoverUrl(), "detail"));
-        this.eventPublisher.emit(new PostEvent(post.getId(), PostEvent.Type.READ));
-        return render("detail", true, resultMap);
-    }
-
-    /**
      * 关于
      * @param resultMap
      * @return
@@ -152,19 +116,6 @@ public class IndexController extends CommonController {
         resultMap.put("currentNav", nav);
         this.eventPublisher.emit(new NavEvent(nav.getId(), NavEvent.Type.READ));
         return render("custom", true, resultMap);
-    }
-
-    /**
-     * 点赞文章
-     * @param postId
-     * @return
-     */
-    @PostMapping("praisePost/{postId}")
-    @ResponseBody
-    public Result prizePost(@PathVariable Integer postId, HttpServletRequest request) {
-        String ipAddr = IpUtil.getIpAddr(request);
-        int prizeNum = this.postService.praisePost(ipAddr, postId);
-        return Result.success(prizeNum);
     }
 
     /**

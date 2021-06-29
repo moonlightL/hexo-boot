@@ -46,6 +46,7 @@
                             </div>
                             <div class="post-data">
                                 <div class="post-title">
+                                    <i class="fa fa-lock" th:if="${#strings.isEmpty(post.authCode) != true}"></i>&nbsp;
                                     <a data-pjax th:href="@{'/' + ${post.link}}">[[${post.title}]]</a>
                                 </div>
                                 <div class="post-summary">
@@ -90,6 +91,7 @@
                                         <li><i class="fa fa-user-circle-o"></i> [[${post.author}]]</li>
                                         <li><i class="fa fa-calendar"></i> [[${post.publishDate}]]</li>
                                         <li class="hidden-xs"> <i class="fa fa-heartbeat"></i> 热度 [[${post.readNum}]] </li>
+                                        <li th:if="${#strings.isEmpty(post.authCode) != true}"><i class="fa fa-lock"></i> 锁定</li>
                                     </ul>
                                     <span class="hidden-xs article-item-tags" th:if="${#strings.isEmpty(post.tags) == false}">
                                        <a data-pjax class="tag" th:href="@{'/tags/'+${tag}+'/'}" rel="tag" th:each="tag,status : ${#strings.arraySplit(post.tags, ',')}"><i class="fa fa-tag"></i> [[${tag}]] &nbsp;</a>
