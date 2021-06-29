@@ -913,6 +913,11 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
         // 转换 img
         Elements imgElements = document.select("img");
         for (Element img : imgElements) {
+            Element parent = img.parent();
+            String aClass = parent.attr("class");
+            if ("fancybox".equals(aClass)) {
+                continue;
+            }
             String src = img.attr("src");
             img.removeAttr("src").attr("data-original", src).addClass("lazyload");
             img.wrap("<a class='fancybox' href='" + src + "' data-fancybox='gallery'></a>");
