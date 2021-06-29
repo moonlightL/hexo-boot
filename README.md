@@ -248,6 +248,8 @@ curl -L -o ~/.hexo-boot/application.yml --create-dirs https://gitee.com/moonligh
 
 ## 六、更新日志
 
+2021-06-29 文章添加访问密码
+
 2021-06-24 新增动态功能
 
 2021-06-22 新增自定义文章链接，支持上传zip包安装博客主题

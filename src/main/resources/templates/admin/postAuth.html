@@ -22,10 +22,7 @@
                                 <span class="font-size-xl text-pulse-dark">首</span>
                                 <span class="font-size-xl">页</span>
                             </a>
-                            <h1 class="h4 font-w700 mt-30 mb-10">本篇文章为加密文章</h1>
-                            <h2 class="h5 font-w400 text-muted mb-0" th:if="${#strings.isEmpty(errorMsg)}">
-                                请输入访问密码
-                            </h2>
+                            <h1 class="h4 font-w700 mt-30 mb-10">《[[${title}]]》为加密文章</h1>
                             <h2 class="h5 font-w400 text-muted mb-0 red" th:if="${#strings.isEmpty(errorMsg) != true}">
                                 [[${errorMsg}]]
                             </h2>

@@ -48,14 +48,16 @@ public class IndexPostController extends CommonController {
         Post post = this.postService.getDetailInfo(link, 1);
         if (StringUtils.isNotBlank(post.getAuthCode())) {
             if (StringUtils.isBlank(authCode)) {
+                resultMap.put("title", post.getTitle());
                 resultMap.put("link", "/" + link);
-                return "/admin/postAuth.html";
+                return "admin/postAuth.html";
             }
 
             if (!post.getAuthCode().equals(authCode)) {
+                resultMap.put("title", post.getTitle());
                 resultMap.put("link", "/" + link);
                 resultMap.put("errorMsg", "访问密码不正确");
-                return "/admin/postAuth.html";
+                return "admin/postAuth.html";
             }
         }
         resultMap.put("post", post);
@@ -77,14 +79,16 @@ public class IndexPostController extends CommonController {
         Post post = this.postService.getDetailInfo(link, 2);
         if (StringUtils.isNotBlank(post.getAuthCode())) {
             if (StringUtils.isBlank(authCode)) {
+                resultMap.put("title", post.getTitle());
                 resultMap.put("link", "/" + link + ".html");
-                return "/admin/postAuth.html";
+                return "admin/postAuth.html";
             }
 
             if (!post.getAuthCode().equals(authCode)) {
+                resultMap.put("title", post.getTitle());
                 resultMap.put("link", "/" + link + ".html");
                 resultMap.put("errorMsg", "访问密码不正确");
-                return "/admin/postAuth.html";
+                return "admin/postAuth.html";
             }
         }
         resultMap.put("post", post);
