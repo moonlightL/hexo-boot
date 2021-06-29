@@ -20,6 +20,10 @@ import com.light.hexo.common.util.DateUtil;
 import com.light.hexo.common.util.EhcacheUtil;
 import com.light.hexo.common.util.ExceptionUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
@@ -69,6 +73,17 @@ public class DynamicServiceImpl extends BaseServiceImpl<Dynamic> implements Dyna
         if (StringUtils.isBlank(dynamic.getColor())) {
             dynamic.setColor("#2ECC71");
         }
+
+        Document document = Jsoup.parse(dynamic.getContent());
+        // 转换 img
+        Elements imgElements = document.select("img");
+        for (Element img : imgElements) {
+            String src = img.attr("src");
+            img.attr("data-original", src);
+            img.wrap("<a class='fancybox' href='" + src + "' data-fancybox='gallery'></a>");
+        }
+
+        dynamic.setContent(document.toString());
         this.saveModel(dynamic);
         EhcacheUtil.clearByCacheName("dynamicCache");
     }
@@ -80,6 +95,22 @@ public class DynamicServiceImpl extends BaseServiceImpl<Dynamic> implements Dyna
         if (dbRecord == null) {
             ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_DYNAMIC_NOT_EXIST);
         }
+
+        Document document = Jsoup.parse(dynamic.getContent());
+        // 转换 img
+        Elements imgElements = document.select("img");
+        for (Element img : imgElements) {
+            Element parent = img.parent();
+            String aClass = parent.attr("class");
+            if ("fancybox".equals(aClass)) {
+                continue;
+            }
+            String src = img.attr("src");
+            img.attr("data-original", src);
+            img.wrap("<a class='fancybox' href='" + src + "' data-fancybox='gallery'></a>");
+        }
+
+        dynamic.setContent(document.toString());
 
         this.updateModel(dynamic);
         EhcacheUtil.clearByCacheName("dynamicCache");
