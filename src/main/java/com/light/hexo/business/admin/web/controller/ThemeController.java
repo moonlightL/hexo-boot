@@ -1,7 +1,5 @@
 package com.light.hexo.business.admin.web.controller;
 
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.file.FileNameUtil;
 import com.github.pagehelper.PageInfo;
 import com.light.hexo.business.admin.constant.HexoExceptionEnum;
 import com.light.hexo.business.admin.model.Theme;
@@ -100,11 +98,21 @@ public class ThemeController extends BaseController {
 
         resultMap.put("theme", theme);
 
-        List<TreeNode> catalogList = this.themeService.getThemeTreeNode(theme);
-        resultMap.put("catalogList", catalogList);
-
         return render("codeUI", resultMap);
     }
+
+    @RequestMapping("/getCatalogList.json")
+    @ResponseBody
+    public Result getCatalogList(Integer id) {
+        Theme theme = this.themeService.findById(id);
+        if (theme == null) {
+            ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_THEME_NOT_EXIST);
+        }
+
+        List<TreeNode> catalogList = this.themeService.getThemeTreeNode(theme);
+        return Result.success(catalogList);
+    }
+
 
     /**
      * 使用主题

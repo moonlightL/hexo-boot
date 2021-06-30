@@ -1,6 +1,5 @@
 package com.light.hexo.business.portal.web.controller;
 
-import cn.hutool.core.codec.Base64;
 import com.light.hexo.business.admin.model.Nav;
 import com.light.hexo.business.admin.model.Post;
 import com.light.hexo.business.admin.model.event.PostEvent;
@@ -10,12 +9,8 @@ import com.light.hexo.common.util.IpUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.nio.charset.Charset;
 import java.util.Map;
 
 /**
@@ -27,6 +22,8 @@ import java.util.Map;
  */
 @Controller
 public class IndexPostController extends CommonController {
+
+    private static final String POST_AUTH_PAGE = "admin/postAuth.html";
 
     /**
      * 文章内容，URL 的配置格式是为了兼容 hexo
@@ -50,14 +47,14 @@ public class IndexPostController extends CommonController {
             if (StringUtils.isBlank(authCode)) {
                 resultMap.put("title", post.getTitle());
                 resultMap.put("link", "/" + link);
-                return "admin/postAuth.html";
+                return POST_AUTH_PAGE;
             }
 
             if (!post.getAuthCode().equals(authCode)) {
                 resultMap.put("title", post.getTitle());
                 resultMap.put("link", "/" + link);
                 resultMap.put("errorMsg", "访问密码不正确");
-                return "admin/postAuth.html";
+                return POST_AUTH_PAGE;
             }
         }
         resultMap.put("post", post);
@@ -75,20 +72,20 @@ public class IndexPostController extends CommonController {
      * @return
      */
     @RequestMapping("{link}.html")
-    public String post(@PathVariable("link") String link, String authCode, Map<String, Object> resultMap) {
+    public String post(@PathVariable("link") String link, String authCode, Map<String, Object> resultMap) throws UnsupportedEncodingException {
         Post post = this.postService.getDetailInfo(link, 2);
         if (StringUtils.isNotBlank(post.getAuthCode())) {
             if (StringUtils.isBlank(authCode)) {
                 resultMap.put("title", post.getTitle());
                 resultMap.put("link", "/" + link + ".html");
-                return "admin/postAuth.html";
+                return POST_AUTH_PAGE;
             }
 
             if (!post.getAuthCode().equals(authCode)) {
                 resultMap.put("title", post.getTitle());
                 resultMap.put("link", "/" + link + ".html");
                 resultMap.put("errorMsg", "访问密码不正确");
-                return "admin/postAuth.html";
+                return POST_AUTH_PAGE;
             }
         }
         resultMap.put("post", post);

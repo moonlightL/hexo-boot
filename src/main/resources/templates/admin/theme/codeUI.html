@@ -56,6 +56,7 @@
                     <div class="catalog-container">
                         <div class="catalog-content">
                             <h4 th:text="${theme.name + ' 主题目录'}" style="text-align: center"></h4>
+                            <img id="loadImg" th:src="@{'/admin/assets/images/load-code.gif'}" width="64">
                             <ul id="catalogTree" class="ztree"></ul>
                         </div>
                     </div>
@@ -101,18 +102,29 @@
 <script th:src="@{'/admin/assets/js/plugins/codemirror/addon/search/search.js'}"></script>
 <script th:src="@{'/admin/assets/js/plugins/codemirror/addon/search/jump-to-line.js'}"></script>
 <script type="text/javascript" th:inline="javascript">
+    let theme = [[${theme}]];
     let modeArr = [];
     modeArr["js"] = "javascript";
     modeArr["css"] = "css";
     modeArr["html"] = "text/html";
     modeArr["json"] = "application/json";
-    let zNodes = [[${catalogList}]];
     let ThemeManager = {
         path: "",
         editor: null,
-        init: function (zNodes) {
-            ThemeManager.initCatalogTree(zNodes);
+        init: function (theme) {
+            ThemeManager.loadCatalog(theme);
             ThemeManager.bindEvent();
+        },
+        loadCatalog: function(theme) {
+            $.hexo.action.sendRequest({
+                type: "GET",
+                url: BASE_URL + "/getCatalogList.json",
+                params: {"id": theme.id},
+                callback: function(resp) {
+                    $("#loadImg").remove();
+                    ThemeManager.initCatalogTree(resp.data);
+                }
+            });
         },
         initCatalogTree: function (zNodes) {
             let setting = {
@@ -172,7 +184,7 @@
         }
     };
 
-    ThemeManager.init(zNodes);
+    ThemeManager.init(theme);
 </script>
 </body>
 </html>

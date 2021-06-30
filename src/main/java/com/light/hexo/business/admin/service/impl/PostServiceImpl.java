@@ -657,7 +657,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
     public Post getDetailInfo(String link, Integer linkType) throws GlobalException {
 
         Example.Builder builder = Example.builder(Post.class)
-                .select("id", "title", "author", "contentHtml", "publishDate", "year", "month", "day", "top", "reprint", "reprintLink",
+                .select("id", "title", "author", "contentHtml", "publishDate", "year", "month", "day", "top", "reprint", "reprintLink", "comment",
                         "coverUrl", "coverType", "link", "customLink", "categoryId", "tags", "readNum", "praiseNum", "commentNum", "authCode",
                         "topTime", "createTime");
         if (linkType.equals(1)) {
@@ -913,11 +913,6 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
         // 转换 img
         Elements imgElements = document.select("img");
         for (Element img : imgElements) {
-            Element parent = img.parent();
-            String aClass = parent.attr("class");
-            if ("fancybox".equals(aClass)) {
-                continue;
-            }
             String src = img.attr("src");
             img.removeAttr("src").attr("data-original", src).addClass("lazyload");
             img.wrap("<a class='fancybox' href='" + src + "' data-fancybox='gallery'></a>");
