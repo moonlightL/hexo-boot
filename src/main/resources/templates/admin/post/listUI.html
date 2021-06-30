@@ -112,7 +112,8 @@
 
     function titleFormatter(val, row) {
         let lock = row.authCode ? '<i class="fa fa-lock"></i>' : '';
-        return lock + " <a href='/" + row.link + "' target='_blank' style='color: rgba(0,0,0,0.6)'>" + row.title + "</a>";
+        // return lock + " <a href='/" + row.link + "' target='_blank' style='color: rgba(0,0,0,0.6)'>" + row.title + "</a>";
+        return lock + " <a href='javascript:void(0)' target='_blank' style='color: rgba(0,0,0,0.6)' data-link='"+row.link+"' data-code='"+row.authCode+"' onclick='visitPage($(this))'>" + row.title + "</a>";
     }
 
     function commentFormatter(val, row) {
@@ -133,6 +134,19 @@
         arr.push('<span class="css-control-indicator"></span>');
         arr.push('</label>');
         return arr.join("");
+    }
+
+    function visitPage($obj) {
+        let link = "/" + $obj.data("link");
+        let authCode = $obj.data("code");
+        let html = '<span><span>&lt;<span>form</span> <span>id</span>=<span>"visitForm"</span> <span>action</span>=<span>"'+link+'"</span> <span>method</span>=<span>"post"</span>&gt;</span></span><br><span>&lt;input type=<span>"hidden"</span> name=<span>"authCode"</span> <span>value</span>=<span>"'+authCode+'"</span>&gt;</span><br><span><span>&lt;/<span>form</span>&gt;</span></span><br><span><span>&lt;<span>script</span>&gt;</span><span></span></span><br><span><span>window</span>.onload = <span><span>function</span>(<span></span>) </span>{</span><br><span><span>document</span><span>.getElementById</span>("<span>visitForm</span>")<span>.submit</span>();</span><br><span>}</span><br><span><span>&lt;/<span>script</span>&gt;</span></span>';
+        html = html.replace(/<br>/g, "\r\n");
+        let codeContent = $(html).text();
+        let childWin = window.open("", "_blank", "");
+        childWin.opener = null;
+        childWin.document.open("text/html", "replace");
+        childWin.document.write(codeContent);
+        childWin.document.close();
     }
 
     function switchChange(type, $obj) {
@@ -180,8 +194,6 @@
         btnArr.push("</div>");
         return btnArr.join("");
     }
-
-
 
     $(function() {
         $.hexo.table.init({
