@@ -187,8 +187,8 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
 
         Example example = new Example(Post.class);
         example.createCriteria().andEqualTo("title", post.getTitle());
-        Post dbPost = this.getBaseMapper().selectOneByExample(example);
-        if (dbPost != null) {
+        int titleCount = this.getBaseMapper().selectCountByExample(example);
+        if (titleCount > 0) {
             ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_POST_TITLE_REPEAT);
         }
 
@@ -228,6 +228,13 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
             if (StringUtils.isNotBlank(customLink)) {
                 if (customLink.startsWith("/")) {
                     post.setCustomLink(customLink.substring(1));
+                }
+
+                Example postExample = new Example(Post.class);
+                postExample.createCriteria().andEqualTo("customLink", post.getCustomLink());
+                int linkCount = this.getBaseMapper().selectCountByExample(postExample);
+                if (linkCount > 0) {
+                    ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_POST_LINK_REPEAT);
                 }
             }
 
@@ -275,10 +282,12 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
         // 前端上传的参数可能带空格，影响条件查询
         dbPost.setTitle(post.getTitle().trim());
 
-        Example example = new Example(Post.class);
-        example.createCriteria().andEqualTo("title", post.getTitle());
-        Post tmp = this.getBaseMapper().selectOneByExample(example);
-        if (tmp != null && !tmp.getId().equals(dbPost.getId())) {
+        Example example = Example.builder(Post.class)
+                .select("id")
+                .where(Sqls.custom().andEqualTo("title", post.getTitle()))
+                .build();
+        Post titlePost = this.getBaseMapper().selectOneByExample(example);
+        if (titlePost != null && !titlePost.getId().equals(dbPost.getId())) {
             ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_POST_TITLE_REPEAT);
         }
 
@@ -313,6 +322,15 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
             if (StringUtils.isNotBlank(customLink)) {
                 if (customLink.startsWith("/")) {
                     post.setCustomLink(customLink.substring(1));
+                }
+
+                Example linkExample = Example.builder(Post.class)
+                        .select("id")
+                        .where(Sqls.custom().andEqualTo("customLink", post.getCustomLink()))
+                        .build();
+                Post linkPost = this.getBaseMapper().selectOneByExample(linkExample);
+                if (linkPost != null && !linkPost.getId().equals(dbPost.getId())) {
+                    ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_POST_LINK_REPEAT);
                 }
             }
 
@@ -412,8 +430,10 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
     @Override
     public void updateState(Post post) throws GlobalException {
 
-        Post dbPost = super.findById(post.getId());
-        if (dbPost == null) {
+        Example example = new Example(Post.class);
+        example.createCriteria().andEqualTo("id", post.getId());
+        int count = this.getBaseMapper().selectCountByExample(example);
+        if (count == 0) {
             ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_POST_NOT_EXIST);
         }
 
@@ -472,8 +492,10 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
 
     @Override
     public void publishPost(Integer id) throws GlobalException {
-        Post dbPost = super.findById(id);
-        if (dbPost == null) {
+        Example example = new Example(Post.class);
+        example.createCriteria().andEqualTo("id", id);
+        int count = this.getBaseMapper().selectCountByExample(example);
+        if (count == 0) {
             ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_POST_NOT_EXIST);
         }
 
@@ -678,25 +700,31 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
 
         Integer postId = post.getId();
 
-        Post prevPost = this.postMapper.selectPreviousInfo(postId);
+        Post prevPost = this.getPreviousInfo(postId);
         post.setPrevPost(prevPost);
 
-        Post nextPost = this.postMapper.selectNextInfo(postId);
+        Post nextPost = this.getNextInfo(postId);
         post.setNextPost(nextPost);
 
         return post;
     }
 
-    @Cacheable(key = "'" + PageConstant.POST_DETAIL_PREVIOUS + ":' + #id")
     @Override
     public Post getPreviousInfo(Integer id) throws GlobalException {
-        return this.postMapper.selectPreviousInfo(id);
+        Post post = this.postMapper.selectPreviousInfo(id);
+        if (post != null && StringUtils.isNotBlank(post.getCustomLink())) {
+            post.setLink(post.getCustomLink() + ".html");
+        }
+        return post;
     }
 
-    @Cacheable(key = "'" + PageConstant.POST_DETAIL_NEXT + ":' + #id")
     @Override
     public Post getNextInfo(Integer id) throws GlobalException {
-        return this.postMapper.selectNextInfo(id);
+        Post post = this.postMapper.selectNextInfo(id);
+        if (post != null && StringUtils.isNotBlank(post.getCustomLink())) {
+            post.setLink(post.getCustomLink() + ".html");
+        }
+        return post;
     }
 
     @Override
@@ -721,8 +749,8 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
     public Integer getPostNumByCategoryId(Integer categoryId) throws GlobalException {
         Example example = new Example(Post.class);
         example.createCriteria().andEqualTo("categoryId", categoryId)
-                .andEqualTo("publish", true)
-                .andEqualTo("delete", false);
+               .andEqualTo("publish", true)
+               .andEqualTo("delete", false);
         return this.getBaseMapper().selectCountByExample(example);
     }
 

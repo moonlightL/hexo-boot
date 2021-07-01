@@ -29,6 +29,7 @@ public enum HexoExceptionEnum implements GlobalExceptionMap {
     ERROR_IMPORT_PATH_HAVE_NO_MD(2004, "没有可导入的 Markdown 文件"),
     ERROR_NOT_SUPPORT_COMMENT(2005, "该文章已关闭评论功能"),
     ERROR_POST_TITLE_REPEAT(2006, "文章标题重复"),
+    ERROR_POST_LINK_REPEAT(2007, "文章自定义链接重复"),
 
     // 3xxx --> 评论
     ERROR_POST_COMMENT_NOT_EXIST(3001, "该评论不存在"),

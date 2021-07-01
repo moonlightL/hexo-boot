@@ -37,16 +37,6 @@ public class PageConstant {
     public static final String POST_DETAIL_INFO = "hexo:post:detail:info";
 
     /**
-     * 文章详情页上一页缓存 key（格式：PageConstant.POST_DETAIL_PREVIOUS + #id）
-     */
-    public static final String POST_DETAIL_PREVIOUS = "hexo:post:detail:previous";
-
-    /**
-     * 文章详情页下一页缓存 key（格式：PageConstant.POST_DETAIL_NEXT + #id）
-     */
-    public static final String POST_DETAIL_NEXT = "hexo:post:detail:next";
-
-    /**
      * 分类名称相关的文章列表缓存 key（格式：PageConstant.POST_BY_CATEGORY_NAME + #categoryName + #pageNum）
      */
     public static final String POST_BY_CATEGORY_NAME = "hexo:post:by:category:name";
