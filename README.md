@@ -1,13 +1,13 @@
 ## 一、Hexo Boot
 
-Hexo Boot 是基于 Spring Boot + MySQL 开发的一套开源的博客系统。前身是 ml-blog 博客系统，在此基础上演变和扩展而来。
+Hexo Boot 是基于 Spring Boot + MySQL 开发的一套开源的博客系统。前身是 [ml-blog](https://github.com/moonlightL/ml-blog) 博客系统，在此基础上演变和扩展而来。
 
 [![](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://github.com/moonlightL/ml-blog/blob/master/LICENSE)
 ![](https://img.shields.io/badge/language-Java-blue.svg)
 
 ## 二、扩展功能
 
-除了继承 ml-blog 中的功能（文章、分类、标签、全局参数）外，Hexo Boot 还扩展了一下功能
+除了继承 [ml-blog](https://github.com/moonlightL/ml-blog) 中的功能（文章、分类、标签、全局参数）外，Hexo Boot 还扩展了一下功能
 
 ### 2.1 评论、留言功能
 
@@ -51,7 +51,13 @@ Hexo Boot 是基于 Spring Boot + MySQL 开发的一套开源的博客系统。�
 支持音乐配置管理以及在线播放，切换页面不中断
 ```
 
-### 2.8 默认主题特色
+### 2.8 动态
+
+```
+发表个人心情（支持图片、视频和 emoji 表情）、名人名言等简短信息
+```
+
+### 2.9 默认主题特色
 
 ```
 支持 CDN 配置
