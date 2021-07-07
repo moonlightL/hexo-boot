@@ -21,6 +21,14 @@
         <java.version>1.8</java.version>
     </properties>
 
+    <developers>
+        <developer>
+            <name>MoonlightL</name>
+            <email>jx8996@163.com</email>
+            <url>https://www.extlight.com</url>
+        </developer>
+    </developers>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
