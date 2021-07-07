@@ -4,6 +4,8 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+/src/main/resources/public/service-worker.js
+
 ### STS ###
 .apt_generated
 .classpath
@@ -36,4 +38,3 @@ build/
 ### VS Code ###
 .vscode/
 
-/src/main/resources/public/service-worker.js
