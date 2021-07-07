@@ -139,6 +139,10 @@
     function visitPage($obj) {
         let link = "/" + $obj.data("link");
         let authCode = $obj.data("code");
+        if (!authCode) {
+            window.open(link);
+            return;
+        }
         let html = '<span><span>&lt;<span>form</span> <span>id</span>=<span>"visitForm"</span> <span>action</span>=<span>"'+link+'"</span> <span>method</span>=<span>"post"</span>&gt;</span></span><br><span>&lt;input type=<span>"hidden"</span> name=<span>"authCode"</span> <span>value</span>=<span>"'+authCode+'"</span>&gt;</span><br><span><span>&lt;/<span>form</span>&gt;</span></span><br><span><span>&lt;<span>script</span>&gt;</span><span></span></span><br><span><span>window</span>.onload = <span><span>function</span>(<span></span>) </span>{</span><br><span><span>document</span><span>.getElementById</span>("<span>visitForm</span>")<span>.submit</span>();</span><br><span>}</span><br><span><span>&lt;/<span>script</span>&gt;</span></span>';
         html = html.replace(/<br>/g, "\r\n");
         let codeContent = $(html).text();

@@ -23,7 +23,7 @@ import java.util.Map;
 @Controller
 public class IndexPostController extends CommonController {
 
-    private static final String POST_AUTH_PAGE = "admin/postAuth.html";
+    private static final String POST_AUTH_PAGE = "portal/post/auth.html";
 
     /**
      * 文章内容，URL 的配置格式是为了兼容 hexo
