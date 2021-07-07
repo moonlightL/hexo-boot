@@ -12,6 +12,7 @@
     <groupId>com.light</groupId>
     <artifactId>hexo-boot</artifactId>
     <version>1.0.0</version>
+
     <!-- 打 war 包时，放开下边的注释 -->
 <!--    <packaging>war</packaging>-->
     <name>hexo-boot</name>
@@ -153,7 +154,6 @@
             <version>2.10.6</version>
         </dependency>
 
-
         <!-- thymeleaf 模板 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -233,7 +233,7 @@
             <version>1.20</version>
         </dependency>
 
-
+        <!-- common markdown -->
         <dependency>
             <groupId>com.atlassian.commonmark</groupId>
             <artifactId>commonmark</artifactId>
