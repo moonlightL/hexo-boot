@@ -1,6 +1,8 @@
 package com.light.hexo.business.admin.web.controller;
 
 import com.light.hexo.business.admin.service.BlacklistService;
+import com.light.hexo.common.component.log.ActionEnum;
+import com.light.hexo.common.component.log.OperateLog;
 import com.light.hexo.common.constant.CacheKey;
 import com.light.hexo.common.constant.HexoConstant;
 import com.light.hexo.business.admin.constant.HexoExceptionEnum;
@@ -87,6 +89,7 @@ public class LoginController extends BaseController {
      */
     @RequestMapping("/login.json")
     @ResponseBody
+    @OperateLog(value = "系统登录", actionType = ActionEnum.LOGIN)
     public Result login(@Validated(UserRequest.Login.class) UserRequest request, HttpServletRequest httpServletRequest) {
 
         HttpSession session = httpServletRequest.getSession();
@@ -133,6 +136,7 @@ public class LoginController extends BaseController {
      */
     @RequestMapping("/logout.json")
     @ResponseBody
+    @OperateLog(value = "系统登录", actionType = ActionEnum.LOGIN)
     public Result logout(HttpSession session) {
         session.removeAttribute(HexoConstant.CURRENT_USER);
         session.invalidate();

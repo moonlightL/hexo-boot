@@ -5,6 +5,8 @@ import com.light.hexo.business.admin.model.FriendLink;
 import com.light.hexo.business.admin.service.FriendLinkService;
 import com.light.hexo.common.base.BaseController;
 import com.light.hexo.common.base.BaseRequest;
+import com.light.hexo.common.component.log.ActionEnum;
+import com.light.hexo.common.component.log.OperateLog;
 import com.light.hexo.common.exception.GlobalExceptionEnum;
 import com.light.hexo.common.model.FriendLinkRequest;
 import com.light.hexo.common.model.Result;
@@ -64,6 +66,7 @@ public class FriendLinkController extends BaseController {
      */
     @RequestMapping("add.json")
     @ResponseBody
+    @OperateLog(value = "新增友链", actionType = ActionEnum.ADMIN_ADD)
     public Result add(@Validated(BaseRequest.Save.class) FriendLinkRequest request) {
         FriendLink friendLink = request.toDoModel();
         friendLink.setTitle(friendLink.getTitle().trim());
@@ -78,6 +81,7 @@ public class FriendLinkController extends BaseController {
      */
     @RequestMapping("edit.json")
     @ResponseBody
+    @OperateLog(value = "编辑友链", actionType = ActionEnum.ADMIN_EDIT)
     public Result edit(@Validated(BaseRequest.Update.class) FriendLinkRequest request) {
         FriendLink friendLink = request.toDoModel();
         friendLink.setTitle(friendLink.getTitle().trim());
@@ -86,12 +90,13 @@ public class FriendLinkController extends BaseController {
     }
 
     /**
-     * 删除分类
+     * 删除友链
      * @param idStr
      * @return
      */
     @RequestMapping("remove.json")
     @ResponseBody
+    @OperateLog(value = "删除友链", actionType = ActionEnum.ADMIN_REMOVE)
     public Result remove(@RequestParam String idStr) {
         if (StringUtils.isBlank(idStr)) {
             ExceptionUtil.throwEx(GlobalExceptionEnum.ERROR_PARAM);

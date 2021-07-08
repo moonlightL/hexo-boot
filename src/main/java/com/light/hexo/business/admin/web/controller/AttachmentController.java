@@ -6,6 +6,8 @@ import com.light.hexo.business.admin.model.Attachment;
 import com.light.hexo.business.admin.service.AttachmentService;
 import com.light.hexo.common.base.BaseController;
 import com.light.hexo.common.component.file.*;
+import com.light.hexo.common.component.log.ActionEnum;
+import com.light.hexo.common.component.log.OperateLog;
 import com.light.hexo.common.exception.GlobalException;
 import com.light.hexo.common.exception.GlobalExceptionEnum;
 import com.light.hexo.common.model.AttachmentRequest;
@@ -65,8 +67,15 @@ public class AttachmentController extends BaseController {
         return render("detailUI", resultMap);
     }
 
+    /**
+     * 上传附件
+     * @param files
+     * @return
+     * @throws GlobalException
+     */
     @PostMapping("/uploadBatch.json")
     @ResponseBody
+    @OperateLog(value = "上传附件", actionType = ActionEnum.ADMIN_ADD)
     public Result uploadBatch(MultipartFile[] files) throws GlobalException {
 
         if (files == null || files.length == 0) {
@@ -112,6 +121,7 @@ public class AttachmentController extends BaseController {
      */
     @RequestMapping("remove.json")
     @ResponseBody
+    @OperateLog(value = "删除附件", actionType = ActionEnum.ADMIN_REMOVE)
     public Result remove(@RequestParam String idStr) {
         if (StringUtils.isBlank(idStr)) {
             ExceptionUtil.throwEx(GlobalExceptionEnum.ERROR_PARAM);

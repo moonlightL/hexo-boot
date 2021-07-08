@@ -7,6 +7,8 @@ import com.light.hexo.business.admin.model.Backup;
 import com.light.hexo.business.admin.service.BackupService;
 import com.light.hexo.business.admin.service.ConfigService;
 import com.light.hexo.common.base.BaseController;
+import com.light.hexo.common.component.log.ActionEnum;
+import com.light.hexo.common.component.log.OperateLog;
 import com.light.hexo.common.exception.GlobalException;
 import com.light.hexo.common.exception.GlobalExceptionEnum;
 import com.light.hexo.common.model.BackupRequest;
@@ -58,6 +60,7 @@ public class BackupController extends BaseController {
      */
     @RequestMapping("/backupData.html")
     @ResponseBody
+    @OperateLog(value = "立即备份", actionType = ActionEnum.ADMIN_ADD)
     public Result backupData() {
         String sqlData = this.dumpService.getSqlData();
         if (StringUtils.isBlank(sqlData)) {
@@ -76,6 +79,7 @@ public class BackupController extends BaseController {
      * @throws GlobalException
      */
     @RequestMapping("/download.html")
+    @OperateLog(value = "下载备份文件", actionType = ActionEnum.ADMIN_DOWNLOAD)
     public void downloadFile(Long id, HttpServletRequest request, HttpServletResponse response) throws GlobalException {
         Backup backup = this.backupService.findById(id);
         if (backup == null) {
@@ -98,6 +102,7 @@ public class BackupController extends BaseController {
      */
     @PostMapping("/saveConfig.json")
     @ResponseBody
+    @OperateLog(value = "保存备份配置", actionType = ActionEnum.ADMIN_ADD)
     public Result saveConfig(@RequestParam Map<String, String> configMap) {
         this.backupService.saveConfig(configMap);
         return Result.success();
@@ -111,6 +116,7 @@ public class BackupController extends BaseController {
      */
     @PostMapping("/remove.json")
     @ResponseBody
+    @OperateLog(value = "删除备份", actionType = ActionEnum.ADMIN_REMOVE)
     public Result remove(@RequestParam String idStr) throws GlobalException {
         if (StringUtils.isBlank(idStr)) {
             ExceptionUtil.throwEx(GlobalExceptionEnum.ERROR_PARAM);

@@ -74,6 +74,9 @@ public enum HexoExceptionEnum implements GlobalExceptionMap {
     // 13xxx --> 动态
     ERROR_DYNAMIC_NOT_EXIST(13001, "动态不存在"),
 
+    // 14xxx --> 日志
+    ERROR_ACTION_LOG_NOT_EXIST(14001, "日志不存在"),
+
     // 50xxx --> 前端
     ERROR_REPEAT_PRAISE_POST(50001, "已点赞，请勿重复操作")
 

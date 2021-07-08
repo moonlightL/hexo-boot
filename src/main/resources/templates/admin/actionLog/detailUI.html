@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, initial-scale=1, shrink-to-fit=no">
+    <div th:replace="~{admin/common :: common-link}"></div>
+</head>
+<body>
+
+<div class="content">
+    <div class="block block-fx-shadow">
+        <div class="block-content">
+            <div class="row justify-content-center py-20">
+                <div class="col-xl-6">
+                    <form class="js-validation-bootstrap" th:object="${actionLog}">
+                        <div class="form-group row">
+                            <label class="col-lg-4 col-form-label">操作类型</label>
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" th:value="${actionTypeMap.get(actionLog.actionType)}" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-4 col-form-label">操作备注</label>
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" th:field="*{remark}"  disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-4 col-form-label">方法名</label>
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" th:field="*{actionLogDetail.methodName}"  disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-4 col-form-label">方法参数</label>
+                            <div class="col-lg-8">
+                                <textarea id="remark"class="form-control" th:field="*{actionLogDetail.methodParam}" aria-label="With textarea" style="resize: none;height: 150px"  disabled></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-4 col-form-label">ip 地址</label>
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" th:field="*{ipAddress}"  disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-4 col-form-label">浏览器</label>
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" th:field="*{browser}"  disabled>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div th:replace="~{admin/common :: common-script}"></div>
+<script type="text/javascript" th:inline="javascript">
+
+</script>
+</body>
+</html>

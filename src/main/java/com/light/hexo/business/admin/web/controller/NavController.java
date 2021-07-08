@@ -5,6 +5,8 @@ import com.light.hexo.business.admin.model.Nav;
 import com.light.hexo.business.admin.service.NavService;
 import com.light.hexo.common.base.BaseController;
 import com.light.hexo.common.base.BaseRequest;
+import com.light.hexo.common.component.log.ActionEnum;
+import com.light.hexo.common.component.log.OperateLog;
 import com.light.hexo.common.exception.GlobalExceptionEnum;
 import com.light.hexo.common.model.NavRequest;
 import com.light.hexo.common.model.Result;
@@ -69,6 +71,7 @@ public class NavController extends BaseController {
      */
     @RequestMapping("add.json")
     @ResponseBody
+    @OperateLog(value = "新增导航", actionType = ActionEnum.ADMIN_ADD)
     public Result add(@Validated(BaseRequest.Save.class) NavRequest request) {
         Nav nav = request.toDoModel();
         nav.setName(nav.getName().trim());
@@ -84,6 +87,7 @@ public class NavController extends BaseController {
      */
     @RequestMapping("edit.json")
     @ResponseBody
+    @OperateLog(value = "编辑导航", actionType = ActionEnum.ADMIN_EDIT)
     public Result edit(@Validated(BaseRequest.Update.class) NavRequest request) {
         Nav nav = request.toDoModel();
         nav.setName(nav.getName().trim());
@@ -99,6 +103,7 @@ public class NavController extends BaseController {
      */
     @RequestMapping("updateState.json")
     @ResponseBody
+    @OperateLog(value = "修改导航状态", actionType = ActionEnum.ADMIN_EDIT)
     public Result updateState(NavRequest request) {
         this.navService.updateModel(request.toDoModel());
         return Result.success();
@@ -111,6 +116,7 @@ public class NavController extends BaseController {
      */
     @RequestMapping("remove.json")
     @ResponseBody
+    @OperateLog(value = "删除导航", actionType = ActionEnum.ADMIN_REMOVE)
     public Result remove(@RequestParam String idStr) {
         if (StringUtils.isBlank(idStr)) {
             ExceptionUtil.throwEx(GlobalExceptionEnum.ERROR_PARAM);

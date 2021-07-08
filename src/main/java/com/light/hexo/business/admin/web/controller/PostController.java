@@ -7,6 +7,8 @@ import com.light.hexo.business.admin.service.CategoryService;
 import com.light.hexo.business.admin.service.PostService;
 import com.light.hexo.common.base.BaseController;
 import com.light.hexo.common.base.BaseRequest;
+import com.light.hexo.common.component.log.ActionEnum;
+import com.light.hexo.common.component.log.OperateLog;
 import com.light.hexo.common.exception.GlobalExceptionEnum;
 import com.light.hexo.common.model.PostRequest;
 import com.light.hexo.common.model.Result;
@@ -96,6 +98,7 @@ public class PostController extends BaseController {
      */
     @RequestMapping("add.json")
     @ResponseBody
+    @OperateLog(value = "新增文章", actionType = ActionEnum.ADMIN_ADD)
     public Result add(@Validated(BaseRequest.Save.class) PostRequest request) {
         Post post = request.toDoModel();
         this.postService.savePost(post);
@@ -109,6 +112,7 @@ public class PostController extends BaseController {
      */
     @RequestMapping("edit.json")
     @ResponseBody
+    @OperateLog(value = "编辑文章", actionType = ActionEnum.ADMIN_EDIT)
     public Result edit(@Validated(BaseRequest.Update.class) PostRequest request) {
         Post post = request.toDoModel();
         this.postService.editPost(post);
@@ -122,6 +126,7 @@ public class PostController extends BaseController {
      */
     @RequestMapping("importPosts.json")
     @ResponseBody
+    @OperateLog(value = "导入文章", actionType = ActionEnum.ADMIN_ADD)
     public Result importPosts(@RequestParam String path, @RequestParam String type) {
         if ("md".equals(type)) {
             this.postService.importPostsByMd(path);
@@ -138,6 +143,7 @@ public class PostController extends BaseController {
      */
     @RequestMapping("updateSwitch.json")
     @ResponseBody
+    @OperateLog(value = "修改文章状态", actionType = ActionEnum.ADMIN_EDIT)
     public Result updateState(PostRequest request) {
         this.postService.updateState(request.toDoModel());
         return Result.success();
@@ -150,6 +156,7 @@ public class PostController extends BaseController {
      */
     @RequestMapping("remove.json")
     @ResponseBody
+    @OperateLog(value = "删除文章", actionType = ActionEnum.ADMIN_REMOVE)
     public Result remove(@RequestParam String idStr) {
         if (StringUtils.isBlank(idStr)) {
             ExceptionUtil.throwEx(GlobalExceptionEnum.ERROR_PARAM);
@@ -166,6 +173,7 @@ public class PostController extends BaseController {
      */
     @RequestMapping("publishPost.json")
     @ResponseBody
+    @OperateLog(value = "发表文章", actionType = ActionEnum.ADMIN_EDIT)
     public Result publishPost(Integer id) {
         this.postService.publishPost(id);
         return Result.success();

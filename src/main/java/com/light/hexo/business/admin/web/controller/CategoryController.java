@@ -5,6 +5,8 @@ import com.light.hexo.business.admin.model.Category;
 import com.light.hexo.business.admin.service.CategoryService;
 import com.light.hexo.common.base.BaseController;
 import com.light.hexo.common.base.BaseRequest;
+import com.light.hexo.common.component.log.ActionEnum;
+import com.light.hexo.common.component.log.OperateLog;
 import com.light.hexo.common.exception.GlobalExceptionEnum;
 import com.light.hexo.common.model.CategoryRequest;
 import com.light.hexo.common.model.Result;
@@ -63,6 +65,7 @@ public class CategoryController extends BaseController {
      */
     @RequestMapping("add.json")
     @ResponseBody
+    @OperateLog(value = "新增分类", actionType = ActionEnum.ADMIN_ADD)
     public Result add(@Validated(BaseRequest.Save.class) CategoryRequest request) {
         Category category = request.toDoModel();
         category.setName(category.getName().trim());
@@ -78,6 +81,7 @@ public class CategoryController extends BaseController {
      */
     @RequestMapping("edit.json")
     @ResponseBody
+    @OperateLog(value = "编辑分类", actionType = ActionEnum.ADMIN_EDIT)
     public Result edit(@Validated(BaseRequest.Update.class) CategoryRequest request) {
         Category category = request.toDoModel();
         category.setName(category.getName().trim());
@@ -93,6 +97,7 @@ public class CategoryController extends BaseController {
      */
     @RequestMapping("updateState.json")
     @ResponseBody
+    @OperateLog(value = "修改分类状态", actionType = ActionEnum.ADMIN_EDIT)
     public Result updateState(CategoryRequest request) {
         this.categoryService.updateModel(request.toDoModel());
         return Result.success();
@@ -105,6 +110,7 @@ public class CategoryController extends BaseController {
      */
     @RequestMapping("remove.json")
     @ResponseBody
+    @OperateLog(value = "删除分类", actionType = ActionEnum.ADMIN_REMOVE)
     public Result remove(@RequestParam String idStr) {
         if (StringUtils.isBlank(idStr)) {
             ExceptionUtil.throwEx(GlobalExceptionEnum.ERROR_PARAM);

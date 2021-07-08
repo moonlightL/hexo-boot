@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, initial-scale=1, shrink-to-fit=no">
+    <div th:replace="~{admin/common :: common-link}"></div>
+</head>
+<body>
+<div class="content animated fadeIn">
+    <h2 class="content-heading" id="toolbar">
+        <button type="button" class="btn btn-sm btn-secondary float-right hexo-query" data-query-area="queryArea"><i class="fa fa-search text-success mr-5"></i> 查询</button>
+        <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-refresh"><i class="fa fa-refresh mr-5"></i> 刷新</button>
+        <i class="fa fa-file-text-o"></i> 日志列表
+    </h2>
+    <div class="block block-fx-shadow hide" id="queryArea">
+        <div class="block-content block-content-full">
+            <form class="form-inline" method="post" id="queryForm">
+                <label class="sr-only" for="actionType">状态</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <button type="button" class="btn btn-secondary">操作类型</button>
+                    </div>
+                    <select class="form-control mb-2 mr-sm-2 mb-sm-0" id="actionType" name="actionType">
+                        <option value="">全部</option>
+                        <option th:each="actionType:${actionTypeMap}" th:value="${actionType.key}" th:text="${actionType.value}"></option>
+                    </select>
+                </div>
+                <button type="button" class="btn btn-alt-primary mr-5 hexo-query-submit">提交</button>
+                <button type="reset" class="btn btn-alt-warning">重置</button>
+            </form>
+        </div>
+    </div>
+    <div class="block block-fx-shadow">
+        <div class="block-content">
+            <div class="table-responsive">
+                <table id="listTable" class="table table-striped table-vcenter">
+                    <thead>
+                        <tr>
+                            <th class='text-center' width="5%" data-checkbox="true">
+                                <label class="css-control css-control-primary css-checkbox" for="check-all" >
+                                    <input type="checkbox" class="css-control-input" id="check-all">
+                                    <span class="css-control-indicator"></span>
+                                </label>
+                            </th>
+                            <th width="10%" data-field="remark">描述</th>
+                            <th width="10%" data-field="ipAddress">ip 地址</th>
+                            <th width="10%" data-field="browser">浏览器</th>
+                            <th width="5%" align="center" data-field="actionType" data-formatter="actionTypeFormatter">类型</th>
+                            <th width="10%" align="center" data-field="createTime">操作时间</th>
+                            <th width="5%" align="center" data-formatter="actionFormatter">操作</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="~{admin/common :: common-script}"></div>
+<script th:inline="javascript">
+
+    let actionTypeMap = [[${actionTypeMap}]];
+
+    function actionTypeFormatter(val, row) {
+        return actionTypeMap[val];
+    }
+
+    function actionFormatter(val, row) {
+        let btnArr = [];
+        btnArr.push('<div class="btn-group">');
+        btnArr.push('<button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="详情" onclick="window.showDetailUI(\'' + row.id + '\', $(this))"><i class="fa fa-search"></i></button>');
+        btnArr.push("</div>");
+        return btnArr.join("");
+    }
+
+    function showDetailUI(id, $target) {
+        $.hexo.modal.window("日志详情", BASE_URL + "/detailUI.html?id=" + id, $target);
+    }
+
+    $(function() {
+        $.hexo.table.init({
+            baseUrl: BASE_URL
+        });
+    });
+</script>
+</body>
+</html>

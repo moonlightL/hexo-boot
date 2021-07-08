@@ -5,6 +5,8 @@ import com.light.hexo.business.admin.constant.ConfigEnum;
 import com.light.hexo.business.admin.model.UserExtend;
 import com.light.hexo.business.admin.service.ConfigService;
 import com.light.hexo.business.admin.service.UserExtendService;
+import com.light.hexo.common.component.log.ActionEnum;
+import com.light.hexo.common.component.log.OperateLog;
 import com.light.hexo.common.constant.HexoConstant;
 import com.light.hexo.business.admin.constant.HexoExceptionEnum;
 import com.light.hexo.business.admin.model.User;
@@ -85,6 +87,7 @@ public class UserController extends BaseController {
      */
     @RequestMapping("updateInfo.json")
     @ResponseBody
+    @OperateLog(value = "编辑个人信息", actionType = ActionEnum.ADMIN_EDIT)
     public Result updateInfo(@Validated(UserRequest.Update.class)UserRequest userRequest, HttpSession session) {
 
         User user = (User) session.getAttribute(HexoConstant.CURRENT_USER);
@@ -119,6 +122,7 @@ public class UserController extends BaseController {
      */
     @RequestMapping("updatePassword.json")
     @ResponseBody
+    @OperateLog(value = "修改登录密码", actionType = ActionEnum.ADMIN_EDIT)
     public Result updatePassword(@Validated(UserRequest.UpdatePwd.class) UserRequest userRequest, HttpSession session) {
 
         User user = (User) session.getAttribute(HexoConstant.CURRENT_USER);
@@ -146,6 +150,7 @@ public class UserController extends BaseController {
      */
     @RequestMapping("updateState.json")
     @ResponseBody
+    @OperateLog(value = "修改用户状态", actionType = ActionEnum.ADMIN_EDIT)
     public Result updateState(UserRequest request) {
         this.userService.updateState(request.toDoModel());
         return Result.success();
@@ -158,6 +163,7 @@ public class UserController extends BaseController {
      */
     @RequestMapping("remove.json")
     @ResponseBody
+    @OperateLog(value = "删除用户", actionType = ActionEnum.ADMIN_REMOVE)
     public Result remove(@RequestParam String idStr, HttpSession session) {
         if (StringUtils.isBlank(idStr)) {
             ExceptionUtil.throwEx(GlobalExceptionEnum.ERROR_PARAM);
@@ -181,12 +187,13 @@ public class UserController extends BaseController {
     }
 
     /**
-     * 保存
+     * 编辑个人介绍
      * @param descr
      * @return
      */
     @RequestMapping("saveUserExtend.json")
     @ResponseBody
+    @OperateLog(value = "编辑个人介绍", actionType = ActionEnum.ADMIN_EDIT)
     public Result saveUserExtend(@RequestParam String descr, HttpSession session) {
         User user = (User) session.getAttribute(HexoConstant.CURRENT_USER);
         this.userExtendService.saveUserExtend(user.getId(), descr);

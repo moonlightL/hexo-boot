@@ -2,6 +2,8 @@ package com.light.hexo.business.admin.web.controller;
 
 import com.light.hexo.business.admin.component.InstallService;
 import com.light.hexo.common.base.BaseRequest;
+import com.light.hexo.common.component.log.ActionEnum;
+import com.light.hexo.common.component.log.OperateLog;
 import com.light.hexo.common.model.InstallRequest;
 import com.light.hexo.common.model.Result;
 import com.light.hexo.common.model.UserRequest;
@@ -53,6 +55,7 @@ public class InstallController {
      */
     @RequestMapping("/install.json")
     @ResponseBody
+    @OperateLog(value = "安装博客系统", actionType = ActionEnum.INSTALL)
     public Result install(@Validated(BaseRequest.Save.class) InstallRequest request, HttpServletRequest httpServletRequest) throws Exception{
         this.installService.installApplication(
                 request,

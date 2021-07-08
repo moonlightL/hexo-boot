@@ -1,6 +1,8 @@
 package com.light.hexo.business.admin.web.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.light.hexo.common.component.log.ActionEnum;
+import com.light.hexo.common.component.log.OperateLog;
 import com.light.hexo.common.constant.HexoConstant;
 import com.light.hexo.business.admin.model.Post;
 import com.light.hexo.business.admin.model.PostComment;
@@ -77,6 +79,7 @@ public class PostCommentController extends BaseController {
      */
     @RequestMapping("add.json")
     @ResponseBody
+    @OperateLog(value = "后台评论", actionType = ActionEnum.ADMIN_ADD)
     public Result add(@Validated(BaseRequest.Save.class) PostCommentRequest request, HttpServletRequest httpServletRequest) {
         PostComment postComment = request.toDoModel();
         User user = (User) httpServletRequest.getSession().getAttribute(HexoConstant.CURRENT_USER);
@@ -89,12 +92,13 @@ public class PostCommentController extends BaseController {
     }
 
     /**
-     * 删除留言
+     * 删除评论
      * @param idStr
      * @return
      */
     @RequestMapping("remove.json")
     @ResponseBody
+    @OperateLog(value = "删除评论", actionType = ActionEnum.ADMIN_REMOVE)
     public Result remove(@RequestParam String idStr) {
         if (StringUtils.isBlank(idStr)) {
             ExceptionUtil.throwEx(GlobalExceptionEnum.ERROR_PARAM);
@@ -117,12 +121,13 @@ public class PostCommentController extends BaseController {
     }
 
     /**
-     * 回复
+     * 回复评论
      * @param request
      * @return
      */
     @RequestMapping("reply.json")
     @ResponseBody
+    @OperateLog(value = "后台评论回复", actionType = ActionEnum.ADMIN_ADD)
     public Result reply(@Validated(PostCommentRequest.Reply.class) PostCommentRequest request, HttpServletRequest httpServletRequest) {
         PostComment postComment = request.toDoModel();
         User user = (User) httpServletRequest.getSession().getAttribute(HexoConstant.CURRENT_USER);
@@ -141,6 +146,7 @@ public class PostCommentController extends BaseController {
      */
     @RequestMapping("addBlacklist.json")
     @ResponseBody
+    @OperateLog(value = "评论-加入黑名单", actionType = ActionEnum.ADMIN_ADD)
     public Result addBlacklist(PostCommentRequest request, HttpServletRequest httpServletRequest) {
         this.postCommentService.addBlacklist(request.toDoModel(), IpUtil.getIpAddr(httpServletRequest));
         return Result.success();

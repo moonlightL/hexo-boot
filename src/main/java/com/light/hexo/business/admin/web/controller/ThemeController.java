@@ -8,6 +8,8 @@ import com.light.hexo.business.admin.service.ThemeExtendService;
 import com.light.hexo.business.admin.service.ThemeService;
 import com.light.hexo.common.base.BaseController;
 import com.light.hexo.common.base.BaseRequest;
+import com.light.hexo.common.component.log.ActionEnum;
+import com.light.hexo.common.component.log.OperateLog;
 import com.light.hexo.common.exception.GlobalException;
 import com.light.hexo.common.exception.GlobalExceptionEnum;
 import com.light.hexo.common.model.Result;
@@ -115,12 +117,13 @@ public class ThemeController extends BaseController {
 
 
     /**
-     * 使用主题
+     * 切换主题
      * @param request
      * @return
      */
     @RequestMapping("/useTheme.json")
     @ResponseBody
+    @OperateLog(value = "切换主题", actionType = ActionEnum.ADMIN_EDIT)
     public Result useTheme(@Validated(BaseRequest.Update.class) ThemeRequest request) {
         Theme theme = request.toDoModel();
         this.themeService.useTheme(theme.getId());
@@ -134,6 +137,7 @@ public class ThemeController extends BaseController {
      */
     @RequestMapping("/fetchTheme.json")
     @ResponseBody
+    @OperateLog(value = "拉取主题", actionType = ActionEnum.ADMIN_ADD)
     public Result fetchTheme(@RequestParam String themeUrl) {
         this.themeService.fetchTheme(themeUrl);
         return Result.success();
@@ -146,6 +150,7 @@ public class ThemeController extends BaseController {
      */
     @RequestMapping("/unzipTheme.json")
     @ResponseBody
+    @OperateLog(value = "解压主题", actionType = ActionEnum.ADMIN_ADD)
     public Result unzipTheme(MultipartFile file) {
 
         if (file == null) {
@@ -181,12 +186,13 @@ public class ThemeController extends BaseController {
     }
 
     /**
-     * 保存主题配置
+     * 编辑主题配置
      * @param extendList
      * @return
      */
     @RequestMapping("saveConfig.json")
     @ResponseBody
+    @OperateLog(value = "编辑主题配置", actionType = ActionEnum.ADMIN_EDIT)
     public Result saveConfig(@RequestBody List<ThemeExtend> extendList) {
         this.themeExtendService.saveThemeExtend(extendList);
         return Result.success();
@@ -212,6 +218,7 @@ public class ThemeController extends BaseController {
      */
     @RequestMapping("editCode.json")
     @ResponseBody
+    @OperateLog(value = "编辑主题源码", actionType = ActionEnum.ADMIN_EDIT)
     public Result editCode(String path, String content) throws IOException {
         this.themeService.editThemeFileContent(path, content);
         return Result.success();
@@ -225,6 +232,7 @@ public class ThemeController extends BaseController {
      */
     @RequestMapping("remove.json")
     @ResponseBody
+    @OperateLog(value = "删除主题", actionType = ActionEnum.ADMIN_REMOVE)
     public Result remove(Integer id) {
         this.themeService.removeTheme(id);
         return Result.success();

@@ -5,6 +5,8 @@ import com.light.hexo.business.admin.model.Tag;
 import com.light.hexo.business.admin.service.TagService;
 import com.light.hexo.common.base.BaseController;
 import com.light.hexo.common.base.BaseRequest;
+import com.light.hexo.common.component.log.ActionEnum;
+import com.light.hexo.common.component.log.OperateLog;
 import com.light.hexo.common.exception.GlobalExceptionEnum;
 import com.light.hexo.common.model.Result;
 import com.light.hexo.common.model.TagRequest;
@@ -48,24 +50,26 @@ public class TagController extends BaseController {
     }
 
     /**
-     * 编辑分类
+     * 编辑标签
      * @param request
      * @return
      */
     @RequestMapping("edit.json")
     @ResponseBody
+    @OperateLog(value = "编辑标签", actionType = ActionEnum.ADMIN_EDIT)
     public Result edit(@Validated(BaseRequest.Update.class) TagRequest request) {
         this.tagService.updateModel(request.toDoModel());
         return Result.success();
     }
 
     /**
-     * 删除分类
+     * 删除标签
      * @param idStr
      * @return
      */
     @RequestMapping("remove.json")
     @ResponseBody
+    @OperateLog(value = "删除标签", actionType = ActionEnum.ADMIN_REMOVE)
     public Result remove(@RequestParam String idStr) {
         if (StringUtils.isBlank(idStr)) {
             ExceptionUtil.throwEx(GlobalExceptionEnum.ERROR_PARAM);

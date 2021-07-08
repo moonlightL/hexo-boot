@@ -1,6 +1,8 @@
 package com.light.hexo.business.admin.web.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.light.hexo.common.component.log.ActionEnum;
+import com.light.hexo.common.component.log.OperateLog;
 import com.light.hexo.common.constant.HexoConstant;
 import com.light.hexo.business.admin.model.GuestBook;
 import com.light.hexo.business.admin.model.User;
@@ -69,6 +71,7 @@ public class GuestBookController extends BaseController {
      */
     @RequestMapping("add.json")
     @ResponseBody
+    @OperateLog(value = "后台留言", actionType = ActionEnum.ADMIN_ADD)
     public Result add(@Validated(BaseRequest.Save.class) GuestBookRequest request, HttpServletRequest httpServletRequest) {
         GuestBook guestBook = request.toDoModel();
         HttpSession session = httpServletRequest.getSession();
@@ -88,6 +91,7 @@ public class GuestBookController extends BaseController {
      */
     @RequestMapping("remove.json")
     @ResponseBody
+    @OperateLog(value = "删除留言", actionType = ActionEnum.ADMIN_REMOVE)
     public Result remove(@RequestParam String idStr) {
         if (StringUtils.isBlank(idStr)) {
             ExceptionUtil.throwEx(GlobalExceptionEnum.ERROR_PARAM);
@@ -110,12 +114,13 @@ public class GuestBookController extends BaseController {
     }
 
     /**
-     * 回复
+     * 回复留言
      * @param request
      * @return
      */
     @RequestMapping("reply.json")
     @ResponseBody
+    @OperateLog(value = "后台留言回复", actionType = ActionEnum.ADMIN_ADD)
     public Result reply(@Validated(GuestBookRequest.Reply.class) GuestBookRequest request, HttpServletRequest httpServletRequest) {
         GuestBook guestBook = request.toDoModel();
         HttpSession session = httpServletRequest.getSession();
@@ -135,6 +140,7 @@ public class GuestBookController extends BaseController {
      */
     @RequestMapping("addBlacklist.json")
     @ResponseBody
+    @OperateLog(value = "留言-加入黑名单", actionType = ActionEnum.ADMIN_ADD)
     public Result addBlacklist(GuestBookRequest request, HttpServletRequest httpServletRequest) {
         this.guestBookService.addBlacklist(request.toDoModel(), IpUtil.getIpAddr(httpServletRequest));
         return Result.success();

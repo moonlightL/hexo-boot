@@ -5,6 +5,8 @@ import com.light.hexo.business.admin.model.Dynamic;
 import com.light.hexo.business.admin.service.DynamicService;
 import com.light.hexo.common.base.BaseController;
 import com.light.hexo.common.base.BaseRequest;
+import com.light.hexo.common.component.log.ActionEnum;
+import com.light.hexo.common.component.log.OperateLog;
 import com.light.hexo.common.exception.GlobalExceptionEnum;
 import com.light.hexo.common.model.DynamicRequest;
 import com.light.hexo.common.model.Result;
@@ -64,6 +66,7 @@ public class DynamicController extends BaseController {
      */
     @RequestMapping("add.json")
     @ResponseBody
+    @OperateLog(value = "发表动态", actionType = ActionEnum.ADMIN_ADD)
     public Result add(@Validated(BaseRequest.Save.class) DynamicRequest request) {
         Dynamic dynamic = request.toDoModel();
         this.dynamicService.saveDynamic(dynamic);
@@ -77,6 +80,7 @@ public class DynamicController extends BaseController {
      */
     @RequestMapping("edit.json")
     @ResponseBody
+    @OperateLog(value = "编辑动态", actionType = ActionEnum.ADMIN_EDIT)
     public Result edit(@Validated(BaseRequest.Update.class) DynamicRequest request) {
         Dynamic dynamic = request.toDoModel();
         this.dynamicService.updateDynamic(dynamic);
@@ -90,6 +94,7 @@ public class DynamicController extends BaseController {
      */
     @RequestMapping("remove.json")
     @ResponseBody
+    @OperateLog(value = "删除动态", actionType = ActionEnum.ADMIN_REMOVE)
     public Result remove(@RequestParam String idStr) {
         if (StringUtils.isBlank(idStr)) {
             ExceptionUtil.throwEx(GlobalExceptionEnum.ERROR_PARAM);

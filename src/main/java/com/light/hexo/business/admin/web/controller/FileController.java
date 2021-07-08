@@ -2,6 +2,8 @@ package com.light.hexo.business.admin.web.controller;
 
 import com.google.gson.Gson;
 import com.light.hexo.common.component.file.*;
+import com.light.hexo.common.component.log.ActionEnum;
+import com.light.hexo.common.component.log.OperateLog;
 import com.light.hexo.common.exception.GlobalException;
 import com.light.hexo.common.exception.GlobalExceptionEnum;
 import com.light.hexo.common.model.FileResult;
@@ -36,9 +38,14 @@ public class FileController {
     @Autowired
     private DefaultFileService defaultFileService;
 
-
+    /**
+     * 文件上传（分类、文章页）
+     * @param file
+     * @return
+     */
     @RequestMapping(value = "upload.json", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
+    @OperateLog(value = "文件（分类、文章页）上传", actionType = ActionEnum.ADMIN_ADD)
     public Result upload(@RequestParam(value = "file") MultipartFile file) {
 
         if (file == null) {
@@ -72,8 +79,14 @@ public class FileController {
         return Result.fail();
     }
 
+    /**
+     * 附件文件批量上传
+     * @param files
+     * @return
+     */
     @RequestMapping(value = "uploadBatch.json", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
+    @OperateLog(value = "附件批量上传", actionType = ActionEnum.ADMIN_ADD)
     public Result uploadBatch(@RequestParam(value = "file", required = false) MultipartFile[] files) {
 
         if (files == null || files.length == 0) {
@@ -110,8 +123,15 @@ public class FileController {
         return Result.success(urlList);
     }
 
+    /**
+     * markdown 编辑器文件上传
+     * @param file
+     * @return
+     * @throws GlobalException
+     */
     @RequestMapping(value = "/mdUploadFile.json", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
+    @OperateLog(value = "编辑器文件上传", actionType = ActionEnum.ADMIN_ADD)
     public FileResult mdUploadFile(@RequestParam(value = "editormd-image-file", required = false) MultipartFile file) throws GlobalException {
         if (file == null) {
             ExceptionUtil.throwEx(GlobalExceptionEnum.ERROR_PARAM);

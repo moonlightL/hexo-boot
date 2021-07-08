@@ -6,6 +6,8 @@ import com.light.hexo.business.admin.model.Blacklist;
 import com.light.hexo.business.admin.service.BlacklistService;
 import com.light.hexo.common.base.BaseController;
 import com.light.hexo.common.base.BaseRequest;
+import com.light.hexo.common.component.log.ActionEnum;
+import com.light.hexo.common.component.log.OperateLog;
 import com.light.hexo.common.exception.GlobalException;
 import com.light.hexo.common.exception.GlobalExceptionEnum;
 import com.light.hexo.common.model.BlackListRequest;
@@ -68,6 +70,7 @@ public class BlacklistController extends BaseController {
      */
     @RequestMapping("add.json")
     @ResponseBody
+    @OperateLog(value = "新增黑名单", actionType = ActionEnum.ADMIN_ADD)
     public Result add(@Validated(BaseRequest.Save.class) BlackListRequest request) {
         this.blacklistService.saveModel(request.toDoModel());
         return Result.success();
@@ -80,6 +83,7 @@ public class BlacklistController extends BaseController {
      */
     @RequestMapping("edit.json")
     @ResponseBody
+    @OperateLog(value = "编辑黑名单", actionType = ActionEnum.ADMIN_EDIT)
     public Result edit(@Validated(BaseRequest.Update.class) BlackListRequest request) {
         this.blacklistService.updateModel(request.toDoModel());
         return Result.success();
@@ -92,6 +96,7 @@ public class BlacklistController extends BaseController {
      */
     @RequestMapping("remove.json")
     @ResponseBody
+    @OperateLog(value = "删除黑名单", actionType = ActionEnum.ADMIN_REMOVE)
     public Result remove(@RequestParam String idStr) {
         if (StringUtils.isBlank(idStr)) {
             ExceptionUtil.throwEx(GlobalExceptionEnum.ERROR_PARAM);

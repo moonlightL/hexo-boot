@@ -5,6 +5,8 @@ import com.light.hexo.business.admin.model.Music;
 import com.light.hexo.business.admin.service.MusicService;
 import com.light.hexo.common.base.BaseController;
 import com.light.hexo.common.base.BaseRequest;
+import com.light.hexo.common.component.log.ActionEnum;
+import com.light.hexo.common.component.log.OperateLog;
 import com.light.hexo.common.exception.GlobalExceptionEnum;
 import com.light.hexo.common.model.MusicRequest;
 import com.light.hexo.common.model.Result;
@@ -64,6 +66,7 @@ public class MusicController extends BaseController {
      */
     @RequestMapping("add.json")
     @ResponseBody
+    @OperateLog(value = "新增音乐", actionType = ActionEnum.ADMIN_ADD)
     public Result add(@Validated(BaseRequest.Save.class) MusicRequest request) {
         Music music = request.toDoModel();
         music.setName(music.getName().trim());
@@ -80,6 +83,7 @@ public class MusicController extends BaseController {
      */
     @RequestMapping("edit.json")
     @ResponseBody
+    @OperateLog(value = "编辑音乐", actionType = ActionEnum.ADMIN_EDIT)
     public Result edit(@Validated(BaseRequest.Update.class) MusicRequest request) {
         Music music = request.toDoModel();
         music.setName(music.getName().trim());
@@ -96,6 +100,7 @@ public class MusicController extends BaseController {
      */
     @RequestMapping("updateState.json")
     @ResponseBody
+    @OperateLog(value = "修改音乐状态", actionType = ActionEnum.ADMIN_EDIT)
     public Result updateState(MusicRequest request) {
         this.musicService.updateModel(request.toDoModel());
         return Result.success();
@@ -108,6 +113,7 @@ public class MusicController extends BaseController {
      */
     @RequestMapping("remove.json")
     @ResponseBody
+    @OperateLog(value = "删除音乐", actionType = ActionEnum.ADMIN_REMOVE)
     public Result remove(@RequestParam String idStr) {
         if (StringUtils.isBlank(idStr)) {
             ExceptionUtil.throwEx(GlobalExceptionEnum.ERROR_PARAM);
