@@ -3,8 +3,10 @@ package com.light.hexo.business.admin.web.controller;
 import com.github.pagehelper.PageInfo;
 import com.light.hexo.business.admin.model.Category;
 import com.light.hexo.business.admin.model.Post;
+import com.light.hexo.business.admin.model.PostTask;
 import com.light.hexo.business.admin.service.CategoryService;
 import com.light.hexo.business.admin.service.PostService;
+import com.light.hexo.business.admin.service.PostTaskService;
 import com.light.hexo.common.base.BaseController;
 import com.light.hexo.common.base.BaseRequest;
 import com.light.hexo.common.component.log.ActionEnum;
@@ -39,6 +41,9 @@ public class PostController extends BaseController {
 
     @Autowired
     private PostService postService;
+
+    @Autowired
+    private PostTaskService postTaskService;
 
     @Autowired
     private CategoryService categoryService;
@@ -78,6 +83,8 @@ public class PostController extends BaseController {
         resultMap.put("vo", post);
         List<Category> categoryList = this.categoryService.findAll(true);
         resultMap.put("categoryList", categoryList);
+        PostTask postTask = this.postTaskService.getPostTask(post.getId());
+        resultMap.put("jobTime", postTask != null ? postTask.getJobTime() : "");
         return this.render("editUI", resultMap);
     }
 

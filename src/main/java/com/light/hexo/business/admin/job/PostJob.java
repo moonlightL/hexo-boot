@@ -1,7 +1,10 @@
-package com.light.hexo.business.admin.task;
+package com.light.hexo.business.admin.job;
 
 import com.light.hexo.business.admin.model.Post;
+import com.light.hexo.business.admin.model.PostTask;
 import com.light.hexo.business.admin.service.PostService;
+import com.light.hexo.business.admin.service.PostTaskService;
+import com.light.hexo.common.exception.GlobalException;
 import com.light.hexo.common.util.MarkdownUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,17 +19,20 @@ import java.util.concurrent.Executors;
 
 /**
  * @Author MoonlightL
- * @ClassName: PostTask
+ * @ClassName: PostJob
  * @ProjectName hexo-boot
  * @Description: 文章定时器
  * @DateTime 2021/4/27 17:03
  */
 @Component
 @Slf4j
-public class PostTask {
+public class PostJob {
 
     @Autowired
     private PostService postService;
+
+    @Autowired
+    private PostTaskService postTaskService;
 
     private ExecutorService executorService = Executors.newFixedThreadPool(2);
 
@@ -35,6 +41,7 @@ public class PostTask {
      */
     @Scheduled(cron = "0 0/1 * * * ?")
     public void checkContentHtml() {
+
         List<Post> postList = this.postService.listEmptyHtml();
         if (CollectionUtils.isEmpty(postList)) {
             return;
@@ -47,6 +54,31 @@ public class PostTask {
                 tmp.setContentHtml(MarkdownUtil.md2html(post.getContent())).setUpdateTime(LocalDateTime.now());
                 this.postService.updateModel(tmp);
             });
+        }
+    }
+
+    /**
+     * 检测文章任务
+     */
+    @Scheduled(cron = "0 0/1 * * * ?")
+    public void checkPostTask() {
+
+        List<PostTask> postTaskList = this.postTaskService.listPostTasks(0);
+        if (CollectionUtils.isEmpty(postTaskList)) {
+            return;
+        }
+
+        LocalDateTime date = LocalDateTime.now();
+        for (PostTask postTask : postTaskList) {
+            try {
+                Integer postId = postTask.getPostId();
+                this.postService.publishPost(postId);
+
+                postTask.setState(1).setUpdateTime(date);
+                this.postTaskService.updateModel(postTask);
+            } catch (GlobalException e) {
+                log.error("checkPostTask 异常: {} ", e.getMessage());
+            }
         }
     }
 }

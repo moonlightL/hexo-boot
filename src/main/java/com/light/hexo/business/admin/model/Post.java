@@ -181,6 +181,12 @@ public class Post implements Serializable {
     @Transient
     private Post nextPost;
 
+    /**
+     * 定时发布时间
+     */
+    @Transient
+    private LocalDateTime jobTime;
+
     @CreateTime
     private LocalDateTime createTime;
 

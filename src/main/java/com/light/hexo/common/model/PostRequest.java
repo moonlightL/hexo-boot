@@ -4,9 +4,11 @@ import com.light.hexo.business.admin.model.Post;
 import com.light.hexo.common.base.BaseRequest;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 
 /**
  * @Author MoonlightL
@@ -99,4 +101,10 @@ public class PostRequest extends BaseRequest<Post> {
      * 访问密码
      */
     private String authCode;
+
+    /**
+     * 定时发布时间
+     */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime jobTime;
 }

@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, initial-scale=1, shrink-to-fit=no">
     <div th:replace="~{admin/common :: common-link}"></div>
     <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/bootstrap/css/bootstrap.min.css'}">
+    <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css'}">
+    <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/flatpickr/flatpickr.min.css'}">
     <link th:href="@{'/admin/assets/js/plugins/dropzonejs/dist/min/dropzone.min.css'}" rel="stylesheet">
     <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/dropzonejs/dist/min/basic.min.css'}">
     <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/editor.md/css/editormd.min.css'}">
@@ -32,6 +34,9 @@
         }
         .input-group-text {
             font-weight: bold;
+        }
+        input[disabled] {
+            background: #edf0f3 !important;
         }
     </style>
 </head>
@@ -69,7 +74,7 @@
                                 <div id="btnArr" style="margin: 0 15px 15px 15px"></div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-md-4 col-form-label" for="title">封面布局</label>
+                                <label class="col-md-4 col-form-label" for="title"><i class="fa fa-info-circle" title="仅针对 Pure 主题生效"></i> 封面布局</label>
                                 <div class="col-md-8">
                                     <select class="custom-select" id="coverType" name="coverType">
                                         <option th:text="顶部封面" th:value="4" th:attr="selected=${4 eq vo.coverType}"></option>
@@ -77,7 +82,6 @@
                                         <option th:text="无封面" th:value="2" th:attr="selected=${2 eq vo.coverType}"></option>
                                         <option th:text="左侧封面" th:value="3" th:attr="selected=${3 eq vo.coverType}"></option>
                                     </select>
-                                    (仅针对 Pure 主题生效)
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -98,7 +102,7 @@
                             <div class="form-group row">
                                 <label class="col-md-4 col-form-label" for="title">转载</label>
                                 <div class="col-md-8">
-                                    <select class="custom-select" id="reprint" name="reprint" th:field="*{reprint}">
+                                    <select class="custom-select" id="reprint" name="reprint" th:field="*{reprint}" style="height:34px">
                                         <option value="" disabled selected>是否转载</option>
                                         <option value="0">否</option>
                                         <option value="1">是</option>
@@ -112,11 +116,18 @@
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="col-md-3 col-form-label" for="title">链接</label>
-                                        <div class="col-md-9">
+                                        <label class="col-md-4 col-form-label" for="title">链接</label>
+                                        <div class="col-md-8">
                                             <input type="text" class="form-control" placeholder="原文章地址" name="reprintLink" th:field="*{reprintLink}">
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label" for="jobTime">定时发布</label>
+                                <div class="col-md-8">
+                                    <input type="text" class="js-flatpickr form-control bg-white" id="jobTime" name="jobTime" placeholder="发布时间"
+                                           data-enable-time="true" th:value="${jobTime}" th:disabled="*{publish}" data-date-format="Y-m-d H:i:ss" data-time_24hr="true">
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -128,7 +139,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <button type="submit" class="btn btn-primary" id="submitBtn">保存</button>
+                                        <button type="submit" class="btn btn-primary" id="submitBtn" style="width:100%">保存</button>
                                     </div>
                                 </div>
                             </div>
@@ -137,8 +148,8 @@
                             <div class="col-lg-4 col-md-4 col-sm-4">
                                 <div class="form-group">
                                     <label class="css-control css-control-success css-switch css-control-sm css-switch-square">
-                                        <input type="checkbox" class="css-control-input" name="publish" th:attr="checked=${vo.publish}">
-                                        <span class="css-control-indicator"></span> 是否发表
+                                        <input type="checkbox" class="css-control-input" name="publish" th:attr="checked=${vo.publish}" th:disabled="${vo.publish}">
+                                        <span class="css-control-indicator"></span> 是否发表 <i class="fa fa-info-circle" title="已发表无法修改"></i>
                                     </label>
                                 </div>
                             </div>
@@ -167,6 +178,9 @@
     </div>
 </div>
 <div th:replace="~{admin/common :: common-script}"></div>
+<script th:src="@{'/admin/assets/js/plugins/bootstrap/js/bootstrap.min.js'}"></script>
+<script th:src="@{'/admin/assets/js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js'}"></script>
+<script th:src="@{'/admin/assets/js/plugins/flatpickr/flatpickr.min.js'}"></script>
 <script th:src="@{'/admin/assets/js/plugins/dropzonejs/dist/min/dropzone.min.js'}"></script>
 <script th:src="@{'/admin/assets/js/plugins/editor.md/editormd.min.js'}"></script>
 <script th:src="@{'/admin/assets/js/plugins/summernote/summernote.min.js'}"></script>
@@ -188,7 +202,7 @@
             }
         });
 
-        Codebase.helpers(['tags-inputs']);
+        Codebase.helpers(['tags-inputs','flatpickr','datepicker']);
         $("#submitBtn").on("click", function () {
             if (editorType === "markdown") {
                 $("#content").val(MyEditor.getMarkdown());
@@ -214,7 +228,7 @@
                 imageFormats : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
                 imageUploadURL : "/admin/file/upload.json",
                 onload: function () {
-                    $("#postEditor").height($(window.parent).height() - 70);
+                    $("#postEditor").height($(window.parent).height() - 240);
                     MyEditor.setMarkdown(vo.content);
                 }
             });
@@ -265,7 +279,7 @@
 
         let FileManager = {
             initUploadEvent: function () {
-                $("#btnArr").html('<a id="uploadBtn" href="javascript:void(0)">选择文件</a>&nbsp;&nbsp;<a id="randomBtn" href="javascript:void(0)">随机获取</a><p>(如不设置封面,则保存文章后系统随机生成)</p>');
+                $("#btnArr").html('<i class="fa fa-info-circle" title="如不设置封面,则保存文章后系统随机生成"></i> <a id="uploadBtn" href="javascript:void(0)">选择文件</a>&nbsp;&nbsp;<a id="randomBtn" href="javascript:void(0)">随机获取</a><p></p>');
                 $("#uploadBtn").dropzone({
                     method: "POST",
                     url: "/admin/file/upload.json", //上传地址

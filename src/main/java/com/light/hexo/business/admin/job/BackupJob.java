@@ -1,4 +1,4 @@
-package com.light.hexo.business.admin.task;
+package com.light.hexo.business.admin.job;
 
 import com.light.hexo.business.admin.component.DumpService;
 import com.light.hexo.business.admin.constant.ConfigEnum;
@@ -16,14 +16,14 @@ import java.util.Map;
 
 /**
  * @Author MoonlightL
- * @ClassName: BackupTask
+ * @ClassName: BackupJob
  * @ProjectName hexo-boot
  * @Description: 备份定时器
  * @DateTime 2020/9/9 10:57
  */
 @Component
 @Slf4j
-public class BackupTask {
+public class BackupJob {
 
     @Autowired
     private ConfigService configService;

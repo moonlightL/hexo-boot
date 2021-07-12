@@ -85,7 +85,7 @@ public class HttpClientUtil { private HttpClientUtil() { }
                     synchronized (this) {
                         wait(5000);
                         // 关闭失效的连接
-                        System.out.println("======");
+                        System.out.println("===关闭失效的连接===");
                         connMgr.closeExpiredConnections();
                     }
                 }

@@ -15,6 +15,7 @@ import org.jsoup.internal.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
+import org.springframework.util.DigestUtils;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -114,9 +115,14 @@ public class ActionLogAspect {
                     if ("content".equals(f.getName()) && flag) {
                         continue;
                     }
+
                     Object val = f.get(arg);
                     if (val != null) {
-                        map.put(f.getName(), val);
+                        if ("password".equals(f.getName())) {
+                            map.put(f.getName(), DigestUtils.md5DigestAsHex(val.toString().trim().getBytes()));
+                        } else {
+                            map.put(f.getName(), val);
+                        }
                     }
                 }
             } catch (Exception e) {

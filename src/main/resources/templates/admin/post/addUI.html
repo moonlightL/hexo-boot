@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, initial-scale=1, shrink-to-fit=no">
     <div th:replace="~{admin/common :: common-link}"></div>
     <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/bootstrap/css/bootstrap.min.css'}">
+    <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css'}">
+    <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/flatpickr/flatpickr.min.css'}">
     <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/editor.md/css/editormd.min.css'}">
     <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/jquery-tags-input/jquery.tagsinput.min.css'}">
     <link th:href="@{'/admin/assets/js/plugins/dropzonejs/dist/min/dropzone.min.css'}" rel="stylesheet">
@@ -50,7 +52,7 @@
                                 <div class="col-md-5">
                                     <input type="text" id="title" class="form-control" placeholder="标题名 *" name="title" data-bv-notempty="true" data-bv-notempty-message="标题不能为空">
                                 </div>
-                                <label class="col-md-1 col-form-label" for="link">链接</label>
+                                <label class="col-md-1 col-form-label" for="customLink">链接</label>
                                 <div class="col-md-4">
                                     <div class="input-group">
                                         <input type="text" id="customLink" class="form-control" placeholder="自定义链接" name="customLink">
@@ -68,7 +70,7 @@
                                 <div id="btnArr" style="margin: 0 15px 15px 15px"></div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-md-4 col-form-label" for="title">封面布局</label>
+                                <label class="col-md-4 col-form-label" for="title"><i class="fa fa-info-circle" title="仅针对 Pure 主题生效"></i> 封面布局</label>
                                 <div class="col-md-8">
                                     <select class="custom-select" id="coverType" name="coverType">
                                         <option value="4">顶部封面</option>
@@ -76,7 +78,6 @@
                                         <option value="2">无封面</option>
                                         <option value="3">左侧封面</option>
                                     </select>
-                                    (仅针对 Pure 主题生效)
                                 </div>
 
                             </div>
@@ -98,7 +99,7 @@
                             <div class="form-group row">
                                 <label class="col-md-4 col-form-label" for="title">转载</label>
                                 <div class="col-md-8">
-                                    <select class="custom-select" id="reprint" name="reprint">
+                                    <select class="custom-select" id="reprint" name="reprint" style="height:34px">
                                         <option value="" disabled selected>是否转载</option>
                                         <option value="0">否</option>
                                         <option value="1">是</option>
@@ -106,17 +107,24 @@
                                 </div>
                                 <div class="col-md-12" id="anchorInfo" style="display: none">
                                     <div class="form-group row">
-                                        <label class="col-md-3 col-form-label" for="title">作者</label>
-                                        <div class="col-md-9">
+                                        <label class="col-md-4 col-form-label" for="title">作者</label>
+                                        <div class="col-md-8">
                                             <input type="text" class="form-control" placeholder="原作者" name="author">
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="col-md-3 col-form-label" for="title">链接</label>
-                                        <div class="col-md-9">
+                                        <label class="col-md-4 col-form-label" for="title">链接</label>
+                                        <div class="col-md-8">
                                             <input type="text" class="form-control" placeholder="原文章地址" name="reprintLink">
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label" for="jobTime">定时发布</label>
+                                <div class="col-md-8">
+                                    <input type="text" class="js-flatpickr form-control bg-white" id="jobTime" name="jobTime" placeholder="发布时间"
+                                           data-enable-time="true" data-date-format="Y-m-d H:i:ss" data-time_24hr="true">
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -128,7 +136,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <button type="submit" class="btn btn-primary" id="submitBtn">保存</button>
+                                        <button type="submit" class="btn btn-primary" id="submitBtn" style="width:100%">保存</button>
                                     </div>
                                 </div>
                             </div>
@@ -168,6 +176,8 @@
 </div>
 <div th:replace="~{admin/common :: common-script}"></div>
 <script th:src="@{'/admin/assets/js/plugins/bootstrap/js/bootstrap.min.js'}"></script>
+<script th:src="@{'/admin/assets/js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js'}"></script>
+<script th:src="@{'/admin/assets/js/plugins/flatpickr/flatpickr.min.js'}"></script>
 <script th:src="@{'/admin/assets/js/plugins/dropzonejs/dist/min/dropzone.min.js'}"></script>
 <script th:src="@{'/admin/assets/js/plugins/editor.md/editormd.min.js'}"></script>
 <script th:src="@{'/admin/assets/js/plugins/summernote/summernote.min.js'}"></script>
@@ -188,7 +198,7 @@
             }
         });
 
-        Codebase.helpers(['tags-inputs']);
+        Codebase.helpers(['tags-inputs','flatpickr','datepicker']);
         $("#submitBtn").on("click", function () {
             if (editorType === "markdown") {
                 $("#content").val(MyEditor.getMarkdown());
@@ -266,7 +276,7 @@
 
         let FileManager = {
             initUploadEvent: function () {
-                $("#btnArr").html('<a id="uploadBtn" href="javascript:void(0)">选择文件</a>&nbsp;&nbsp;<a id="randomBtn" href="javascript:void(0)">随机获取</a><p>(如不设置封面,则保存文章后系统随机生成)</p>');
+                $("#btnArr").html('<i class="fa fa-info-circle" title="如不设置封面,则保存文章后系统随机生成"></i> <a id="uploadBtn" href="javascript:void(0)">选择文件</a>&nbsp;&nbsp;<a id="randomBtn" href="javascript:void(0)">随机获取</a><p></p>');
                 $("#uploadBtn").dropzone({
                     method: "POST",
                     url: "/admin/file/upload.json", //上传地址

@@ -78,6 +78,9 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
     private BaiDuPushService baiDuPushService;
 
     @Autowired
+    private PostTaskService postTaskService;
+
+    @Autowired
     @Lazy
     private EventPublisher eventPublisher;
 
@@ -217,12 +220,17 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
         }
 
         LocalDateTime now = LocalDateTime.now();
-        if (post.getPublish() != null) {
+        LocalDateTime jobTime = post.getJobTime();
+        if (jobTime != null) {
+            post.setPublish(false);
+        }
+
+        if (post.getPublish() != null && post.getPublish()) {
             post.setPublishDate(now.toLocalDate().toString())
-                .setYear(now.getYear() + "")
-                .setMonth(DateUtil.fillTime(now.getMonth().getValue()))
-                .setDay(DateUtil.fillTime(now.getDayOfMonth()))
-                .setLink(post.getYear() + "/" + post.getMonth() + "/" + post.getDay() + "/" + StringUtils.replace(post.getTitle(), " ", "-") + "/");
+                    .setYear(now.getYear() + "")
+                    .setMonth(DateUtil.fillTime(now.getMonth().getValue()))
+                    .setDay(DateUtil.fillTime(now.getDayOfMonth()))
+                    .setLink(post.getYear() + "/" + post.getMonth() + "/" + post.getDay() + "/" + StringUtils.replace(post.getTitle(), " ", "-") + "/");
 
             String customLink = post.getCustomLink();
             if (StringUtils.isNotBlank(customLink)) {
@@ -259,6 +267,11 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
         this.saveModel(post);
 
         this.saveTags(post, false);
+
+        Integer postId = post.getId();
+        if (jobTime != null) {
+            this.postTaskService.savePostTask(postId, jobTime);
+        }
 
         EhcacheUtil.clearByCacheName("postCache");
         EhcacheUtil.clearByCacheName("categoryCache");
@@ -305,7 +318,12 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
         }
 
         LocalDateTime now = LocalDateTime.now();
-        if (post.getPublish() != null) {
+        LocalDateTime jobTime = post.getJobTime();
+        if (jobTime != null) {
+            post.setPublish(false);
+        }
+
+        if (post.getPublish() != null && post.getPublish()) {
             String year,month,day;
             if (dbPost.getPublish()) {
                 year = dbPost.getYear();
@@ -357,6 +375,11 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
         this.updateModel(post);
 
         this.saveTags(post, true);
+
+        Integer postId = post.getId();
+        if (jobTime != null) {
+            this.postTaskService.savePostTask(postId, jobTime);
+        }
 
         EhcacheUtil.clearByCacheName("postCache");
         EhcacheUtil.clearByCacheName("categoryCache");
@@ -492,11 +515,17 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
 
     @Override
     public void publishPost(Integer id) throws GlobalException {
-        Example example = new Example(Post.class);
-        example.createCriteria().andEqualTo("id", id);
-        int count = this.getBaseMapper().selectCountByExample(example);
-        if (count == 0) {
+        Example example = Example.builder(Post.class)
+                .select("id", "publish")
+                .where(Sqls.custom().andEqualTo("id", id))
+                .build();
+        Post dbPost = this.getBaseMapper().selectOneByExample(example);
+        if (dbPost == null) {
             ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_POST_NOT_EXIST);
+        }
+
+        if (dbPost.getPublish()) {
+            ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_POST_HAD_PUBLISH);
         }
 
         Post post = new Post();
