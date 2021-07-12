@@ -516,7 +516,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
     @Override
     public void publishPost(Integer id) throws GlobalException {
         Example example = Example.builder(Post.class)
-                .select("id", "publish")
+                .select("id", "publish", "title")
                 .where(Sqls.custom().andEqualTo("id", id))
                 .build();
         Post dbPost = this.getBaseMapper().selectOneByExample(example);
@@ -536,7 +536,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
             .setYear(now.getYear() + "")
             .setMonth(DateUtil.fillTime(now.getMonth().getValue()))
             .setDay(DateUtil.fillTime(now.getDayOfMonth()))
-            .setLink(post.getYear() + "/" + post.getMonth() + "/" + post.getDay() + "/" + StringUtils.replace(post.getTitle(), " ", "-") + "/");
+            .setLink(post.getYear() + "/" + post.getMonth() + "/" + post.getDay() + "/" + StringUtils.replace(dbPost.getTitle(), " ", "-") + "/");
         this.updateModel(post);
         this.baiDuPushService.push2BaiDu(post.getLink());
         EhcacheUtil.clearByCacheName("postCache");
