@@ -12,8 +12,8 @@
         <button type="button" class="btn btn-sm btn-secondary float-right hexo-query" data-query-area="queryArea"><i class="fa fa-search text-success mr-5"></i> 查询</button>
         <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-refresh"><i class="fa fa-refresh mr-5"></i> 刷新</button>
         <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-remove"><i class="fa fa-trash text-danger mr-5"></i> 删除</button>
-        <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-edit" title="编辑分类" data-width="550" data-height="350"><i class="fa fa-edit text-warning mr-5"></i> 编辑</button>
-        <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-add" title="新增分类" data-width="550" data-height="350"><i class="fa fa-plus-square text-primary mr-5"></i> 新增</button>
+        <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-edit" title="编辑分类" data-width="500" data-height="550"><i class="fa fa-edit text-warning mr-5"></i> 编辑</button>
+        <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-add" title="新增分类" data-width="500" data-height="550"><i class="fa fa-plus-square text-primary mr-5"></i> 新增</button>
         <span title="列入黑名单的ip禁止访问网站"><i class="fa fa-lock"></i> 黑名单列表</span>
     </h2>
     <div class="block block-fx-shadow hide" id="queryArea">
@@ -45,7 +45,9 @@
                         </th>
                         <th data-field="ipAddress">ip 地址</th>
                         <th width="30%" data-field="remark">描述</th>
-                        <th width="20%" data-field="createTime">操作时间</th>
+                        <th width="5%" align="center" data-field="state" data-formatter="stateFormatter">状态</th>
+                        <th width="15%" align="center" data-field="expireTime" data-formatter="expireTimeFormatter">过期时间</th>
+                        <th width="15%" data-field="createTime">操作时间</th>
                         <th width="10%" align="center" data-formatter="actionFormatter">操作</th>
                     </tr>
                     </thead>
@@ -57,10 +59,18 @@
 <div th:replace="~{admin/common :: common-script}"></div>
 <script th:inline="javascript">
 
+    function stateFormatter(val, row) {
+        return val === 1 ? "永久" : "临时";
+    }
+
+    function expireTimeFormatter(val, row) {
+        return row.state === 1 ? "-" : val;
+    }
+
     function actionFormatter(val, row) {
         let btnArr = [];
         btnArr.push('<div class="btn-group">');
-        btnArr.push('<button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="编辑分类" data-width="550" data-height="350" onclick="$.hexo.action.showEditUI(\'' + row.id + '\', $(this))"><i class="fa fa-pencil"></i></button>');
+        btnArr.push('<button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="编辑分类" data-width="500" data-height="550" onclick="$.hexo.action.showEditUI(\'' + row.id + '\', $(this))"><i class="fa fa-pencil"></i></button>');
         btnArr.push('<button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="删除" onclick="$.hexo.action.remove(\'' + row.id + '\')"><i class="fa fa-times"></i></button>');
         btnArr.push("</div>");
         return btnArr.join("");

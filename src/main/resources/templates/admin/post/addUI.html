@@ -70,7 +70,7 @@
                                 <div id="btnArr" style="margin: 0 15px 15px 15px"></div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-md-4 col-form-label" for="title"><i class="fa fa-info-circle" title="仅针对 Pure 主题生效"></i> 封面布局</label>
+                                <label class="col-md-4 col-form-label" for="title">封面布局 <i class="fa fa-info-circle" title="仅针对 Pure 主题生效"></i></label>
                                 <div class="col-md-8">
                                     <select class="custom-select" id="coverType" name="coverType">
                                         <option value="4">顶部封面</option>
@@ -82,7 +82,7 @@
 
                             </div>
                             <div class="form-group row">
-                                <label class="col-md-4 col-form-label" for="title">分类</label>
+                                <label class="col-md-4 col-form-label" for="title">文章分类</label>
                                 <div class="col-md-8">
                                     <select class="custom-select" id="categoryId" name="categoryId" data-bv-notempty="true" data-bv-notempty-message="分类不能为空">
                                         <option value="" disabled selected>分类 *</option>
@@ -91,13 +91,13 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-md-4 col-form-label" for="title">标签</label>
+                                <label class="col-md-4 col-form-label" for="title">文章标签</label>
                                 <div class="col-md-8">
                                     <input type="text" id="tags" name="tags" class="js-tags-input form-control" placeholder="标签" data-height="32px" >
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-md-4 col-form-label" for="title">转载</label>
+                                <label class="col-md-4 col-form-label" for="title">是否转载</label>
                                 <div class="col-md-8">
                                     <select class="custom-select" id="reprint" name="reprint" style="height:34px">
                                         <option value="" disabled selected>是否转载</option>
@@ -128,7 +128,7 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-md-4 col-form-label" for="authCode">访问密码</label>
+                                <label class="col-md-4 col-form-label" for="authCode">访问密码 <i class="fa fa-info-circle" title="选填,长度不得超过20"></i></label>
                                 <div class="col-md-8">
                                     <input type="text" id="authCode" name="authCode" class="form-control" placeholder="访问密码">
                                 </div>
@@ -276,7 +276,7 @@
 
         let FileManager = {
             initUploadEvent: function () {
-                $("#btnArr").html('<i class="fa fa-info-circle" title="如不设置封面,则保存文章后系统随机生成"></i> <a id="uploadBtn" href="javascript:void(0)">选择文件</a>&nbsp;&nbsp;<a id="randomBtn" href="javascript:void(0)">随机获取</a><p></p>');
+                $("#btnArr").html('<a id="uploadBtn" href="javascript:void(0)">选择文件</a>&nbsp;&nbsp;<a id="randomBtn" href="javascript:void(0)">随机获取</a> <i class="fa fa-info-circle" title="如不设置封面,则保存文章后系统随机生成"></i><p></p>');
                 $("#uploadBtn").dropzone({
                     method: "POST",
                     url: "/admin/file/upload.json", //上传地址

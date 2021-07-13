@@ -41,6 +41,16 @@ public class Blacklist implements Serializable {
      */
     private String remark;
 
+    /**
+     * 状态 1:永久 2：临时
+     */
+    private Integer state;
+
+    /**
+     * 解除时间
+     */
+    private LocalDateTime expireTime;
+
     @CreateTime
     private LocalDateTime createTime;
 

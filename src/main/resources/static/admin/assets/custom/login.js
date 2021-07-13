@@ -62,7 +62,7 @@
                         window.location.href = resp.data;
                     } else {
                         swal({
-                            title: "",
+                            title: "登录信息",
                             text: resp.message,
                             type: "error",
                             confirmButtonColor: "#DD6B55",

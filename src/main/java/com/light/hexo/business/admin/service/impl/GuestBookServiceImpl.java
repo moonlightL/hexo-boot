@@ -212,7 +212,7 @@ public class GuestBookServiceImpl extends BaseServiceImpl<GuestBook> implements 
             return;
         }
 
-        this.blacklistService.saveBlacklist(ipAddr, "通过留言列表页加入黑名单");
+        this.blacklistService.saveBlacklist(ipAddr, "通过留言列表页加入黑名单", 2);
     }
 
     @Override

@@ -13,3 +13,6 @@ COMMENT='文章定时任务'
 ENGINE=InnoDB
 ;
 
+ALTER TABLE `t_blacklist`
+	ADD COLUMN `state` TINYINT NOT NULL DEFAULT '1' COMMENT '状态 1：永久 2：临时' AFTER `remark`,
+	ADD COLUMN `expire_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '解除时间' AFTER `state`;

@@ -4,6 +4,9 @@ import com.light.hexo.business.admin.model.Blacklist;
 import com.light.hexo.common.base.BaseService;
 import com.light.hexo.common.exception.GlobalException;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 /**
  * @Author MoonlightL
  * @ClassName: BlacklistService
@@ -25,7 +28,16 @@ public interface BlacklistService extends BaseService<Blacklist> {
      * 添加黑名单
      * @param ipAddr
      * @param remark
+     * @param hour    null 表示永久
      * @throws GlobalException
      */
-    void saveBlacklist(String ipAddr, String remark) throws GlobalException;
+    void saveBlacklist(String ipAddr, String remark, Integer hour) throws GlobalException;
+
+    /**
+     * 获取临时黑名单
+     * @param dateTime
+     * @return
+     * @throws GlobalException
+     */
+    List<Blacklist> listExpireBlacks(LocalDateTime dateTime) throws GlobalException;
 }

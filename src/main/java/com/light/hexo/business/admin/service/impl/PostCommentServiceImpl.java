@@ -240,7 +240,7 @@ public class PostCommentServiceImpl extends BaseServiceImpl<PostComment> impleme
             return;
         }
 
-        this.blacklistService.saveBlacklist(ipAddress, "通过评论列表页加入黑名单");
+        this.blacklistService.saveBlacklist(ipAddress, "通过评论列表页加入黑名单", 2);
     }
 
     @Override

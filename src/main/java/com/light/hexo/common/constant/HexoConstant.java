@@ -9,6 +9,8 @@ package com.light.hexo.common.constant;
  */
 public class HexoConstant {
 
+	public static final Integer CHANGE_NUM = 6;
+
 	/**
 	 * 登录用户 KEY
 	 */

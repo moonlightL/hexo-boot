@@ -6,6 +6,8 @@ import com.light.hexo.business.admin.service.BlacklistService;
 import com.light.hexo.common.base.BaseMapper;
 import com.light.hexo.common.base.BaseRequest;
 import com.light.hexo.common.base.BaseServiceImpl;
+import com.light.hexo.common.component.log.ActionEnum;
+import com.light.hexo.common.component.log.OperateLog;
 import com.light.hexo.common.constant.CacheKey;
 import com.light.hexo.common.exception.GlobalException;
 import com.light.hexo.common.model.BlackListRequest;
@@ -15,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -87,11 +90,26 @@ public class BlacklistServiceImpl extends BaseServiceImpl<Blacklist> implements 
     }
 
     @Override
-    public void saveBlacklist(String ipAddr, String remark) throws GlobalException {
+    @OperateLog(value = "操作异常频繁", actionType = ActionEnum.ADMIN_ADD)
+    public void saveBlacklist(String ipAddr, String remark, Integer hour) throws GlobalException {
         Blacklist blacklist = new Blacklist();
         blacklist.setIpAddress(ipAddr).setRemark(remark);
+        if (hour != null) {
+            blacklist.setState(2).setExpireTime(LocalDateTime.now().plusHours(hour));
+        } else {
+            blacklist.setState(1);
+        }
         super.saveModel(blacklist);
         CacheUtil.remove(CacheKey.BLACK_LIST);
+    }
+
+    @Override
+    public List<Blacklist> listExpireBlacks(LocalDateTime dateTime) throws GlobalException {
+        Example example = new Example(Blacklist.class);
+        example.createCriteria()
+               .andEqualTo("state", 2)
+               .andLessThanOrEqualTo("expireTime", dateTime);
+        return this.getBaseMapper().selectByExample(example);
     }
 
 }

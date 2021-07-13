@@ -95,26 +95,30 @@ public class LoginController extends BaseController {
         HttpSession session = httpServletRequest.getSession();
         String capText = (String) session.getAttribute(HexoConstant.CAPTCHA);
         if (!request.getVerifyCode().equalsIgnoreCase(capText)) {
-            this.checkLoginError(httpServletRequest);
-            ExceptionUtil.throwEx(GlobalExceptionEnum.ERROR_VERIFY_CODE_WRONG);
+            int remainNum = this.checkLoginError(httpServletRequest);
+            ExceptionUtil.throwEx(GlobalExceptionEnum.ERROR_VERIFY_CODE_WRONG.getCode(),
+                    GlobalExceptionEnum.ERROR_VERIFY_CODE_WRONG.getMessage() + ", 剩余 " + remainNum + " 次尝试机会");
         }
 
         session.removeAttribute(HexoConstant.CAPTCHA);
 
         User user = this.userService.findUserByUsername(request.getUsername().trim());
         if (user == null) {
-            this.checkLoginError(httpServletRequest);
-            ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_USER_NOT_EXIST);
+            int remainNum = this.checkLoginError(httpServletRequest);
+            ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_USER_NOT_EXIST.getCode(),
+                    HexoExceptionEnum.ERROR_USER_NOT_EXIST.getMessage() + ", 剩余 " + remainNum + " 次尝试机会");
         }
 
         if (!user.getPassword().equals(DigestUtils.md5DigestAsHex(request.getPassword().trim().getBytes()))) {
-            this.checkLoginError(httpServletRequest);
-            ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_USER_PASSWORD_WRONG);
+            int remainNum = this.checkLoginError(httpServletRequest);
+            ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_USER_PASSWORD_WRONG.getCode(),
+                    HexoExceptionEnum.ERROR_USER_PASSWORD_WRONG.getMessage() + ", 剩余 " + remainNum + " 次尝试机会");
         }
 
         if (!user.getRole().equals(1)) {
-            this.checkLoginError(httpServletRequest);
-            ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_STATE_WRONG);
+            int remainNum = this.checkLoginError(httpServletRequest);
+            ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_STATE_WRONG.getCode(),
+                    HexoExceptionEnum.ERROR_STATE_WRONG.getMessage() + ", 剩余 " + remainNum + " 次尝试机会");
         }
 
         if (!user.getState()) {
@@ -143,12 +147,13 @@ public class LoginController extends BaseController {
         return Result.success();
     }
 
-    private void checkLoginError(HttpServletRequest httpServletRequest) {
+    private Integer checkLoginError(HttpServletRequest httpServletRequest) {
         String ipAddr = IpUtil.getIpAddr(httpServletRequest);
         Integer errorNum = CacheUtil.incr(CacheKey.LOGIN_ERROR_NUM + ":" + ipAddr);
-        if (errorNum >= 5) {
-            this.blacklistService.saveBlacklist(ipAddr, "频繁登录失败");
+        if (errorNum >= HexoConstant.CHANGE_NUM) {
+            this.blacklistService.saveBlacklist(ipAddr, "频繁登录失败", 2);
             CacheUtil.remove(CacheKey.LOGIN_ERROR_NUM + ":" + ipAddr);
         }
+        return HexoConstant.CHANGE_NUM - errorNum;
     }
 }

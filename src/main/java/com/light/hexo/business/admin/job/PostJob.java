@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -58,7 +57,7 @@ public class PostJob {
     }
 
     /**
-     * 检测文章任务
+     * 定时发布文章
      */
     @Scheduled(cron = "0 0/1 * * * ?")
     public void checkPostTask() {
@@ -73,12 +72,12 @@ public class PostJob {
             try {
                 Integer postId = postTask.getPostId();
                 this.postService.publishPost(postId);
-
-                postTask.setState(1).setUpdateTime(date);
-                this.postTaskService.updateModel(postTask);
             } catch (GlobalException e) {
                 log.error("checkPostTask 异常: {} ", e.getMessage());
             }
+
+            postTask.setState(1).setUpdateTime(date);
+            this.postTaskService.updateModel(postTask);
         }
     }
 }

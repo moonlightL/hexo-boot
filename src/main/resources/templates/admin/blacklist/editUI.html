@@ -5,11 +5,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, initial-scale=1, shrink-to-fit=no">
     <div th:replace="~{admin/common :: common-link}"></div>
+    <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/bootstrap/css/bootstrap.min.css'}">
+    <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css'}">
+    <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/flatpickr/flatpickr.min.css'}">
 </head>
 <body>
 
 <div class="content">
-    <div class="block">
+    <div class="block block-fx-shadow">
         <div class="block-content">
             <div class="row justify-content-center py-20">
                 <div class="col-xl-6">
@@ -28,6 +31,24 @@
                             </div>
                         </div>
                         <div class="form-group row">
+                            <label class="col-md-4 col-form-label" for="state">状态类型</label>
+                            <div class="col-md-8">
+                                <select class="custom-select" id="state" name="state" th:field="*{state}" style="height:34px">
+                                    <option value="1">永久</option>
+                                    <option value="2">临时</option>
+                                </select> <br><br>
+                            </div>
+                            <div class="col-md-12" id="time"  th:attr="style='display:' + ${vo.state == 2 ? 'block' : 'none'}">
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label" for="expireTime">过期时间</label>
+                                    <div class="col-md-8">
+                                        <input type="text" class="js-flatpickr form-control bg-white" id="expireTime" name="expireTime" placeholder="过期时间"
+                                               data-enable-time="true" data-date-format="Y-m-d H:i:ss" data-time_24hr="true" th:value="${vo.expireTime}">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
                             <div class="col-lg-8 text-center">
                                 <button type="reset" class="btn btn-secondary">重置</button>
                                 <button type="submit" class="btn btn-primary" id="submitBtn">提交</button>
@@ -41,9 +62,23 @@
     </div>
 </div>
 <div th:replace="~{admin/common :: common-script}"></div>
+<script th:src="@{'/admin/assets/js/plugins/bootstrap/js/bootstrap.min.js'}"></script>
+<script th:src="@{'/admin/assets/js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js'}"></script>
+<script th:src="@{'/admin/assets/js/plugins/flatpickr/flatpickr.min.js'}"></script>
 <script type="text/javascript" th:inline="javascript">
 
     $(function(){
+        Codebase.helpers(['flatpickr','datepicker']);
+
+        $("#state").on("change", function () {
+            let val = $(this).val();
+            if (val === "2") {
+                $("#time").show();
+            } else {
+                $("#time").hide();
+            }
+        });
+
         $("#submitBtn").on("click", function () {
             $.hexo.action.save("saveForm");
         });
