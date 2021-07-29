@@ -53,4 +53,9 @@ public class HtmlCompressorFilter implements Filter {
             response.getWriter().write(htmlCompressor.compress(responseWrapper.toString()));
         }
     }
+
+    @Override
+    public void destroy() {
+
+    }
 }
