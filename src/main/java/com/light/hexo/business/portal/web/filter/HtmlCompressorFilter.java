@@ -50,7 +50,12 @@ public class HtmlCompressorFilter implements Filter {
         response.setContentLength(-1);
 
         if (!response.isCommitted()) {
-            response.getWriter().write(htmlCompressor.compress(responseWrapper.toString()));
+            String content = responseWrapper.toString();
+            try {
+                response.getWriter().write(this.htmlCompressor.compress(content));
+            } catch (Exception e) {
+                response.getWriter().write(content);
+            }
         }
     }
 
