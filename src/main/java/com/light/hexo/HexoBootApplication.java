@@ -14,14 +14,14 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import tk.mybatis.spring.annotation.MapperScan;
 
-@ServletComponentScan(basePackages= {"com.light.hexo.business.portal.web.filter"})
-@MapperScan(basePackages = {"com.light.hexo.business.admin.mapper"})
-@EnableScheduling
-@EnableCaching
-@EnableAsync
 @Slf4j
+@EnableAsync
+@EnableCaching
+@MapperScan(basePackages = {"com.light.hexo.business.admin.mapper"})
+@ServletComponentScan(basePackages= {"com.light.hexo.business.portal.web.filter"})
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class, FlywayAutoConfiguration.class, MybatisAutoConfiguration.class})
 public class HexoBootApplication extends SpringBootServletInitializer {
 
