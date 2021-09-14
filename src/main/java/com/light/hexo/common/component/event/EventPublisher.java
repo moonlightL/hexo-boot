@@ -3,6 +3,7 @@ package com.light.hexo.common.component.event;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
 import java.util.Queue;
@@ -21,6 +22,9 @@ public class EventPublisher {
     @Autowired
     private EventServiceFactory eventServiceFactory;
 
+    @Autowired
+    private ThreadPoolTaskExecutor threadPoolTaskExecutor;
+
     private Queue<BaseEvent> eventQueue = new LinkedBlockingQueue<>();
 
     /**
@@ -34,11 +38,12 @@ public class EventPublisher {
 
     @Scheduled(fixedRate = 1000)
     public void dealWithEvent() {
-
         BaseEvent event = this.eventQueue.poll();
         if (event != null) {
-            EventService eventService = this.eventServiceFactory.getInstance(event.getEventType());
-            eventService.dealWithEvent(event);
+            this.threadPoolTaskExecutor.execute(() -> {
+                EventService eventService = this.eventServiceFactory.getInstance(event.getEventType());
+                eventService.dealWithEvent(event);
+            });
         }
     }
 }

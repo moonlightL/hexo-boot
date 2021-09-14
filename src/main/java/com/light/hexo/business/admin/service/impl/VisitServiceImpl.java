@@ -82,10 +82,10 @@ public class VisitServiceImpl extends BaseServiceImpl<Visit> implements VisitSer
 
          Visit record = new Visit();
          record.setIpAddress(ipAddress)
-                 .setBrowser(browser)
-                 .setVisitDate(date)
-                 .setCreateTime(LocalDateTime.now())
-                 .setUpdateTime(record.getCreateTime());
+               .setBrowser(browser)
+               .setVisitDate(date)
+               .setCreateTime(LocalDateTime.now())
+               .setUpdateTime(record.getCreateTime());
          super.saveModel(record);
     }
 

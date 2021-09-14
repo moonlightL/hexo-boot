@@ -173,6 +173,6 @@ public class DynamicServiceImpl extends BaseServiceImpl<Dynamic> implements Dyna
         data.setId(dynamic.getId())
             .setPraiseNum(dynamic.getPraiseNum() + 1)
             .setUpdateTime(LocalDateTime.now());
-        this.updateDynamic(data);
+        this.updateModel(data);
     }
 }
