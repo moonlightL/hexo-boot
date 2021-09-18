@@ -3,27 +3,35 @@ package com.light.hexo.business.admin.service.impl;
 import com.light.hexo.business.admin.constant.HexoExceptionEnum;
 import com.light.hexo.business.admin.mapper.CategoryMapper;
 import com.light.hexo.business.admin.model.Category;
+import com.light.hexo.business.admin.model.event.CategoryEvent;
 import com.light.hexo.business.admin.service.CategoryService;
 import com.light.hexo.business.admin.service.PostService;
 import com.light.hexo.business.portal.constant.PageConstant;
 import com.light.hexo.common.base.BaseMapper;
 import com.light.hexo.common.base.BaseRequest;
 import com.light.hexo.common.base.BaseServiceImpl;
-import com.light.hexo.common.constant.CacheKey;
+import com.light.hexo.common.component.event.BaseEvent;
+import com.light.hexo.common.component.event.EventEnum;
+import com.light.hexo.common.component.event.EventPublisher;
 import com.light.hexo.common.constant.HexoConstant;
 import com.light.hexo.common.exception.GlobalException;
 import com.light.hexo.common.exception.GlobalExceptionEnum;
 import com.light.hexo.common.model.CategoryRequest;
-import com.light.hexo.common.util.CacheUtil;
 import com.light.hexo.common.util.EhcacheUtil;
 import com.light.hexo.common.util.ExceptionUtil;
+import com.light.hexo.common.util.SpringContextUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.context.WebApplicationContext;
 import tk.mybatis.mapper.entity.Example;
+
+import javax.servlet.ServletContext;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,6 +44,7 @@ import java.util.stream.Collectors;
  */
 @CacheConfig(cacheNames = "categoryCache")
 @Service
+@Slf4j
 public class CategoryServiceImpl extends BaseServiceImpl<Category> implements CategoryService {
 
     @Autowired
@@ -43,6 +52,10 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category> implements Ca
 
     @Autowired
     private PostService postService;
+
+    @Autowired
+    @Lazy
+    private EventPublisher eventPublisher;
 
     @Override
     public BaseMapper<Category> getBaseMapper() {
@@ -71,26 +84,6 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category> implements Ca
     }
 
     @Override
-    public int saveModel(Category model) throws GlobalException {
-        int num = super.saveModel(model);
-        if (num > 0) {
-            EhcacheUtil.clearByCacheName("categoryCache");
-            CacheUtil.remove(CacheKey.INDEX_COUNT_INFO);
-        }
-        return num;
-    }
-
-    @Override
-    public int updateModel(Category model) throws GlobalException {
-        int num = super.updateModel(model);
-        if (num > 0) {
-            EhcacheUtil.clearByCacheName("categoryCache");
-            CacheUtil.remove(CacheKey.INDEX_COUNT_INFO);
-        }
-        return num;
-    }
-
-    @Override
     public void saveCategory(Category category) throws GlobalException {
 
         Category db = this.getCategoryByName(category.getName().trim());
@@ -103,6 +96,8 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category> implements Ca
         }
 
         this.saveModel(category);
+        // 清除缓存
+        this.eventPublisher.emit(new CategoryEvent());
     }
 
     @Override
@@ -113,6 +108,8 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category> implements Ca
         }
 
         this.updateModel(category);
+        // 清除缓存
+        this.eventPublisher.emit(new CategoryEvent());
     }
 
     @Override
@@ -138,8 +135,8 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category> implements Ca
             }
         }
 
-        EhcacheUtil.clearByCacheName("categoryCache");
-        CacheUtil.remove(CacheKey.INDEX_COUNT_INFO);
+        // 清除缓存
+        this.eventPublisher.emit(new CategoryEvent());
     }
 
     @Override
@@ -197,5 +194,27 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category> implements Ca
                                 .andEqualTo("state", true);
 
         return this.getBaseMapper().selectOneByExample(example);
+    }
+
+    @Override
+    public EventEnum getEventType() {
+        return EventEnum.CATEGORY;
+    }
+
+    @Override
+    public void dealWithEvent(BaseEvent event) {
+
+        EhcacheUtil.clearByCacheName("categoryCache");
+
+        WebApplicationContext webApplicationContext = (WebApplicationContext) SpringContextUtil.applicationContext;
+        ServletContext servletContext = webApplicationContext.getServletContext();
+        if (servletContext == null) {
+            log.info("===========CategoryService dealWithEvent 获取 servletContext 为空============");
+            return;
+        }
+
+        List<Category> categoryList = this.listCategoriesByIndex();
+        servletContext.setAttribute("categoryList", categoryList);
+        servletContext.setAttribute("categoryNum", categoryList.size());
     }
 }

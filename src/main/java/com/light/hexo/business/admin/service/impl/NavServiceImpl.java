@@ -219,8 +219,8 @@ public class NavServiceImpl extends BaseServiceImpl<Nav> implements NavService {
                 log.info("===========NavService dealWithEvent 获取 servletContext 为空============");
                 return;
             }
-
             this.initNav(servletContext);
+
         } else if (NavEvent.Type.READ.getCode().equals(navEvent.getType().getCode())) {
             Nav nav = this.findById(navEvent.getId());
             if (nav != null) {
@@ -229,8 +229,6 @@ public class NavServiceImpl extends BaseServiceImpl<Nav> implements NavService {
                 super.updateModel(tmp);
             }
         }
-
     }
-
 
 }

@@ -1,8 +1,9 @@
 package com.light.hexo.business.admin.web.listener;
 
+import com.light.hexo.business.admin.model.Category;
 import com.light.hexo.business.admin.model.Config;
-import com.light.hexo.business.admin.service.ConfigService;
-import com.light.hexo.business.admin.service.NavService;
+import com.light.hexo.business.admin.model.FriendLink;
+import com.light.hexo.business.admin.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
@@ -10,6 +11,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 import javax.servlet.ServletContext;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -31,6 +33,18 @@ public class InitListener implements ApplicationListener<ContextRefreshedEvent> 
     @Autowired
     private NavService navService;
 
+    @Autowired
+    private PostService postService;
+
+    @Autowired
+    private TagService tagService;
+
+    @Autowired
+    protected CategoryService categoryService;
+
+    @Autowired
+    protected FriendLinkService friendLinkService;
+
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
         WebApplicationContext webApplicationContext = (WebApplicationContext) contextRefreshedEvent.getApplicationContext();
@@ -47,5 +61,25 @@ public class InitListener implements ApplicationListener<ContextRefreshedEvent> 
 
         this.navService.initNav(servletContext);
         log.info("==========InitListener 初始化[导航数据]===========");
+
+        this.initBlogInfo(servletContext);
+        log.info("==========InitListener 初始化[博客信息]===========");
+    }
+
+    private void initBlogInfo(ServletContext servletContext) {
+
+        // 分类
+        List<Category> categoryList = this.categoryService.listCategoriesByIndex();
+        servletContext.setAttribute("categoryList", categoryList);
+
+        // 友链
+        List<FriendLink> friendLinkList = this.friendLinkService.listFriendLinkByIndex();
+        servletContext.setAttribute("friendLinkList", friendLinkList);
+
+        // 数量（文章数，标签数，分类数，友链数）
+        servletContext.setAttribute("postNum", this.postService.getPostNum());
+        servletContext.setAttribute("tagNum", this.tagService.getTagNum());
+        servletContext.setAttribute("categoryNum", categoryList.size());
+        servletContext.setAttribute("friendLinkNum", friendLinkList.size());
     }
 }

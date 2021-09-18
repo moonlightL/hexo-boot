@@ -2,6 +2,7 @@ package com.light.hexo.business.admin.service;
 
 import com.light.hexo.business.admin.model.FriendLink;
 import com.light.hexo.common.base.BaseService;
+import com.light.hexo.common.component.event.EventService;
 import com.light.hexo.common.exception.GlobalException;
 
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.List;
  * @Description: 友链 Service
  * @DateTime 2020/9/22 17:47
  */
-public interface FriendLinkService extends BaseService<FriendLink> {
+public interface FriendLinkService extends BaseService<FriendLink>, EventService {
 
     /**
      * 批量删除友链

@@ -36,9 +36,11 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.context.WebApplicationContext;
 import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.util.Sqls;
 
+import javax.servlet.ServletContext;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
@@ -170,9 +172,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
         example.createCriteria().andIn("id", idList);
         int num = this.getBaseMapper().deleteByExample(example);
         if (num > 0) {
-            EhcacheUtil.clearByCacheName("postCache");
-            EhcacheUtil.clearByCacheName("categoryCache");
-            CacheUtil.remove(CacheKey.INDEX_COUNT_INFO);
+            this.eventPublisher.emit(new PostEvent(null, PostEvent.Type.POST_NUM));
         }
     }
 
@@ -273,9 +273,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
             this.postTaskService.savePostTask(postId, jobTime);
         }
 
-        EhcacheUtil.clearByCacheName("postCache");
-        EhcacheUtil.clearByCacheName("categoryCache");
-        CacheUtil.remove(CacheKey.INDEX_COUNT_INFO);
+        this.eventPublisher.emit(new PostEvent(null, PostEvent.Type.POST_NUM));
     }
 
     @Override
@@ -381,9 +379,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
             this.postTaskService.savePostTask(postId, jobTime);
         }
 
-        EhcacheUtil.clearByCacheName("postCache");
-        EhcacheUtil.clearByCacheName("categoryCache");
-        CacheUtil.remove(CacheKey.INDEX_COUNT_INFO);
+        this.eventPublisher.emit(new PostEvent(null, PostEvent.Type.POST_NUM));
         CacheUtil.remove(PageConstant.MARKDOWN_KEY + ":" + post.getId() + ":1");
         CacheUtil.remove(PageConstant.MARKDOWN_KEY + ":" + post.getId() + ":2");
     }
@@ -412,7 +408,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
 
         // 清理缓存
         EhcacheUtil.clearAll();
-        CacheUtil.remove(CacheKey.INDEX_COUNT_INFO);
+        this.eventPublisher.emit(new PostEvent(null, PostEvent.Type.POST_NUM));
     }
 
     @Override
@@ -443,7 +439,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
 
             // 清理缓存
             EhcacheUtil.clearAll();
-            CacheUtil.remove(CacheKey.INDEX_COUNT_INFO);
+            this.eventPublisher.emit(new PostEvent(null, PostEvent.Type.POST_NUM));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -539,9 +535,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
             .setLink(post.getYear() + "/" + post.getMonth() + "/" + post.getDay() + "/" + StringUtils.replace(dbPost.getTitle(), " ", "-") + "/");
         this.updateModel(post);
         this.baiDuPushService.push2BaiDu(post.getLink());
-        EhcacheUtil.clearByCacheName("postCache");
-        EhcacheUtil.clearByCacheName("categoryCache");
-        CacheUtil.remove(CacheKey.INDEX_COUNT_INFO);
+        this.eventPublisher.emit(new PostEvent(null, PostEvent.Type.POST_NUM));
     }
 
     @Override
@@ -883,24 +877,44 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
     @Override
     public void dealWithEvent(BaseEvent event) {
         PostEvent postEvent = (PostEvent) event;
-        Post post = this.findById(postEvent.getId());
-        if (post == null) {
-            return;
+
+        if (postEvent.getType().getCode().equals(PostEvent.Type.POST_NUM.getCode())) {
+
+            EhcacheUtil.clearByCacheName("postCache");
+            EhcacheUtil.clearByCacheName("categoryCache");
+
+            WebApplicationContext webApplicationContext = (WebApplicationContext) SpringContextUtil.applicationContext;
+            ServletContext servletContext = webApplicationContext.getServletContext();
+            if (servletContext == null) {
+                log.info("===========PostService dealWithEvent 获取 servletContext 为空============");
+                return;
+            }
+
+            servletContext.setAttribute("postNum", this.getPostNum());
+            servletContext.setAttribute("tagNum", this.tagService.getTagNum());
+
+        } else {
+
+            Post post = this.findById(postEvent.getId());
+            if (post == null) {
+                return;
+            }
+
+            Post data = new Post();
+            data.setId(post.getId());
+            if (postEvent.getType().getCode().equals(PostEvent.Type.READ.getCode())) {
+                data.setReadNum(post.getReadNum() + 1);
+            } else if (postEvent.getType().getCode().equals(PostEvent.Type.PRAISE.getCode())) {
+                data.setPraiseNum(post.getPraiseNum() + 1);
+            } else if (postEvent.getType().getCode().equals(PostEvent.Type.COMMENT_ADD.getCode())) {
+                data.setCommentNum(post.getCommentNum() + 1);
+            } else if (postEvent.getType().getCode().equals(PostEvent.Type.COMMENT_MINUS.getCode())) {
+                data.setCommentNum(post.getCommentNum() - 1);
+            }
+            data.setUpdateTime(LocalDateTime.now());
+            this.updateModel(data);
         }
 
-        Post data = new Post();
-        data.setId(post.getId());
-        if (postEvent.getType().getCode().equals(PostEvent.Type.READ.getCode())) {
-            data.setReadNum(post.getReadNum() + 1);
-        } else if (postEvent.getType().getCode().equals(PostEvent.Type.PRAISE.getCode())) {
-            data.setPraiseNum(post.getPraiseNum() + 1);
-        } else if (postEvent.getType().getCode().equals(PostEvent.Type.COMMENT_ADD.getCode())) {
-            data.setCommentNum(post.getCommentNum() + 1);
-        } else if (postEvent.getType().getCode().equals(PostEvent.Type.COMMENT_MINUS.getCode())) {
-            data.setCommentNum(post.getCommentNum() - 1);
-        }
-        data.setUpdateTime(LocalDateTime.now());
-        this.updateModel(data);
     }
 
     private String interceptContent(String content, boolean isMarkdown) {

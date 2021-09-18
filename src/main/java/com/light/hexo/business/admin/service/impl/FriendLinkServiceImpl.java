@@ -3,23 +3,30 @@ package com.light.hexo.business.admin.service.impl;
 import com.light.hexo.business.admin.mapper.FriendLinkMapper;
 import com.light.hexo.business.admin.model.FriendLink;
 import com.light.hexo.business.admin.model.Tag;
+import com.light.hexo.business.admin.model.event.FriendLinkEvent;
 import com.light.hexo.business.admin.service.FriendLinkService;
 import com.light.hexo.business.portal.constant.PageConstant;
 import com.light.hexo.common.base.BaseMapper;
 import com.light.hexo.common.base.BaseRequest;
 import com.light.hexo.common.base.BaseServiceImpl;
-import com.light.hexo.common.constant.CacheKey;
+import com.light.hexo.common.component.event.BaseEvent;
+import com.light.hexo.common.component.event.EventEnum;
+import com.light.hexo.common.component.event.EventPublisher;
 import com.light.hexo.common.exception.GlobalException;
 import com.light.hexo.common.model.FriendLinkRequest;
-import com.light.hexo.common.util.CacheUtil;
 import com.light.hexo.common.util.EhcacheUtil;
+import com.light.hexo.common.util.SpringContextUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.WebApplicationContext;
 import tk.mybatis.mapper.entity.Example;
 
+import javax.servlet.ServletContext;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,10 +39,15 @@ import java.util.stream.Collectors;
  */
 @CacheConfig(cacheNames = "friendLinkCache")
 @Service
+@Slf4j
 public class FriendLinkServiceImpl extends BaseServiceImpl<FriendLink> implements FriendLinkService {
 
     @Autowired
     private FriendLinkMapper friendLinkMapper;
+
+    @Autowired
+    @Lazy
+    private EventPublisher eventPublisher;
 
     @Override
     public BaseMapper<FriendLink> getBaseMapper() {
@@ -63,16 +75,14 @@ public class FriendLinkServiceImpl extends BaseServiceImpl<FriendLink> implement
     public void saveFriendLink(FriendLink friendLink) throws GlobalException {
         super.saveModel(friendLink);
         // 清除缓存
-        EhcacheUtil.clearByCacheName("friendLinkCache");
-        CacheUtil.remove(CacheKey.INDEX_COUNT_INFO);
+        this.eventPublisher.emit(new FriendLinkEvent());
     }
 
     @Override
     public void updateFriendLink(FriendLink friendLink) throws GlobalException {
         super.updateModel(friendLink);
         // 清除缓存
-        EhcacheUtil.clearByCacheName("friendLinkCache");
-        CacheUtil.remove(CacheKey.INDEX_COUNT_INFO);
+        this.eventPublisher.emit(new FriendLinkEvent());
     }
 
     @Override
@@ -82,8 +92,7 @@ public class FriendLinkServiceImpl extends BaseServiceImpl<FriendLink> implement
         example.createCriteria().andIn("id", idList);
         this.getBaseMapper().deleteByExample(example);
         // 清除缓存
-        EhcacheUtil.clearByCacheName("friendLinkCache");
-        CacheUtil.remove(CacheKey.INDEX_COUNT_INFO);
+        this.eventPublisher.emit(new FriendLinkEvent());
     }
 
     @Cacheable(key = "'" + PageConstant.FRIEND_LINK_LIST + "'")
@@ -98,5 +107,27 @@ public class FriendLinkServiceImpl extends BaseServiceImpl<FriendLink> implement
     public Integer getFriendLinkNum() throws GlobalException {
         Example example = new Example(FriendLink.class);
         return this.getBaseMapper().selectCountByExample(example);
+    }
+
+    @Override
+    public EventEnum getEventType() {
+        return EventEnum.FRIEND_LINK;
+    }
+
+    @Override
+    public void dealWithEvent(BaseEvent event) {
+
+        EhcacheUtil.clearByCacheName("friendLinkCache");
+
+        WebApplicationContext webApplicationContext = (WebApplicationContext) SpringContextUtil.applicationContext;
+        ServletContext servletContext = webApplicationContext.getServletContext();
+        if (servletContext == null) {
+            log.info("===========FriendService dealWithEvent 获取 servletContext 为空============");
+            return;
+        }
+
+        List<FriendLink> friendLinkList = this.listFriendLinkByIndex();
+        servletContext.setAttribute("friendLinkList", friendLinkList);
+        servletContext.setAttribute("friendLinkNum", friendLinkList.size());
     }
 }

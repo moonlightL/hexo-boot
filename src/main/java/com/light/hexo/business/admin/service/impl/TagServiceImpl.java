@@ -2,19 +2,28 @@ package com.light.hexo.business.admin.service.impl;
 
 import com.light.hexo.business.admin.mapper.TagMapper;
 import com.light.hexo.business.admin.model.Tag;
+import com.light.hexo.business.admin.model.event.TagEvent;
 import com.light.hexo.business.admin.service.TagService;
 import com.light.hexo.business.portal.constant.PageConstant;
 import com.light.hexo.common.base.BaseMapper;
 import com.light.hexo.common.base.BaseRequest;
 import com.light.hexo.common.base.BaseServiceImpl;
+import com.light.hexo.common.component.event.BaseEvent;
+import com.light.hexo.common.component.event.EventEnum;
+import com.light.hexo.common.component.event.EventPublisher;
 import com.light.hexo.common.exception.GlobalException;
 import com.light.hexo.common.model.TagRequest;
+import com.light.hexo.common.util.SpringContextUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.WebApplicationContext;
 import tk.mybatis.mapper.entity.Example;
+import javax.servlet.ServletContext;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,10 +39,15 @@ import java.util.stream.Collectors;
  */
 @CacheConfig(cacheNames = "tagCache")
 @Service
+@Slf4j
 public class TagServiceImpl extends BaseServiceImpl<Tag> implements TagService {
 
     @Autowired
     private TagMapper tagMapper;
+
+    @Autowired
+    @Lazy
+    private EventPublisher eventPublisher;
 
     @Override
     public BaseMapper<Tag> getBaseMapper() {
@@ -63,6 +77,8 @@ public class TagServiceImpl extends BaseServiceImpl<Tag> implements TagService {
         Example example = new Example(Tag.class);
         example.createCriteria().andIn("id", idList);
         this.getBaseMapper().deleteByExample(example);
+        // 清除缓存
+        this.eventPublisher.emit(new TagEvent());
     }
 
     @Override
@@ -115,5 +131,23 @@ public class TagServiceImpl extends BaseServiceImpl<Tag> implements TagService {
         example.createCriteria().andEqualTo("name", tagName);
 
         return this.getBaseMapper().selectOneByExample(example);
+    }
+
+    @Override
+    public EventEnum getEventType() {
+        return EventEnum.TAG;
+    }
+
+    @Override
+    public void dealWithEvent(BaseEvent event) {
+
+        WebApplicationContext webApplicationContext = (WebApplicationContext) SpringContextUtil.applicationContext;
+        ServletContext servletContext = webApplicationContext.getServletContext();
+        if (servletContext == null) {
+            log.info("===========TagService dealWithEvent 获取 servletContext 为空============");
+            return;
+        }
+
+        servletContext.setAttribute("tagNum", this.getTagNum());
     }
 }

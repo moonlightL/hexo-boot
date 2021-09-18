@@ -2,6 +2,7 @@ package com.light.hexo.business.admin.service;
 
 import com.light.hexo.business.admin.model.Tag;
 import com.light.hexo.common.base.BaseService;
+import com.light.hexo.common.component.event.EventService;
 import com.light.hexo.common.exception.GlobalException;
 
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.List;
  * @Description: 标签 Service
  * @DateTime 2020/8/3 16:29
  */
-public interface TagService extends BaseService<Tag> {
+public interface TagService extends BaseService<Tag>, EventService {
 
     /**
      * 批量删除标签

@@ -1,6 +1,7 @@
 package com.light.hexo.business.admin.service;
 import com.light.hexo.business.admin.model.Category;
 import com.light.hexo.common.base.BaseService;
+import com.light.hexo.common.component.event.EventService;
 import com.light.hexo.common.exception.GlobalException;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,7 +14,7 @@ import java.util.List;
  * @Description: 分类 Service
  * @DateTime 2020/8/3 11:55
  */
-public interface CategoryService extends BaseService<Category> {
+public interface CategoryService extends BaseService<Category>, EventService {
 
     /**
      * 保存分类

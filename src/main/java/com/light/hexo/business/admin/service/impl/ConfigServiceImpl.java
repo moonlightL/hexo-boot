@@ -132,14 +132,16 @@ public class ConfigServiceImpl extends BaseServiceImpl<Config> implements Config
 
     @Override
     public void dealWithEvent(BaseEvent event) {
-        List<Config> configList = super.findAll();
-        Map<String, String> configMap = configList.stream().collect(Collectors.toMap(Config::getConfigKey, Config::getConfigValue,  (v1, v2) -> v2));
+
         WebApplicationContext webApplicationContext = (WebApplicationContext) SpringContextUtil.applicationContext;
         ServletContext servletContext = webApplicationContext.getServletContext();
         if (servletContext == null) {
             log.info("===========ConfigService dealWithEvent 获取 servletContext 为空============");
             return;
         }
+
+        List<Config> configList = super.findAll();
+        Map<String, String> configMap = configList.stream().collect(Collectors.toMap(Config::getConfigKey, Config::getConfigValue,  (v1, v2) -> v2));
         servletContext.setAttribute("configMap", configMap);
     }
 }

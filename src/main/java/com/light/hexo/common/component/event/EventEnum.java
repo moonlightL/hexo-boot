@@ -19,7 +19,9 @@ public enum  EventEnum {
     MESSAGE(5, "消息事件"),
     NAV(6, "导航事件"),
     DYNAMIC(7, "动态事件"),
-
+    CATEGORY(8, "分类事件"),
+    FRIEND_LINK(9, "友链事件"),
+    TAG(10, "标签")
     ;
 
     EventEnum(int code, String message) {

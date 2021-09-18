@@ -70,10 +70,6 @@ public class CommonController {
 
     protected String render(String pageName, boolean isDetail, Map<String, Object> resultMap) {
 
-        // 数量
-        Map<String, Integer> countInfo = this.getCountInfo();
-        resultMap.put("countInfo", countInfo);
-
         // 主题
         Theme activeTheme = this.themeService.getActiveTheme(true);
         String themeName = (activeTheme == null ? "default" : activeTheme.getName());
@@ -82,15 +78,6 @@ public class CommonController {
         resultMap.put("prefix", "/theme/" + themeName);
         resultMap.put("activeTheme", activeTheme);
         resultMap.put("md", MarkdownUtil.class);
-
-        if ("next".equals(themeName)) {
-            // 友链
-            List<FriendLink> friendLinkList = this.friendLinkService.listFriendLinkByIndex();
-            resultMap.put("friendLinkList", friendLinkList);
-
-            List<Category> categoryList = this.categoryService.listCategoriesByIndex();
-            resultMap.put("categoryList", categoryList);
-        }
 
         this.settingBasePath(activeTheme, resultMap);
 
@@ -117,28 +104,6 @@ public class CommonController {
         } else {
             resultMap.put("baseLink", "/theme/" + themeName);
         }
-    }
-
-
-    private Map<String, Integer> getCountInfo() {
-
-        String key = CacheKey.INDEX_COUNT_INFO;
-        Map<String, Integer> result = CacheUtil.get(key);
-        if (result == null) {
-            result = new HashMap<>(4);
-            // 文章数
-            result.put("postNum", this.postService.getPostNum());
-            // 分类数
-            result.put("categoryNum", this.categoryService.getCategoryNum());
-            // 标签数
-            result.put("tagNum", this.tagService.getTagNum());
-            // 友链数
-            result.put("friendLinkNum", this.friendLinkService.getFriendLinkNum());
-            // 缓存一天
-            CacheUtil.put(key, result, 24 * 60 * 60 * 1000);
-        }
-
-        return result;
     }
 
 }

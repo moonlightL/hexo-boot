@@ -34,7 +34,9 @@ public class PostEvent extends BaseEvent {
         READ(1, "浏览"),
         PRAISE(2, "点赞"),
         COMMENT_ADD(3, "新增评论"),
-        COMMENT_MINUS(4, "减少评论");
+        COMMENT_MINUS(4, "减少评论"),
+        POST_NUM(5, "文章数量")
+        ;
 
         Integer code;
         String remark;
