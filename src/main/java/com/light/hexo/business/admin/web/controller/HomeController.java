@@ -145,7 +145,7 @@ public class HomeController extends BaseController {
     @RequestMapping("/top5PostList.json")
     @ResponseBody
     public Result top5PostList() {
-        List<Post> list = this.postService.listTop5();
+        List<Post> list = this.postService.listTop5ByReadNum();
         return Result.success(list);
     }
 

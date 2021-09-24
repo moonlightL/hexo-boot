@@ -3,6 +3,7 @@ package com.light.hexo.business.admin.web.listener;
 import com.light.hexo.business.admin.model.Category;
 import com.light.hexo.business.admin.model.Config;
 import com.light.hexo.business.admin.model.FriendLink;
+import com.light.hexo.business.admin.model.Post;
 import com.light.hexo.business.admin.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,7 +68,6 @@ public class InitListener implements ApplicationListener<ContextRefreshedEvent> 
     }
 
     private void initBlogInfo(ServletContext servletContext) {
-
         // 分类
         List<Category> categoryList = this.categoryService.listCategoriesByIndex();
         servletContext.setAttribute("categoryList", categoryList);
@@ -81,5 +81,9 @@ public class InitListener implements ApplicationListener<ContextRefreshedEvent> 
         servletContext.setAttribute("tagNum", this.tagService.getTagNum());
         servletContext.setAttribute("categoryNum", categoryList.size());
         servletContext.setAttribute("friendLinkNum", friendLinkList.size());
+
+        // 推荐文章（点赞数排名）
+        List<Post> recommendPostList = this.postService.listTop5ByPraiseNum();
+        servletContext.setAttribute("recommendPostList", recommendPostList);
     }
 }

@@ -489,7 +489,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
     }
 
     @Override
-    public List<Post> listTop5() throws GlobalException {
+    public List<Post> listTop5ByReadNum() throws GlobalException {
         Example example = Example.builder(Post.class)
                 .select("id", "title", "link", "customLink", "readNum")
                 .orderByDesc("readNum")
@@ -546,6 +546,27 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
         }
         select.orderByDesc("createTime");
         Example example = select.build();
+        List<Post> postList = this.getBaseMapper().selectByExample(example);
+        if (CollectionUtils.isEmpty(postList)) {
+            return postList;
+        }
+
+        for (Post post : postList) {
+            if (StringUtils.isNotBlank(post.getCustomLink())) {
+                post.setLink(post.getCustomLink() + ".html");
+            }
+        }
+
+        return postList;
+    }
+
+    @Override
+    public List<Post> listTop5ByPraiseNum() throws GlobalException {
+        Example example = Example.builder(Post.class)
+                .select("id", "title", "link", "customLink", "readNum", "praiseNum", "coverUrl")
+                .orderByDesc("praiseNum")
+                .build();
+        PageHelper.startPage(1, 5);
         List<Post> postList = this.getBaseMapper().selectByExample(example);
         if (CollectionUtils.isEmpty(postList)) {
             return postList;

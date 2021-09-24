@@ -76,11 +76,11 @@ public interface PostService extends BaseService<Post>, EventService {
     int getPostNum() throws GlobalException;
 
     /**
-     * 获取 top5 文章列表
+     * 获取热门文章列表
      * @return
      * @throws GlobalException
      */
-    List<Post> listTop5() throws GlobalException;
+    List<Post> listTop5ByReadNum() throws GlobalException;
 
     /**
      * 发表文章
@@ -97,6 +97,20 @@ public interface PostService extends BaseService<Post>, EventService {
      */
     List<Post> listPostByIdList(List<Integer> postIdList) throws GlobalException;
 
+    /**
+     * 获取推荐文章
+     * @return
+     * @throws GlobalException
+     */
+    List<Post> listTop5ByPraiseNum() throws GlobalException;
+
+
+    /**
+     * 获取 contentHtml 为空的文章列表（定时器任务专用）
+     * @return
+     * @throws GlobalException
+     */
+    List<Post> listEmptyHtml() throws GlobalException;
 
     // ================================= 以下为前端页面请求 ===============================
 
@@ -195,10 +209,5 @@ public interface PostService extends BaseService<Post>, EventService {
      */
     List<Post> findTopList() throws GlobalException;
 
-    /**
-     * 获取 contentHtml 为空的文章列表（定时器任务专用）
-     * @return
-     * @throws GlobalException
-     */
-    List<Post> listEmptyHtml() throws GlobalException;
+
 }
