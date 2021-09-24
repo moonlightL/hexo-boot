@@ -78,6 +78,7 @@ public class GuestBookController extends BaseController {
         User user = (User) session.getAttribute(HexoConstant.CURRENT_USER);
         guestBook.setUserId(user.getId());
         guestBook.setNickname(user.getNickname().trim());
+        guestBook.setAvatar(user.getAvatar());
         guestBook.setBrowser(BrowserUtil.getBrowserName(httpServletRequest));
         guestBook.setIpAddress(IpUtil.getIpAddr(httpServletRequest));
         this.guestBookService.saveGuestBook(guestBook);
@@ -127,6 +128,7 @@ public class GuestBookController extends BaseController {
         User user = (User) session.getAttribute(HexoConstant.CURRENT_USER);
         guestBook.setUserId(user.getId());
         guestBook.setNickname(user.getNickname());
+        guestBook.setAvatar(user.getAvatar());
         guestBook.setBrowser(BrowserUtil.getBrowserName(httpServletRequest));
         guestBook.setIpAddress(IpUtil.getIpAddr(httpServletRequest));
         this.guestBookService.replyByAdmin(guestBook);

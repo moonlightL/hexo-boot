@@ -85,6 +85,7 @@ public class PostCommentController extends BaseController {
         User user = (User) httpServletRequest.getSession().getAttribute(HexoConstant.CURRENT_USER);
         postComment.setUserId(user.getId());
         postComment.setNickname(user.getNickname());
+        postComment.setAvatar(user.getAvatar());
         postComment.setBrowser(BrowserUtil.getBrowserName(httpServletRequest));
         postComment.setIpAddress(IpUtil.getIpAddr(httpServletRequest));
         this.postCommentService.savePostComment(postComment);
@@ -133,6 +134,7 @@ public class PostCommentController extends BaseController {
         User user = (User) httpServletRequest.getSession().getAttribute(HexoConstant.CURRENT_USER);
         postComment.setUserId(user.getId());
         postComment.setNickname(user.getNickname().trim());
+        postComment.setAvatar(user.getAvatar());
         postComment.setBrowser(BrowserUtil.getBrowserName(httpServletRequest));
         postComment.setIpAddress(IpUtil.getIpAddr(httpServletRequest));
         this.postCommentService.replyByAdmin(postComment);
