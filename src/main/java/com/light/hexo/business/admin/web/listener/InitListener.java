@@ -1,9 +1,6 @@
 package com.light.hexo.business.admin.web.listener;
 
-import com.light.hexo.business.admin.model.Category;
-import com.light.hexo.business.admin.model.Config;
-import com.light.hexo.business.admin.model.FriendLink;
-import com.light.hexo.business.admin.model.Post;
+import com.light.hexo.business.admin.model.*;
 import com.light.hexo.business.admin.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,6 +68,10 @@ public class InitListener implements ApplicationListener<ContextRefreshedEvent> 
         // 分类
         List<Category> categoryList = this.categoryService.listCategoriesByIndex();
         servletContext.setAttribute("categoryList", categoryList);
+
+        // 标签
+        List<Tag> tagList = this.tagService.listTagsByIndex();
+        servletContext.setAttribute("tagList", tagList);
 
         // 友链
         List<FriendLink> friendLinkList = this.friendLinkService.listFriendLinkByIndex();

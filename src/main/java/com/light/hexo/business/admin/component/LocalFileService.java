@@ -57,9 +57,10 @@ public class LocalFileService implements FileService {
 
             File dest = new File(uploadDir, fileRequest.getFilename());
             FileUtils.copyToFile(bis, dest);
+            String blogPage = this.configService.getConfigValue(ConfigEnum.HOME_PAGE.getName());
             fileResponse.setSuccess(true)
                     .setPath(dest.getAbsolutePath())
-                    .setUrl("http://" + IpUtil.getHostIp() + ":" + environment.getProperty("server.port") + "/images/" + dest.getName());
+                    .setUrl((StringUtils.isNotBlank(blogPage) ? blogPage : "http://" + IpUtil.getHostIp()) + ":" + environment.getProperty("server.port") + "/images/" + dest.getName());
             return fileResponse;
 
         } catch (GlobalException e) {
