@@ -83,3 +83,4 @@ blog:
   theme-dir: ${blog.home-dir}templates/theme/
   attachment-dir: ${blog.home-dir}attachments/
   log-dir: ${blog.home-dir}logs/
+  version: 3.2

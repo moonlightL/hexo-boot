@@ -27,4 +27,6 @@ public class BlogProperty {
     private String attachmentDir;
 
     private String logDir;
+
+    private String version;
 }

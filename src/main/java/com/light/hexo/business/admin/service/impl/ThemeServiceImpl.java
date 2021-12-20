@@ -240,7 +240,7 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
     }
 
     @Override
-    public void fetchTheme(String themeUrl) throws GlobalException {
+    public boolean fetchTheme(String themeUrl) throws GlobalException {
 
         int index = themeUrl.indexOf("hexo-boot-theme");
         if (index < 0) {
@@ -277,11 +277,14 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
             ) {
 
             log.info("Cloning from " + themeUrl + " to " + git.getRepository());
+
+            return true;
         } catch (GitAPIException e) {
             e.printStackTrace();
             log.info(e.getMessage());
         }
 
+        return false;
     }
 
     @Override

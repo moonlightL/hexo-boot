@@ -139,8 +139,8 @@ public class ThemeController extends BaseController {
     @ResponseBody
     @OperateLog(value = "拉取主题", actionType = ActionEnum.ADMIN_ADD)
     public Result fetchTheme(@RequestParam String themeUrl) {
-        this.themeService.fetchTheme(themeUrl);
-        return Result.success();
+        boolean result = this.themeService.fetchTheme(themeUrl);
+        return result ? Result.success() : Result.fail();
     }
 
     /**

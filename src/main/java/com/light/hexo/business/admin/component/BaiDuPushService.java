@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class BaiDuPushService {
 
-    private static final String BAIDU_PUSH_URL = "http://data.zz.baidu.com/urls?site=HOME_PAGE&token=TOKEN";
+    private static final String BAI_DU_PUSH_URL = "http://data.zz.baidu.com/urls?site=HOME_PAGE&token=TOKEN";
 
     @Autowired
     private ConfigService configService;
@@ -44,7 +44,7 @@ public class BaiDuPushService {
             return;
         }
 
-        String requestUrl = BAIDU_PUSH_URL.replace("HOME_PAGE", home_page).replace("TOKEN", bai_du_push_token);
+        String requestUrl = BAI_DU_PUSH_URL.replace("HOME_PAGE", home_page).replace("TOKEN", bai_du_push_token);
         String result = HttpClientUtil.sendPost(requestUrl, home_page + "/" + url);
 
         log.info("===== push2BaiDu result:{}=====", result);

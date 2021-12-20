@@ -10,6 +10,11 @@ package com.light.hexo.common.constant;
 public final class CacheKey {
 
     /**
+     * 首页数量信息
+     */
+    public static final String INDEX_COUNT_INFO = "index:count:info";
+
+    /**
      * 导航列表缓存 key
      */
     public static final String NAV_LIST = "nav:list";

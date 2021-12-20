@@ -1,13 +1,19 @@
 package com.light.hexo.business.portal.common;
 
+import com.light.hexo.business.admin.config.BlogProperty;
 import com.light.hexo.business.admin.model.Theme;
 import com.light.hexo.business.admin.service.*;
 import com.light.hexo.common.component.event.EventPublisher;
+import com.light.hexo.common.constant.CacheKey;
+import com.light.hexo.common.util.CacheUtil;
 import com.light.hexo.common.util.MarkdownUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -62,6 +68,9 @@ public class CommonController {
     @Autowired
     protected EventPublisher eventPublisher;
 
+    @Autowired
+    private BlogProperty blogProperty;
+
     protected String render(String pageName, boolean isDetail, Map<String, Object> resultMap) {
 
         // 主题
@@ -73,12 +82,19 @@ public class CommonController {
         resultMap.put("activeTheme", activeTheme);
         resultMap.put("md", MarkdownUtil.class);
 
-        this.settingBasePath(activeTheme, resultMap);
+        this.settingBaseLink(activeTheme, resultMap);
 
-        return "theme/" +  themeName + "/" + pageName;
+        String version = this.blogProperty.getVersion();
+        if (StringUtils.isBlank(version) || Double.valueOf(version) > 3.0) {
+            // 数量，兼容老版本主题
+            Map<String, Integer> countInfo = this.getCountInfo();
+            resultMap.put("countInfo", countInfo);
+        }
+
+        return String.format("theme/%s/%s", themeName, pageName);
     }
 
-    private void settingBasePath(Theme activeTheme, Map<String, Object> resultMap) {
+    private void settingBaseLink(Theme activeTheme, Map<String, Object> resultMap) {
         if (activeTheme == null) {
             resultMap.put("baseLink", "/theme/default");
             return;
@@ -98,6 +114,28 @@ public class CommonController {
         } else {
             resultMap.put("baseLink", "/theme/" + themeName);
         }
+    }
+
+
+    private Map<String, Integer> getCountInfo() {
+
+        String key = CacheKey.INDEX_COUNT_INFO;
+        Map<String, Integer> result = CacheUtil.get(key);
+        if (result == null) {
+            result = new HashMap<>(4);
+            // 文章数
+            result.put("postNum", this.postService.getPostNum());
+            // 分类数
+            result.put("categoryNum", this.categoryService.getCategoryNum());
+            // 标签数
+            result.put("tagNum", this.tagService.getTagNum());
+            // 友链数
+            result.put("friendLinkNum", this.friendLinkService.getFriendLinkNum());
+            // 缓存一天
+            CacheUtil.put(key, result, 24 * 60 * 60 * 1000);
+        }
+
+        return result;
     }
 
 }

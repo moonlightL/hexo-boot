@@ -91,7 +91,7 @@ public interface ThemeService extends BaseService<Theme> {
      * @throws GlobalException
      * @throws IOException
      */
-    void fetchTheme(String themeUrl) throws GlobalException;
+    boolean fetchTheme(String themeUrl) throws GlobalException;
 
     /**
      * 解压主题
