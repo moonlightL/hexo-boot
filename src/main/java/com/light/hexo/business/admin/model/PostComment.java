@@ -2,11 +2,10 @@ package com.light.hexo.business.admin.model;
 
 import com.light.hexo.common.component.mybatis.CreateTime;
 import com.light.hexo.common.component.mybatis.UpdateTime;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
-import org.springframework.transaction.annotation.Transactional;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -19,7 +18,8 @@ import java.util.List;
  * @Description: 文章评论
  * @DateTime 2020/8/21 11:47
  */
-@Data
+@Setter
+@Getter
 @Accessors(chain = true)
 @ToString
 @Table(name = "t_post_comment")

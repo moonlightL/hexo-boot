@@ -3,7 +3,8 @@ package com.light.hexo.business.admin.model;
 import com.light.hexo.common.component.mybatis.CreateTime;
 import com.light.hexo.common.component.mybatis.UpdateTime;
 import com.light.hexo.common.util.DateUtil;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
@@ -21,7 +22,8 @@ import java.time.LocalDateTime;
  * @Description: 消息
  * @DateTime 2020/9/18 15:00
  */
-@Data
+@Setter
+@Getter
 @Accessors(chain = true)
 @ToString
 @Table(name = "t_message")

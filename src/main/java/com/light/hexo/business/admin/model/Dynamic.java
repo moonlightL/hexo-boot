@@ -2,7 +2,8 @@ package com.light.hexo.business.admin.model;
 
 import com.light.hexo.common.component.mybatis.CreateTime;
 import com.light.hexo.common.component.mybatis.UpdateTime;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
@@ -20,7 +21,8 @@ import java.time.LocalDateTime;
  * @Description: 动态
  * @DateTime 2021/6/23 14:54
  */
-@Data
+@Setter
+@Getter
 @Accessors(chain = true)
 @ToString
 @Table(name = "t_dynamic")

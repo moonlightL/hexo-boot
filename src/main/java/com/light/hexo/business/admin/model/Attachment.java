@@ -4,10 +4,10 @@ import com.light.hexo.common.component.mybatis.CreateTime;
 import com.light.hexo.common.component.mybatis.UpdateTime;
 import com.light.hexo.common.util.DateUtil;
 import com.light.hexo.common.util.FileSizeUtil;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
-
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -22,7 +22,8 @@ import java.util.Date;
  * @Description: 附件
  * @DateTime 2020/9/10 16:05
  */
-@Data
+@Setter
+@Getter
 @Accessors(chain = true)
 @ToString
 @Table(name = "t_attachment")

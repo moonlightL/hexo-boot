@@ -21,7 +21,8 @@ public enum  EventEnum {
     DYNAMIC(7, "动态事件"),
     CATEGORY(8, "分类事件"),
     FRIEND_LINK(9, "友链事件"),
-    TAG(10, "标签")
+    TAG(10, "标签"),
+    ALBUM(11, "专辑"),
     ;
 
     EventEnum(int code, String message) {

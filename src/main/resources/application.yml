@@ -28,8 +28,8 @@ spring:
     date-format: yyyy-MM-dd HH:mm:ss
   servlet:
     multipart:
-      max-file-size:  10MB
-      max-request-size:  30MB
+      max-file-size:  100MB
+      max-request-size:  100MB
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     druid:

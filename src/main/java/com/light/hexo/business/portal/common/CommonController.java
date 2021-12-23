@@ -66,6 +66,12 @@ public class CommonController {
     protected DynamicService dynamicService;
 
     @Autowired
+    protected AlbumService albumService;
+
+    @Autowired
+    protected AlbumDetailService albumDetailService;
+
+    @Autowired
     protected EventPublisher eventPublisher;
 
     @Autowired

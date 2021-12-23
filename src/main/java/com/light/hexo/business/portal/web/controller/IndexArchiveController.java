@@ -1,16 +1,10 @@
 package com.light.hexo.business.portal.web.controller;
 
-import com.light.hexo.business.admin.model.Nav;
-import com.light.hexo.business.admin.model.Post;
-import com.light.hexo.business.admin.model.Theme;
-import com.light.hexo.business.admin.model.event.NavEvent;
 import com.light.hexo.business.portal.common.CommonController;
 import com.light.hexo.business.portal.model.HexoPageInfo;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,9 +27,7 @@ public class IndexArchiveController extends CommonController {
         pageNum = pageNum == null ? 1 : pageNum;
         HexoPageInfo pageInfo =  this.postService.archivePostsByIndex(pageNum, PAGE_SIZE);
         resultMap.put("pageInfo", pageInfo);
-        Nav nav = this.navService.findByLink("/archives/");
-        resultMap.put("currentNav", nav);
-        this.eventPublisher.emit(new NavEvent(nav.getId(), NavEvent.Type.READ));
+        resultMap.put("currentNav", this.navService.findByLink("/archives/"));
         return render("archives", false, resultMap);
     }
 }

@@ -3,18 +3,14 @@ package com.light.hexo.business.portal.web.controller;
 import com.light.hexo.business.admin.constant.ConfigEnum;
 import com.light.hexo.business.admin.model.*;
 import com.light.hexo.business.admin.model.event.NavEvent;
-import com.light.hexo.business.admin.model.event.PostEvent;
 import com.light.hexo.business.portal.common.CommonController;
 import com.light.hexo.business.portal.model.HexoPageInfo;
 import com.light.hexo.common.model.Result;
 import com.light.hexo.common.util.HttpClientUtil;
-import com.light.hexo.common.util.IpUtil;
 import com.light.hexo.common.util.JsonUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -52,9 +48,7 @@ public class IndexController extends CommonController {
             resultMap.put("topList", topList.stream().limit(3).collect(Collectors.toList()));
         }
 
-        Nav nav = this.navService.findByLink("/");
-        resultMap.put("currentNav", nav);
-        this.eventPublisher.emit(new NavEvent(nav.getId(), NavEvent.Type.READ));
+        resultMap.put("currentNav", this.navService.findByLink("/"));
         return render("index", false, resultMap);
     }
 
@@ -86,9 +80,7 @@ public class IndexController extends CommonController {
     public String about(Map<String, Object> resultMap) {
         UserExtend extend = this.userExtendService.getBloggerInfo();
         resultMap.put("about", extend);
-        Nav nav = this.navService.findByLink("/about/");
-        resultMap.put("currentNav", nav);
-        this.eventPublisher.emit(new NavEvent(nav.getId(), NavEvent.Type.READ));
+        resultMap.put("currentNav", this.navService.findByLink("/about/"));
         return render("about", false, resultMap);
     }
 

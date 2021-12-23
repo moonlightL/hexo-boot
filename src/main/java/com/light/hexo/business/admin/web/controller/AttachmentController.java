@@ -56,8 +56,9 @@ public class AttachmentController extends BaseController {
         return render("addUI", resultMap);
     }
 
+    @Deprecated
     @GetMapping("/detailUI.html")
-    public String addUI(Integer id, Map<String,Object> resultMap) throws GlobalException {
+    public String detailUI(Integer id, Map<String,Object> resultMap) throws GlobalException {
         Attachment attachment = this.attachmentService.findById(id);
         if (attachment == null) {
             ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_ATTACHMENT_NOT_EXIST);
@@ -90,18 +91,7 @@ public class AttachmentController extends BaseController {
                     continue;
                 }
 
-                FileRequest fileRequest = new FileRequest();
-                String baseName = FilenameUtils.getBaseName(originalName);
-                String extension = FilenameUtils.getExtension(originalName);
-                String newFilename = baseName + "_" + System.currentTimeMillis() + "." + extension;
-                fileRequest.setOriginalName(originalName)
-                           .setFilename(newFilename)
-                           .setData(file.getBytes())
-                           .setFileSize(file.getSize())
-                           .setContentType(file.getContentType())
-                           .setExtension(extension);
-
-                FileResponse fileResponse = this.defaultFileService.upload(fileRequest);
+                FileResponse fileResponse = this.defaultFileService.upload(file);
                 if (fileResponse.getSuccess()) {
                     urlList.add(fileResponse.getUrl());
                 }
@@ -144,5 +134,20 @@ public class AttachmentController extends BaseController {
         return Result.success(pageInfo);
     }
 
+    /**
+     * 获取附件详情
+     * @param id
+     * @return
+     * @throws GlobalException
+     */
+    @RequestMapping("detail.json")
+    @ResponseBody
+    public Result detail(Integer id) throws GlobalException {
+        Attachment attachment = this.attachmentService.findById(id);
+        if (attachment == null) {
+            ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_ATTACHMENT_NOT_EXIST);
+        }
 
+        return Result.success(attachment);
+    }
 }

@@ -5,9 +5,12 @@ import com.light.hexo.business.admin.model.Attachment;
 import com.light.hexo.business.admin.service.AttachmentService;
 import com.light.hexo.business.admin.service.ConfigService;
 import com.light.hexo.common.exception.GlobalException;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,6 +52,9 @@ public class DefaultFileService {
 
         FileResponse fileResponse = this.getFileService().upload(fileRequest);
         if (fileResponse.getSuccess()) {
+            fileResponse.setOriginalName(fileRequest.getOriginalName());
+            fileResponse.setFilename(fileRequest.getFilename());
+
             Attachment attachment = new Attachment();
             attachment.setFilename(fileRequest.getFilename())
                     .setOriginalName(fileRequest.getOriginalName())
@@ -70,6 +76,22 @@ public class DefaultFileService {
 
         return fileResponse;
     }
+
+    public FileResponse upload(MultipartFile file) throws GlobalException, IOException {
+        FileRequest fileRequest = new FileRequest();
+        String originalName = file.getOriginalFilename();
+        String baseName = FilenameUtils.getBaseName(originalName);
+        String extension = FilenameUtils.getExtension(originalName);
+        String newFilename = baseName + "_" + System.currentTimeMillis() + "." + extension;
+        fileRequest.setOriginalName(originalName)
+                .setFilename(newFilename)
+                .setData(file.getBytes())
+                .setFileSize(file.getSize())
+                .setContentType(file.getContentType())
+                .setExtension(extension);
+        return this.upload(fileRequest);
+    }
+
 
     public FileResponse remove(FileRequest fileRequest) throws GlobalException {
         return this.getFileService().remove(fileRequest);

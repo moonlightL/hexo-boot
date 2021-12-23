@@ -46,4 +46,14 @@ public class FileResponse {
      */
     private byte[] data;
 
+    /**
+     * 文件名称
+     */
+    private String filename;
+
+    /**
+     * 文件原始名称
+     */
+    private String originalName;
+
 }

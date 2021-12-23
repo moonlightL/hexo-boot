@@ -38,6 +38,10 @@
             display: inline-block;
             color: #3a3939;
         }
+
+        #tab-container {
+            box-shadow: rgb(216 221 229) 0px 10px 14px;
+        }
     </style>
 </head>
 <body>
@@ -270,22 +274,30 @@
                     </li>
                     <li class="nav-main-heading"><span class="sidebar-mini-visible">UI</span><span class="sidebar-mini-hidden">博客管理</span></li>
                     <li>
-                        <a href="javascript:;" data-url="/admin/post/listUI.html" data-name="博客列表"><i class="fa fa-pencil-square-o"></i><span class="sidebar-mini-hide">博客列表</span></a>
-                    </li>
-                    <li>
-                        <a href="javascript:;" data-url="/admin/category/listUI.html" data-name="分类列表"><i class="fa fa-bars"></i><span class="sidebar-mini-hide">分类列表</span></a>
-                    </li>
-                    <li>
-                        <a href="javascript:;" data-url="/admin/tag/listUI.html" data-name="标签列表"><i class="fa fa-tags"></i><span class="sidebar-mini-hide">标签列表</span></a>
-                    </li>
-                    <li>
-                        <a href="javascript:;" data-url="/admin/postComment/listUI.html" data-name="评论列表"><i class="fa fa-comments-o"></i><span class="sidebar-mini-hide">评论列表</span></a>
-                    </li>
-                    <li>
-                        <a href="javascript:;" data-url="/admin/guestBook/listUI.html" data-name="留言列表"><i class="fa fa-comment-o"></i><span class="sidebar-mini-hide">留言列表</span></a>
+                        <a class="nav-submenu" data-toggle="nav-submenu" href="#"><i class="fa fa-pencil-square-o"></i><span class="sidebar-mini-hide">常用管理</span></a>
+                        <ul>
+                            <li>
+                                <a href="javascript:;" data-url="/admin/post/listUI.html" data-name="博客列表"><!--<i class="fa fa-pencil-square-o"></i>--><span class="sidebar-mini-hide">博客列表</span></a>
+                            </li>
+                            <li>
+                                <a href="javascript:;" data-url="/admin/category/listUI.html" data-name="分类列表"><!--<i class="fa fa-bars"></i>--><span class="sidebar-mini-hide">分类列表</span></a>
+                            </li>
+                            <li>
+                                <a href="javascript:;" data-url="/admin/tag/listUI.html" data-name="标签列表"><!--<i class="fa fa-tags"></i>--><span class="sidebar-mini-hide">标签列表</span></a>
+                            </li>
+                            <li>
+                                <a href="javascript:;" data-url="/admin/postComment/listUI.html" data-name="评论列表"><!--<i class="fa fa-comments-o"></i>--><span class="sidebar-mini-hide">评论列表</span></a>
+                            </li>
+                            <li>
+                                <a href="javascript:;" data-url="/admin/guestBook/listUI.html" data-name="留言列表"><!--<i class="fa fa-comment-o"></i>--><span class="sidebar-mini-hide">留言列表</span></a>
+                            </li>
+                        </ul>
                     </li>
                     <li>
                         <a href="javascript:;" data-url="/admin/dynamic/listUI.html" data-name="动态列表"><i class="fa fa-heart-o"></i><span class="sidebar-mini-hide">动态列表</span></a>
+                    </li>
+                    <li>
+                        <a href="javascript:;" data-url="/admin/album/listUI.html" data-name="专辑列表"><i class="fa fa-sun-o"></i><span class="sidebar-mini-hide">专辑列表</span></a>
                     </li>
                     <li class="nav-main-heading"><span class="sidebar-mini-visible">BD</span><span class="sidebar-mini-hidden">网站管理</span></li>
                     <li>

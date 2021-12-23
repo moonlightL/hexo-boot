@@ -78,6 +78,12 @@ public enum HexoExceptionEnum implements GlobalExceptionMap {
     // 14xxx --> 日志
     ERROR_ACTION_LOG_NOT_EXIST(14001, "日志不存在"),
 
+    // 15xxx --> 专辑
+    ERROR_ALBUM_NOT_EXIST(15001, "该专辑不存在"),
+    ERROR_ALBUM_NAME_REPEAT(15002, "专辑名称重复"),
+    ERROR_ALBUM_DETAIL_NOT_EMPTY(15003, "该专辑详情不为空，禁止删除"),
+    ERROR_ALBUM_DETAIL_NOT_EXIST(15004, "该专辑详情不存在"),
+
     // 50xxx --> 前端
     ERROR_REPEAT_PRAISE_POST(50001, "已点赞，请勿重复操作")
 

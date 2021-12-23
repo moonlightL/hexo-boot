@@ -1,9 +1,9 @@
 package com.light.hexo.business.admin.model;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
-
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -16,7 +16,8 @@ import java.io.Serializable;
  * @Description: 操作日志详情
  * @DateTime 2021/7/8 10:22
  */
-@Data
+@Setter
+@Getter
 @Accessors(chain = true)
 @ToString
 @Table(name = "t_action_log_detail")

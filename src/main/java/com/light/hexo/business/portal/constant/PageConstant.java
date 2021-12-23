@@ -62,6 +62,11 @@ public class PageConstant {
     public static final String FRIEND_LINK_LIST = "hexo:friend:link:list";
 
     /**
+     * 首页专辑列表缓存 key（格式：PageConstant.ALBUM_LIST）
+     */
+    public static final String ALBUM_LIST = "hexo:album:list";
+
+    /**
      * 导航页面
      */
     public static final String NAV_PAGE = "nav:page";

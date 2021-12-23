@@ -2,10 +2,7 @@ package com.light.hexo.business.portal.web.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.light.hexo.business.admin.model.Dynamic;
-import com.light.hexo.business.admin.model.Nav;
-import com.light.hexo.business.admin.model.event.NavEvent;
 import com.light.hexo.business.portal.common.CommonController;
-import com.light.hexo.business.portal.model.HexoPageInfo;
 import com.light.hexo.common.model.Result;
 import com.light.hexo.common.util.IpUtil;
 import org.springframework.stereotype.Controller;
@@ -13,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
@@ -39,9 +35,7 @@ public class IndexDynamicController extends CommonController {
         pageNum = pageNum == null ? 1 : pageNum;
         List<Dynamic> dynamicList = this.dynamicService.listDynamicByIndex(pageNum, PAGE_SIZE);
         resultMap.put("pageInfo", new PageInfo<>(dynamicList, PAGE_SIZE));
-        Nav nav = this.navService.findByLink("/dynamics/");
-        resultMap.put("currentNav", nav);
-        this.eventPublisher.emit(new NavEvent(nav.getId(), NavEvent.Type.READ));
+        resultMap.put("currentNav", this.navService.findByLink("/dynamics/"));
         return render("dynamics", false, resultMap);
     }
 

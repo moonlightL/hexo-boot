@@ -10,7 +10,7 @@ import lombok.experimental.Accessors;
  * @Author MoonlightL
  * @ClassName: CategoryEvent
  * @ProjectName hexo-boot
- * @Description: 分类时间
+ * @Description: 分类事件
  * @DateTime 2021/9/18, 0018 10:16
  */
 @Setter

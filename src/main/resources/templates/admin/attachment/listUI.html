@@ -16,6 +16,14 @@
             text-overflow:ellipsis;
             white-space: nowrap;
         }
+        .panel {
+            display: none;
+            width: 400px;
+            padding: 20px;
+            color: #000;
+            background-color: #fff;
+            box-shadow: rgb(216 221 229) 0px 10px 14px;
+        }
     </style>
 </head>
 <body>
@@ -24,7 +32,7 @@
     <h2 class="content-heading" id="toolbar">
         <button type="button" class="btn btn-sm btn-secondary float-right hexo-query" data-query-area="queryArea"><i class="fa fa-search text-success mr-5"></i> 查询</button>
         <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-refresh"><i class="fa fa-refresh mr-5"></i> 刷新</button>
-        <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-add" title="上传附件" data-width="640" data-height="340"><i class="fa fa-plus-square text-primary mr-5"></i> 上传</button>
+        <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-add" title="上传附件" data-width="720" data-height="340"><i class="fa fa-plus-square text-primary mr-5"></i> 上传</button>
         <i class="fa fa fa-files-o"></i> 附件列表 <span id="totalNum"></span>
     </h2>
     <div class="block block-fx-shadow hide" id="queryArea">
@@ -61,10 +69,72 @@
             <nav aria-label="Page navigation" id="pageBar"></nav>
         </div>
     </div>
+    <div id="leftPanel" class="panel">
+        <div class="block-content">
+            <div class="row justify-content-center py-20">
+                <div class="col-xl-12" >
+                    <div class="form-group row">
+                        <div class="col-md-12 col-xs-12">
+                            <span id="attachmentShow"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3 col-xs-2">文件名</div>
+                        <div class="col-md-9 col-xs-10">
+                            <span id="detail-filename"></span>&nbsp;<button class="btn" title="复制" data-clipboard-target="#filename"><i class="fa fa-clone"></i></button>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3 col-xs-2">原始名称</div>
+                        <div class="col-md-9 col-xs-10">
+                            <span id="detail-originalName"></span>&nbsp;<button class="btn" title="复制" data-clipboard-target="#originalName"><i class="fa fa-clone"></i></button>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3 col-xs-2">本地路径</div>
+                        <div class="col-md-9 col-xs-10">
+                            <span id="detail-filePath" style="display: inline-block; width:180px; text-overflow: ellipsis;overflow: hidden;white-space: nowrap;"></span>&nbsp;<button class="btn" title="复制" data-clipboard-target="#filePath"><i class="fa fa-clone"></i></button>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3 col-xs-2">访问链接</div>
+                        <div class="col-md-9 col-xs-10">
+                            <span id="detail-fileUrl" style="display: inline-block; width:180px; text-overflow: ellipsis;overflow: hidden;white-space: nowrap;"></span>&nbsp;<button class="btn" title="复制" data-clipboard-target="#fileUrl"><i class="fa fa-clone"></i></button>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3 col-xs-2">内容类型</div>
+                        <div class="col-md-9 col-xs-10">
+                            <span id="detail-contentType"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3 col-xs-2">文件大小</div>
+                        <div class="col-md-9 col-xs-10">
+                            <span id="detail-fileSizeInfo"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3 col-xs-2">存储位置</div>
+                        <div class="col-md-9 col-xs-10">
+                            <span id="detail-position"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3 col-xs-2">上传时间</div>
+                        <div class="col-md-9 col-xs-10">
+                            <span id="detail-uploadTime"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <!-- END Page Content -->
 <div th:replace="~{admin/common :: common-script}"></div>
 <script th:src="@{'/admin/assets/js/plugins/magnific-popup/jquery.magnific-popup.min.js'}"></script>
+<script th:src="@{'/admin/assets/js/plugins/jquery-panelslider/jquery.panelslider.min.js'}"></script>
 <script th:inline="javascript">
 
     $("#attachmentBody").addClass('js-gallery-enabled').magnificPopup({
@@ -97,7 +167,30 @@
 
             $(document).on("click", ".detail-btn", function () {
                 let $target = $(this);
-                $.hexo.modal._window("附件详情", BASE_URL + "/detailUI.html?id=" + $target.data("id"), 800, 540, false);
+
+                $.hexo.action.sendRequest({
+                    url: BASE_URL + "/detail.json?id=" + $target.data("id"),
+                    params: AttachmentManager.params,
+                    callback: function (resp) {
+                        let attachment = resp.data;
+                        for (let key in attachment) {
+                            if (key == "thumbnailUrl") {
+                                if (attachment.contentType.indexOf("image") > -1) {
+                                    $("#attachmentShow").html('<img src="' + attachment[key] + '" width="320" height="150" alt="">');
+                                } else {
+                                    $("#attachmentShow").html('<video src="' + attachment[key] + '" controls="controls" width="320" height="150" alt="">');
+                                }
+                            } else if (key == "position") {
+                                let position = attachment[key];
+                                $("#detail-" + key).html(position == 1 ? "本地" : (position == 2 ? "七牛云" : "OSS"));
+                            } else {
+                                $("#detail-" + key).html(attachment[key]);
+                            }
+                        }
+
+                        $.panelslider($('#leftPanel'));
+                    }
+                });
             });
 
             // 绑定删除事件
@@ -144,8 +237,12 @@
                 for (let i = 0; i < attachmentList.length; i++) {
                     let obj = attachmentList[i];
                     contentArr.push('<div class="col-md-3 col-lg-3 col-xl-3 animated fadeIn">');
-                    contentArr.push('<div class="options-container fx-item-zoom-in fx-overlay-slide-down" >');
-                    contentArr.push('<img class="img-fluid options-item" src="' + obj.thumbnailUrl + '" alt="" style="width: 300px;height: 200px; border: 1px solid #eee;display: block">');
+                    contentArr.push('<div class="options-container  fx-overlay-slide-down">');
+                    if (obj.contentType.indexOf("image") > -1) {
+                        contentArr.push('<img class="img-fluid options-item" src="' + obj.thumbnailUrl + '" alt="" style="width: 331px;height: 200px; border: 1px solid #eee;display: block">');
+                    } else if (obj.contentType.indexOf("video") > -1) {
+                        contentArr.push('<video src="' + obj.fileUrl + '" controls="controls" alt="" style="width: 331px;height: 200px; border: 1px solid #eee;display: block">');
+                    }
                     contentArr.push('<div class="options-overlay bg-black-op-75">');
                     contentArr.push('<div class="options-overlay-content">');
                     let pos = "";
@@ -159,15 +256,13 @@
                     contentArr.push('<h4 class="h6 text-white mb-15 original-name">原始名: ' + obj.originalName +'</h4>');
                     contentArr.push('<h4 class="h6 text-white-op mb-15">文件大小: ' + obj.fileSizeInfo +'</h4>');
                     contentArr.push('<h4 class="h6 text-white-op mb-15">存储于: ' + pos +'</h4>');
-                    contentArr.push('<a class="btn btn-sm btn-rounded btn-noborder btn-alt-primary min-width-75 img-lightbox" target="_blank" href="' + obj.thumbnailUrl + '">');
-                    contentArr.push('<i class="fa fa-search-plus"></i> 浏览');
-                    contentArr.push('</a>');
-                    contentArr.push(' <a class="btn btn-sm btn-rounded btn-noborder btn-alt-success min-width-75 detail-btn" href="javascript:void(0)" data-id="' + obj.id + '"><i class="fa fa-envelope-open-o"></i> 详情</a>');
+                    contentArr.push(' <a class="btn btn-sm btn-rounded btn-noborder btn-alt-primary min-width-75 img-lightbox" target="_blank" href="' + obj.thumbnailUrl + '"><i class="fa fa-search-plus"></i> 浏览</a>');
+                    contentArr.push('</div>');
+                    contentArr.push('</div>');
+                    contentArr.push('</div><br><div class="text-center">');
+                    contentArr.push('<a class="btn btn-sm btn-rounded btn-noborder btn-alt-success min-width-75 detail-btn" href="javascript:void(0)" data-id="' + obj.id + '"><i class="fa fa-envelope-open-o"></i> 详情</a>');
                     contentArr.push(' <a class="btn btn-sm btn-rounded btn-noborder btn-alt-danger min-width-75 remove-btn" href="javascript:void(0)" data-id="' + obj.id + '"><i class="fa fa-trash"></i> 删除</a>');
-                    contentArr.push('</div>');
-                    contentArr.push('</div>');
-                    contentArr.push('</div>');
-                    contentArr.push('</div>');
+                    contentArr.push('</div></div></div>');
                 }
             } else {
                 contentArr.push('<div class="col-md-12 col-lg-12 col-xl-12 animated fadeIn text-center"><h5>暂无附件</h5></div>');

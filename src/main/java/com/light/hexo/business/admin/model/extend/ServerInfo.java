@@ -29,7 +29,8 @@ import java.util.Properties;
  * @Description: 服务器参数信息
  * @DateTime 2020/9/24 11:23
  */
-@Data
+@Setter
+@Getter
 @Accessors(chain = true)
 @ToString
 public class ServerInfo implements Serializable {

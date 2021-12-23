@@ -88,8 +88,9 @@ public class NavServiceImpl extends BaseServiceImpl<Nav> implements NavService {
     public Nav findByLink(String link) throws GlobalException {
         List<Nav> navList = this.listNavs();
         Optional<Nav> first = navList.stream().filter(i -> i.getLink().equals(link)).findFirst();
-        return first.orElseGet(() -> new Nav("tmp", "/tmp", "", "tmp"));
-
+        Nav nav = first.orElseGet(() -> new Nav("tmp", "/tmp", "", "tmp"));
+        this.eventPublisher.emit(new NavEvent(nav.getId(), NavEvent.Type.READ));
+        return nav;
     }
 
     /**
@@ -212,6 +213,11 @@ public class NavServiceImpl extends BaseServiceImpl<Nav> implements NavService {
     public void dealWithEvent(BaseEvent event) {
 
         NavEvent navEvent = (NavEvent) event;
+
+        if (navEvent.getId() == null) {
+            return;
+        }
+
         if (NavEvent.Type.LOAD.getCode().equals(navEvent.getType().getCode())) {
             WebApplicationContext webApplicationContext = (WebApplicationContext) SpringContextUtil.applicationContext;
             ServletContext servletContext = webApplicationContext.getServletContext();

@@ -58,20 +58,8 @@ public class FileController {
         }
 
         try {
-            FileRequest fileRequest = new FileRequest();
-            String baseName = FilenameUtils.getBaseName(originalName);
-            String extension = FilenameUtils.getExtension(originalName);
-            String newFilename = baseName + "_" + System.currentTimeMillis() + "." + extension;
-            fileRequest.setOriginalName(originalName)
-                       .setFilename(newFilename)
-                       .setData(file.getBytes())
-                       .setFileSize(file.getSize())
-                       .setContentType(file.getContentType())
-                       .setExtension(extension);
-
-            FileResponse fileResponse = this.defaultFileService.upload(fileRequest);
+            FileResponse fileResponse = this.defaultFileService.upload(file);
             return Result.success(fileResponse.getUrl());
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -101,19 +89,10 @@ public class FileController {
                     continue;
                 }
 
-                FileRequest fileRequest = new FileRequest();
-                String baseName = FilenameUtils.getBaseName(originalName);
-                String extension = FilenameUtils.getExtension(originalName);
-                String newFilename = baseName + "_" + System.currentTimeMillis() + "." + extension;
-                fileRequest.setOriginalName(originalName)
-                           .setFilename(newFilename)
-                           .setData(file.getBytes())
-                           .setFileSize(file.getSize())
-                           .setContentType(file.getContentType())
-                           .setExtension(extension);
-
-                FileResponse fileResponse = this.defaultFileService.upload(fileRequest);
-                urlList.add(fileResponse.getUrl());
+                FileResponse fileResponse = this.defaultFileService.upload(file);
+                if (fileResponse.getSuccess()) {
+                    urlList.add(fileResponse.getUrl());
+                }
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -143,20 +122,8 @@ public class FileController {
         }
 
         try {
-            FileRequest fileRequest = new FileRequest();
-            String baseName = FilenameUtils.getBaseName(originalName);
-            String extension = FilenameUtils.getExtension(originalName);
-            String newFilename = baseName + "_" + System.currentTimeMillis() + "." + extension;
-            fileRequest.setOriginalName(originalName)
-                       .setFilename(newFilename)
-                       .setData(file.getBytes())
-                       .setFileSize(file.getSize())
-                       .setContentType(file.getContentType())
-                       .setExtension(extension);
-
-            FileResponse fileResponse = this.defaultFileService.upload(fileRequest);
+            FileResponse fileResponse = this.defaultFileService.upload(file);
             return FileResult.success(fileResponse.getUrl());
-
         } catch (IOException e) {
             e.printStackTrace();
         }

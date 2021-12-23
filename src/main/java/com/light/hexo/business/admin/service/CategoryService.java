@@ -71,7 +71,7 @@ public interface CategoryService extends BaseService<Category>, EventService {
     // =========================== 以下为前端页面请求 ============================
 
     /**
-     * 分类列表 分类列表（首页）
+     * 分类列表（首页）
      * @return
      * @throws GlobalException
      */

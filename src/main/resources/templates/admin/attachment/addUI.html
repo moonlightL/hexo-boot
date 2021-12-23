@@ -43,24 +43,24 @@
             url: "/admin/file/uploadBatch.json", //上传地址
             addRemoveLinks: true,
             maxFiles: 10,// 一次性上传的文件数量上限
-            maxFilesize: 10, // 单个上传文件大小，单位：MB
+            maxFilesize: 100, // 单个上传文件大小，单位：MB
             previewsContainer: null,
             uploadMultiple: true, // 允许批量上传
             parallelUploads: 10, // 每次上传的文件数量，默认值 2
             autoProcessQueue: false, // 是否自动上传
             acceptedFiles: ".jpg, .jpeg, .png, .gif, .webp, .txt, .md, .sql, .pdf, .doc, .docx, .xls, .xlsx, .ppt",
-            dictDefaultMessage: '+<br>(支持上传的文件类型*.jpg,*.jpeg,*.png, *.gif,*.webp, *.txt, *.md, *.sql, *.pdf, *.doc, *.docx, *.xls, *.xlsx, *.ppt)',
+            dictDefaultMessage: '+<br>(支持上传的文件类型*.jpg,*.jpeg,*.png, *.gif,*.webp, *.txt, *.md, *.sql, *.pdf, *.doc, *.docx, *.xls, *.xlsx, *.ppt，最大上传100MB)',
             dictMaxFilesExceeded: "每次最多只能上传1个文件",
             dictResponseError: '文件上传失败',
             dictInvalidFileType: "支持上传的文件类型*.jpg,*.jpeg,*.png, *.gif,*.webp, *.txt, *.md, *.sql, *.pdf, *.doc, *.docx, *.xls, *.xlsx, *.ppt",
             dictFallbackMessage: "浏览器不支持",
-            dictFileTooBig: "最大支持10MB文件上传",
+            dictFileTooBig: "最大支持100MB文件上传",
             dictRemoveFile: "删除",
             dictUploadCanceled: "取消",
             thumbnailWidth:"120",
             thumbnailHeight:"120",
             init: function () {
-                var myDropzone = this;
+                let myDropzone = this;
                 $("#uploadBtn").on("click", function(e) {
                     e.preventDefault();
                     // 手动上传所有图片

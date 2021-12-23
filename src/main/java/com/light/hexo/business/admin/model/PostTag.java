@@ -1,8 +1,6 @@
 package com.light.hexo.business.admin.model;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.Accessors;
 
 /**
@@ -12,7 +10,8 @@ import lombok.experimental.Accessors;
  * @Description: 文章标签
  * @DateTime 2020/9/17 15:36
  */
-@Data
+@Setter
+@Getter
 @Accessors(chain = true)
 @EqualsAndHashCode(of = {"postId", "tagId"})
 @ToString

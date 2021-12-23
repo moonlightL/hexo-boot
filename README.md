@@ -262,6 +262,8 @@ curl -L -o ~/.hexo-boot/application.yml --create-dirs https://gitee.com/moonligh
 
 ## 六、更新日志
 
+2021-12-23 新增发布专辑功能（图片、视频）
+
 2021-07-08 新增日志记录功能
 
 2021-06-29 文章添加访问密码

@@ -2,7 +2,8 @@ package com.light.hexo.business.admin.model;
 
 import com.light.hexo.common.component.mybatis.CreateTime;
 import com.light.hexo.common.component.mybatis.UpdateTime;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
@@ -21,7 +22,8 @@ import java.util.List;
  * @Description: 导航
  * @DateTime 2020/12/14 17:27
  */
-@Data
+@Setter
+@Getter
 @Accessors(chain = true)
 @ToString
 @Table(name = "t_nav")
