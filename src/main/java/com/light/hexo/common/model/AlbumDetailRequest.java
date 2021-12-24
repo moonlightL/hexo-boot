@@ -32,6 +32,17 @@ public class AlbumDetailRequest extends BaseRequest<AlbumDetail> {
     private String name;
 
     /**
+     * 地址
+     */
+    @NotEmpty(message = "地址不能为空", groups = {BaseRequest.Save.class, BaseRequest.Update.class})
+    private String url;
+
+    /**
+     * 专辑 id
+     */
+    private Integer albumId;
+
+    /**
      * 排序
      */
     private Integer sort;

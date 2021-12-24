@@ -36,7 +36,8 @@
     <h2 class="content-heading" id="toolbar">
         <button type="button" class="btn btn-sm btn-secondary float-right hexo-remove" data-query-area="queryArea"><i class="fa fa-trash text-danger mr-5"></i> 全部删除</button>
         <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-refresh"><i class="fa fa-refresh mr-5"></i> 刷新</button>
-        <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-add" title="上传文件"><i class="fa fa-upload text-primary mr-5"></i> 上传图片</button>
+        <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-upload" title="上传文件"><i class="fa fa-upload text-primary mr-5"></i> 上传图片</button>
+        <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-add" title="上传文件"><i class="fa fa-pencil text-primary mr-5"></i> 手动录入</button>
         <i class="fa fa fa-picture-o"></i> 专辑名：【[[${vo.name}]]】 <span id="totalNum"></span>
     </h2>
 
@@ -68,9 +69,16 @@
                     <div class="col-xl-12 col-xs-12">
                         <form id="saveForm" class="js-validation-bootstrap" method="post">
                             <input type="hidden" name="id" id="id">
+                            <input type="hidden" name="albumId" id="albumId" th:value="${vo.id}">
                             <div class="form-group row">
                                 <div class="col-lg-12">
-                                    <img id="url" src="" alt="" width="255" height="150">
+                                    <img id="image-url" src="" alt="" width="255" height="150">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-4 col-form-label" for="url">地址 <span class="text-danger">*</span></label>
+                                <div class="col-lg-8">
+                                    <input type="text" class="form-control" id="url" name="url" placeholder="地址">
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -119,6 +127,12 @@
             $("#toolbar").find("button").on("click", function(e) {
                 let $target = $(this);
                 if ($target.hasClass("hexo-add")) {
+                    let $saveForm = $("#saveForm");
+                    $saveForm[0].reset();
+                    $("#id").val("");
+                    $("#image-url").attr("src", "");
+                    $.panelslider($('#leftPanel'));
+                } else if ($target.hasClass("hexo-upload")) {
                     let $uploadBody = $("#uploadBody");
                     if ($uploadBody.hasClass("hide")) {
                         $uploadBody.slideDown("slow");
@@ -136,11 +150,12 @@
             });
 
             $("#submitBtn").on("click", function () {
+                let id = $("#id").val();
                 $.hexo.action.sendRequest({
-                    url: BASE_URL + "/editAlbumDetail.json",
+                    url: BASE_URL + (id == "" ? "/saveAlbumDetail.json" : "/editAlbumDetail.json"),
                     params: $("#saveForm").serialize(),
                     callback: function (resp) {
-                        $.hexo.modal.tip("修改成功", "success", function () {
+                        $.hexo.modal.tip("保存成功", "success", function () {
                             window.AlbumManager.query();
                         });
                     }
@@ -158,7 +173,8 @@
                         let albumDetail = resp.data;
                         for (let key in albumDetail) {
                             if (key == "url") {
-                                $("#" + key).attr("src", albumDetail[key]);
+                                $("#image-url").attr("src", albumDetail[key]);
+                                $("#" + key).val(albumDetail[key]);
                             } else {
                                 $("#" + key).val(albumDetail[key]);
                             }

@@ -237,6 +237,19 @@ public class AlbumController extends BaseController {
     }
 
     /**
+     * 保存专辑详情信息
+     * @param request
+     * @return
+     */
+    @RequestMapping("saveAlbumDetail.json")
+    @ResponseBody
+    @OperateLog(value = "保存专辑详情", actionType = ActionEnum.ADMIN_ADD)
+    public Result saveAlbumDetail(@Validated(BaseRequest.Save.class) AlbumDetailRequest request) {
+        this.albumDetailService.saveAlbumDetail(request.toDoModel());
+        return Result.success();
+    }
+
+    /**
      * 修改专辑详情信息
      * @param request
      * @return

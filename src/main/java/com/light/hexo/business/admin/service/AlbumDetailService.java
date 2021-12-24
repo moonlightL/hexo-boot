@@ -36,6 +36,13 @@ public interface AlbumDetailService extends BaseService<AlbumDetail> {
     void saveAlbumDetail(Integer albumId, String originalName, String url) throws GlobalException;
 
     /**
+     * 保存专辑详情
+     * @param albumDetail
+     * @throws GlobalException
+     */
+    void saveAlbumDetail(AlbumDetail albumDetail) throws GlobalException;
+
+    /**
      * 修改专辑详情
      * @param albumDetail
      * @throws GlobalException
@@ -66,4 +73,5 @@ public interface AlbumDetailService extends BaseService<AlbumDetail> {
     // ================================= 以下为前端页面请求 ===============================
 
     HexoPageInfo pageAlbumDetailByIndex(Integer albumId, Integer pageNum, Integer pageSize);
+
 }

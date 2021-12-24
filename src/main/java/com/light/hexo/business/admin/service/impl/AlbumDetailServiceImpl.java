@@ -46,7 +46,7 @@ public class AlbumDetailServiceImpl extends BaseServiceImpl<AlbumDetail> impleme
     public List<AlbumDetail> findListByAlbumId(Integer albumId, Integer pageNum, Integer pageSize) throws GlobalException {
         Example example = new Example(AlbumDetail.class);
         example.createCriteria().andEqualTo("albumId", albumId);
-        example.orderBy("id ").desc();
+        example.orderBy("sort ").asc();
         PageHelper.startPage(pageNum, pageSize);
         return this.albumDetailMapper.selectByExample(example);
     }
@@ -60,6 +60,11 @@ public class AlbumDetailServiceImpl extends BaseServiceImpl<AlbumDetail> impleme
                    .setSort(0)
                    .setCreateTime(LocalDateTime.now())
                    .setUpdateTime(albumDetail.getCreateTime());
+        super.saveModel(albumDetail);
+    }
+
+    @Override
+    public void saveAlbumDetail(AlbumDetail albumDetail) throws GlobalException {
         super.saveModel(albumDetail);
     }
 
