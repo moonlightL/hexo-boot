@@ -38,7 +38,7 @@
                                 <a data-pjax th:href="@{'/albumDetail/' + ${album.id} + '/'}">
                                     <img th:data-original="@{${album.coverUrl}}" class="lazyload">
                                     <div class="descr">
-                                        [[${album.name}]]<span> ([[${album.detailNum}]])</span>
+                                        <span th:if="${album.visitType == 0}"><i class="fa fa-lock"></i></span> [[${album.name}]]<span> ([[${album.detailNum}]])</span>
                                     </div>
                                 </a>
                             </div>

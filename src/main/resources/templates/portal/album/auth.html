@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh" class="no-focus" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>密码验证 | 文章访问</title>
+    <link rel="shortcut icon" th:href="@{${#servletContext.getAttribute('configMap')['favicon_url']}}">
+    <link rel="stylesheet" th:href="@{'/admin/assets/fonts/googleapis/fonts.googleapis.css?family=Nunito+Sans:300,400,400i,600,700&display=swap'}">
+    <link rel="stylesheet" id="css-main" th:href="@{'/admin/assets/css/codebase.min.css'}">
+    <style>.red {color: red !important;}</style>
+<body>
+
+<div id="page-container" class="main-content-boxed">
+    <main id="main-container">
+        <div class="bg-image bg-pattern">
+            <div class="row mx-0 justify-content-center bg-white-op-95">
+                <div class="hero-static col-lg-6 col-xl-4">
+                    <div class="content content-full overflow-hidden">
+                        <div class="py-30 text-center">
+                            <a class="link-effect font-w700" th:href="@{'/'}">
+                                <i class="si si-fire"></i>
+                                <span class="font-size-xl text-pulse-dark">首</span>
+                                <span class="font-size-xl">页</span>
+                            </a>
+                            <h1 class="h4 font-w700 mt-30 mb-10">《[[${name}]]》为加密专辑</h1>
+                            <h2 class="h5 font-w400 text-muted mb-0 red" th:if="${#strings.isEmpty(errorMsg) != true}">
+                                [[${errorMsg}]]
+                            </h2>
+                        </div>
+                        <form id="authForm" class="js-validation-lock" th:action="@{${link}}"  method="POST">
+                            <div class="block block-themed block-rounded block-shadow">
+                                <div class="block-header bg-gd-primary"><h3 class="block-title">密码验证</h3>
+                                    <div class="block-options">
+                                        <button type="button" class="btn-block-option"><i class="si si-wrench"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="block-content">
+                                    <div class="form-group text-center">
+                                        <img class="img-avatar img-avatar96" th:src="@{'/admin/assets/images/avatar.jpg'}" alt="">
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-12">
+                                            <label for="visitCode">访问密码</label>
+                                            <input type="password" class="form-control" id="visitCode" name="visitCode">
+                                        </div>
+                                    </div>
+                                    <div class="form-group text-center">
+                                        <button type="submit" class="btn btn-alt-primary">
+                                            <i class="si si-lock-open mr-10"></i>访问
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>
