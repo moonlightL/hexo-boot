@@ -81,25 +81,25 @@
                     <div class="form-group row">
                         <div class="col-md-3 col-xs-2">文件名</div>
                         <div class="col-md-9 col-xs-10">
-                            <span id="detail-filename"></span>&nbsp;<button class="btn" title="复制" data-clipboard-target="#filename"><i class="fa fa-clone"></i></button>
+                            <span id="detail-filename"></span>&nbsp;<button class="btn" title="复制" data-clipboard-target="#detail-filename"><i class="fa fa-clone"></i></button>
                         </div>
                     </div>
                     <div class="form-group row">
                         <div class="col-md-3 col-xs-2">原始名称</div>
                         <div class="col-md-9 col-xs-10">
-                            <span id="detail-originalName"></span>&nbsp;<button class="btn" title="复制" data-clipboard-target="#originalName"><i class="fa fa-clone"></i></button>
+                            <span id="detail-originalName"></span>&nbsp;<button class="btn" title="复制" data-clipboard-target="#detail-originalName"><i class="fa fa-clone"></i></button>
                         </div>
                     </div>
                     <div class="form-group row">
                         <div class="col-md-3 col-xs-2">本地路径</div>
                         <div class="col-md-9 col-xs-10">
-                            <span id="detail-filePath" style="display: inline-block; width:180px; text-overflow: ellipsis;overflow: hidden;white-space: nowrap;"></span>&nbsp;<button class="btn" title="复制" data-clipboard-target="#filePath"><i class="fa fa-clone"></i></button>
+                            <span id="detail-filePath" style="display: inline-block; width:180px; text-overflow: ellipsis;overflow: hidden;white-space: nowrap;"></span>&nbsp;<button class="btn" title="复制" data-clipboard-target="#detail-filePath"><i class="fa fa-clone"></i></button>
                         </div>
                     </div>
                     <div class="form-group row">
                         <div class="col-md-3 col-xs-2">访问链接</div>
                         <div class="col-md-9 col-xs-10">
-                            <span id="detail-fileUrl" style="display: inline-block; width:180px; text-overflow: ellipsis;overflow: hidden;white-space: nowrap;"></span>&nbsp;<button class="btn" title="复制" data-clipboard-target="#fileUrl"><i class="fa fa-clone"></i></button>
+                            <span id="detail-fileUrl" style="display: inline-block; width:180px; text-overflow: ellipsis;overflow: hidden;white-space: nowrap;"></span>&nbsp;<button class="btn" title="复制" data-clipboard-target="#detail-fileUrl"><i class="fa fa-clone"></i></button>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -135,6 +135,7 @@
 <div th:replace="~{admin/common :: common-script}"></div>
 <script th:src="@{'/admin/assets/js/plugins/magnific-popup/jquery.magnific-popup.min.js'}"></script>
 <script th:src="@{'/admin/assets/js/plugins/jquery-panelslider/jquery.panelslider.min.js'}"></script>
+<script th:src="@{'/admin/assets/js/plugins/clipboard/clipboard.min.js'}"></script>
 <script th:inline="javascript">
 
     $("#attachmentBody").addClass('js-gallery-enabled').magnificPopup({
@@ -212,6 +213,12 @@
                 }
                 AttachmentManager.params = $.extend({}, AttachmentManager.params, parameter);
                 AttachmentManager.query();
+            });
+
+            let clipboard = new ClipboardJS('.btn');
+            clipboard.on('success', function(e) {
+                layer.msg("复制成功");
+                e.clearSelection();
             });
 
             AttachmentManager.query();
