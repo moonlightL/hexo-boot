@@ -1275,6 +1275,7 @@ h3.friend-link-title.blogger {
 /** 专辑 start  */
 .album-item {
     width: 100%;
+    height: 100%;
     text-align:center;
     background-size: cover;
     margin-bottom: 2em;
@@ -1296,12 +1297,12 @@ h3.friend-link-title.blogger {
     width: 100%;
     height:150px;
     object-fit: cover;
-    border-radius: 4px 4px 0 0;
 }
 
 .album-detail-item {
     position: relative;
     margin: 1.5rem auto;
+    height: 100%;
 }
 
 .album-detail-item a .mask {

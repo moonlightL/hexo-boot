@@ -35,7 +35,7 @@
                 <div class="ml-content-body">
                     <div class="row" th:if="${album.detailType == 1}">
                         <div class="col-sm-6 col-md-3" th:each="detail,iterStat: ${pageInfo.data}">
-                            <div class="album-detail-item animate-box">
+                            <div class="album-detail-item animate-box" data-animate-effect="fadeIn">
                                 <a class="fancybox" th:href="@{${detail.url}}" data-fancybox="gallery">
                                     <img th:data-original="@{${detail.url}}" class="lazyload">
                                     <div class="mask"><i class="fa fa-search-plus"></i></div>
