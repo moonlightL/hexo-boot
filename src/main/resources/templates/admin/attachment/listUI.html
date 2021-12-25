@@ -152,6 +152,12 @@
                         </div>
                     </div>
                     <div class="form-group row">
+                        <div class="col-md-3 col-xs-2">文件类型</div>
+                        <div class="col-md-9 col-xs-10">
+                            <span id="detail-fileType"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
                         <div class="col-md-3 col-xs-2">文件大小</div>
                         <div class="col-md-9 col-xs-10">
                             <span id="detail-fileSizeInfo"></span>
@@ -234,15 +240,19 @@
                     callback: function (resp) {
                         let attachment = resp.data;
                         for (let key in attachment) {
-                            if (key == "thumbnailUrl") {
-                                if (attachment.contentType.indexOf("image") > -1) {
+                            if (key == "fileUrl") {
+                                if (attachment.fileType == 1) {
                                     $("#attachmentShow").html('<img src="' + attachment[key] + '" width="320" height="150" alt="">');
-                                } else {
+                                } else if (attachment.fileType == 2) {
                                     $("#attachmentShow").html('<video src="' + attachment[key] + '" controls="controls" width="320" height="150" alt="">');
                                 }
+                                $("#detail-" + key).html(attachment[key]);
                             } else if (key == "position") {
                                 let position = attachment[key];
                                 $("#detail-" + key).html(position == 1 ? "本地" : (position == 2 ? "七牛云" : "OSS"));
+                            } else if (key == "fileType") {
+                                let fileType = attachment[key];
+                                $("#detail-" + key).html(fileType == 1 ? "图片" : (fileType == 2 ? "视频" : "其他"));
                             } else {
                                 $("#detail-" + key).html(attachment[key]);
                             }
