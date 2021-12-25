@@ -44,9 +44,12 @@
                         </div>
                     </div>
                     <div class="row" th:if="${album.detailType == 2}">
-                        <div class="col-sm-12 col-md-6" th:each="detail,iterStat: ${pageInfo.data}">
+                        <div class="col-sm-12 col-md-4" th:each="detail,iterStat: ${pageInfo.data}">
                             <div class="album-detail-item animate-box">
-                                <video th:src="@{${detail.url}}" controls="controls" width="100%"></video>
+                                <a href="javascript:void(0)" th:data-url="${detail.url}" class="play-btn">
+                                    <img th:data-original="@{${detail.coverUrl}}" class="lazyload">
+                                    <div class="mask"><i class="fa fa-play"></i></div>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -81,6 +84,34 @@
                     </span>
                 </div>
             </div>
+
+            <script>
+                let pageContainer = document.getElementById("pageContainer");
+                let playBtnList = document.getElementsByClassName("play-btn");
+                for (let i = 0; i < playBtnList.length; i++) {
+                    let playBtn = playBtnList[i];
+                    let url = playBtn.dataset.url;
+                    playBtn.addEventListener("click", function (e) {
+                        e.stopPropagation();
+                        let videoMask = document.createElement("div");
+                        videoMask.setAttribute("class", "video-mask");
+                        pageContainer.appendChild(videoMask);
+                        let video = document.createElement("video");
+                        video.setAttribute("src", url);
+                        video.setAttribute("class", "video-self");
+                        video.setAttribute("controls", "controls");
+                        videoMask.appendChild(video);
+                        let close = document.createElement("div");
+                        close.setAttribute("class", "video-close");
+                        close.setAttribute("title", "关闭");
+                        close.innerHTML = "x"
+                        videoMask.appendChild(close);
+                        close.addEventListener("click", function() {
+                            pageContainer.removeChild(videoMask);
+                        });
+                    });
+                }
+            </script>
         </div>
 
         <!-- footer -->

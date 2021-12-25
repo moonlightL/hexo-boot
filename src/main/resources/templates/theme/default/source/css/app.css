@@ -1327,6 +1327,39 @@ h3.friend-link-title.blogger {
     transform: translate(-50%, -50%);
 }
 
+.video-mask {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0, 0, 0, .7);
+    z-index: 999;
+}
+
+.video-self {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 620px;
+    height: 420px;
+    z-index: 1000;
+}
+
+.video-close {
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    top: 12px;
+    right: 12px;
+    z-index: 1000;
+    cursor: pointer;
+    color: #fff;
+    font-size: 22px;
+}
 
 /** 专辑 end  */
 
@@ -1954,6 +1987,13 @@ h3.friend-link-title.blogger {
     }
 
     /** 归档 end **/
+
+    /**专辑 start**/
+    .video-self {
+        width: 360px;
+        height: 240px;
+    }
+    /**专辑 end**/
 
     /** 文章页 start */
 
