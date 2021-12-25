@@ -3,14 +3,18 @@ package com.light.hexo.business.admin.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.light.hexo.business.admin.constant.HexoExceptionEnum;
 import com.light.hexo.business.admin.mapper.AlbumDetailMapper;
+import com.light.hexo.business.admin.model.Album;
 import com.light.hexo.business.admin.model.AlbumDetail;
 import com.light.hexo.business.admin.service.AlbumDetailService;
+import com.light.hexo.business.admin.service.AlbumService;
 import com.light.hexo.business.portal.model.HexoPageInfo;
 import com.light.hexo.common.base.BaseMapper;
 import com.light.hexo.common.base.BaseRequest;
 import com.light.hexo.common.base.BaseServiceImpl;
 import com.light.hexo.common.exception.GlobalException;
 import com.light.hexo.common.util.ExceptionUtil;
+import com.light.hexo.common.util.VideoUtil;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
@@ -30,6 +34,12 @@ public class AlbumDetailServiceImpl extends BaseServiceImpl<AlbumDetail> impleme
 
     @Autowired
     private AlbumDetailMapper albumDetailMapper;
+
+    @Autowired
+    private AlbumService albumService;
+
+    @Autowired
+    private VideoUtil videoUtil;
 
     @Override
     public BaseMapper<AlbumDetail> getBaseMapper() {
@@ -52,11 +62,12 @@ public class AlbumDetailServiceImpl extends BaseServiceImpl<AlbumDetail> impleme
     }
 
     @Override
-    public void saveAlbumDetail(Integer albumId, String originalName, String url) throws GlobalException {
+    public void saveAlbumDetail(Integer albumId, String originalName, String url, String coverUrl) throws GlobalException {
         AlbumDetail albumDetail = new AlbumDetail();
         albumDetail.setAlbumId(albumId)
-                   .setName(originalName)
+                   .setName(FilenameUtils.getBaseName(originalName))
                    .setUrl(url)
+                   .setCoverUrl(coverUrl)
                    .setSort(0)
                    .setCreateTime(LocalDateTime.now())
                    .setUpdateTime(albumDetail.getCreateTime());
@@ -65,6 +76,14 @@ public class AlbumDetailServiceImpl extends BaseServiceImpl<AlbumDetail> impleme
 
     @Override
     public void saveAlbumDetail(AlbumDetail albumDetail) throws GlobalException {
+        Album album = this.albumService.findById(albumDetail.getAlbumId());
+        if (album == null) {
+            return;
+        }
+
+        String baseName = FilenameUtils.getBaseName(albumDetail.getName());
+        String coverUrl = album.getDetailType().equals(2) ? this.videoUtil.createCover(baseName, albumDetail.getUrl()) : albumDetail.getUrl();
+        albumDetail.setCoverUrl(coverUrl);
         super.saveModel(albumDetail);
     }
 

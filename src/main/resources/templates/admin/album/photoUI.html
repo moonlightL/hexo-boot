@@ -27,6 +27,7 @@
             color: #000;
             background-color: #fff;
             box-shadow: rgb(216 221 229) 0px 10px 14px;
+            overflow: auto;
         }
     </style>
 </head>
@@ -150,11 +151,14 @@
             });
 
             $("#submitBtn").on("click", function () {
+                let $that = $(this);
                 let id = $("#id").val();
+                $that.prop("disabled", true);
                 $.hexo.action.sendRequest({
                     url: BASE_URL + (id == "" ? "/saveAlbumDetail.json" : "/editAlbumDetail.json"),
                     params: $("#saveForm").serialize(),
                     callback: function (resp) {
+                        $that.prop("disabled", false);
                         $.hexo.modal.tip("保存成功", "success", function () {
                             window.AlbumManager.query();
                         });
@@ -229,13 +233,14 @@
                     let myDropzone = this;
                     $("#uploadBtn").off("click").on("click", function(e) {
                         e.preventDefault();
+                        $(this).prop("disabled", true);
                         // 手动上传所有图片
                         myDropzone.processQueue();
                     });
 
                     //当添加图片后的事件，上传按钮恢复可用
                     this.on("addedfile", function () {
-                        $("#uploadBtn").removeAttr("disabled");
+                        $("#uploadBtn").prop("disabled", false);
                     });
 
                     this.on("error", function (data, message) {
@@ -290,8 +295,8 @@
                     contentArr.push('<img class="img-fluid options-item img-thumb" src="' + obj.url + '" style="width: 331px;height: 203px; display: block">');
                     contentArr.push('<div class="options-overlay bg-black-op-75">');
                     contentArr.push('<div class="options-overlay-content">');
-                    contentArr.push('<h4 class="h5 text-white mb-5">' + obj.name + '</h4>');
-                    contentArr.push('<h4 class="h6 text-white-op mb-15">' + obj.remark + '</h4>');
+                    contentArr.push('<h4 class="h5 text-white mb-5">名称: ' + obj.name + '</h4>');
+                    contentArr.push('<h4 class="h6 text-white-op mb-15">备注: ' + obj.remark + '</h4>');
                     contentArr.push('<a class="btn btn-sm btn-rounded btn-noborder btn-alt-primary min-width-75 img-lightbox edit-btn" href="javascript:void(0)" data-id="' + obj.id + '"><i class="fa fa-pencil-square-o"></i> 编辑</a>');
                     contentArr.push('&nbsp;<a class="btn btn-sm btn-rounded btn-noborder btn-alt-danger min-width-75 remove-btn" href="javascript:void(0)" data-id="' + obj.id + '"><i class="fa fa-trash"></i> 删除</a>');
                     contentArr.push('</div></div></div></div>');

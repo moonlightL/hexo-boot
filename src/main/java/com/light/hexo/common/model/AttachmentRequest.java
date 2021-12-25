@@ -5,8 +5,6 @@ import com.light.hexo.common.base.BaseRequest;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Id;
-
 /**
  * @Author MoonlightL
  * @ClassName: AttachmentRequest
@@ -30,4 +28,8 @@ public class AttachmentRequest extends BaseRequest<Attachment> {
      */
     private Integer position;
 
+    /**
+     * 文件类型 1：图片 2：视频 3：其他  参考： FileTypeEnum
+     */
+    private Integer fileType;
 }

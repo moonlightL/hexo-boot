@@ -31,9 +31,10 @@ public interface AlbumDetailService extends BaseService<AlbumDetail> {
      * @param albumId
      * @param originalName
      * @param url
+     * @param coverUrl
      * @throws GlobalException
      */
-    void saveAlbumDetail(Integer albumId, String originalName, String url) throws GlobalException;
+    void saveAlbumDetail(Integer albumId, String originalName, String url, String coverUrl) throws GlobalException;
 
     /**
      * 保存专辑详情

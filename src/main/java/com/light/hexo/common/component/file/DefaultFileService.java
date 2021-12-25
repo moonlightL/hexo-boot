@@ -1,10 +1,12 @@
 package com.light.hexo.common.component.file;
 
 import com.light.hexo.business.admin.constant.ConfigEnum;
+import com.light.hexo.business.admin.constant.FileTypeEnum;
 import com.light.hexo.business.admin.model.Attachment;
 import com.light.hexo.business.admin.service.AttachmentService;
 import com.light.hexo.business.admin.service.ConfigService;
 import com.light.hexo.common.exception.GlobalException;
+import com.light.hexo.common.util.VideoUtil;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -33,6 +35,9 @@ public class DefaultFileService {
     @Autowired
     private AttachmentService attachmentService;
 
+    @Autowired
+    private VideoUtil videoUtil;
+
     private static final Map<String, String> THUMBNAIL_URL_MAP;
 
     static {
@@ -59,6 +64,7 @@ public class DefaultFileService {
             attachment.setFilename(fileRequest.getFilename())
                     .setOriginalName(fileRequest.getOriginalName())
                     .setContentType(fileRequest.getContentType())
+                    .setFileType(this.checkFileType(attachment.getContentType()).getType())
                     .setFileUrl(fileResponse.getUrl())
                     .setFilePath(fileResponse.getPath())
                     .setFileSize(fileRequest.getFileSize())
@@ -68,13 +74,28 @@ public class DefaultFileService {
             if (THUMBNAIL_URL_MAP.containsKey(fileRequest.getExtension())) {
                 attachment.setThumbnailUrl(THUMBNAIL_URL_MAP.get(fileRequest.getExtension()));
             } else {
-                attachment.setThumbnailUrl(attachment.getFileUrl());
+                if (attachment.getContentType().startsWith(FileTypeEnum.VIDEO.getCode())) {
+                    attachment.setThumbnailUrl(this.videoUtil.createCover(FilenameUtils.getBaseName(attachment.getOriginalName()), attachment.getFileUrl()));
+                } else {
+                    attachment.setThumbnailUrl(attachment.getFileUrl());
+                }
             }
 
             this.attachmentService.saveModel(attachment);
+
+            fileResponse.setCoverUrl(attachment.getThumbnailUrl());
         }
 
         return fileResponse;
+    }
+
+    private FileTypeEnum checkFileType(String contentType) {
+        if (contentType.startsWith(FileTypeEnum.IMAGE.getCode())) {
+            return FileTypeEnum.IMAGE;
+        } else if (contentType.startsWith(FileTypeEnum.VIDEO.getCode())) {
+            return FileTypeEnum.VIDEO;
+        }
+        return FileTypeEnum.OTHER;
     }
 
     public FileResponse upload(MultipartFile file) throws GlobalException, IOException {

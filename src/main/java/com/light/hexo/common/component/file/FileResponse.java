@@ -56,4 +56,8 @@ public class FileResponse {
      */
     private String originalName;
 
+    /**
+     * 封面
+     */
+    private String coverUrl;
 }

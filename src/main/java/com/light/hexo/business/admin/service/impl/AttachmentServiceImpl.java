@@ -57,6 +57,11 @@ public class AttachmentServiceImpl extends BaseServiceImpl<Attachment> implement
             criteria.andEqualTo("position", position);
         }
 
+        Integer fileType = attachmentRequest.getFileType();
+        if (fileType != null) {
+            criteria.andEqualTo("fileType", fileType);
+        }
+
         example.orderBy("id").desc();
         return example;
     }

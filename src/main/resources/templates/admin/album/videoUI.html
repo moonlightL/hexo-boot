@@ -11,18 +11,13 @@
         img {
             object-fit: cover;
         }
-        .original-name {
-            padding: 0 20px;
-            overflow: hidden;
-            text-overflow:ellipsis;
-            white-space: nowrap;
-        }
+
         .col-form-label {
             color: #000;
         }
         .options-container {
             background-color: #fff;
-            padding: 1rem;
+            padding: 0;
         }
         .hide {
             display: none;
@@ -34,12 +29,32 @@
             color: #fff;
             background-color: #fff;
             box-shadow: rgb(216 221 229) 0px 10px 14px;
+            overflow: auto;
+        }
+        .video-mask {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background: rgba(0, 0, 0, .7);
+            z-index: 999;
+        }
+        .video-self {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 620px;
+            height: 420px;
         }
     </style>
 </head>
 <body>
 <!-- Page Content -->
-<div class="content animated fadeIn">
+<div class="content animated fadeIn" id="content">
     <h2 class="content-heading" id="toolbar">
         <button type="button" class="btn btn-sm btn-secondary float-right hexo-remove" data-query-area="queryArea"><i class="fa fa-trash text-danger mr-5"></i> 全部删除</button>
         <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-refresh"><i class="fa fa-refresh mr-5"></i> 刷新</button>
@@ -73,18 +88,13 @@
             <hr>
             <nav aria-label="Page navigation" id="pageBar"></nav>
         </div>
-        <div id="right-panel" class="panel">
+        <div id="leftPanel" class="panel">
             <div class="block-content">
                 <div class="row justify-content-center py-20">
                     <div class="col-xl-12 col-xs-12">
                         <form id="saveForm" class="js-validation-bootstrap" method="post">
                             <input type="hidden" name="id" id="id">
                             <input type="hidden" name="albumId" id="albumId" th:value="${vo.id}">
-                            <div class="form-group row">
-                                <div class="col-lg-12">
-                                    <video id="video-url" src="" alt="" width="255" height="150" controls="controls" />
-                                </div>
-                            </div>
                             <div class="form-group row">
                                 <label class="col-lg-4 col-form-label" for="url">地址 <span class="text-danger">*</span></label>
                                 <div class="col-lg-8">
@@ -114,6 +124,11 @@
                                     <button type="button" class="btn btn-primary" id="submitBtn">提交</button>
                                 </div>
                             </div>
+                            <div class="form-group row">
+                                <div class="col-lg-12">
+                                    <div style="color: #000">提示：首次保存视频生成封面，远程拉取资源时间较长，请耐心等待</div>
+                                </div>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -140,8 +155,7 @@
                     let $saveForm = $("#saveForm");
                     $saveForm[0].reset();
                     $("#id").val("");
-                    $("#video-url").attr("src", "");
-                    $.panelslider($('#right-panel'));
+                    $.panelslider($('#leftPanel'));
                 } else if ($target.hasClass("hexo-upload")) {
                     let $uploadBody = $("#uploadBody");
                     if ($uploadBody.hasClass("hide")) {
@@ -160,11 +174,14 @@
             });
 
             $("#submitBtn").on("click", function () {
+                let $that = $(this);
                 let id = $("#id").val();
+                $that.prop("disabled", true);
                 $.hexo.action.sendRequest({
                     url: BASE_URL + (id == "" ? "/saveAlbumDetail.json" : "/editAlbumDetail.json"),
                     params: $("#saveForm").serialize(),
                     callback: function (resp) {
+                        $that.prop("disabled", false);
                         $.hexo.modal.tip("保存成功", "success", function () {
                             window.AlbumManager.query();
                         });
@@ -172,7 +189,23 @@
                 });
             });
 
-            $(document).on("click", ".edit-btn", function () {
+            let $document = $(document);
+            $document.on("click", ".play-btn", function () {
+                let $target = $(this);
+                let url = $target.data("url");
+                let $videoMask = $("<div class='video-mask'></div>");
+                $("#content").append($videoMask);
+                let $video = $("<video src='" + url + "' controls='controls' class='video-self'></video>");
+                $videoMask.append($video);
+
+                $videoMask.on("click", function () {
+                    $video.remove();
+                    $(this).remove();
+                });
+
+            });
+
+            $document.on("click", ".edit-btn", function () {
                 let $target = $(this);
                 AlbumManager.params = $.extend({}, AlbumManager.params, {"detailId": $target.data("id")});
 
@@ -182,21 +215,15 @@
                     callback: function (resp) {
                         let albumDetail = resp.data;
                         for (let key in albumDetail) {
-                            if (key == "url") {
-                                $("#" + key).val(albumDetail[key]);
-                                $("#video-url").attr("src", albumDetail[key]);
-                            } else {
-                                $("#" + key).val(albumDetail[key]);
-                            }
+                            $("#" + key).val(albumDetail[key]);
                         }
 
-                        $.panelslider($('#right-panel'));
+                        $.panelslider($('#leftPanel'));
                     }
                 });
             });
 
-            // 绑定删除事件
-            $(document).on("click", ".remove-btn", function () {
+            $document.on("click", ".remove-btn", function () {
                 let $target = $(this);
                 AlbumManager.params = $.extend({}, AlbumManager.params, {"detailId": $target.data("id")});
                 $.hexo.modal.confirm("确定要删除该文件吗?", function() {
@@ -239,13 +266,14 @@
                     let myDropzone = this;
                     $("#uploadBtn").off("click").on("click", function(e) {
                         e.preventDefault();
+                        $(this).prop("disabled", true);
                         // 手动上传所有图片
                         myDropzone.processQueue();
                     });
 
                     //当添加图片后的事件，上传按钮恢复可用
                     this.on("addedfile", function () {
-                        $("#uploadBtn").removeAttr("disabled");
+                        $("#uploadBtn").prop("disabled", false);
                     });
 
                     this.on("error", function (data, message) {
@@ -296,13 +324,16 @@
                 for (let i = 0; i < albumList.length; i++) {
                     let obj = albumList[i];
                     contentArr.push('<div class="col-md-4 col-lg-4 col-xl-4 animated fadeIn">');
-                    contentArr.push('<div class="options-container">');
-                    contentArr.push('<div class="text-center">标题: ' + obj.name + '</div>')
-                    contentArr.push('<video src="' + obj.url + '" controls="controls" style="width: 420px;height: 233px; display: block">');
-                    contentArr.push('</div><br><div class="text-center">');
-                    contentArr.push('<a class="btn btn-sm btn-rounded btn-noborder btn-alt-primary min-width-75 img-lightbox edit-btn" href="javascript:void(0)" data-id="' + obj.id + '"><i class="fa fa-pencil-square-o"></i> 编辑</a>');
+                    contentArr.push('<div class="text-center" style="padding: .5rem 0; background: #f0f2f5;">标题: ' + obj.name + '</div>')
+                    contentArr.push('<div class="options-container fx-item-zoom-in fx-overlay-slide-down">');
+                    contentArr.push('<img class="img-fluid" src="' + obj.coverUrl + '" style="width: 100%;height: 203px; display: block">');
+                    contentArr.push('<div class="options-overlay bg-black-op-75">');
+                    contentArr.push('<div class="options-overlay-content">');
+                    contentArr.push('<h4 class="h6 text-white-op mb-15">备注: ' + obj.remark + '</h4>');
+                    contentArr.push('<a class="btn btn-sm btn-rounded btn-noborder btn-alt-primary min-width-75 img-lightbox play-btn" href="javascript:void(0)" data-url="' + obj.url + '"><i class="fa fa-play-circle-o"></i> 播放</a>');
+                    contentArr.push(' <a class="btn btn-sm btn-rounded btn-noborder btn-alt-success min-width-75 img-lightbox edit-btn" href="javascript:void(0)" data-id="' + obj.id + '"><i class="fa fa-pencil-square-o"></i> 编辑</a>');
                     contentArr.push(' <a class="btn btn-sm btn-rounded btn-noborder btn-alt-danger min-width-75 remove-btn" href="javascript:void(0)" data-id="' + obj.id + '"><i class="fa fa-trash"></i> 删除</a>');
-                    contentArr.push('</div></div>');
+                    contentArr.push('</div></div></div></div>');
                 }
             } else {
                 contentArr.push('<div class="col-md-12 col-lg-12 col-xl-12 animated fadeIn text-center"><h5>暂无内容</h5></div>');

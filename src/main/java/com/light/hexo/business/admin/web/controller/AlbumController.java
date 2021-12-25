@@ -3,8 +3,6 @@ package com.light.hexo.business.admin.web.controller;
 import com.github.pagehelper.PageInfo;
 import com.light.hexo.business.admin.constant.HexoExceptionEnum;
 import com.light.hexo.business.admin.model.Album;
-import com.light.hexo.business.admin.model.AlbumDetail;
-import com.light.hexo.business.admin.model.Attachment;
 import com.light.hexo.business.admin.service.AlbumDetailService;
 import com.light.hexo.business.admin.service.AlbumService;
 import com.light.hexo.common.base.BaseController;
@@ -25,6 +23,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -163,7 +162,7 @@ public class AlbumController extends BaseController {
                 FileResponse fileResponse = this.defaultFileService.upload(file);
                 if (fileResponse.getSuccess()) {
                     urlList.add(fileResponse.getUrl());
-                    this.albumDetailService.saveAlbumDetail(albumId, fileResponse.getOriginalName(), fileResponse.getUrl());
+                    this.albumDetailService.saveAlbumDetail(albumId, fileResponse.getOriginalName(), fileResponse.getUrl(), fileResponse.getCoverUrl());
                 }
 
             } catch (IOException e) {

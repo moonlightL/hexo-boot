@@ -42,9 +42,14 @@ public class AlbumDetail implements Serializable {
     private String name;
 
     /**
-     * 地址
+     * 资源地址
      */
     private String url;
+
+    /**
+     * 封面地址
+     */
+    private String coverUrl;
 
     /**
      * 排序
