@@ -85,6 +85,10 @@ public class AlbumServiceImpl extends BaseServiceImpl<Album> implements AlbumSer
             album.setCoverUrl(HexoConstant.DEFAULT_CATEGORY_COVER);
         }
 
+        if (album.getVisitType().equals(1)) {
+            album.setVisitCode("");
+        }
+
         this.saveModel(album);
 
         // 清除缓存
@@ -96,6 +100,11 @@ public class AlbumServiceImpl extends BaseServiceImpl<Album> implements AlbumSer
         if (StringUtils.isBlank(album.getCoverUrl())) {
             album.setCoverUrl(HexoConstant.DEFAULT_CATEGORY_COVER);
         }
+
+        if (album.getVisitType().equals(1)) {
+            album.setVisitCode("");
+        }
+
         this.updateModel(album);
 
         // 清除缓存
