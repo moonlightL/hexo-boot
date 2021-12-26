@@ -312,10 +312,31 @@
             <version>5.7.2</version>
         </dependency>
 
+        <!-- 视频相关 -->
         <dependency>
             <groupId>org.bytedeco</groupId>
-            <artifactId>javacv-platform</artifactId>
-            <version>1.5.3</version>
+            <artifactId>javacv</artifactId>
+            <version>1.5.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.bytedeco</groupId>
+            <artifactId>javacpp</artifactId>
+            <version>1.5.1</version>
+        </dependency>
+
+<!--        <dependency>-->
+<!--            <groupId>org.bytedeco</groupId>-->
+<!--            <artifactId>ffmpeg</artifactId>-->
+<!--            <version>4.2.1-1.5.2</version>-->
+<!--            <classifier>windows-x86_64</classifier>-->
+<!--        </dependency>-->
+
+        <dependency>
+            <groupId>org.bytedeco</groupId>
+            <artifactId>ffmpeg</artifactId>
+            <version>4.2.1-1.5.2</version>
+            <classifier>linux-x86_64</classifier>
         </dependency>
 
     </dependencies>

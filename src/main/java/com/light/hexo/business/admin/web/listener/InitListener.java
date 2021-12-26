@@ -3,8 +3,6 @@ package com.light.hexo.business.admin.web.listener;
 import com.light.hexo.business.admin.model.*;
 import com.light.hexo.business.admin.service.*;
 import lombok.extern.slf4j.Slf4j;
-import org.bytedeco.javacv.FFmpegFrameGrabber;
-import org.bytedeco.javacv.FrameGrabber;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -64,12 +62,6 @@ public class InitListener implements ApplicationListener<ContextRefreshedEvent> 
 
         this.initBlogInfo(servletContext);
         log.info("==========InitListener 初始化[博客信息]===========");
-
-        try {
-            FFmpegFrameGrabber.tryLoad();
-        } catch (FrameGrabber.Exception e) {
-            e.printStackTrace();
-        }
     }
 
     private void initBlogInfo(ServletContext servletContext) {
