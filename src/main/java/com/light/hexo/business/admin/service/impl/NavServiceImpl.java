@@ -214,10 +214,6 @@ public class NavServiceImpl extends BaseServiceImpl<Nav> implements NavService {
 
         NavEvent navEvent = (NavEvent) event;
 
-        if (navEvent.getId() == null) {
-            return;
-        }
-
         if (NavEvent.Type.LOAD.getCode().equals(navEvent.getType().getCode())) {
             WebApplicationContext webApplicationContext = (WebApplicationContext) SpringContextUtil.applicationContext;
             ServletContext servletContext = webApplicationContext.getServletContext();
@@ -228,6 +224,10 @@ public class NavServiceImpl extends BaseServiceImpl<Nav> implements NavService {
             this.initNav(servletContext);
 
         } else if (NavEvent.Type.READ.getCode().equals(navEvent.getType().getCode())) {
+            if (navEvent.getId() == null) {
+                return;
+            }
+
             Nav nav = this.findById(navEvent.getId());
             if (nav != null) {
                 Nav tmp = new Nav();

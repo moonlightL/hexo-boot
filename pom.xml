@@ -325,12 +325,12 @@
             <version>1.5.1</version>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>org.bytedeco</groupId>-->
-<!--            <artifactId>ffmpeg</artifactId>-->
-<!--            <version>4.2.1-1.5.2</version>-->
-<!--            <classifier>windows-x86_64</classifier>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>org.bytedeco</groupId>
+            <artifactId>ffmpeg</artifactId>
+            <version>4.2.1-1.5.2</version>
+            <classifier>windows-x86_64</classifier>
+        </dependency>
 
         <dependency>
             <groupId>org.bytedeco</groupId>
