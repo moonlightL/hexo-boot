@@ -49,6 +49,7 @@
             transform: translate(-50%, -50%);
             width: 620px;
             height: 420px;
+            z-index: 1000;
         }
     </style>
 </head>
@@ -190,16 +191,17 @@
             });
 
             let $document = $(document);
-            $document.on("click", ".play-btn", function () {
+            $document.on("click", ".play-btn", function (e) {
+                e.stopPropagation();
                 let $target = $(this);
                 let url = $target.data("url");
                 let $videoMask = $("<div class='video-mask'></div>");
                 $("#content").append($videoMask);
-                let $video = $("<video src='" + url + "' controls='controls' class='video-self'></video>");
+                let $video = $("<video src='" + url + "' controls='controls' class='video-self' autoplay='autoplay'></video>");
                 $videoMask.append($video);
 
-                $videoMask.on("click", function () {
-                    $video.remove();
+                $videoMask.on("click", function (e) {
+                    $video.attr("src", "").remove();
                     $(this).remove();
                 });
 
