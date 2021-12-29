@@ -158,7 +158,7 @@ public class ThemeController extends BaseController {
         }
 
         String contentType = file.getContentType();
-        if (!"application/x-zip-compressed".equals(contentType)) {
+        if (!"application/x-zip-compressed".equalsIgnoreCase(contentType) && !"application/zip".equalsIgnoreCase(contentType)) {
             ExceptionUtil.throwEx(GlobalExceptionEnum.ERROR_PARAM);
         }
 

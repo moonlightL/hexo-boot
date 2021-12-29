@@ -87,6 +87,12 @@
                 });
 
                 this.on("success", function (e, resp) {
+
+                    if (!resp.success) {
+                        $.hexo.modal.tip(resp.message, "error");
+                        return;
+                    }
+
                     let themeName = resp.data;
 
                     let num = 0;
