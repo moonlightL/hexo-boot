@@ -25,7 +25,7 @@
 }
 
 .toc-nav li:hover:before{
-  background-color: #37b1f3;
+  background-color: var(--theme-color);
 }
 
 .toc-nav {
@@ -43,7 +43,7 @@
 
 
 .toc-nav li.active:before {
-    background-color: #37b1f3;
+    background-color: var(--theme-color);
     width: 18px;
     height: 18px;
     border: 4px solid #cbeff9   ;

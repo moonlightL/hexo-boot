@@ -67,7 +67,7 @@
 }
 
 :root[mode=light] {
-    --theme-color: #37b1f3;
+    --theme-color: #8fabbb;
     --hover-color: #fff;
     --blog-bg-color: #f0f2f5;
     --content-color: #fff;
@@ -85,7 +85,7 @@
 }
 
 :root[mode=dark] {
-    --theme-color: #2f9064;
+    --theme-color: #20ad96;
     --hover-color: #fff;
     --blog-bg-color: #202020;
     --content-color: #0e0f10;
@@ -1050,8 +1050,7 @@ span.effect {
 }
 
 .archives .archives-item {
-    padding: .75rem 0;
-    border-bottom: 1px dashed #aaa;
+    padding: 1rem 0;
 }
 
 .archives a {
@@ -1067,8 +1066,7 @@ span.effect {
 }
 
 .archives a:hover {
-    font-size: 16px;
-    font-weight: 600;
+    transform: translateX(10px);
 }
 
 .archives span.title {
@@ -1297,6 +1295,10 @@ h3.friend-link-title.blogger {
     width: 100%;
     height:150px;
     object-fit: cover;
+}
+
+.album-item .descr {
+    padding-top: 1rem;
 }
 
 .album-detail-item {
@@ -2407,7 +2409,6 @@ h3.friend-link-title.blogger {
 /** 目录 start **/
 .toc-nav li.active:before {
     background-color: var(--theme-color);
-    border: 4px solid #cbf9f5;
 }
 
 .toc-nav li a {
@@ -2472,4 +2473,8 @@ h3.friend-link-title.blogger {
 
 #animate {
     z-index: -1!important;
+}
+
+#nprogress .bar, #nprogress .spinner-icon{
+    background: var(--theme-color);
 }

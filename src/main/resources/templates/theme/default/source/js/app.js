@@ -284,7 +284,6 @@
         $(document).pjax('a[data-pjax]', '#wrap', {fragment: '#wrap', timeout: 8000});
         $(document).on('pjax:send', function() { NProgress.start();});
         $(document).on('pjax:complete',   function(e) {
-            loadLazy();
             circleMagic();
             contentWayPoint();
             dynamicEvent();
