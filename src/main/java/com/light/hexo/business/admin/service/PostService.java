@@ -209,5 +209,10 @@ public interface PostService extends BaseService<Post>, EventService {
      */
     List<Post> findTopList() throws GlobalException;
 
-
+    /**
+     * 获取简单详情
+     * @param page
+     * @return
+     */
+    Post getSimpleInfo(String page) throws GlobalException;
 }

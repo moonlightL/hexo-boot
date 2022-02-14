@@ -882,6 +882,23 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
     }
 
     @Override
+    public Post getSimpleInfo(String page) throws GlobalException {
+        Example.Builder builder = Example.builder(Post.class)
+                .select("id", "title", "author", "publishDate", "year", "month", "day", "top", "reprint", "reprintLink", "comment",
+                        "coverUrl", "coverType", "link", "customLink", "categoryId", "tags", "readNum", "praiseNum", "commentNum", "authCode",
+                        "topTime", "createTime");
+        builder.where(Sqls.custom().andEqualTo("link", page).andEqualTo("delete", false));
+
+        Post post = this.getBaseMapper().selectOneByExample(builder.build());
+        if (post == null) {
+            builder.where(Sqls.custom().andEqualTo("customLink", page).andEqualTo("delete", false));
+            post = this.getBaseMapper().selectOneByExample(builder.build());
+        }
+
+        return post;
+    }
+
+    @Override
     public List<Post> listEmptyHtml() throws GlobalException {
         Example example = Example.builder(Post.class)
                 .select("id", "content")

@@ -39,6 +39,9 @@ public class CommonController {
     protected PostCommentService postCommentService;
 
     @Autowired
+    protected CommentService commentService;
+
+    @Autowired
     protected TagService tagService;
 
     @Autowired

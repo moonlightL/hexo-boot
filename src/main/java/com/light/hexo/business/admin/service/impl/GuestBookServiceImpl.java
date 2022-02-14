@@ -244,7 +244,7 @@ public class GuestBookServiceImpl extends BaseServiceImpl<GuestBook> implements 
             return new ArrayList<>();
         }
 
-        List<Integer> pidList = guestBookList.stream().map(GuestBook::getId).collect(Collectors.toList());
+        List<Integer> pidList = guestBookList.stream().map(GuestBook::getPId).collect(Collectors.toList());
         Example parentExample = Example.builder(GuestBook.class).where(Sqls.custom().andIn("id", pidList)).build();
         List<GuestBook> parentList = this.getBaseMapper().selectByExample(parentExample);
         Map<Integer, GuestBook> parentMap = parentList.stream().collect(Collectors.toMap(GuestBook::getId, Function.identity(), (k1, k2)->k1));

@@ -25,7 +25,7 @@
     <link rel="stylesheet" th:href="@{${baseLink} + '/source/js/nprogress/nprogress.min.css'}">
     <link rel="stylesheet" th:href="@{${baseLink} + '/source/js/autoToc/jquery.autoToc.css'}"/>
     <link rel="stylesheet" th:href="@{${baseLink} + '/source/js/overshare/css/share.min.css'}"/>
-    <link rel="stylesheet" th:href="@{${baseLink} + '/source/js/jquery-comment/jquery-comment.css'}"/>
+    <link rel="stylesheet" th:href="@{${baseLink} + '/source/js/hb-comment/hb-comment.css'}"/>
     <link rel="stylesheet" th:href="@{${prefix} + '/source/css/app.css?v=' + ${activeTheme.configMap['version']}}"/>
     <style th:if="${activeTheme.configMap['mourn'] == 'true'}">
         #animate,.footer-copyright,.content,.options,#nprogress .bar, #nprogress .spinner-icon{
@@ -104,6 +104,18 @@
     <div id="aplayer" class="visible"></div>
 </div>
 
+<div th:fragment="comment">
+    <div class="hb-comment"></div>
+    <script type='text/javascript' th:src="@{${baseLink} + '/source/js/hb-comment/hb-comment.js'}"></script>
+    <script th:inline="javascript">
+        HbComment.init({
+            el: ".hb-comment",
+            baseUrl: [[${baseLink}]] + "/source/js",
+            wrapClass: "ml-content"
+        });
+    </script>
+</div>
+
 <div th:fragment="script">
     <script th:inline="javascript">
         let themeName = [[${activeTheme.name}]];
@@ -112,8 +124,6 @@
         let openPjax = [[${activeTheme.configMap['PJAX']}]];
     </script>
     <script type='text/javascript' th:src="@{${baseLink} + '/source/js/plugins.js'}"></script>
-    <script type='text/javascript' th:src="@{${baseLink} + '/source/js/jquery-comment/jquery.cookie.js'}"></script>
-    <script type='text/javascript' th:src="@{${baseLink} + '/source/js/jquery-comment/jquery-comment.js'}"></script>
     <script type='text/javascript' th:src="@{${baseLink} + '/source/css/bootstrap/js/bootstrap.min.js'}"></script>
     <script type='text/javascript' th:src="@{${baseLink} + '/source/js/fancybox/jquery.fancybox.min.js'}"></script>
     <script type='text/javascript' th:src="@{${baseLink} + '/source/js/layer/layer.js'}"></script>

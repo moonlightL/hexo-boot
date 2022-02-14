@@ -34,6 +34,7 @@ public enum HexoExceptionEnum implements GlobalExceptionMap {
 
     // 3xxx --> 评论
     ERROR_POST_COMMENT_NOT_EXIST(3001, "该评论不存在"),
+    ERROR_POST_COMMENT_PAGE_NOT_EXIST(3002, "评论页面不存在"),
 
     // 4xxx --> 分类
     ERROR_CATEGORY_NOT_EXIST(4001, "该分类不存在"),

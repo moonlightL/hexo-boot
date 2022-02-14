@@ -134,12 +134,13 @@
         </div>
 
         <!-- 评论 -->
-        <div id="detail-comment" class="comment-container"></div>
         <script type="text/javascript" th:inline="javascript">
-            window.postId = [[${post.id}]];
+            window.isDetail = [[${isDetail}]];
             window.canComment = [[${post.comment}]];
         </script>
-    </div>
+        <div th:replace="~{theme/default/common :: comment}"></div>
+
+        </div>
 
         <!-- footer -->
         <div th:replace="~{theme/default/common :: footer}"></div>

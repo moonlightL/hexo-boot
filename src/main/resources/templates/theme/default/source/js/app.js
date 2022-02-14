@@ -6,12 +6,6 @@
                 css: baseLink + "/source/js/APlayer/APlayer.min.css",
                 js: baseLink + "/source/js/APlayer/APlayer.min.js"
             },
-            about: {
-                js: baseLink + "/source/js/about.js?v=" + version
-            },
-            detail: {
-                js: baseLink + "/source/js/detail.js?v=" + version
-            },
             highlight: {
                 js: baseLink + "/source/js/highlightjs/highlight.pack.js"
             },
@@ -182,7 +176,8 @@
     };
 
     const postEvent = function() {
-        let $detailComment = $("#detail-comment");
+        console.log(window.isDetail)
+        let $detailComment = $(".hb-comment");
         if ($detailComment.length > 0) {
             $.getScript(APP.plugins.highlight.js, function () {
                 document.querySelectorAll('figure span').forEach((block) => {
@@ -238,20 +233,6 @@
                     }
                 });
             });
-
-            $.getScript(APP.plugins.detail.js, function () {
-                initComment(window.postId, window.canComment);
-            });
-
-        }
-    };
-
-    const aboutEvent = function() {
-        let $about = $("#about-comment");
-        if ($about.length > 0) {
-            $.getScript(APP.plugins.about.js, function () {
-                initComment();
-            });
         }
     };
 
@@ -288,7 +269,6 @@
             contentWayPoint();
             dynamicEvent();
             postEvent();
-            aboutEvent();
             let $navBar = $("#navbar");
             let $arr = $navBar.find("ul.menu>li");
             $arr.removeClass("active");
@@ -307,7 +287,6 @@
         contentWayPoint();
         dynamicEvent();
         postEvent();
-        aboutEvent();
         if (openPjax === "true") {
             pjaxEvent();
         }

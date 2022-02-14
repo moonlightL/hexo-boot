@@ -1,0 +1,682 @@
+! function(win, func) {
+    "object" == typeof exports && "object" == typeof module ? module.exports = t() : "function" == typeof define && define.amd ? define([], t) : "object" == typeof exports ? exports.HbComment = func() : win.HbComment = func()
+}(window, (function(){
+
+    let HbComment = function() {};
+
+    HbComment.DEFAULT_OPTIONS = {
+        el: ".hb-comment",                        // 评论区容器
+        title: "评论",                           // 标题，如：评论、留言
+        subTitle: "最新评论",                     // 子标题
+        baseUrl: "",                             // jquery-comment 父级目录路径
+        listUrl: "/commentList.json",            // 评论列表请求地址
+        sendUrl: "/auth/sendComment.json",       // 发送评论请求地址
+        ajaxParams: {pageNum: 1, pageSize: 10},  // 评论列表请求参数
+        wrapClass: "",                           // 包裹样式
+        canComment: true,                        // 是否开启评论
+        listHandler: function(resp) {            // 评论列表请求响应数据处理
+            return {
+                totalNum: resp.data.totalNum,
+                commentList: resp.data.commentList,
+                commentShowType: resp.data.commentShowType
+            }
+        },
+        sendHandler: function (resp) {           // 发送评论请求响应数据处理
+            return resp;
+        }
+    };
+
+    HbComment.prototype.init = function(options, isRefresh) {
+        if (isRefresh) {
+            this.initW();
+            this.initR();
+            return;
+        }
+
+        let panel = document.querySelector(".hb-w");
+        if (panel != null) {
+            return;
+        }
+
+        this.options = Object.assign(HbComment.DEFAULT_OPTIONS, options);
+        this.el = document.querySelector(options.el);
+        if (!this.el) {
+            return;
+        }
+        this.$container = this.el;
+        let cookie = getCookie("visitor");
+        this.visitor = cookie ? JSON.parse(getCookie("visitor")) : null;
+        this.initEmoji();
+        this.initW();
+        this.initR();
+    };
+
+    HbComment.prototype.initEmoji = function () {
+        let self = this;
+        self.emojiArr = [
+            {'title':'微笑','url':'weixiao.gif'},
+            {'title':'嘻嘻','url':'xixi.gif'},
+            {'title':'哈哈','url':'haha.gif'},
+            {'title':'可爱','url':'keai.gif'},
+            {'title':'可怜','url':'kelian.gif'},
+            {'title':'挖鼻','url':'wabi.gif'},
+            {'title':'吃惊','url':'chijing.gif'},
+            {'title':'害羞','url':'haixiu.gif'},
+            {'title':'挤眼','url':'jiyan.gif'},
+            {'title':'闭嘴','url':'bizui.gif'},
+            {'title':'鄙视','url':'bishi.gif'},
+            {'title':'爱你','url':'aini.gif'},
+            {'title':'泪','url':'lei.gif'},
+            {'title':'偷笑','url':'touxiao.gif'},
+            {'title':'亲亲','url':'qinqin.gif'},
+            {'title':'生病','url':'shengbing.gif'},
+            {'title':'太开心','url':'taikaixin.gif'},
+            {'title':'白眼','url':'baiyan.gif'},
+            {'title':'右哼哼','url':'youhengheng.gif'},
+            {'title':'左哼哼','url':'zuohengheng.gif'},
+            {'title':'嘘','url':'xu.gif'},
+            {'title':'衰','url':'shuai.gif'},
+            {'title':'吐','url':'tu.gif'},
+            {'title':'哈欠','url':'haqian.gif'},
+            {'title':'抱抱','url':'baobao.gif'},
+            {'title':'怒','url':'nu.gif'},
+            {'title':'疑问','url':'yiwen.gif'},
+            {'title':'馋嘴','url':'chanzui.gif'},
+            {'title':'拜拜','url':'baibai.gif'},
+            {'title':'思考','url':'sikao.gif'},
+            {'title':'汗','url':'han.gif'},
+            {'title':'困','url':'kun.gif'},
+            {'title':'睡','url':'shui.gif'},
+            {'title':'钱','url':'qian.gif'},
+            {'title':'失望','url':'shiwang.gif'},
+            {'title':'酷','url':'ku.gif'},
+            {'title':'色','url':'se.gif'},
+            {'title':'哼','url':'heng.gif'},
+            {'title':'鼓掌','url':'guzhang.gif'},
+            {'title':'晕','url':'yun.gif'},
+            {'title':'悲伤','url':'beishang.gif'},
+            {'title':'抓狂','url':'zhuakuang.gif'},
+            {'title':'黑线','url':'heixian.gif'},
+            {'title':'阴险','url':'yinxian.gif'},
+            {'title':'怒骂','url':'numa.gif'},
+            {'title':'互粉','url':'hufen.gif'},
+            {'title':'书呆子','url':'shudaizi.gif'},
+            {'title':'愤怒','url':'fennu.gif'},
+            {'title':'感冒','url':'ganmao.gif'},
+            {'title':'心','url':'xin.gif'},
+            {'title':'伤心','url':'shangxin.gif'},
+            {'title':'猪','url':'zhu.gif'},
+            {'title':'熊猫','url':'xiongmao.gif'},
+            {'title':'兔子','url':'tuzi.gif'},
+            {'title':'OK','url':'ok.gif'},
+            {'title':'耶','url':'ye.gif'},
+            {'title':'GOOD','url':'good.gif'},
+            {'title':'NO','url':'no.gif'},
+            {'title':'赞','url':'zan.gif'},
+            {'title':'来','url':'lai.gif'},
+            {'title':'弱','url':'ruo.gif'},
+            {'title':'草泥马','url':'caonima.gif'},
+            {'title':'神马','url':'shenma.gif'},
+            {'title':'囧','url':'jiong.gif'},
+            {'title':'浮云','url':'fuyun.gif'},
+            {'title':'给力','url':'geili.gif'},
+            {'title':'围观','url':'weiguan.gif'},
+            {'title':'威武','url':'weiwu.gif'},
+            {'title':'话筒','url':'huatong.gif'},
+            {'title':'蜡烛','url':'lazhu.gif'},
+            {'title':'蛋糕','url':'dangao.gif'},
+            {'title':'发红包','url':'fahongbao.gif'}
+        ];
+    };
+
+    HbComment.prototype.initW = function () {
+        let self = this;
+        let baseUrl = self.options.baseUrl;
+        let htmlArr = [];
+        if (self.options.wrapClass) {
+            htmlArr.push('<div class="'+ self.options.wrapClass +'">');
+        }
+        htmlArr.push('<div class="hb-w">');
+        htmlArr.push('<div class="hb-w-head">');
+        htmlArr.push('<h2>' + self.options.title + '</h2>' + (self.visitor ? '（欢迎归来）' : '') + ' <span></span>');
+        htmlArr.push('</div>');
+        htmlArr.push('<div class="hb-w-body">');
+        htmlArr.push('<div class="hb-comment-info">');
+        if (self.visitor) {
+            htmlArr.push('<img src="'+ self.visitor.avatar + '" class="hb_avatar" width="48" height="48">');
+            htmlArr.push('<input type="text" name="email" value="' + self.visitor.email + '" class="hb_email" readonly="readonly" placeholder="*邮箱(qq邮箱可自动获取头像和昵称)">');
+            htmlArr.push('<input type="text" name="nickname" value="' + self.visitor.nickname + '" class="hb_nickname" readonly="readonly" placeholder="*昵称">');
+            htmlArr.push('<input type="text" name="homePage" value="' + self.visitor.homePage + '" class="hb_home_page" placeholder="主页">');
+        } else {
+            htmlArr.push('<img src="'+ baseUrl + '/jquery-comment/image/avatar/default_avatar.jpg" class="hb_avatar" width="48" height="48">');
+            htmlArr.push('<input type="text" name="email" class="hb_email" placeholder="*邮箱(qq邮箱可自动获取头像和昵称)">');
+            htmlArr.push('<input type="text" name="nickname" class="hb_nickname" placeholder="*昵称">');
+            htmlArr.push('<input type="text" name="homePage" class="hb_home_page" placeholder="主页">');
+        }
+        htmlArr.push('</div>');
+        htmlArr.push('<div class="hb-comment-content">');
+        htmlArr.push('<textarea name="content" class="hb_content" placeholder="*内容"></textarea>');
+        htmlArr.push('</div>');
+        htmlArr.push('<div class="hb-comment-help">');
+        htmlArr.push('<a href="javascript:void(0)" title="表情" class="emoji_btn">☺</a>');
+        htmlArr.push('<button type="button" class="send_btn">发送</button>');
+        htmlArr.push('</div>');
+        htmlArr.push('</div>');
+        htmlArr.push('</div>');
+
+        if (self.options.wrapClass) {
+            htmlArr.push('</div>');
+        }
+
+        self.$container.insertAdjacentHTML('beforeend', htmlArr.join(""));
+
+        if (self.options.canComment) {
+            self.registerWEvent(document.querySelector(".hb-w-body"));
+        }
+    };
+
+    HbComment.prototype.initR = function () {
+        let self = this;
+        let htmlArr = [];
+        if (self.options.wrapClass) {
+            htmlArr.push('<div class="'+ self.options.wrapClass +'">');
+        }
+        htmlArr.push('<div class="hb-r">');
+        htmlArr.push('<div class="hb-r-head">');
+        htmlArr.push('<h2>'+ self.options.subTitle +' <span id="commentNum"></span></h2>');
+        htmlArr.push('</div>');
+        htmlArr.push('<div class="hb-r-body" id="hbRBody">');
+        htmlArr.push('</div>');
+        htmlArr.push('</div>');
+        if (self.options.wrapClass) {
+            htmlArr.push('</div>');
+        }
+
+        self.$container.insertAdjacentHTML('beforeend', htmlArr.join(""));
+
+        self.getCommentList(self.options.ajaxParams);
+    }
+
+    HbComment.prototype.getCommentList = function(ajaxParams) {
+        let self = this;
+
+        if (!self.options.listUrl) {
+            console.error("listUrl 参数为空");
+            return;
+        }
+
+        let newAjaxParams = Object.assign(self.options.ajaxParams, {page: window.location.pathname})
+
+        sendRequest({
+            type: "GET",
+            url: self.options.listUrl + "?" + formatData(newAjaxParams),
+            success: function(resp) {
+                let transformResp = self.options.listHandler(resp);
+                self.commentData = transformResp;
+                self.renderCommentList();
+                self.renderPagination();
+            }
+        });
+    }
+
+    HbComment.prototype.renderCommentList = function() {
+        let self = this;
+        let commentListBody = document.querySelector("#hbRBody");
+
+        if (!self.commentData || self.commentData.totalNum === 0) {
+            let htmlArr = ["<div class='comment_send_info'><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span> <strong>沙发位空缺，快来抢呀 ~~</strong></div>"];
+            commentListBody.insertAdjacentHTML('beforeend', htmlArr.join(""));
+            return;
+        }
+
+        document.querySelector("#commentNum").innerHTML = "(" + self.commentData.totalNum + " 条)";
+
+        let htmlArr = [];
+        let list = self.commentData.commentList;
+        let commentShowType = self.commentData.commentShowType;
+        for (let i = 0; i < list.length; i++) {
+            let comment = list[i];
+            htmlArr.push('<div class="hb-r-body-item">');
+            htmlArr.push('<div class="avatar">');
+            htmlArr.push('<img id="'+ comment.id +'" src="'+ comment.avatar +'" width="48" height="48">');
+            htmlArr.push('</div>');
+            htmlArr.push('<div class="main">');
+            htmlArr.push('<div class="info">');
+            let bloggerHtml = comment.blogger ? ' <span class="blogger">博主</span>' : '';
+            if (comment.homePage) {
+                htmlArr.push('<div class="nickname"><a href="' + comment.homePage + '" target="_blank">'+ comment.nickname  + bloggerHtml + '</a></div>');
+            } else {
+                htmlArr.push('<div class="nickname">'+ comment.nickname + bloggerHtml + '</div>');
+            }
+            if (self.options.canComment) {
+                htmlArr.push('<div class="action"><a href="javascript:void(0)" title="回复" class="action-reply" data-comment-id="'+ comment.id +'" data-nickname="'+ comment.nickname +'"><span class="glyphicon glyphicon-comment"></span></a></div>');
+            }
+            htmlArr.push('</div>');
+            htmlArr.push('<div class="content">');
+            htmlArr.push('<p>'+ formatContent(comment.content) +'</p>');
+            htmlArr.push('</div>');
+            if (commentShowType === "singleRow") {
+                let parent = comment.parent;
+                if (parent) {
+                    let bloggerHtml = parent.blogger ? ' <span class="blogger">[博主]</span>' : '';
+                    htmlArr.push('<blockquote class="original-content">');
+                    htmlArr.push('<p><b>@'+ parent.nickname + bloggerHtml + ':</b> '+ formatContent(parent.content) +'</p>');
+                    htmlArr.push('</blockquote>');
+                }
+                htmlArr.push('<div class="extras">');
+                htmlArr.push('使用 ' + comment.browser + ' 浏览器发表于 <span>'+ comment.timeDesc +'</span>');
+                htmlArr.push('</div>');
+            } else {
+                htmlArr.push('<div class="extras">');
+                htmlArr.push('使用 ' + comment.browser + ' 浏览器发表于 <span>'+ comment.timeDesc +'</span>');
+                htmlArr.push('</div>');
+                if (comment.replyList && comment.replyList.length > 0) {
+                    htmlArr.push('<div class="replies">');
+                    for (let j = 0; j < comment.replyList.length; j++) {
+                        let replyComment = comment.replyList[j];
+                        htmlArr.push('<div class="hb-r-body-item">');
+                        htmlArr.push('<div class="avatar">');
+                        htmlArr.push('<img id="'+ replyComment.id +'" src="'+ replyComment.avatar +'" width="48" height="48">');
+                        htmlArr.push('</div>');
+                        htmlArr.push('<div class="main">');
+                        htmlArr.push('<div class="info">');
+                        let bloggerHtml = replyComment.blogger ? ' <span class="blogger">博主</span>' : '';
+                        htmlArr.push('<div class="nickname">'+ replyComment.nickname + bloggerHtml + '</div>');
+                        if (self.options.canComment) {
+                            htmlArr.push('<div class="action"><a href="javascript:void(0)" title="回复" class="action-reply" data-comment-id="'+ replyComment.id +'" data-nickname="'+ replyComment.nickname +'"><span class="glyphicon glyphicon-comment"></span></a></div>');
+                        }
+                        htmlArr.push('</div>');
+                        htmlArr.push('<div class="content">');
+                        htmlArr.push('<p><b>@'+ replyComment.sourceNickname +'</b>&nbsp;&nbsp;'+ formatContent(replyComment.content) +'</p>');
+                        htmlArr.push('</div>');
+                        htmlArr.push('<div class="extras">');
+                        htmlArr.push('使用 ' + comment.browser + ' 浏览器发表于 <span>'+ replyComment.timeDesc +'</span>');
+                        htmlArr.push('</div>');
+                        htmlArr.push('</div>');
+                        htmlArr.push('</div>');
+                    }
+                    htmlArr.push('</div>');
+                }
+            }
+            htmlArr.push('</div>');
+            htmlArr.push('</div>');
+        }
+
+        commentListBody.insertAdjacentHTML('beforeend', htmlArr.join(""));
+
+        if (self.options.canComment) {
+            self.registerREvent();
+        }
+
+    }
+
+    HbComment.prototype.renderPagination = function() {
+        let self = this;
+
+        if (!self.commentData || self.commentData.totalNum === 0) {
+            return;
+        }
+        let ajaxParams = self.options.ajaxParams;
+        let pageNum = ajaxParams.pageNum;
+        let pageSize = ajaxParams.pageSize;
+        let totalNum = self.commentData.totalNum;
+        let navigatePages = 10;
+        let pages;
+        if (totalNum % pageSize === 0) {
+            pages = totalNum / pageSize;
+        } else {
+            pages = Math.floor(totalNum / pageSize) + 1;
+        }
+
+        let startPage, endPage;
+        if (pages <= navigatePages) {
+            startPage = 1;
+            endPage = pages;
+        } else {
+            startPage = pageNum - 4;
+            endPage =  pageNum + 5;
+
+            if (startPage < 1) {
+                startPage = 1;
+                endPage = 10;
+            }
+
+            if (endPage > pages) {
+                endPage = pages;
+                startPage = pages - 9;
+            }
+        }
+
+        let pageBar = [];
+        let index = 0;
+        for (let i = startPage; i <= endPage; i++) {
+            pageBar[index++] = i;
+        }
+
+        let hasPrev = (pageNum > 1);
+        let hasNext = pageNum < pages;
+
+        let commentListBody = document.querySelector("#hbRBody");
+
+        let htmlArr = [];
+        htmlArr.push('<div class="hb-r-pagination">');
+        htmlArr.push('<ul id="pagination-bar">');
+        htmlArr.push('<li><a href="javascript:void(0)" data-num="'+ (pageNum - 1) +'" class="hb-page '+ (hasPrev ? "" : "disabled") +'"><</a></li>');
+        for (let i = 0; i < pageBar.length; i ++) {
+            let page = pageBar[i];
+            htmlArr.push('<li class="'+ (pageNum == page ? "active" : "hidden-xs") +'"><a href="javascript:void(0)" data-num="'+ page +'" class="hb-page ' + (pageNum == page ? "disabled" : "")  +'">'+ page +'</a></li>');
+        }
+        htmlArr.push('<li><a href="javascript:void(0)" data-num="'+ (pageNum + 1) +'" class="hb-page ' + (hasNext ? "" : "disabled")  +'">></a></li>');
+        htmlArr.push('</ul>');
+        htmlArr.push('</div>');
+
+        commentListBody.insertAdjacentHTML('beforeend', htmlArr.join(""));
+
+        self.registerPageClickEvent();
+    }
+
+    // ############################# 【注册事件相关 START 】 ######################################
+
+    HbComment.prototype.registerWEvent = function(commentBody) {
+        let self = this;
+
+        if (!self.visitor) {
+            let email = getElementByClassName(commentBody, "hb_email");
+            email.addEventListener("blur", function() {
+                let emailValue = this.value;
+                if (emailValue.indexOf("@") == -1) {
+                    return;
+                }
+
+                let qq = emailValue.split("@")[0];
+                if (isNaN(qq)) {
+                    return;
+                }
+
+                sendRequest({
+                    type: "GET",
+                    url: "https://api.mou.ge/api/qq?qq=" + qq,
+                    success: function(resp) {
+                        getElementByClassName(commentBody, "hb_avatar").setAttribute("src", resp.data.avatar);
+                        getElementByClassName(commentBody, "hb_nickname").value = resp.data.name;
+                    }
+                })
+            });
+        }
+
+        let emoji = getElementByClassName(commentBody, "emoji_btn");
+        emoji.addEventListener("click", function() {
+            console.log("打开表情")
+        });
+
+        let send = getElementByClassName(commentBody, "send_btn");
+        send.addEventListener("click", function() {
+            let that = this;
+            let nickname,email,homePage,avatarVal;
+            if (!self.visitor) {
+                nickname = getElementByClassName(commentBody, "hb_nickname").value;
+                email = getElementByClassName(commentBody, "hb_email").value;
+                avatarVal = "/admin/assets/custom/images/avatar/default_avatar.jpg";
+                let avatar = getElementByClassName(commentBody, "hb_avatar");
+                let tmp = avatar.getAttribute("src");
+                if (tmp && tmp.indexOf("http") > -1) {
+                    avatarVal = tmp;
+                }
+                homePage = getElementByClassName(commentBody, "hb_home_page").value;
+            } else {
+                nickname = self.visitor.nickname;
+                email = self.visitor.email;
+                avatarVal = self.visitor.avatar;
+                homePage = self.visitor.homePage || getElementByClassName(commentBody, "hb_home_page").value;
+            }
+
+            let contentObj = getElementByClassName(commentBody, "hb_content");
+
+            if (!nickname || !email || !contentObj.value) {
+                alert("必填项不能为空");
+                return;
+            }
+
+            let data = {
+                "avatar": avatarVal,
+                "nickname": checkSafe(nickname),
+                "email": checkSafe(email),
+                "content": checkSafe(contentObj.value).replace(/\n/g,'<br/>'),
+                "homePage": checkSafe(homePage),
+                "pId": that.dataset.commentPid || 0,
+                "sourceNickname": that.dataset.sourceNickname || "",
+                "page": window.location.pathname
+            };
+
+            if (!self.options.sendUrl) {
+                console.error("请求地址为空!")
+                return;
+            }
+
+            sendRequest({
+                type: "POST",
+                url: self.options.sendUrl,
+                data: formatData(data),
+                success: function(resp) {
+                    if (resp.success) {
+                        data.content = "";
+                        data.page = "";
+                        setCookie("visitor", JSON.stringify(data), 60);
+                        self.visitor = data;
+                        self.refresh(self.options);
+                    } else {
+                        alert(resp.message);
+                    }
+                }
+            });
+        });
+    }
+
+    HbComment.prototype.registerPageClickEvent = function() {
+        let self = this;
+        let pageBar = document.querySelector("#pagination-bar");
+        pageBar.addEventListener("click", function(e) {
+            let target = e.target;
+            if (target.className.indexOf("hb-page") > -1) {
+                let num = target.dataset.num;
+                if (!num || num < 1 ) {
+                    console.warn("=====当前列表不能翻页====");
+                    return;
+                }
+
+                if (target.className.indexOf("disabled") > -1) {
+                    console.warn("=====当前列表不能翻页====");
+                    return;
+                }
+
+                self.options.ajaxParams = Object.assign(self.options.ajaxParams, {pageNum: num});
+                self.refresh(self.options);
+            }
+        });
+    };
+
+    HbComment.prototype.registerREvent = function() {
+        let self = this;
+        let replyArr = document.querySelectorAll(".action-reply");
+        let hbW = document.querySelector(".hb-w");
+        for (let i = 0; i < replyArr.length; i++) {
+            let replyBtn = replyArr[i];
+            let commentId = replyBtn.dataset.commentId;
+            let sourceNickname = replyBtn.dataset.nickname;
+            replyBtn.addEventListener("click", function() {
+                let infoNode = replyBtn.parentNode.parentNode;
+                let index = infoNode.className.indexOf("reply");
+                if (index == -1) {
+                    infoNode.className = infoNode.className + " reply";
+                    let mainArr = document.querySelectorAll(".main");
+                    for (let i = 0; i < mainArr.length; i++) {
+                        let mainElement = mainArr[i];
+                        let commentBody = getElementByClassName(mainElement, "hb-w-body");
+                        if (commentBody) {
+                            getElementByClassName(mainElement, "info").setAttribute("class", "info");
+                            mainElement.removeChild(commentBody);
+                        }
+                    }
+                    let wBody = getElementByClassName(hbW,"hb-w-body");
+                    let cloneCommentBody = wBody.cloneNode(true);
+                    let sendBtn = getElementByClassName(cloneCommentBody, "send_btn");
+                    sendBtn.dataset.commentPid = commentId;
+                    sendBtn.dataset.sourceNickname = sourceNickname;
+                    infoNode.parentNode.appendChild(cloneCommentBody);
+                    self.registerWEvent(cloneCommentBody);
+                } else {
+                    infoNode.setAttribute("class", "info");
+                    let mainNode = infoNode.parentNode;
+                    mainNode.removeChild(mainNode.lastChild);
+                }
+            });
+        }
+    }
+
+    // ############################# 【注册事件相关 END 】 ######################################
+
+
+    HbComment.prototype.destroy = function() {
+        let self = this;
+        let el = document.querySelector(".hb-comment");
+        let first = el.firstElementChild;
+        let last = el.lastElementChild;
+        el.removeChild(first);
+        el.removeChild(last);
+    };
+
+    HbComment.prototype.refresh = function(params) {
+        this.destroy();
+        this.init(params, true);
+    };
+
+
+    // ############################# 【工具函数相关 START 】 ######################################
+
+    // 发送请求
+    function sendRequest(params) {
+
+        if (!params.url) {
+            console.error("url 参数为空");
+            return;
+        }
+
+        let xmlHttp = new XMLHttpRequest();
+        xmlHttp.open(params.type, params.url, true);
+        xmlHttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+        xmlHttp.send(params.data);
+        xmlHttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                let resp = JSON.parse(xmlHttp.responseText);
+                params.success(resp);
+            }
+        };
+    };
+
+    function formatData(data) {
+        let result = "";
+        for (let key in data) {
+            result += key + "=" + encodeURIComponent(data[key]) + "&";
+        }
+        result = result.substring(0, result.length - 1);
+        return result;
+    }
+
+    function formatContent(content) {
+        let emojiCache = HbComment.emojiCache;
+        let list = content.match(/\[[\u4e00-\u9fa5]*\w*\]/g);
+        let filter = /[\[\]]/g;
+        let title;
+        if (list) {
+            for(let i = 0; i < list.length; i++){
+                title = list[i].replace(filter,'');
+                if(emojiCache[title]) {
+                    content = content.replace(list[i],' <img src="'+ emojiCache[title] +'"/> ');
+                }
+            }
+        }
+        return replaceAll(content, "&lt;br/&gt;", "<br/>")
+    };
+
+    function replaceAll(content,searchValue,replaceValue){
+        while (content.indexOf(searchValue) > -1) {
+            content = content.replace(searchValue, replaceValue);
+        }
+        return content;
+    }
+
+    function checkSafe(content) {
+        if(!content) {
+            return "";
+        }
+        return content.replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    };
+
+    function transformList(list) {
+        let arr = [];
+        for(let i = 0; i < list.length; i++) {
+            arr.push(list[i]);
+        }
+        return arr;
+    }
+
+    function getElementByClassName(parentNode, childClassName) {
+        let arr = findByClassName(parentNode, childClassName, []);
+        if (arr && arr.length > 0) {
+            return arr[0];
+        }
+    }
+
+    function getElementsByClassName(parentNode, childClassName) {
+        return findByClassName(parentNode, childClassName, []);
+    }
+
+    function findByClassName(parentNode, childClassName, arr) {
+        if (parentNode.className.indexOf(childClassName) > -1) {
+            arr.push(parentNode)
+            return parentNode;
+        } else {
+            let nodes = parentNode.childNodes;
+            nodes = transformList(nodes).filter(function(item){
+                if(item.nodeType !== 3) {
+                    return item;
+                }
+            });
+
+            if (nodes.length > 0) {
+                nodes.forEach(function(item) {
+                    findByClassName(item, childClassName, arr);
+                });
+            }
+        }
+        return arr;
+    }
+
+    function setCookie(cname, cvalue, exdays) {
+        let d = new Date();
+        d.setTime(d.getTime() + (exdays*24*60*60*1000));
+        let expires = "expires="+ d.toUTCString();
+        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    }
+
+    function getCookie(cname) {
+        let name = cname + "=";
+        let decodedCookie = decodeURIComponent(document.cookie);
+        let ca = decodedCookie.split(';');
+        for(let i = 0; i <ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return "";
+    }
+
+    // ############################# 【工具类相关 END 】 ######################################
+
+
+    return new HbComment();
+}));
