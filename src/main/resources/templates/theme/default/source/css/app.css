@@ -224,6 +224,14 @@ h6 {
     }
 }
 
+ul {
+    margin: 0;
+    padding: 0;
+}
+ul li {
+    list-style-type: none;
+}
+
 .btn-primary {
     background-color: var(--theme-color);
     border-color: var(--border-color);

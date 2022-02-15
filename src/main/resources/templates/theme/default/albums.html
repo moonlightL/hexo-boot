@@ -1,58 +1,41 @@
 <!doctype html>
-<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" layout:decorate="~{theme/default/layout}">
 
 <head>
-    <div th:replace="~{theme/default/common :: meta}"></div>
     <meta property="og:title" th:content="${'专辑 | ' + #servletContext.getAttribute('configMap')['blog_name']}" />
     <title>专辑 | [[${#servletContext.getAttribute('configMap')['blog_name']}]]</title>
-    <div th:replace="~{theme/default/common :: link}"></div>
 </head>
 
 <body>
-<div id="animate" th:if="${activeTheme.configMap['animated'] == 'true'}" style="position: fixed;width: 100%; height: 100%">
-    <script type='text/javascript' th:src="@{${prefix} + '/source/js/ribbon.js'}"></script>
-</div>
-<div class="ml-container" id="pageContainer">
-    <div class="container">
-        <!-- 导航 -->
-        <div th:replace="~{theme/default/common :: nav}"></div>
-
-        <!-- 内容 -->
-        <div id="wrap" class="content">
-            <!-- 图片 -->
-            <div class="image-banner" style="color: #fff">
-                <div class="image-content" th:if="${#strings.startsWith(currentNav.cover,'http') == true}"><img th:data-original="@{${currentNav.cover}}" class="lazyload"></div>
-                <div class="image-content" th:if="${#strings.startsWith(currentNav.cover,'http') == false}"><img th:data-original="@{${prefix} + '/source/images/album.png'}" class="lazyload"></div>
-                <div class="descr">
-                    <a data-pjax th:href="@{/}">首页  /  </a>
-                    <a href="javascript:void(0)">专辑</a>
-                </div>
-                <div class="title">专辑</div>
-            </div>
-
-            <div class="ml-content">
-                <div class="ml-content-body">
-                    <div class="row">
-                        <div class="col-sm-6 col-md-3" th:each="album,iterStat: ${albumList}">
-                            <div class="album-item animate-box">
-                                <a data-pjax th:href="@{'/albumDetail/' + ${album.id} + '/'}">
-                                    <img th:data-original="@{${album.coverUrl}}" class="lazyload">
-                                    <div class="descr">
-                                        <span th:if="${album.visitType == 0}"><i class="fa fa-lock"></i></span> [[${album.name}]]<span> ([[${album.detailNum}]])</span>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div th:if="${albumNum == 0}" th:style="'text-align:center;'" th:text="'~~作者偷懒，没有创建专辑栏目~~'"></div>
-                </div>
-            </div>
+    <div id="wrap" class="content" layout:fragment="content">
+    <!-- 图片 -->
+    <div class="image-banner" style="color: #fff">
+        <div class="image-content" th:if="${#strings.startsWith(currentNav.cover,'http') == true}"><img th:data-original="@{${currentNav.cover}}" class="lazyload"></div>
+        <div class="image-content" th:if="${#strings.startsWith(currentNav.cover,'http') == false}"><img th:data-original="@{${prefix} + '/source/images/album.png'}" class="lazyload"></div>
+        <div class="descr">
+            <a data-pjax th:href="@{/}">首页  /  </a>
+            <a href="javascript:void(0)">专辑</a>
         </div>
-
-        <!-- footer -->
-        <div th:replace="~{theme/default/common :: footer}"></div>
+        <div class="title">专辑</div>
     </div>
-    <div th:replace="~{theme/default/common :: script}"></div>
+
+    <div class="ml-content">
+        <div class="ml-content-body">
+            <div class="row">
+                <div class="col-sm-6 col-md-3" th:each="album,iterStat: ${albumList}">
+                    <div class="album-item animate-box">
+                        <a data-pjax th:href="@{'/albumDetail/' + ${album.id} + '/'}">
+                            <img th:data-original="@{${album.coverUrl}}" class="lazyload">
+                            <div class="descr">
+                                <span th:if="${album.visitType == 0}"><i class="fa fa-lock"></i></span> [[${album.name}]]<span> ([[${album.detailNum}]])</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div th:if="${albumNum == 0}" th:style="'text-align:center;'" th:text="'~~作者偷懒，没有创建专辑栏目~~'"></div>
+        </div>
+    </div>
 </div>
 
 </body>

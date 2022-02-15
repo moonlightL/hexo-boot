@@ -1,69 +1,58 @@
 <!doctype html>
-<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" layout:decorate="~{theme/default/layout}">
 
 <head>
-    <div th:replace="~{theme/default/common :: meta}"></div>
     <meta property="og:title" th:content="${'文章列表 | ' + #servletContext.getAttribute('configMap')['blog_name']}" />
     <title>文章列表 | [[${#servletContext.getAttribute('configMap')['blog_name']}]]</title>
-    <div th:replace="~{theme/default/common :: link}"></div>
 </head>
 
 <body>
-<div id="animate" th:if="${activeTheme.configMap['animated'] == 'true'}" style="position: fixed;width: 100%; height: 100%">
-    <script type='text/javascript' th:src="@{${prefix} + '/source/js/ribbon.js'}"></script>
-</div>
-<div class="ml-container" id="pageContainer">
-    <div class="container">
-        <!-- 导航 -->
-        <div th:replace="~{theme/default/common :: nav}"></div>
+    <div id="wrap" class="content" layout:fragment="content">
+    <!-- 图片 -->
+    <div class="image-banner" style="color: #fff">
+        <div class="image-content" th:if="${#strings.startsWith(currentNav.cover,'http') == true}"><img th:data-original="@{${currentNav.cover}}" class="lazyload"></div>
+        <div class="image-content" th:if="${#strings.startsWith(currentNav.cover,'http') == false}"><img th:data-original="@{${prefix} + '/source/images/postList.png'}" class="lazyload"></div>
+        <div class="descr">
+            <a data-pjax th:href="@{/}">首页  /  </a>
+            <a data-pjax th:href="@{'/' + ${link} + '/'}">[[${type}]]  /  </a>
+            <a href="javascript:void(0)">[[${name}]]</a></div>
+        <div class="title">[[${type}]]相关</div>
+    </div>
 
-        <!-- 内容 -->
-        <div id="wrap" class="content">
-            <!-- 图片 -->
-            <div class="image-banner" style="color: #fff">
-                <div class="image-content" th:if="${#strings.startsWith(currentNav.cover,'http') == true}"><img th:data-original="@{${currentNav.cover}}" class="lazyload"></div>
-                <div class="image-content" th:if="${#strings.startsWith(currentNav.cover,'http') == false}"><img th:data-original="@{${prefix} + '/source/images/postList.png'}" class="lazyload"></div>
-                <div class="descr">
-                    <a data-pjax th:href="@{/}">首页  /  </a>
-                    <a data-pjax th:href="@{'/' + ${link} + '/'}">[[${type}]]  /  </a>
-                    <a href="javascript:void(0)">[[${name}]]</a></div>
-                <div class="title">[[${type}]]相关</div>
-            </div>
-
-            <div class="ml-content">
-                <div class="ml-content-body">
-                    <div class="archive-body" id="archives">
-                        <div th:if="${pageInfo.total > 0}">
-                            <div class='archive-content' th:each="post,iterStat : ${pageInfo.list}">
-                                <div class="archives">
-                                    <div class="animate-box archives-item" data-animate-effect="fadeInUp">
-                                        <a data-pjax th:href="@{'/'+${post.link}}" style="display: block">
-                                            📚 <span class="time">[[${post.year} + '-' + ${post.month} + '-' + ${post.day}]]</span>
-                                            <span class="title">[[${post.title}]]</span>
-                                            <span class="pull-right hidden-xs">([[${post.readNum}]])</span>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class='archive-title' th:if="${pageInfo.total == 0}">
-                            <div style="text-align:center;">
-                                ~~找不到数据~~
+    <div class="ml-content">
+        <div class="ml-content-body">
+            <div class="archive-body" id="archives">
+                <div th:if="${pageInfo.total > 0}">
+                    <div class='archive-content' th:each="post,iterStat : ${pageInfo.list}">
+                        <div class="archives">
+                            <div class="animate-box archives-item" data-animate-effect="fadeInUp">
+                                <a data-pjax th:href="@{'/'+${post.link}}" style="display: block">
+                                    📚 <span class="time">[[${post.year} + '-' + ${post.month} + '-' + ${post.day}]]</span>
+                                    <span class="title">[[${post.title}]]</span>
+                                    <span class="pull-right hidden-xs">([[${post.readNum}]])</span>
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="pagination">
+                <div class='archive-title' th:if="${pageInfo.total == 0}">
+                    <div style="text-align:center;">
+                        ~~找不到数据~~
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="pagination">
                     <span th:if="${pageInfo.hasPreviousPage}" class="page">
                         <a data-pjax class="prev page-numbers" th:href="@{${pageInfo.pageNum-1} == 1 ? '/' + ${link} + '/' + ${name} + '/': '/' + ${link} + '/' + ${name} + '/page/' + ${pageInfo.pageNum-1}+'/'}" ><i class="fa fa-angle-left"></i></a>
                     </span>
-                    <span th:each="pageNum : ${pageInfo.navigatepageNums}" th:if="${pageInfo.navigatepageNums.length} le '4' ">
+            <span th:each="pageNum : ${pageInfo.navigatepageNums}" th:if="${pageInfo.navigatepageNums.length} le '4' ">
                         <span th:if="${pageNum == pageInfo.pageNum}"  class="page current" th:text="${pageNum}"></span>
                         <span class="page" th:if="${pageNum != pageInfo.pageNum}">
                             <a data-pjax th:href="@{${pageNum} == 1 ? '/' + ${link} + '/' + ${name} + '/': '/' + ${link} + '/' + ${name} + '/page/' + ${pageNum}+'/'}" th:text="${pageNum}"></a>
                         </span>
                     </span>
-                    <span th:each="pageNum, iterStat : ${pageInfo.navigatepageNums}" th:if="${pageInfo.navigatepageNums.length} gt '4' ">
+            <span th:each="pageNum, iterStat : ${pageInfo.navigatepageNums}" th:if="${pageInfo.navigatepageNums.length} gt '4' ">
                            <span class="page" th:if="${pageNum == pageInfo.pageNum and iterStat.count gt 2 and iterStat.count le iterStat.size}">...</span>
                            <span th:if="${pageNum == pageInfo.pageNum}" class="page current" th:text="${pageNum}"></span>
                            <span class="page" th:if="${pageNum == pageInfo.pageNum and iterStat.count le (iterStat.size - 2)}">...</span>
@@ -72,18 +61,12 @@
                                <span class="page" th:if="${iterStat.count == (iterStat.size)}"><a data-pjax th:href="@{'/' + ${link} + '/' + ${name} + '/page/' +  ${pageNum} +'/'}" th:text="${pageNum}"></a></span>
                             </span>
                        </span>
-                    <span th:if="${pageInfo.hasNextPage}" class="page">
+            <span th:if="${pageInfo.hasNextPage}" class="page">
                         <a data-pjax class="next page-numbers" th:href="@{'/' + ${link} + '/' + ${name} + '/page/' +  ${pageInfo.pageNum + 1}+'/'}" ><i class="fa fa-angle-right"></i></a>
                     </span>
-                </div>
-
-            </div>
         </div>
 
-        <!-- footer -->
-        <div th:replace="~{theme/default/common :: footer}"></div>
     </div>
-    <div th:replace="~{theme/default/common :: script}"></div>
 </div>
 </body>
 </html>

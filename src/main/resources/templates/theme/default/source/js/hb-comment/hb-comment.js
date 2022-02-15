@@ -1,3 +1,6 @@
+/**
+ * 用原生js重写评论区插件（统一文章评论和留言请求接口）
+ */
 ! function(win, func) {
     "object" == typeof exports && "object" == typeof module ? module.exports = t() : "function" == typeof define && define.amd ? define([], t) : "object" == typeof exports ? exports.HbComment = func() : win.HbComment = func()
 }(window, (function(){
@@ -53,80 +56,146 @@
 
     HbComment.prototype.initEmoji = function () {
         let self = this;
-        self.emojiArr = [
-            {'title':'微笑','url':'weixiao.gif'},
-            {'title':'嘻嘻','url':'xixi.gif'},
-            {'title':'哈哈','url':'haha.gif'},
-            {'title':'可爱','url':'keai.gif'},
-            {'title':'可怜','url':'kelian.gif'},
-            {'title':'挖鼻','url':'wabi.gif'},
-            {'title':'吃惊','url':'chijing.gif'},
-            {'title':'害羞','url':'haixiu.gif'},
-            {'title':'挤眼','url':'jiyan.gif'},
-            {'title':'闭嘴','url':'bizui.gif'},
-            {'title':'鄙视','url':'bishi.gif'},
-            {'title':'爱你','url':'aini.gif'},
-            {'title':'泪','url':'lei.gif'},
-            {'title':'偷笑','url':'touxiao.gif'},
-            {'title':'亲亲','url':'qinqin.gif'},
-            {'title':'生病','url':'shengbing.gif'},
-            {'title':'太开心','url':'taikaixin.gif'},
-            {'title':'白眼','url':'baiyan.gif'},
-            {'title':'右哼哼','url':'youhengheng.gif'},
-            {'title':'左哼哼','url':'zuohengheng.gif'},
-            {'title':'嘘','url':'xu.gif'},
-            {'title':'衰','url':'shuai.gif'},
-            {'title':'吐','url':'tu.gif'},
-            {'title':'哈欠','url':'haqian.gif'},
-            {'title':'抱抱','url':'baobao.gif'},
-            {'title':'怒','url':'nu.gif'},
-            {'title':'疑问','url':'yiwen.gif'},
-            {'title':'馋嘴','url':'chanzui.gif'},
-            {'title':'拜拜','url':'baibai.gif'},
-            {'title':'思考','url':'sikao.gif'},
-            {'title':'汗','url':'han.gif'},
-            {'title':'困','url':'kun.gif'},
-            {'title':'睡','url':'shui.gif'},
-            {'title':'钱','url':'qian.gif'},
-            {'title':'失望','url':'shiwang.gif'},
-            {'title':'酷','url':'ku.gif'},
-            {'title':'色','url':'se.gif'},
-            {'title':'哼','url':'heng.gif'},
-            {'title':'鼓掌','url':'guzhang.gif'},
-            {'title':'晕','url':'yun.gif'},
-            {'title':'悲伤','url':'beishang.gif'},
-            {'title':'抓狂','url':'zhuakuang.gif'},
-            {'title':'黑线','url':'heixian.gif'},
-            {'title':'阴险','url':'yinxian.gif'},
-            {'title':'怒骂','url':'numa.gif'},
-            {'title':'互粉','url':'hufen.gif'},
-            {'title':'书呆子','url':'shudaizi.gif'},
-            {'title':'愤怒','url':'fennu.gif'},
-            {'title':'感冒','url':'ganmao.gif'},
-            {'title':'心','url':'xin.gif'},
-            {'title':'伤心','url':'shangxin.gif'},
-            {'title':'猪','url':'zhu.gif'},
-            {'title':'熊猫','url':'xiongmao.gif'},
-            {'title':'兔子','url':'tuzi.gif'},
-            {'title':'OK','url':'ok.gif'},
-            {'title':'耶','url':'ye.gif'},
-            {'title':'GOOD','url':'good.gif'},
-            {'title':'NO','url':'no.gif'},
-            {'title':'赞','url':'zan.gif'},
-            {'title':'来','url':'lai.gif'},
-            {'title':'弱','url':'ruo.gif'},
-            {'title':'草泥马','url':'caonima.gif'},
-            {'title':'神马','url':'shenma.gif'},
-            {'title':'囧','url':'jiong.gif'},
-            {'title':'浮云','url':'fuyun.gif'},
-            {'title':'给力','url':'geili.gif'},
-            {'title':'围观','url':'weiguan.gif'},
-            {'title':'威武','url':'weiwu.gif'},
-            {'title':'话筒','url':'huatong.gif'},
-            {'title':'蜡烛','url':'lazhu.gif'},
-            {'title':'蛋糕','url':'dangao.gif'},
-            {'title':'发红包','url':'fahongbao.gif'}
+        HbComment.emojiCache = [];
+
+        self.emojiManager = {
+            emojiArr: [],
+            typeArr: ["微博表情", "贴吧表情"]
+        }
+
+        self.emojiManager.emojiArr[0] = [
+            {'title':'微笑','url':'weibo/weixiao.gif'},
+            {'title':'嘻嘻','url':'weibo/xixi.gif'},
+            {'title':'哈哈','url':'weibo/haha.gif'},
+            {'title':'可爱','url':'weibo/keai.gif'},
+            {'title':'可怜','url':'weibo/kelian.gif'},
+            {'title':'挖鼻','url':'weibo/wabi.gif'},
+            {'title':'吃惊','url':'weibo/chijing.gif'},
+            {'title':'害羞','url':'weibo/haixiu.gif'},
+            {'title':'挤眼','url':'weibo/jiyan.gif'},
+            {'title':'闭嘴','url':'weibo/bizui.gif'},
+            {'title':'鄙视','url':'weibo/bishi.gif'},
+            {'title':'爱你','url':'weibo/aini.gif'},
+            {'title':'泪','url':'weibo/lei.gif'},
+            {'title':'偷笑','url':'weibo/touxiao.gif'},
+            {'title':'亲亲','url':'weibo/qinqin.gif'},
+            {'title':'生病','url':'weibo/shengbing.gif'},
+            {'title':'太开心','url':'weibo/taikaixin.gif'},
+            {'title':'白眼','url':'weibo/baiyan.gif'},
+            {'title':'右哼哼','url':'weibo/youhengheng.gif'},
+            {'title':'左哼哼','url':'weibo/zuohengheng.gif'},
+            {'title':'嘘','url':'weibo/xu.gif'},
+            {'title':'衰','url':'weibo/shuai.gif'},
+            {'title':'吐','url':'weibo/tu.gif'},
+            {'title':'哈欠','url':'weibo/haqian.gif'},
+            {'title':'抱抱','url':'weibo/baobao.gif'},
+            {'title':'怒','url':'weibo/nu.gif'},
+            {'title':'疑问','url':'weibo/yiwen.gif'},
+            {'title':'馋嘴','url':'weibo/chanzui.gif'},
+            {'title':'拜拜','url':'weibo/baibai.gif'},
+            {'title':'思考','url':'weibo/sikao.gif'},
+            {'title':'汗','url':'weibo/han.gif'},
+            {'title':'困','url':'weibo/kun.gif'},
+            {'title':'睡','url':'weibo/shui.gif'},
+            {'title':'钱','url':'weibo/qian.gif'},
+            {'title':'失望','url':'weibo/shiwang.gif'},
+            {'title':'酷','url':'weibo/ku.gif'},
+            {'title':'色','url':'weibo/se.gif'},
+            {'title':'哼','url':'weibo/heng.gif'},
+            {'title':'鼓掌','url':'weibo/guzhang.gif'},
+            {'title':'晕','url':'weibo/yun.gif'},
+            {'title':'悲伤','url':'weibo/beishang.gif'},
+            {'title':'抓狂','url':'weibo/zhuakuang.gif'},
+            {'title':'黑线','url':'weibo/heixian.gif'},
+            {'title':'阴险','url':'weibo/yinxian.gif'},
+            {'title':'怒骂','url':'weibo/numa.gif'},
+            {'title':'互粉','url':'weibo/hufen.gif'},
+            {'title':'书呆子','url':'weibo/shudaizi.gif'},
+            {'title':'愤怒','url':'weibo/fennu.gif'},
+            {'title':'感冒','url':'weibo/ganmao.gif'},
+            {'title':'心','url':'weibo/xin.gif'},
+            {'title':'伤心','url':'weibo/shangxin.gif'},
+            {'title':'猪','url':'weibo/zhu.gif'},
+            {'title':'熊猫','url':'weibo/xiongmao.gif'},
+            {'title':'兔子','url':'weibo/tuzi.gif'},
+            {'title':'OK','url':'weibo/ok.gif'},
+            {'title':'耶','url':'weibo/ye.gif'},
+            {'title':'GOOD','url':'weibo/good.gif'},
+            {'title':'NO','url':'weibo/no.gif'},
+            {'title':'赞','url':'weibo/zan.gif'},
+            {'title':'来','url':'weibo/lai.gif'},
+            {'title':'弱','url':'weibo/ruo.gif'},
+            {'title':'草泥马','url':'weibo/caonima.gif'},
+            {'title':'神马','url':'weibo/shenma.gif'},
+            {'title':'囧','url':'weibo/jiong.gif'},
+            {'title':'浮云','url':'weibo/fuyun.gif'},
+            {'title':'给力','url':'weibo/geili.gif'},
+            {'title':'围观','url':'weibo/weiguan.gif'},
+            {'title':'威武','url':'weibo/weiwu.gif'},
+            {'title':'话筒','url':'weibo/huatong.gif'},
+            {'title':'蜡烛','url':'weibo/lazhu.gif'},
+            {'title':'蛋糕','url':'weibo/dangao.gif'},
+            {'title':'发红包','url':'weibo/fahongbao.gif'}
         ];
+        self.emojiManager.emojiArr[1] = [
+            {'title': '_呵呵', 'url': 'tieba/hehe.jpg'},
+            {'title': '_哈哈', 'url': 'tieba/haha.jpg'},
+            {'title': '_吐舌', 'url': 'tieba/tushe.jpg'},
+            {'title': '_啊', 'url': 'tieba/a.jpg'},
+            {'title': '_酷', 'url': 'tieba/ku.jpg'},
+            {'title': '_怒', 'url': 'tieba/nu.jpg'},
+            {'title': '_开心', 'url': 'tieba/kaixin.jpg'},
+            {'title': '_汗', 'url': 'tieba/han.jpg'},
+            {'title': '_泪', 'url': 'tieba/lei.jpg'},
+            {'title': '_黑线', 'url': 'tieba/heixian.jpg'},
+            {'title': '_鄙视', 'url': 'tieba/bishi.jpg'},
+            {'title': '_不高兴', 'url': 'tieba/bugaoxing.jpg'},
+            {'title': '_真棒', 'url': 'tieba/zhenbang.jpg'},
+            {'title': '_钱', 'url': 'tieba/qian.jpg'},
+            {'title': '_疑问', 'url': 'tieba/yiwen.jpg'},
+            {'title': '_阴脸', 'url': 'tieba/yinxian.jpg'},
+            {'title': '_吐', 'url': 'tieba/tu.jpg'},
+            {'title': '_咦', 'url': 'tieba/yi.jpg'},
+            {'title': '_委屈', 'url': 'tieba/weiqu.jpg'},
+            {'title': '_花心', 'url': 'tieba/huaxin.jpg'},
+            {'title': '_呼~', 'url': 'tieba/hu.jpg'},
+            {'title': '_笑脸', 'url': 'tieba/xiaonian.jpg'},
+            {'title': '_冷', 'url': 'tieba/leng.jpg'},
+            {'title': '_太开心', 'url': 'tieba/taikaixin.jpg'},
+            {'title': '_滑稽', 'url': 'tieba/huaji.jpg'},
+            {'title': '_勉强', 'url': 'tieba/mianqiang.jpg'},
+            {'title': '_狂汗', 'url': 'tieba/kuanghan.jpg'},
+            {'title': '_乖', 'url': 'tieba/guai.jpg'},
+            {'title': '_睡觉', 'url': 'tieba/shuijiao.jpg'},
+            {'title': '_惊哭', 'url': 'tieba/jinku.jpg'},
+            {'title': '_生气', 'url': 'tieba/shengqi.jpg'},
+            {'title': '_惊讶', 'url': 'tieba/jinya.jpg'},
+            {'title': '_喷', 'url': 'tieba/pen.jpg'},
+            {'title': '_爱心', 'url': 'tieba/aixin.jpg'},
+            {'title': '_心碎', 'url': 'tieba/xinsui.jpg'},
+            {'title': '_玫瑰', 'url': 'tieba/meigui.jpg'},
+            {'title': '_礼物', 'url': 'tieba/liwu.jpg'},
+            {'title': '_彩虹', 'url': 'tieba/caihong.jpg'},
+            {'title': '_星星月亮', 'url': 'tieba/xxyl.jpg'},
+            {'title': '_太阳', 'url': 'tieba/taiyang.jpg'},
+            {'title': '_钱币', 'url': 'tieba/qianbi.jpg'},
+            {'title': '_灯泡', 'url': 'tieba/dengpao.jpg'},
+            {'title': '_茶杯', 'url': 'tieba/chabei.jpg'},
+            {'title': '_蛋糕', 'url': 'tieba/dangao.jpg'},
+            {'title': '_音乐', 'url': 'tieba/yinyue.jpg'},
+            {'title': '_haha', 'url': 'tieba/haha2.jpg'},
+            {'title': '_胜利', 'url': 'tieba/shenli.jpg'},
+            {'title': '_大拇指', 'url': 'tieba/damuzhi.jpg'},
+            {'title': '_弱', 'url': 'tieba/ruo.jpg'},
+            {'title': '_OK', 'url': 'tieba/OK.jpg'},
+        ];
+
+        for (let i = 0; i < self.emojiManager.emojiArr.length; i++) {
+            self.emojiManager.emojiArr[i].forEach(function(item, index) {
+                HbComment.emojiCache[item.title] = self.options.baseUrl + "/hb-comment/image/" + item.url;
+            });
+        }
+
     };
 
     HbComment.prototype.initW = function () {
@@ -148,7 +217,7 @@
             htmlArr.push('<input type="text" name="nickname" value="' + self.visitor.nickname + '" class="hb_nickname" readonly="readonly" placeholder="*昵称">');
             htmlArr.push('<input type="text" name="homePage" value="' + self.visitor.homePage + '" class="hb_home_page" placeholder="主页">');
         } else {
-            htmlArr.push('<img src="'+ baseUrl + '/jquery-comment/image/avatar/default_avatar.jpg" class="hb_avatar" width="48" height="48">');
+            htmlArr.push('<img src="'+ baseUrl + '/hb-comment/image/avatar/default_avatar.jpg" class="hb_avatar" width="48" height="48">');
             htmlArr.push('<input type="text" name="email" class="hb_email" placeholder="*邮箱(qq邮箱可自动获取头像和昵称)">');
             htmlArr.push('<input type="text" name="nickname" class="hb_nickname" placeholder="*昵称">');
             htmlArr.push('<input type="text" name="homePage" class="hb_home_page" placeholder="主页">');
@@ -158,7 +227,7 @@
         htmlArr.push('<textarea name="content" class="hb_content" placeholder="*内容"></textarea>');
         htmlArr.push('</div>');
         htmlArr.push('<div class="hb-comment-help">');
-        htmlArr.push('<a href="javascript:void(0)" title="表情" class="emoji_btn">☺</a>');
+        htmlArr.push('<span title="表情" class="emoji_btn">☺</span>');
         htmlArr.push('<button type="button" class="send_btn">发送</button>');
         htmlArr.push('</div>');
         htmlArr.push('</div>');
@@ -405,8 +474,77 @@
         }
 
         let emoji = getElementByClassName(commentBody, "emoji_btn");
+        let helpNode = emoji.parentNode;
         emoji.addEventListener("click", function() {
-            console.log("打开表情")
+            let emojiPanel = getElementByClassName(helpNode, "emoji-panel");
+            if (emojiPanel) {
+                helpNode.removeChild(emojiPanel);
+                return;
+            }
+
+            let htmlArr = ['<div class="emoji-panel emoji"><div class="emoji" style="height: 2rem;background-color: #8fabbb"></div>'];
+            let emojiManager = self.emojiManager;
+            let emojiArr = emojiManager.emojiArr;
+            for (let i = 0; i < emojiArr.length; i++) {
+                let emojiArrElements = emojiArr[i];
+                let active = (i == 0 ? ' active' : '');
+                htmlArr.push('<ul id="emoji_ul_' + i +'" class="emoji emoji-ul ' + active + '">');
+                emojiArrElements.forEach(function(item, index) {
+                    htmlArr.push('<li title="'+ item.title +'" class="emoji emoji-item"><img class="emoji" src="'+ HbComment.emojiCache[item.title] +'"/></li>');
+                });
+                htmlArr.push('</ul>');
+            }
+            htmlArr.push('<div style="clear: both;border-top: 1px solid #f1f1f1;height: 2.5rem;" class="emoji">');
+            for (let i = 0; i < emojiArr.length; i++) {
+                let active = (i == 0 ? ' active' : '');
+                htmlArr.push('<span id="emoji_tab_' + i + '" class="emoji emoji-tab ' + active + '">' + emojiManager.typeArr[i] + '</span>');
+            }
+            htmlArr.push('</div>')
+            htmlArr.push('</div>');
+            helpNode.insertAdjacentHTML('beforeend', htmlArr.join(""));
+
+            let emojiUls = getElementsByClassName(helpNode, "emoji-ul");
+            for (let i = 0; i < emojiArr.length; i++) {
+                emojiUls[i].addEventListener("click", function(e) {
+                    if (e.target.nodeName == "IMG") {
+                        let title = e.target.parentNode.title;
+                        let textArea = getElementByClassName(helpNode.parentNode,"hb_content");
+                        textArea.value = textArea.value + "[" + title + "]";
+                    }
+                });
+            }
+
+            let emojiTabs = getElementsByClassName(helpNode, "emoji-tab");
+            let tabLength = emojiTabs.length;
+            for (let i = 0; i < tabLength; i++) {
+                emojiTabs[i].addEventListener("click", function(e) {
+                    if (this.className.indexOf("active") > -1) {
+                        return;
+                    }
+
+                    for (let i = 0; i < tabLength; i++) {
+                        document.querySelector("#emoji_ul_" + i).setAttribute("class", "emoji-ul");
+                        document.querySelector("#emoji_tab_" + i).setAttribute("class", "emoji-tab");
+                    }
+
+                    let arr = this.id.split("_");
+                    let num = arr[arr.length - 1];
+
+                    document.querySelector("#emoji_ul_" + num).setAttribute("class", "emoji-ul active");
+                    document.querySelector("#emoji_tab_" + num).setAttribute("class", "emoji-tab active");
+                });
+            }
+        });
+
+        document.addEventListener("click", function(e) {
+            if (e.target.className.indexOf("emoji") > -1) {
+                return;
+            }
+
+            let emojiPanel = getElementByClassName(helpNode, "emoji-panel");
+            if (emojiPanel) {
+                helpNode.removeChild(emojiPanel);
+            }
         });
 
         let send = getElementByClassName(commentBody, "send_btn");
@@ -584,13 +722,13 @@
 
     function formatContent(content) {
         let emojiCache = HbComment.emojiCache;
-        let list = content.match(/\[[\u4e00-\u9fa5]*\w*\]/g);
+        let list = content.match(/\[\w*[\u4e00-\u9fa5]*\w*\]/g);
         let filter = /[\[\]]/g;
         let title;
         if (list) {
-            for(let i = 0; i < list.length; i++){
-                title = list[i].replace(filter,'');
-                if(emojiCache[title]) {
+            for (let i = 0; i < list.length; i++){
+                title = list[i].replace(filter, '');
+                if (emojiCache[title]) {
                     content = content.replace(list[i],' <img src="'+ emojiCache[title] +'"/> ');
                 }
             }
@@ -632,7 +770,7 @@
     }
 
     function findByClassName(parentNode, childClassName, arr) {
-        if (parentNode.className.indexOf(childClassName) > -1) {
+        if (parentNode.className && parentNode.className.indexOf(childClassName) > -1) {
             arr.push(parentNode)
             return parentNode;
         } else {

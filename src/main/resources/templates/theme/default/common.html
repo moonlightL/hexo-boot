@@ -79,7 +79,6 @@
     <footer class="footer-copyright" id="footer-copyright">
         <div class="row">
             <div style="padding-left: 2rem">
-<!--                <span class="pull-left" style="left: 10px">❤️[[${#servletContext.getAttribute('configMap')['power_by']}]]</span>-->
                 <span class="pull-left" style="left: 10px" th:utext="${#servletContext.getAttribute('configMap')['power_by']}"></span>
             </div>
             <div style="position: absolute; left: 50%; transform: translateX(-50%)">
@@ -96,7 +95,6 @@
                 </ul>
             </div>
             <div class="hidden-xs" style="padding-right: 2rem">
-<!--                <a class="pull-right" href="http://beian.miit.gov.cn/" target="_blank">[[${#servletContext.getAttribute('configMap')['record']}]]</a>-->
                 <a class="pull-right" href="http://beian.miit.gov.cn/" target="_blank" th:utext="${#servletContext.getAttribute('configMap')['record']}"></a>
             </div>
         </div>

@@ -176,9 +176,8 @@
     };
 
     const postEvent = function() {
-        console.log(window.isDetail)
-        let $detailComment = $(".hb-comment");
-        if ($detailComment.length > 0) {
+        let $detail = $("#post-content");
+        if ($detail.length > 0) {
             $.getScript(APP.plugins.highlight.js, function () {
                 document.querySelectorAll('figure span').forEach((block) => {
                     hljs.highlightBlock(block);
@@ -195,6 +194,8 @@
 
             // 点赞
             $("#priseBtn").on("click",function () {
+                let postId = $(this).data("id");
+                console.log(postId)
                 let key = "post-hasPrize" + postId;
                 if (sessionStorage.getItem(key)) {
                     layer.msg("已点赞");
