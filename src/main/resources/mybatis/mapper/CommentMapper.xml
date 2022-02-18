@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.light.hexo.business.admin.mapper.CommentMapper">
+
+    <update id="updateDelStatus" parameterType="java.lang.Integer">
+        UPDATE
+            t_comment
+        SET
+            is_delete = 1
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateDelStatusBatch">
+        UPDATE t_comment SET is_delete = 1 WHERE id IN
+        <foreach collection="idList" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <select id="selectListByBannerIdList" parameterType="java.lang.Integer" resultType="com.light.hexo.business.admin.model.Comment">
+        SELECT
+             c.id,
+             c.post_id,
+             c.p_id,
+             c.banner_id,
+             c.source_nickname,
+             c.content,
+             c.is_delete AS `delete`,
+             c.browser,
+             c.praise_num,
+             c.create_time,
+             c.nickname,
+             c.avatar
+        FROM t_comment c
+        WHERE c.banner_id IN
+        <foreach collection="bannerIdList" item="bannerId" open="(" separator="," close=")">
+            #{bannerId}
+        </foreach>
+        AND c.is_delete = 0
+        ORDER BY c.create_time ASC
+    </select>
+</mapper>

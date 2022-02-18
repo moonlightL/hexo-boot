@@ -1,127 +1,26 @@
 <!doctype html>
 <html lang="zh" mode="light" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
 <head>
-    <meta charset="utf-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <meta name="author" th:content="${#servletContext.getAttribute('configMap')['blog_author']}">
-    <meta name="keywords" th:content="${#servletContext.getAttribute('configMap')['keywords']}" />
-    <meta name="referrer" content="no-referrer" />
-    [(${#servletContext.getAttribute('configMap')['meta_code']})]
-    <link rel="dns-prefetch" th:href="@{'//fonts.googleapis.com'}">
-    <link rel="dns-prefetch" th:href="@{'//fonts.loli.net/css'}">
-    <link rel="dns-prefetch" th:href="@{'//cdn.jsdelivr.net'}">
-    <link rel="shortcut icon" th:href="@{${#servletContext.getAttribute('configMap')['favicon_url']}}"/>
-    <link th:href="@{'https://fonts.loli.net/css?family=Poppins:400,500,600'}" rel="stylesheet">
-    <link th:href="@{'https://fonts.loli.net/css?family=Open+Sans:400,700&amp;subset=latin-ext'}" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{${baseLink} + '/source/css/bootstrap/css/bootstrap.min.css'}">
-    <link rel="stylesheet" th:href="@{${baseLink} + '/source/fonts/font-awesome/css/font-awesome.min.css'}" />
-    <link rel="stylesheet" th:href="@{${baseLink} + '/source/js/iziModal/css/iziModal.min.css'}">
-    <link rel="stylesheet" th:href="@{${baseLink} + '/source/css/animate.css'}"/>
-<!--    <link href="https://cdn.bootcdn.net/ajax/libs/pace/1.2.3/themes/blue/pace-theme-minimal.min.css" rel="stylesheet">-->
-<!--    <script src="https://cdn.bootcdn.net/ajax/libs/pace/1.2.3/pace.min.js"></script>-->
-    <span th:if="${isDetail == true}">
-        <link rel="stylesheet" th:href="@{${baseLink} + '/source/js/highlightjs/styles/'+ ${activeTheme.configMap['highlight']} +'.min.css'}"/>
-        <link rel="stylesheet" th:href="@{${baseLink} + '/source/js/fancybox/jquery.fancybox.min.css'}"/>
-        <link rel="stylesheet" th:href="@{${baseLink} + '/source/js/autoToc/jquery.autoToc.css'}"/>
-        <link rel="stylesheet" th:href="@{${baseLink} + '/source/js/overshare/css/share.min.css'}"/>
-    </span>
-    <link rel="stylesheet" th:href="@{${prefix} + '/source/css/style.css'}"/>
+    <div th:replace="~{theme/default/common :: meta}"></div>
+    <div th:replace="~{theme/default/common :: link}"></div>
 </head>
 <body>
+    <div id="animate" th:if="${activeTheme.configMap['animated'] == 'true'}" style="position: fixed;width: 100%; height: 100%">
+        <script type='text/javascript' th:src="@{${prefix} + '/source/js/ribbon.js'}"></script>
+    </div>
     <div class="ml-container" id="pageContainer">
         <div class="container">
-            <!-- 首部 -->
-            <header class="row">
-                <div class="col-md-12">
-                    <nav class="navbar navbar-default">
-                        <div class="container-fluid">
-                            <div class="navbar-header">
-                                <a class="navbar-brand" href="#">
-                                    <img alt="Brand" th:src="@{${#strings.isEmpty(#servletContext.getAttribute('configMap')['logo_url']) != true ? #servletContext.getAttribute('configMap')['logo_url'] : prefix + '/source/images/logo.png'}}">
-                                </a>
-                                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                                    <span class="sr-only">Toggle navigation</span>
-                                    <span class="icon-bar"></span>
-                                    <span class="icon-bar"></span>
-                                    <span class="icon-bar"></span>
-                                </button>
-                                <a class="navbar-brand" href="#">[[${#servletContext.getAttribute('configMap')['blog_name']}]]</a>
-                            </div>
-                            <div id="navbar" class="navbar-collapse collapse">
-                                <ul class="nav menu navbar-nav navbar-right">
-                                    <li th:each="nav : ${#servletContext.getAttribute('firstNav')}" th:class="${currentNav.code eq nav.code ? 'item active' : 'item'}">
-                                        <a th:href="@{${#lists.isEmpty(nav.children) ? nav.link : '#'}}">
-                                            <i th:class="${nav.icon}"></i> [[${nav.name}]]
-                                        </a>
-                                        <ul class="second-menu" th:if="${#lists.isEmpty(nav.children) == false}">
-                                            <li class="item" th:each="child : ${nav.children}">
-                                                <a th:href="@{${child.link}}"><i th:class="${child.icon}"></i> [[${child.name}]]</a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </nav>
-                </div>
-            </header>
+            <!-- 导航 -->
+            <div th:replace="~{theme/default/common :: nav}"></div>
 
             <!-- 内容 -->
             <div layout:fragment="content"></div>
 
             <!-- 尾部 -->
-            <footer class="footer-copyright" id="footer-copyright">
-                <div class="row">
-                    <div class="col-md-4 col-sm-6">
-                        <span class="pull-left">[[${#servletContext.getAttribute('configMap')['power_by']}]]</span>
-                    </div>
-                    <div class="col-md-4 hidden-sm hidden-xs" style="text-align: center">
-                        <ul class="contract-info">
-                            <li class="wechat" th:if="${#strings.isEmpty(#servletContext.getAttribute('configMap')['wx_account']) != true}">
-                                <a th:title="${#servletContext.getAttribute('configMap')['wx_account']}" class="socialicon" href="javascript:void(0)" target="_blank"><i class="fa fa-weixin fa-lg" aria-hidden="true"></i></a>
-                            </li>
-                            <li th:if="${#strings.isEmpty(#servletContext.getAttribute('configMap')['qq_account']) != true}">
-                                <a th:title="${#servletContext.getAttribute('configMap')['qq_account']}" class="socialicon" href="javascript:void(0)" target="_blank"><i class="fa fa-qq fa-lg" aria-hidden="true"></i></a>
-                            </li>
-                            <li th:if="${#strings.isEmpty(#servletContext.getAttribute('configMap')['git_hub_account']) != true}">
-                                <a title="github" class="socialicon" th:href="@{${#servletContext.getAttribute('configMap')['git_hub_account']}}" target="_blank"><i class="fa fa-github-alt fa-lg" aria-hidden="true"></i></a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="col-md-4 col-sm-6 hidden-xs">
-                        <a class="pull-right" href="http://beian.miit.gov.cn/" target="_blank">[[${#servletContext.getAttribute('configMap')['record']}]]</a>
-                    </div>
-                </div>
-            </footer>
+            <div th:replace="~{theme/default/common :: footer}"></div>
         </div>
-        <!-- /container -->
-
+        <div th:replace="~{theme/default/common :: script}"></div>
     </div>
-    <script th:inline="javascript">
-        let themeName = [[${activeTheme.name}]];
-        let version = [[${activeTheme.configMap['version']}]];
-        let baseLink = [[${baseLink}]];
-    </script>
-    <script type='text/javascript' th:src="@{${baseLink} + '/source/js/plugins.js'}"></script>
-    <script type='text/javascript' th:src="@{${baseLink} + '/source/js/jquery.waypoints.min.js'}"></script>
-    <script type='text/javascript' th:src="@{${baseLink} + '/source/js/circleMagic/circleMagic.min.js'}"></script>
-    <script type='text/javascript' th:src="@{${baseLink} + '/source/js/jquery.lazyload.min.js'}"></script>
-    <script type='text/javascript' th:src="@{${baseLink} + '/source/js/layer/layer.js'}"></script>
-    <span th:if="${isDetail == true}">
-        <script type='text/javascript' th:src="@{${baseLink} + '/source/js/highlightjs/highlight.pack.js'}"></script>
-        <script type='text/javascript' th:src="@{${baseLink} + '/source/js/overshare/js/social-share.min.js'}"></script>
-        <script type='text/javascript' th:src="@{${prefix} + '/source/js/autoToc/jquery.autoToc.js'}"></script>
-        <script type='text/javascript'>
-            $("#tocContainer").autoToc({offsetTop: 520});
-            document.addEventListener('DOMContentLoaded', (event) => {
-                document.querySelectorAll('figure span').forEach((block) => {
-                    hljs.highlightBlock(block);
-                });
-            });
-        </script>
-    </span>
-    <script type='text/javascript' th:src="@{${prefix} + '/source/js/app.js'}"></script>
-    [(${#servletContext.getAttribute('configMap')['script_code']})]
+
 </body>
 </html>

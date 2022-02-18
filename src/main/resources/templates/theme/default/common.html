@@ -25,7 +25,6 @@
     <link rel="stylesheet" th:href="@{${baseLink} + '/source/js/nprogress/nprogress.min.css'}">
     <link rel="stylesheet" th:href="@{${baseLink} + '/source/js/autoToc/jquery.autoToc.css'}"/>
     <link rel="stylesheet" th:href="@{${baseLink} + '/source/js/overshare/css/share.min.css'}"/>
-    <link rel="stylesheet" th:href="@{${baseLink} + '/source/js/jquery-comment/jquery-comment.css'}"/>
     <link rel="stylesheet" th:href="@{${prefix} + '/source/css/app.css?v=' + ${activeTheme.configMap['version']}}"/>
     <style th:if="${activeTheme.configMap['mourn'] == 'true'}">
         #animate,.footer-copyright,.content,.options,#nprogress .bar, #nprogress .spinner-icon{
@@ -79,7 +78,6 @@
     <footer class="footer-copyright" id="footer-copyright">
         <div class="row">
             <div style="padding-left: 2rem">
-<!--                <span class="pull-left" style="left: 10px">❤️[[${#servletContext.getAttribute('configMap')['power_by']}]]</span>-->
                 <span class="pull-left" style="left: 10px" th:utext="${#servletContext.getAttribute('configMap')['power_by']}"></span>
             </div>
             <div style="position: absolute; left: 50%; transform: translateX(-50%)">
@@ -96,12 +94,23 @@
                 </ul>
             </div>
             <div class="hidden-xs" style="padding-right: 2rem">
-<!--                <a class="pull-right" href="http://beian.miit.gov.cn/" target="_blank">[[${#servletContext.getAttribute('configMap')['record']}]]</a>-->
                 <a class="pull-right" href="http://beian.miit.gov.cn/" target="_blank" th:utext="${#servletContext.getAttribute('configMap')['record']}"></a>
             </div>
         </div>
     </footer>
     <div id="aplayer" class="visible"></div>
+</div>
+
+<div th:fragment="comment">
+    <div class="hb-comment"></div>
+    <script type='text/javascript' th:src="@{${baseLink} + '/source/js/hb-comment/hb-comment.js'}"></script>
+    <script th:inline="javascript">
+        HbComment.init({
+            el: ".hb-comment",
+            baseUrl: [[${baseLink}]] + "/source/js",
+            wrapClass: "ml-content"
+        });
+    </script>
 </div>
 
 <div th:fragment="script">
@@ -112,8 +121,6 @@
         let openPjax = [[${activeTheme.configMap['PJAX']}]];
     </script>
     <script type='text/javascript' th:src="@{${baseLink} + '/source/js/plugins.js'}"></script>
-    <script type='text/javascript' th:src="@{${baseLink} + '/source/js/jquery-comment/jquery.cookie.js'}"></script>
-    <script type='text/javascript' th:src="@{${baseLink} + '/source/js/jquery-comment/jquery-comment.js'}"></script>
     <script type='text/javascript' th:src="@{${baseLink} + '/source/css/bootstrap/js/bootstrap.min.js'}"></script>
     <script type='text/javascript' th:src="@{${baseLink} + '/source/js/fancybox/jquery.fancybox.min.js'}"></script>
     <script type='text/javascript' th:src="@{${baseLink} + '/source/js/layer/layer.js'}"></script>

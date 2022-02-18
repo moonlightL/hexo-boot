@@ -1,137 +1,120 @@
 <!doctype html>
-<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" layout:decorate="~{theme/default/layout}">
 
 <head>
-    <div th:replace="~{theme/default/common :: meta}"></div>
     <meta property="og:title" th:content="${'首页 | ' + #servletContext.getAttribute('configMap')['blog_name']}" />
     <title>首页 | [[${#servletContext.getAttribute('configMap')['blog_name']}]]</title>
-    <div th:replace="~{theme/default/common :: link}"></div>
 </head>
 
 <body>
-<div id="animate" th:if="${activeTheme.configMap['animated'] == 'true'}" style="position: fixed;width: 100%; height: 100%">
-    <script type='text/javascript' th:src="@{${prefix} + '/source/js/ribbon.js'}"></script>
-</div>
-<div class="ml-container" id="pageContainer">
-    <div class="container">
-        <!-- 导航 -->
-        <div th:replace="~{theme/default/common :: nav}"></div>
 
-        <!-- 内容 -->
-        <div id="wrap" class="content">
-            <div class="image-banner">
-                <div class="image-content" th:if="${#strings.startsWith(currentNav.cover,'http') == true}"><img th:data-original="@{${currentNav.cover}}" class="lazyload" ></div>
-                <div class="image-content" th:if="${#strings.startsWith(currentNav.cover,'http') == false}"><img th:data-original="@{${prefix} + '/source/images/index.png'}" class="lazyload" ></div>
-                <div class="descr"><a data-pjax th:href="@{/}">首页</a></div>
-                <div class="word_1 animated fadeInRight">不积跬步，无以至千里</div>
-                <div class="word_2 animated fadeInLeft">不积小流，无以成江海</div>
-            </div>
-
-            <div class="ml-content">
-                <div class="row" >
-                    <div class="post col-md-4 col-sm-6 col-xs-12" th:if="${activeTheme.configMap['layout'] == 'grid'}" th:each="post,iterStat : ${pageInfo.data}">
-                        <div class="post-info animate-box" data-animate-effect="zoomIn">
-                            <div class="post-bg">
-                                <span class="reprint" th:if="${post.reprint}">转载</span>
-                                <span class="top" th:if="${post.top}"><img src="/theme/default/source/images/article-top.png" alt="" width="38" height="38"></span>
-                                <img class="lazyload" th:data-original="@{${post.coverUrl}}" alt="阅读全文" width="100%" height="100%">
-                                <div class="mask"></div>
-                                <div class="category">分类: <a data-pjax class="jump" th:href="@{'/categories/'+${post.categoryName}+'/'}">[[${post.categoryName}]]</a></div>
-                                <div class="tags">标签:
-                                    <span th:if="${#strings.isEmpty(post.tags) == false}">
-                                   <a data-pjax class="jump" th:href="@{'/tags/'+${tag}+'/'}" rel="tag" th:each="tag,status : ${#strings.arraySplit(post.tags, ',')}">[[${tag}]] &nbsp;</a>
-                               </span>
-                                    <span th:if="${#strings.isEmpty(post.tags)}">无</span>
-                                </div>
-                            </div>
-                            <div class="post-data">
-                                <div class="post-title">
-                                    <i class="fa fa-lock" th:if="${#strings.isEmpty(post.authCode) != true}"></i>&nbsp;
-                                    <a data-pjax th:href="@{'/' + ${post.link}}">[[${post.title}]]</a>
-                                </div>
-                                <div class="post-summary">
-                                    [[${post.summary}]]
-                                </div>
-                                <div class="post-date"><i class="fa fa-calendar"></i> [[${post.publishDate}]]</div>
-                                <div class="nums">
-                                    <span class="read-num" title="浏览数"><i class="fa fa-eye"></i> [[${post.readNum}]]</span>&nbsp;&nbsp;
-                                    <span class="comment-num" title="评论数"><i class="fa fa-comments-o"></i> [[${post.commentNum}]]</span>
-                                </div>
-                            </div>
-                            <div class="show-btn text-center">
-                                <a data-pjax th:href="@{'/' + ${post.link}}" class="button" data-text="阅读全文">
-                                    <b></b>
-                                    <b></b>
-                                    <span>阅</span>
-                                    <span>读</span>
-                                    <span>全</span>
-                                    <span>文</span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="post col-md-12" th:if="${activeTheme.configMap['layout'] == 'full'}" th:each="post,iterStat : ${pageInfo.data}">
-                        <div class="post-info full animate-box" data-animate-effect="fadeIn">
-                            <div class="cover">
-                                <span class="top" th:if="${post.top}"><img src="/theme/default/source/images/article-top.png" alt="" width="38" height="38"></span>
-                                <a data-pjax th:href="@{'/' + ${post.link}}"><img class="lazyload" th:data-original="@{${post.coverUrl}}" alt="阅读全文"></a>
-                            </div>
-                            <div class="info">
-                                <h3>
-                                    <span class="reprint" th:if="${post.reprint}">转载</span>
-                                   <span class="declare">
-                                       <a data-pjax th:href="@{'/categories/'+${post.categoryName}+'/'}">[[${post.categoryName}]]</a>
-                                   </span>
-                                    <a data-pjax th:href="@{'/' + ${post.link}}" th:text="${post.title}"></a>
-                                </h3>
-                                <p class="summary" th:text="${post.summary}"></p>
-                                <div class="meta">
-                                    <ul>
-                                        <li><i class="fa fa-user-circle-o"></i> [[${post.author}]]</li>
-                                        <li><i class="fa fa-calendar"></i> [[${post.publishDate}]]</li>
-                                        <li class="hidden-xs"> <i class="fa fa-heartbeat"></i> 热度 [[${post.readNum}]] </li>
-                                        <li th:if="${#strings.isEmpty(post.authCode) != true}"><i class="fa fa-lock"></i> 锁定</li>
-                                    </ul>
-                                    <span class="hidden-xs article-item-tags" th:if="${#strings.isEmpty(post.tags) == false}">
-                                       <a data-pjax class="tag" th:href="@{'/tags/'+${tag}+'/'}" rel="tag" th:each="tag,status : ${#strings.arraySplit(post.tags, ',')}"><i class="fa fa-tag"></i> [[${tag}]] &nbsp;</a>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="pagination">
-                <span th:if="${pageInfo.hasPreviousPage}" class="page">
-                    <a data-pjax class="prev page-numbers" th:href="@{${pageInfo.pageNum - 1} == 1 ? '/' : '/page/' + ${pageInfo.pageNum-1}+'/'}" ><i class="fa fa-angle-left"></i></a>
-                </span>
-                    <span th:each="pageNum : ${pageInfo.navigatepageNums}" th:if="${pageInfo.navigatepageNums.length} le '4' ">
-                    <span th:if="${pageNum == pageInfo.pageNum}"  class="page current" th:text="${pageNum}"></span>
-                    <span class="page" th:if="${pageNum != pageInfo.pageNum}">
-                        <a data-pjax th:href="@{'/page/' + ${pageNum}+'/'}" th:text="${pageNum}"></a>
-                    </span>
-               </span>
-                    <span th:each="pageNum, iterStat : ${pageInfo.navigatepageNums}" th:if="${pageInfo.navigatepageNums.length} gt '4' ">
-                   <span class="page" th:if="${pageNum == pageInfo.pageNum and iterStat.count gt 2 and iterStat.count le iterStat.size}">...</span>
-                   <span th:if="${pageNum == pageInfo.pageNum}" class="page current" th:text="${pageNum}"></span>
-                   <span class="page" th:if="${pageNum == pageInfo.pageNum and iterStat.count le (iterStat.size - 2)}">...</span>
-                   <span th:if="${pageNum != pageInfo.pageNum}">
-                       <span class="page" th:if="${iterStat.count == 1}" ><a data-pjax th:href="@{'/page/1/'}" th:text="1"></a></span>
-                       <span class="page" th:if="${iterStat.count == (iterStat.size)}"><a data-pjax th:href="@{'/page/' + ${pageNum}+'/'}" th:text="${pageNum}"></a></span>
-                    </span>
-               </span>
-                    <span th:if="${pageInfo.hasNextPage}" class="page">
-                    <a data-pjax class="next page-numbers" th:href="@{'/page/' + ${pageInfo.pageNum + 1}+'/'}" ><i class="fa fa-angle-right"></i></a>
-                </span>
-                </div>
-            </div>
+    <div id="wrap" class="content" layout:fragment="content">
+        <div class="image-banner">
+            <div class="image-content" th:if="${#strings.startsWith(currentNav.cover,'http') == true}"><img th:data-original="@{${currentNav.cover}}" class="lazyload" ></div>
+            <div class="image-content" th:if="${#strings.startsWith(currentNav.cover,'http') == false}"><img th:data-original="@{${prefix} + '/source/images/index.png'}" class="lazyload" ></div>
+            <div class="descr"><a data-pjax th:href="@{/}">首页</a></div>
+            <div class="word_1 animated fadeInRight">不积跬步，无以至千里</div>
+            <div class="word_2 animated fadeInLeft">不积小流，无以成江海</div>
         </div>
 
-        <!-- footer -->
-        <div th:replace="~{theme/default/common :: footer}"></div>
-    </div>
-    <div th:replace="~{theme/default/common :: script}"></div>
-</div>
+        <div class="ml-content">
+            <div class="row" >
+                <div class="post col-md-4 col-sm-6 col-xs-12" th:if="${activeTheme.configMap['layout'] == 'grid'}" th:each="post,iterStat : ${pageInfo.data}">
+                    <div class="post-info animate-box" data-animate-effect="zoomIn">
+                        <div class="post-bg">
+                            <span class="reprint" th:if="${post.reprint}">转载</span>
+                            <span class="top" th:if="${post.top}"><img src="/theme/default/source/images/article-top.png" alt="" width="38" height="38"></span>
+                            <img class="lazyload" th:data-original="@{${post.coverUrl}}" alt="阅读全文" width="100%" height="100%">
+                            <div class="mask"></div>
+                            <div class="category">分类: <a data-pjax class="jump" th:href="@{'/categories/'+${post.categoryName}+'/'}">[[${post.categoryName}]]</a></div>
+                            <div class="tags">标签:
+                                <span th:if="${#strings.isEmpty(post.tags) == false}">
+                                           <a data-pjax class="jump" th:href="@{'/tags/'+${tag}+'/'}" rel="tag" th:each="tag,status : ${#strings.arraySplit(post.tags, ',')}">[[${tag}]] &nbsp;</a>
+                                       </span>
+                                <span th:if="${#strings.isEmpty(post.tags)}">无</span>
+                            </div>
+                        </div>
+                        <div class="post-data">
+                            <div class="post-title">
+                                <i class="fa fa-lock" th:if="${#strings.isEmpty(post.authCode) != true}"></i>&nbsp;
+                                <a data-pjax th:href="@{'/' + ${post.link}}">[[${post.title}]]</a>
+                            </div>
+                            <div class="post-summary">
+                                [[${post.summary}]]
+                            </div>
+                            <div class="post-date"><i class="fa fa-calendar"></i> [[${post.publishDate}]]</div>
+                            <div class="nums">
+                                <span class="read-num" title="浏览数"><i class="fa fa-eye"></i> [[${post.readNum}]]</span>&nbsp;&nbsp;
+                                <span class="comment-num" title="评论数"><i class="fa fa-comments-o"></i> [[${post.commentNum}]]</span>
+                            </div>
+                        </div>
+                        <div class="show-btn text-center">
+                            <a data-pjax th:href="@{'/' + ${post.link}}" class="button" data-text="阅读全文">
+                                <b></b>
+                                <b></b>
+                                <span>阅</span>
+                                <span>读</span>
+                                <span>全</span>
+                                <span>文</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
 
+                <div class="post col-md-12" th:if="${activeTheme.configMap['layout'] == 'full'}" th:each="post,iterStat : ${pageInfo.data}">
+                    <div class="post-info full animate-box" data-animate-effect="fadeIn">
+                        <div class="cover">
+                            <span class="top" th:if="${post.top}"><img src="/theme/default/source/images/article-top.png" alt="" width="38" height="38"></span>
+                            <a data-pjax th:href="@{'/' + ${post.link}}"><img class="lazyload" th:data-original="@{${post.coverUrl}}" alt="阅读全文"></a>
+                        </div>
+                        <div class="info">
+                            <h3>
+                                <span class="reprint" th:if="${post.reprint}">转载</span>
+                                <span class="declare">
+                                               <a data-pjax th:href="@{'/categories/'+${post.categoryName}+'/'}">[[${post.categoryName}]]</a>
+                                           </span>
+                                <a data-pjax th:href="@{'/' + ${post.link}}" th:text="${post.title}"></a>
+                            </h3>
+                            <p class="summary" th:text="${post.summary}"></p>
+                            <div class="meta">
+                                <ul>
+                                    <li><i class="fa fa-user-circle-o"></i> [[${post.author}]]</li>
+                                    <li><i class="fa fa-calendar"></i> [[${post.publishDate}]]</li>
+                                    <li class="hidden-xs"> <i class="fa fa-heartbeat"></i> 热度 [[${post.readNum}]] </li>
+                                    <li th:if="${#strings.isEmpty(post.authCode) != true}"><i class="fa fa-lock"></i> 锁定</li>
+                                </ul>
+                                <span class="hidden-xs article-item-tags" th:if="${#strings.isEmpty(post.tags) == false}">
+                                               <a data-pjax class="tag" th:href="@{'/tags/'+${tag}+'/'}" rel="tag" th:each="tag,status : ${#strings.arraySplit(post.tags, ',')}"><i class="fa fa-tag"></i> [[${tag}]] &nbsp;</a>
+                                            </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pagination">
+                        <span th:if="${pageInfo.hasPreviousPage}" class="page">
+                            <a data-pjax class="prev page-numbers" th:href="@{${pageInfo.pageNum - 1} == 1 ? '/' : '/page/' + ${pageInfo.pageNum-1}+'/'}" ><i class="fa fa-angle-left"></i></a>
+                        </span>
+                <span th:each="pageNum : ${pageInfo.navigatepageNums}" th:if="${pageInfo.navigatepageNums.length} le '4' ">
+                            <span th:if="${pageNum == pageInfo.pageNum}"  class="page current" th:text="${pageNum}"></span>
+                            <span class="page" th:if="${pageNum != pageInfo.pageNum}">
+                                <a data-pjax th:href="@{'/page/' + ${pageNum}+'/'}" th:text="${pageNum}"></a>
+                            </span>
+                       </span>
+                <span th:each="pageNum, iterStat : ${pageInfo.navigatepageNums}" th:if="${pageInfo.navigatepageNums.length} gt '4' ">
+                           <span class="page" th:if="${pageNum == pageInfo.pageNum and iterStat.count gt 2 and iterStat.count le iterStat.size}">...</span>
+                           <span th:if="${pageNum == pageInfo.pageNum}" class="page current" th:text="${pageNum}"></span>
+                           <span class="page" th:if="${pageNum == pageInfo.pageNum and iterStat.count le (iterStat.size - 2)}">...</span>
+                           <span th:if="${pageNum != pageInfo.pageNum}">
+                               <span class="page" th:if="${iterStat.count == 1}" ><a data-pjax th:href="@{'/page/1/'}" th:text="1"></a></span>
+                               <span class="page" th:if="${iterStat.count == (iterStat.size)}"><a data-pjax th:href="@{'/page/' + ${pageNum}+'/'}" th:text="${pageNum}"></a></span>
+                            </span>
+                       </span>
+                <span th:if="${pageInfo.hasNextPage}" class="page">
+                            <a data-pjax class="next page-numbers" th:href="@{'/page/' + ${pageInfo.pageNum + 1}+'/'}" ><i class="fa fa-angle-right"></i></a>
+                        </span>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

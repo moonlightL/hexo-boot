@@ -36,13 +36,10 @@ public class CommonController {
     protected CategoryService categoryService;
 
     @Autowired
-    protected PostCommentService postCommentService;
+    protected CommentService commentService;
 
     @Autowired
     protected TagService tagService;
-
-    @Autowired
-    protected GuestBookService guestBookService;
 
     @Autowired
     protected UserExtendService userExtendService;

@@ -186,27 +186,27 @@ public class DateUtil {
         }
 
         if (minutes < 60) {
-            return minutes + "分钟前";
+            return minutes + " 分钟前";
         }
 
         long hours = between.toHours();
         if (hours < 24) {
-            return hours + "小时前";
+            return hours + " 小时前";
         }
 
         long days = between.toDays();
         if (days < 7) {
-            return days + "天前";
+            return days + " 天前";
         }
 
         if (days < 120) {
-            return days / 7 + "周前";
+            return days / 7 + " 周前";
         }
 
         if (days < 365) {
-            return days / 30 + "月前";
+            return days / 30 + " 月前";
         }
 
-        return days / 365 + "年前";
+        return days / 365 + " 年前";
     }
 }

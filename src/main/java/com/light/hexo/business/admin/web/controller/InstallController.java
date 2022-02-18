@@ -59,6 +59,7 @@ public class InstallController {
     public Result install(@Validated(BaseRequest.Save.class) InstallRequest request, HttpServletRequest httpServletRequest) throws Exception{
         this.installService.installApplication(
                 request,
+                BrowserUtil.getOsName(httpServletRequest),
                 BrowserUtil.getBrowserName(httpServletRequest),
                 IpUtil.getIpAddr(httpServletRequest));
         return Result.success("/admin/login.html");

@@ -30,13 +30,10 @@ public class HomeController extends BaseController {
     private PostService postService;
 
     @Autowired
-    private PostCommentService postCommentService;
+    private CommentService commentService;
 
     @Autowired
     private CategoryService categoryService;
-
-    @Autowired
-    private GuestBookService guestBookService;
 
     @Autowired
     private VisitService visitService;
@@ -50,8 +47,8 @@ public class HomeController extends BaseController {
     public String index(Map<String, Object> resultMap) {
         int postNum = this.postService.getPostNum();
         int categoryNum = this.categoryService.getCategoryNum();
-        int postCommentNum = this.postCommentService.getPostCommentNum(null);
-        int guestBookNum = this.guestBookService.getGuestBookNum();
+        int postCommentNum = this.commentService.getCommentNum(1);
+        int guestBookNum = this.commentService.getCommentNum(2);
 
         resultMap.put("postNum", postNum);
         resultMap.put("postCommentNum", postCommentNum);

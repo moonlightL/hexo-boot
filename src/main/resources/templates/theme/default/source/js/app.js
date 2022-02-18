@@ -6,12 +6,6 @@
                 css: baseLink + "/source/js/APlayer/APlayer.min.css",
                 js: baseLink + "/source/js/APlayer/APlayer.min.js"
             },
-            about: {
-                js: baseLink + "/source/js/about.js?v=" + version
-            },
-            detail: {
-                js: baseLink + "/source/js/detail.js?v=" + version
-            },
             highlight: {
                 js: baseLink + "/source/js/highlightjs/highlight.pack.js"
             },
@@ -182,8 +176,8 @@
     };
 
     const postEvent = function() {
-        let $detailComment = $("#detail-comment");
-        if ($detailComment.length > 0) {
+        let $detail = $("#post-content");
+        if ($detail.length > 0) {
             $.getScript(APP.plugins.highlight.js, function () {
                 document.querySelectorAll('figure span').forEach((block) => {
                     hljs.highlightBlock(block);
@@ -200,6 +194,7 @@
 
             // 点赞
             $("#priseBtn").on("click",function () {
+                let postId = $(this).data("id");
                 let key = "post-hasPrize" + postId;
                 if (sessionStorage.getItem(key)) {
                     layer.msg("已点赞");
@@ -210,6 +205,7 @@
                     if (resp.success) {
                         $("#prizeCount").text(resp.data);
                         sessionStorage.setItem(key, "y");
+                        layer.msg("谢谢点赞");
                     }
                 },"json");
 
@@ -237,20 +233,6 @@
                         shareBtns.addClass("share-open");
                     }
                 });
-            });
-
-            $.getScript(APP.plugins.detail.js, function () {
-                initComment(window.postId, window.canComment);
-            });
-
-        }
-    };
-
-    const aboutEvent = function() {
-        let $about = $("#about-comment");
-        if ($about.length > 0) {
-            $.getScript(APP.plugins.about.js, function () {
-                initComment();
             });
         }
     };
@@ -288,7 +270,6 @@
             contentWayPoint();
             dynamicEvent();
             postEvent();
-            aboutEvent();
             let $navBar = $("#navbar");
             let $arr = $navBar.find("ul.menu>li");
             $arr.removeClass("active");
@@ -307,7 +288,6 @@
         contentWayPoint();
         dynamicEvent();
         postEvent();
-        aboutEvent();
         if (openPjax === "true") {
             pjaxEvent();
         }
