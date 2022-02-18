@@ -262,7 +262,7 @@ curl -L -o ~/.hexo-boot/application.yml --create-dirs https://gitee.com/moonligh
 
 ## 六、更新日志
 
-2022-02-21 统一评论功能接口，重写评论区插件
+2022-02-18 统一评论功能接口，重写评论区插件
 
 2021-12-23 新增发布专辑功能（图片、视频）
 
