@@ -27,7 +27,7 @@ public class CommentRequest extends BaseRequest<Comment> {
     /**
      * 父级 id
      */
-    @NotNull(message = "pId不能为空", groups = {PostCommentRequest.Reply.class})
+    @NotNull(message = "pId不能为空", groups = {CommentRequest.Reply.class})
     private Integer pId;
 
     /**
@@ -38,19 +38,19 @@ public class CommentRequest extends BaseRequest<Comment> {
     /**
      * 评论内容
      */
-    @NotEmpty(message = "评论内容不能为空", groups = {BaseRequest.Save.class, BaseRequest.Update.class, PostCommentRequest.Reply.class, PostCommentRequest.Send.class})
+    @NotEmpty(message = "评论内容不能为空", groups = {BaseRequest.Save.class, BaseRequest.Update.class, CommentRequest.Reply.class, CommentRequest.Send.class})
     private String content;
 
     /**
      * 留言昵称
      */
-    @NotEmpty(message = "昵称不能为空", groups = {PostCommentRequest.Send.class})
+    @NotEmpty(message = "昵称不能为空", groups = {CommentRequest.Send.class})
     private String nickname;
 
     /**
      * 邮箱地址
      */
-    @NotEmpty(message = "邮箱地址不能为空", groups = {PostCommentRequest.Send.class})
+    @NotEmpty(message = "邮箱地址不能为空", groups = {CommentRequest.Send.class})
     private String email;
 
     /**

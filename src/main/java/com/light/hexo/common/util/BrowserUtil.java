@@ -1,6 +1,7 @@
 package com.light.hexo.common.util;
 
 import eu.bitwalker.useragentutils.Browser;
+import eu.bitwalker.useragentutils.OperatingSystem;
 import eu.bitwalker.useragentutils.UserAgent;
 import eu.bitwalker.useragentutils.Version;
 
@@ -14,6 +15,16 @@ import javax.servlet.http.HttpServletRequest;
  * @Date 2020/8/3 17:33
  */
 public class BrowserUtil {
+
+    /**
+     * 获取远程客户端系统名称
+     * @param request
+     * @return
+     */
+    public static String getOsName(HttpServletRequest request) {
+        UserAgent userAgent = UserAgent.parseUserAgentString(request.getHeader("User-Agent"));
+        return userAgent.getOperatingSystem().getName();
+    }
 
     /**
      * 获取远程客户端浏览器名称

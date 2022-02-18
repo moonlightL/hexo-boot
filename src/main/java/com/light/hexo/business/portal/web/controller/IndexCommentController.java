@@ -7,7 +7,6 @@ import com.light.hexo.business.portal.common.CommonController;
 import com.light.hexo.business.portal.component.RequestLimit;
 import com.light.hexo.common.exception.GlobalException;
 import com.light.hexo.common.model.CommentRequest;
-import com.light.hexo.common.model.PostCommentRequest;
 import com.light.hexo.common.model.Result;
 import com.light.hexo.common.util.BrowserUtil;
 import com.light.hexo.common.util.IpUtil;
@@ -57,7 +56,7 @@ public class IndexCommentController extends CommonController {
         }
 
         PageInfo<Comment> pageInfo = new PageInfo<>(commentList);
-        map.put("totalNum", "singleRow".equals(commentShowType) ? pageInfo.getTotal() : this.commentService.getCommentNum(page));
+        map.put("totalNum", "singleRow".equals(commentShowType) ? pageInfo.getTotal() : this.commentService.getCommentNumByBannerId(page));
         map.put("commentList", pageInfo.getList());
         map.put("commentShowType", commentShowType);
         return Result.success(map);
@@ -73,11 +72,12 @@ public class IndexCommentController extends CommonController {
     @PostMapping("auth/sendComment.json")
     @ResponseBody
     @RequestLimit(cacheName = "commentCache", time = 30, msg = "评论操作过于频繁，请等待30秒后再评论")
-    public Result sendComment(@Validated(PostCommentRequest.Send.class) CommentRequest request, HttpServletRequest httpServletRequest) throws GlobalException {
+    public Result sendComment(@Validated(CommentRequest.Send.class) CommentRequest request, HttpServletRequest httpServletRequest) throws GlobalException {
 
         Comment comment = request.toDoModel();
         String ipAddr = IpUtil.getIpAddr(httpServletRequest);
         comment.setIpAddress(ipAddr);
+        comment.setOsName(BrowserUtil.getOsName(httpServletRequest));
         comment.setBrowser(BrowserUtil.getBrowserName(httpServletRequest));
         this.commentService.saveCommentByIndex(comment);
         return Result.success();

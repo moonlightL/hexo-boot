@@ -195,7 +195,6 @@
             // 点赞
             $("#priseBtn").on("click",function () {
                 let postId = $(this).data("id");
-                console.log(postId)
                 let key = "post-hasPrize" + postId;
                 if (sessionStorage.getItem(key)) {
                     layer.msg("已点赞");
@@ -206,6 +205,7 @@
                     if (resp.success) {
                         $("#prizeCount").text(resp.data);
                         sessionStorage.setItem(key, "y");
+                        layer.msg("谢谢点赞");
                     }
                 },"json");
 

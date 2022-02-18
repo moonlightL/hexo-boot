@@ -211,8 +211,8 @@ public interface PostService extends BaseService<Post>, EventService {
 
     /**
      * 获取简单详情
-     * @param page
+     * @param link
      * @return
      */
-    Post getSimpleInfo(String page) throws GlobalException;
+    Post getSimpleInfo(String link) throws GlobalException;
 }

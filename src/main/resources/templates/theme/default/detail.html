@@ -32,11 +32,11 @@
                 <div class="blogger-info">
                     <img class="hidden-xs" th:src="@{${#strings.isEmpty(#servletContext.getAttribute('configMap')['blog_avatar']) != true ? #servletContext.getAttribute('configMap')['blog_avatar'] :
                         (#strings.isEmpty(#servletContext.getAttribute('configMap')['logo_url']) !=true ? #servletContext.getAttribute('configMap')['logo_url'] : prefix + '/source/images/logo.png')}}">
-                    <span class="blog-author">😊 [[${#servletContext.getAttribute('configMap')['blog_author']}]]</span>
-                    <span class="post-date">📅 [[${post.year} + ' 年 ' + ${post.month} + ' 月 ' + ${post.day} + ' 日']]</span>
+                    <span class="blog-author"><i class="fa fa-user-circle"></i> [[${#servletContext.getAttribute('configMap')['blog_author']}]]</span>
+                    <span class="post-date"><i class="fa fa-calendar"></i> [[${post.year} + ' 年 ' + ${post.month} + ' 月 ' + ${post.day} + ' 日']]</span>
                     <div class="post-nums">
-                        <span>🔥 [[${post.readNum}]]</span>&nbsp;&nbsp;
-                        <span>💬 [[${post.commentNum}]]</span>
+                        <span><i class="fa fa-fire"></i> [[${post.readNum}]]</span>&nbsp;&nbsp;
+                        <span><i class="fa fa-comment-o"></i> [[${post.commentNum}]]</span>
                     </div>
                 </div>
             </header>

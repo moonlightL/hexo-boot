@@ -1,5 +1,6 @@
 package com.light.hexo.business.admin.service.impl;
 
+import cn.hutool.core.net.URLDecoder;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.light.hexo.business.admin.component.BaiDuPushService;
@@ -17,7 +18,6 @@ import com.light.hexo.common.base.BaseServiceImpl;
 import com.light.hexo.common.component.event.BaseEvent;
 import com.light.hexo.common.component.event.EventEnum;
 import com.light.hexo.common.component.event.EventPublisher;
-import com.light.hexo.common.constant.CacheKey;
 import com.light.hexo.common.constant.HexoConstant;
 import com.light.hexo.common.exception.GlobalException;
 import com.light.hexo.common.model.PostRequest;
@@ -39,13 +39,14 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.context.WebApplicationContext;
 import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.util.Sqls;
-
 import javax.servlet.ServletContext;
 import java.io.*;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -718,37 +719,43 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
         return postList.subList(start, end);
     }
 
-    @Cacheable(key = "'" + PageConstant.POST_DETAIL_INFO + ":' + #link")
     @Override
     public Post getDetailInfo(String link, Integer linkType) throws GlobalException {
 
-        Example.Builder builder = Example.builder(Post.class)
-                .select("id", "title", "author", "contentHtml", "publishDate", "year", "month", "day", "top", "reprint", "reprintLink", "comment",
-                        "coverUrl", "coverType", "link", "customLink", "categoryId", "tags", "readNum", "praiseNum", "commentNum", "authCode",
-                        "topTime", "createTime");
-        if (linkType.equals(1)) {
-            builder.where(Sqls.custom().andEqualTo("link", link).andEqualTo("delete", false));
-        } else {
-            builder.where(Sqls.custom().andEqualTo("customLink", link).andEqualTo("delete", false));
-        }
+        String cacheKey = PageConstant.POST_DETAIL_INFO + ":" + link;
 
-        Post post = this.getBaseMapper().selectOneByExample(builder.build());
+        Post post = CacheUtil.get(cacheKey);
         if (post == null) {
-            ExceptionUtil.throwExToPage(HexoExceptionEnum.ERROR_POST_NOT_EXIST);
+            Example.Builder builder = Example.builder(Post.class)
+                    .select("id", "title", "author", "contentHtml", "publishDate", "year", "month", "day", "top", "reprint", "reprintLink", "comment",
+                            "coverUrl", "coverType", "link", "customLink", "categoryId", "tags", "readNum", "praiseNum", "commentNum", "authCode",
+                            "topTime", "createTime");
+            if (linkType.equals(1)) {
+                builder.where(Sqls.custom().andEqualTo("link", link).andEqualTo("delete", false));
+            } else {
+                builder.where(Sqls.custom().andEqualTo("customLink", link).andEqualTo("delete", false));
+            }
+
+            post = this.getBaseMapper().selectOneByExample(builder.build());
+            if (post == null) {
+                ExceptionUtil.throwExToPage(HexoExceptionEnum.ERROR_POST_NOT_EXIST);
+            }
+
+            Category category = this.categoryService.findById(post.getCategoryId());
+            if (category != null) {
+                post.setCategoryName(StringUtils.isNotBlank(category.getName()) ? category.getName() : "默认");
+            }
+
+            Integer postId = post.getId();
+
+            Post prevPost = this.getPreviousInfo(postId);
+            post.setPrevPost(prevPost);
+
+            Post nextPost = this.getNextInfo(postId);
+            post.setNextPost(nextPost);
+
+            CacheUtil.put(cacheKey, post, TimeUnit.MINUTES.toMillis(2));
         }
-
-        Category category = this.categoryService.findById(post.getCategoryId());
-        if (category != null) {
-            post.setCategoryName(StringUtils.isNotBlank(category.getName()) ? category.getName() : "默认");
-        }
-
-        Integer postId = post.getId();
-
-        Post prevPost = this.getPreviousInfo(postId);
-        post.setPrevPost(prevPost);
-
-        Post nextPost = this.getNextInfo(postId);
-        post.setNextPost(nextPost);
 
         return post;
     }
@@ -882,16 +889,19 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
     }
 
     @Override
-    public Post getSimpleInfo(String page) throws GlobalException {
+    public Post getSimpleInfo(String link) throws GlobalException {
+        if (link.startsWith("/")) {
+            link = link.substring(1);
+        }
         Example.Builder builder = Example.builder(Post.class)
                 .select("id", "title", "author", "publishDate", "year", "month", "day", "top", "reprint", "reprintLink", "comment",
                         "coverUrl", "coverType", "link", "customLink", "categoryId", "tags", "readNum", "praiseNum", "commentNum", "authCode",
                         "topTime", "createTime");
-        builder.where(Sqls.custom().andEqualTo("link", page).andEqualTo("delete", false));
+        builder.where(Sqls.custom().andEqualTo("link", link).andEqualTo("delete", false));
 
         Post post = this.getBaseMapper().selectOneByExample(builder.build());
         if (post == null) {
-            builder.where(Sqls.custom().andEqualTo("customLink", page).andEqualTo("delete", false));
+            builder.where(Sqls.custom().andEqualTo("customLink", link).andEqualTo("delete", false));
             post = this.getBaseMapper().selectOneByExample(builder.build());
         }
 
@@ -951,6 +961,9 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
             }
             data.setUpdateTime(LocalDateTime.now());
             this.updateModel(data);
+
+            String cacheKey = PageConstant.POST_DETAIL_INFO + ":" + (StringUtils.isNotBlank(post.getCustomLink()) ? post.getCustomLink() : post.getLink());
+            CacheUtil.remove(cacheKey);
         }
 
     }

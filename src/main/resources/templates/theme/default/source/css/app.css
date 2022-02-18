@@ -2292,124 +2292,46 @@ h3.friend-link-title.blogger {
 
 /** 评论区 start **/
 
-.comment-container a {
-    color: var(--text-color) !important;
+html[mode=dark] .hb-comment {
+    color: #aaa;
 }
 
-.comment-container a:hover {
-    color: var(--theme-color) !important;
+html[mode=dark] .hb-w-body .hb-comment-info .label {
+    color: #aaa;
+    background: #000;
+    border: 1px solid #4a4a4a;
 }
 
-.comment-container .comment-data .comment-data-title, .comment-container .comment-list .comment-list-title {
-    border-bottom: none !important;
+html[mode=dark] .hb-w-body .hb-comment-info input[readonly='readonly'] {
+    background: #a1a1a1;
+    color: #000;
 }
 
-.comment-container h2 {
-    font-size: 22px !important;
-    font-weight: bold;
-    color: var(--text-color);
+html[mode=dark] .hb-w-body .hb-comment-content textarea {
+    border: 1px solid #4a4a4a;
 }
 
-.comment-data-body .comment-data-body-btns .emoji-container .emoji-container-btn {
-    margin-top: 16px !important;
+html[mode=dark] .hb-w-body .hb-comment-info input {
+    border: 1px solid #4a4a4a;
 }
 
-.comment-data-body .comment-data-body-btns .input-container {
-    border-radius: 4px;
-    top: 4px !important;
+html[mode=dark] .hb-w-body .hb-w-body-item,
+html[mode=dark] .hb-r-body .hb-r-body-item {
+    border-bottom: 1px solid #4a4a4a;
 }
 
-.comment-data-body .comment-data-body-btns .input-container .input-content {
-    background-color: var(--content-color) !important;
-    box-shadow: 0 1px 10px var(--shadow-color) !important;
+html[mode=dark] .hb-w-body .hb-comment-help .emoji-panel .emoji-tab:hover,
+html[mode=dark] .hb-w-body .hb-comment-help .emoji-panel .emoji-tab.active {
+    background: #4a4a4a;
 }
 
-.comment-data-body .comment-data-body-btns .input-container .input-content::before {
-    background-color: var(--content-color) !important;
+html[mode=dark] .hb-w-body .hb-comment-help .emoji-panel li {
+    border: none;
 }
 
-.comment-data-body .comment-data-body-info {
-    background-color: var(--content-color) !important;
-}
-
-.comment-data-body .comment-data-body-content {
-    background-color: var(--content-color) !important;
-}
-
-.comment-data-body .comment-data-body-content::before {
-    background-color: var(--content-color) !important;
-    color: var(--text-color) !important;
-}
-
-.comment-data-body .comment-data-body-info img {
-    margin-top: -5px !important;
-}
-
-.comment-data-body .comment-data-body-content textarea {
-    background-color: var(--content-color) !important;
-    color: var(--text-color);
-}
-
-.comment-data-body .comment-data-body-content textarea:focus {
-    border: 2px solid var(--border-color) !important;
-}
-
-.comment-data-body .comment-data-body-btns {
-    background-color: var(--content-color);
-}
-
-.comment-data-body .comment-data-body-btns .send-message-btn,
-.second-comment-data-body .comment-data-body-btns .send-message-btn{
-    background-color: var(--theme-color) !important;
-    border: 0;
-    height: 36px;
-    line-height: 18px;
-}
-
-.comment-data-body .comment-data-body-btns .send-message-btn:hover,
-.second-comment-data-body .comment-data-body-btns .send-message-btn:hover {
-    opacity: .8;
-}
-
-.comment-container .comment-list .comment-list-item .date {
-    background-color: var(--theme-color) !important;
-}
-
-.comment-list .comment-list-page-bar ul li {
-    background-color: var(--theme-color) !important;
-}
-
-.comment-list .comment-list-page-bar ul li {
-    background-color: var(--blog-bg-color) !important;
-    border-radius: 50% !important;
-}
-
-.comment-list .comment-list-page-bar ul li a {
-    border-radius: 50% !important;
-    color: var(--text-color);
-}
-
-.comment-list .comment-list-page-bar ul li a:hover {
-    background: var(--hover-color);
-    color: var(--text-hover-color) !important;
-}
-
-.comment-list .comment-list-page-bar ul li.active a {
-    background-color: var(--theme-color) !important;
-    color: #fff !important;
-}
-
-.comment-list .comment-list-page-bar ul li a:hover {
-    background-color: var(--theme-color) !important;
-    color: var(--text-hover-color);
-}
-
-.comment-list-body .comment-list-item .info {
-    color: var(--text-color);
-}
-
-.comment-list-body .comment-list-item blockquote.original-content {
-    border-radius: 4px;
+html[mode=dark] .hb-r-body .hb-r-pagination ul li {
+    background-color: #000;
+    border: 1px solid #4a4a4a;
 }
 
 /** 评论区 end **/

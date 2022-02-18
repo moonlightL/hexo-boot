@@ -95,6 +95,11 @@ public class Comment implements Serializable {
     private String ipAddress;
 
     /**
+     * 系统名称
+     */
+    private String osName;
+
+    /**
      * 浏览器
      */
     private String browser;
@@ -103,6 +108,11 @@ public class Comment implements Serializable {
      * 点赞数
      */
     private Integer praiseNum;
+
+    /**
+     * 评论类型 1:文章  2:留言
+     */
+    private Integer commentType;
 
     @CreateTime
     private LocalDateTime createTime;
@@ -139,6 +149,10 @@ public class Comment implements Serializable {
      */
     @Transient
     private String timeDesc;
+
+    public String getDate() {
+        return this.createTime.toLocalDate().toString();
+    }
 
 }
 

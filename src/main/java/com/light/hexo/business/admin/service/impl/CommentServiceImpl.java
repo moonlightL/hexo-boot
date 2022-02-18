@@ -1,6 +1,8 @@
 package com.light.hexo.business.admin.service.impl;
 
+import cn.hutool.core.net.URLDecoder;
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.light.hexo.business.admin.component.EmailService;
 import com.light.hexo.business.admin.constant.ConfigEnum;
 import com.light.hexo.business.admin.constant.HexoExceptionEnum;
@@ -26,7 +28,9 @@ import org.springframework.util.CollectionUtils;
 import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.util.Sqls;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -47,9 +51,6 @@ public class CommentServiceImpl extends BaseServiceImpl<Comment> implements Comm
     
     @Autowired
     private EventPublisher eventPublisher;
-
-    @Autowired
-    private UserService userService;
 
     @Autowired
     private EmailService emailService;
@@ -106,32 +107,28 @@ public class CommentServiceImpl extends BaseServiceImpl<Comment> implements Comm
     }
 
     @Override
-    public void saveComment(Comment comment) throws GlobalException {
-        this.saveModel(comment);
-
-        Post post = this.postService.getSimpleInfo(comment.getPage());
-        if (post != null) {
-            this.eventPublisher.emit(new PostEvent(post.getId(), PostEvent.Type.COMMENT_ADD));
-        }
+    public Integer getCommentNum(Integer commentType) {
+        Example example = new Example(Comment.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("commentType", commentType);
+        return this.getBaseMapper().selectCountByExample(example);
     }
 
     @Override
     public void removeCommentBatch(List<String> idStrList) throws GlobalException {
         List<Integer> idList = idStrList.stream().map(Integer::valueOf).collect(Collectors.toList());
 
-        Example example = new Example(PostComment.class);
+        Example example = new Example(Comment.class);
         example.createCriteria().andIn("id", idList);
-        List<Comment> postCommentList = this.getBaseMapper().selectByExample(example);
-        if (postCommentList.isEmpty()) {
+        List<Comment> commentList = this.getBaseMapper().selectByExample(example);
+        if (commentList.isEmpty()) {
             return;
         }
 
-        for (Comment comment : postCommentList) {
+        for (Comment comment : commentList) {
             // 逻辑删除
-            Comment tmp = new Comment();
-            tmp.setId(comment.getId());
-            tmp.setDelete(true);
-            this.getBaseMapper().updateByPrimaryKeySelective(tmp);
+            Integer id = comment.getId();
+            this.commentMapper.updateDelStatus(id);
 
             // 减评论数
             Post post = this.postService.getSimpleInfo(comment.getPage());
@@ -144,28 +141,66 @@ public class CommentServiceImpl extends BaseServiceImpl<Comment> implements Comm
     }
 
     @Override
-    public void replyByAdmin(Comment comment) throws GlobalException {
+    public PageInfo<Comment> findPage(BaseRequest<Comment> request) throws GlobalException {
+        PageInfo<Comment> pageInfo = super.findPage(request);
+        List<Comment> list = pageInfo.getList();
+        if (CollectionUtils.isEmpty(list)) {
+            return pageInfo;
+        }
 
-        Comment parent = super.findById(comment.getPId());
+        // 查询父级留言
+        Map<Integer, Comment> parentMap = new HashMap<>();
+        List<Integer> pidList = list.stream().map(Comment::getPId).filter(i -> i > 0).collect(Collectors.toList());
+        if (!CollectionUtils.isEmpty(pidList)) {
+            Example example = Example.builder(Comment.class).where(Sqls.custom().andIn("id", pidList)).build();
+            List<Comment> parentList = this.getBaseMapper().selectByExample(example);
+            parentMap = parentList.stream().collect(Collectors.toMap(Comment::getId, Function.identity(), (k1, k2)->k1));
+        }
+
+        List<Blacklist> blacklistList = this.blacklistService.findAll();
+        List<String> ipList = blacklistList.stream().map(Blacklist::getIpAddress).collect(Collectors.toList());
+
+        for (Comment comment : list) {
+            // 父级评论
+            Comment parent = parentMap.get(comment.getPId());
+            if (parent != null) {
+                comment.setParent(parent);
+            }
+            // 检测 ip 是否进入黑名单
+            comment.setBlacklist(ipList.contains(comment.getIpAddress()));
+        }
+
+        return pageInfo;
+    }
+
+    @Override
+    public void replyByAdmin(Comment commentReply) throws GlobalException {
+
+        Comment parent = super.findById(commentReply.getPId());
         if (parent == null || parent.getDelete()) {
             return;
         }
 
-        comment.setBannerId(parent.getBannerId() > 0 ? parent.getBannerId() : parent.getId())
-               .setSourceNickname(parent.getNickname())
-               .setDelete(false);
-        this.saveModel(comment);
+        String homePage = this.configService.getConfigValue(ConfigEnum.HOME_PAGE.getName());
+        commentReply.setHomePage(homePage)
+                    .setBannerId(parent.getBannerId() > 0 ? parent.getBannerId() : parent.getId())
+                    .setSourceNickname(parent.getNickname())
+                    .setPage(parent.getPage())
+                    .setCommentType(parent.getCommentType())
+                    .setBlogger(true)
+                    .setDelete(false);
+        this.saveModel(commentReply);
 
-        Post post = this.postService.getSimpleInfo(comment.getPage());
+        Post post = this.postService.getSimpleInfo(parent.getPage());
         if (post != null) {
             this.eventPublisher.emit(new PostEvent(post.getId(), PostEvent.Type.COMMENT_ADD));
         }
 
-        if (StringUtils.isBlank(comment.getEmail())) {
+        if (StringUtils.isBlank(parent.getEmail())) {
             return;
         }
 
-        this.emailService.sendEmail(comment.getEmail(), "博主回复你的评论", comment.getContent());
+        this.emailService.sendEmail(parent.getEmail(), "博主回复你的评论", commentReply.getContent());
     }
 
     @Override
@@ -193,10 +228,11 @@ public class CommentServiceImpl extends BaseServiceImpl<Comment> implements Comm
     public List<Comment> listCommentByPage(String page, Integer pageNum, int pageSize, boolean isSingleRow) {
 
         List<Comment> commentList;
+        String decodePage = URLDecoder.decode(page, Charset.defaultCharset());
 
         if (isSingleRow) {
             Example example = new Example(Comment.class);
-            example.createCriteria().andEqualTo("page", page)
+            example.createCriteria().andEqualTo("page", decodePage)
                     .andEqualTo("delete", 0);
             example.orderBy("createTime").desc();
 
@@ -227,7 +263,7 @@ public class CommentServiceImpl extends BaseServiceImpl<Comment> implements Comm
             }
         } else {
             Example example = new Example(Comment.class);
-            example.createCriteria().andEqualTo("page", page)
+            example.createCriteria().andEqualTo("page", decodePage)
                     .andEqualTo("delete", 0)
                     .andEqualTo("bannerId", 0);
             example.orderBy("createTime").desc();
@@ -241,7 +277,7 @@ public class CommentServiceImpl extends BaseServiceImpl<Comment> implements Comm
 
             // 查询子级回复列表
             List<Integer> pidList = commentList.stream().map(Comment::getId).collect(Collectors.toList());
-            Example replyExample = Example.builder(PostComment.class).where(Sqls.custom().andIn("bannerId", pidList)).build();
+            Example replyExample = Example.builder(Comment.class).where(Sqls.custom().andIn("bannerId", pidList)).build();
             List<Comment> replyList = this.getBaseMapper().selectByExample(replyExample);
             Map<Integer, List<Comment>> replyMap = replyList.stream().collect(Collectors.groupingBy(Comment::getBannerId));
 
@@ -266,12 +302,15 @@ public class CommentServiceImpl extends BaseServiceImpl<Comment> implements Comm
     }
 
     @Override
-    public Integer getCommentNum(String page) {
+    public Integer getCommentNumByBannerId(String page) {
+        String decodePage = URLDecoder.decode(page, Charset.defaultCharset());
+
         Example example = new Example(Comment.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("delete", false);
+        criteria.andEqualTo("delete", false)
+                .andEqualTo("bannerId", 0);
         if (StringUtils.isNotBlank(page)) {
-            criteria.andEqualTo("page", page);
+            criteria.andEqualTo("page", decodePage);
         }
         return this.getBaseMapper().selectCountByExample(example);
     }
@@ -280,12 +319,12 @@ public class CommentServiceImpl extends BaseServiceImpl<Comment> implements Comm
     public void saveCommentByIndex(Comment comment) {
 
         String page = comment.getPage();
+        String decodePage = URLDecoder.decode(page, Charset.defaultCharset());
 
-        // 查询判断是否为自定义页面
-        Nav nav = this.navService.findByLink(page);
+        Nav nav = this.navService.findByLink(decodePage);
         if (nav == null) {
             // 查询为空，说明文章详情
-            Post post = this.postService.getSimpleInfo(page);
+            Post post = this.postService.getSimpleInfo(decodePage);
             if (post == null) {
                 ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_POST_COMMENT_PAGE_NOT_EXIST);
             }
@@ -295,28 +334,37 @@ public class CommentServiceImpl extends BaseServiceImpl<Comment> implements Comm
             }
         }
 
+        comment.setPage(decodePage);
+        comment.setCommentType(nav.getId() != null ? 2 : 1);
+
         String toEmail = "", subject = "";
 
-        Comment parent = super.findById(comment.getPId());
-        if (parent != null && !parent.getDelete()) {
-            comment.setBannerId(parent.getBannerId() > 0 ? parent.getBannerId() : parent.getId()).setSourceNickname(parent.getNickname());
-            if (StringUtils.isNotBlank(parent.getEmail())) {
-                toEmail = parent.getEmail();
-                subject = comment.getNickname() + "回复你的评论";
-            }
-        } else {
+        if (comment.getPId() == null || comment.getPId() == 0) {
             toEmail = this.configService.getConfigValue(ConfigEnum.EMAIL.getName());
             subject = comment.getNickname() + "评论了你的文章";
+        } else {
+            Comment parent = super.findById(comment.getPId());
+            if (parent != null && !parent.getDelete()) {
+                comment.setBannerId(parent.getBannerId() > 0 ? parent.getBannerId() : parent.getId()).setSourceNickname(parent.getNickname());
+                if (StringUtils.isNotBlank(parent.getEmail())) {
+                    toEmail = parent.getEmail();
+                    subject = comment.getNickname() + "回复你的评论";
+                }
+            }
         }
 
         this.saveModel(comment);
 
-        Post post = this.postService.getSimpleInfo(comment.getPage());
-        if (post != null) {
-            this.eventPublisher.emit(new PostEvent(post.getId(), PostEvent.Type.COMMENT_ADD));
-            this.eventPublisher.emit(new MessageEvent(this, comment.getNickname() + "评论了你的文章", MessageEvent.Type.POST_COMMENT));
-        }
+        if (StringUtils.isNotBlank(toEmail) && StringUtils.isNotBlank(subject)) {
+            this.emailService.sendEmail(toEmail, subject, comment.getContent());
 
-        this.emailService.sendEmail(toEmail, subject, comment.getContent());
+            Post post = this.postService.getSimpleInfo(comment.getPage());
+            if (post != null) {
+                this.eventPublisher.emit(new PostEvent(post.getId(), PostEvent.Type.COMMENT_ADD));
+                this.eventPublisher.emit(new MessageEvent(this, comment.getNickname() + "对你的文章评论了", MessageEvent.Type.POST_COMMENT));
+            } else {
+                this.eventPublisher.emit(new MessageEvent(this, comment.getNickname() + "在你的博客留言了", MessageEvent.Type.GUEST_BOOK));
+            }
+        }
     }
 }

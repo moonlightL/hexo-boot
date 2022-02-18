@@ -16,10 +16,11 @@ import java.util.List;
 public interface CommentService extends BaseService<Comment> {
 
     /**
-     * 保存评论
-     * @param comment
+     * 获取评论数
+     * @param commentType  类型 1：文章 2：留言
+     * @return
      */
-    void saveComment(Comment comment) throws GlobalException;
+    Integer getCommentNum(Integer commentType);
 
     /**
      * 批量删除评论
@@ -57,7 +58,7 @@ public interface CommentService extends BaseService<Comment> {
      * @param page
      * @return
      */
-    Integer getCommentNum(String page);
+    Integer getCommentNumByBannerId(String page);
 
     /**
      * 用户评论

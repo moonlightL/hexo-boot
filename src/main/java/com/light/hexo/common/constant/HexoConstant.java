@@ -44,5 +44,5 @@ public class HexoConstant {
 	/**
 	 * 评论插件用户头像目录
 	 */
-	public static final String COMMENT_USER_AVATAR_DIR = "/admin/assets/custom/jquery-comment/image/avatar";
+	public static final String COMMENT_USER_AVATAR_DIR = "/admin/assets/custom/hb-comment/image/avatar";
 }

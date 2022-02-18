@@ -7,9 +7,7 @@ import com.light.hexo.business.admin.service.*;
 import com.light.hexo.common.constant.HexoConstant;
 import com.light.hexo.business.admin.constant.ConfigEnum;
 import com.light.hexo.common.model.InstallRequest;
-import com.light.hexo.common.util.DateUtil;
-import com.light.hexo.common.util.ExceptionUtil;
-import com.light.hexo.common.util.MarkdownUtil;
+import com.light.hexo.common.util.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -45,10 +43,7 @@ public class InstallService {
     private ConfigService configService;
 
     @Autowired
-    private PostCommentService postCommentService;
-
-    @Autowired
-    private GuestBookService guestBookService;
+    private CommentService commentService;
 
     @Autowired
     private FriendLinkService friendLinkService;
@@ -59,7 +54,7 @@ public class InstallService {
     private static final String THEME_DIR = "templates/theme";
 
     @Transactional(rollbackFor = Exception.class)
-    public void installApplication(InstallRequest request, String browserName, String ipAddr) throws Exception {
+    public void installApplication(InstallRequest request, String osName, String browser, String ipAddress) throws Exception {
 
         // 1. 创建管理员(博主)
         User user = this.createBlogger(request.getUsername(), request.getPassword(), request.getNickname(), request.getEmail());
@@ -70,16 +65,13 @@ public class InstallService {
         // 3. 创建默认文章
         Post post = this.createFirstPost(user, category);
 
-        // 4. 创建评论
-        this.createPostComment(post, user, browserName, ipAddr);
+        // 4. 创建留言
+        this.createComment(user, osName, browser, ipAddress);
 
-        // 5. 创建留言
-        this.createGuestBook(user, browserName, ipAddr);
-
-        // 6. 创建友链
+        // 5. 创建友链
         this.createFriendLink();
 
-        // 7. 初始化全局配置
+        // 6. 初始化全局配置
         this.initConfig(user, request.getBlogName(), request.getHomePage(), request.getDescription());
     }
 
@@ -153,28 +145,20 @@ public class InstallService {
         return post;
     }
 
-    private void createPostComment(Post post, User user, String browserName, String ipAddr) {
-        PostComment postComment = new PostComment();
-        postComment.setPostId(post.getId())
-                   .setTitle(post.getTitle())
-                   .setContent("欢迎大家来评论~~")
-                   .setUserId(user.getId())
-                   .setNickname(user.getNickname())
-                   .setAvatar(user.getAvatar())
-                   .setBrowser(browserName)
-                   .setIpAddress(ipAddr);
-        this.postCommentService.saveModel(postComment);
-    }
-
-    private void createGuestBook(User user, String browserName, String ipAddr) {
-        GuestBook guestBook = new GuestBook();
-        guestBook.setContent("欢迎大家踊跃留言~~")
-                 .setUserId(user.getId())
-                 .setNickname(user.getNickname())
-                 .setAvatar(user.getAvatar())
-                 .setBrowser(browserName)
-                 .setIpAddress(ipAddr);
-        this.guestBookService.saveModel(guestBook);
+    private void createComment(User user, String osName, String browserName, String ipAddr) {
+        Comment comment = new Comment();
+        comment.setPage("/about/")
+               .setContent("欢迎大家踊跃留言~~")
+               .setNickname(user.getNickname())
+               .setAvatar(user.getAvatar())
+               .setEmail(user.getEmail())
+               .setHomePage(this.configService.getConfigValue(ConfigEnum.HOME_PAGE.getName()))
+               .setBlogger(true)
+               .setCommentType(2)
+               .setOsName(osName)
+               .setBrowser(browserName)
+               .setIpAddress(ipAddr);
+        this.commentService.saveModel(comment);
     }
 
     private void createFriendLink() {
