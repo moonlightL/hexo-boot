@@ -101,14 +101,15 @@
     <div id="aplayer" class="visible"></div>
 </div>
 
-<div th:fragment="comment">
+<div th:fragment="comment(canComment)">
     <div class="hb-comment"></div>
     <script type='text/javascript' th:src="@{${baseLink} + '/source/js/hb-comment/hb-comment.js'}"></script>
     <script th:inline="javascript">
         HbComment.init({
             el: ".hb-comment",
             baseUrl: [[${baseLink}]] + "/source/js",
-            wrapClass: "ml-content"
+            wrapClass: "ml-content",
+            canComment: [[${canComment}]]
         });
     </script>
 </div>

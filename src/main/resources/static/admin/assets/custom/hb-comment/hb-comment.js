@@ -61,7 +61,6 @@
         let headNode = document.querySelector("head");
         let commentLink = getElementByClassName(headNode, "hb-comment-css");
         if (commentLink) {
-            console.log("已加载")
             return;
         }
         let self = this;
