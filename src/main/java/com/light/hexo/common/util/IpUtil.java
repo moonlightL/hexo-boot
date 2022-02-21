@@ -156,6 +156,11 @@ public class IpUtil {
     }
 
     /**
+     * 对应 nginx 配置中的请求头，获取真实 ip 地址
+     */
+    private static final String[] HEADER_ARR = {"X-Real-IP", "X-Forwarded-For", "Proxy-Client-IP", "WL-Proxy-Client-IP"};
+
+    /**
      * 获取客户端真实IP
      *
      * @param request
@@ -163,14 +168,17 @@ public class IpUtil {
      */
     public static String getIpAddr(HttpServletRequest request) {
 
-        String ipAddress = request.getHeader("x-forwarded-for");
-
+        String ipAddress = request.getHeader(HEADER_ARR[0]);
         if (ipAddress == null || ipAddress.length() == 0 || UNKNOW.equalsIgnoreCase(ipAddress)) {
-            ipAddress = request.getHeader("Proxy-Client-IP");
+            ipAddress = request.getHeader(HEADER_ARR[1]);
         }
 
         if (ipAddress == null || ipAddress.length() == 0 || UNKNOW.equalsIgnoreCase(ipAddress)) {
-            ipAddress = request.getHeader("WL-Proxy-Client-IP");
+            ipAddress = request.getHeader(HEADER_ARR[2]);
+        }
+
+        if (ipAddress == null || ipAddress.length() == 0 || UNKNOW.equalsIgnoreCase(ipAddress)) {
+            ipAddress = request.getHeader(HEADER_ARR[3]);
         }
 
         if (ipAddress == null || ipAddress.length() == 0 || UNKNOW.equalsIgnoreCase(ipAddress)) {
