@@ -250,11 +250,19 @@
         }
         htmlArr.push('</div>');
         htmlArr.push('<div class="hb-comment-content">');
-        htmlArr.push('<textarea name="content" class="hb_content" placeholder="写点内容吧~"></textarea>');
+        if (self.options.canComment) {
+            htmlArr.push('<textarea name="content" class="hb_content" placeholder="写点内容吧~"></textarea>');
+        } else {
+            htmlArr.push('<textarea name="content" class="hb_content" placeholder="本篇文章已关闭评论" disabled="disabled"></textarea>');
+        }
         htmlArr.push('</div>');
         htmlArr.push('<div class="hb-comment-help">');
         htmlArr.push('<span title="表情" class="emoji_btn">☺</span>');
-        htmlArr.push('<button type="button" class="send_btn"><span class="glyphicon glyphicon-send"></span> 发送</button>');
+        if (self.options.canComment) {
+            htmlArr.push('<button type="button" class="send_btn"><span class="glyphicon glyphicon-send"></span> 发送</button>');
+        } else {
+            htmlArr.push('<button type="button" class="send_btn"><span class="glyphicon glyphicon-send"></span> 禁用</button>');
+        }
         htmlArr.push('</div>');
         htmlArr.push('</div>');
         htmlArr.push('</div>');
@@ -638,7 +646,11 @@
                         self.visitor = data;
                         self.refresh(self.options, true);
                     } else {
-                        showTip(resp.message, 5000);
+                        showTip(resp.message, 4000, function() {
+                            if (resp.code == 2005) {
+                                window.location.reload();
+                            }
+                        });
                     }
                 }
             });
@@ -845,7 +857,7 @@
         return "";
     }
 
-    function showTip(content, second) {
+    function showTip(content, second, fn) {
         let timeout = (second || 2000);
         let tipNode = document.createElement("div");
         tipNode.className = "hb-comment-tip";
@@ -854,6 +866,9 @@
 
         setTimeout(function() {
             document.body.removeChild(tipNode);
+            if (typeof fn == "function") {
+                fn();
+            }
         }, timeout);
 
     }

@@ -87,6 +87,9 @@
             border-radius: 50%;
         }
 
+        .note-group-select-from-files {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -124,7 +127,6 @@
                 <div class="form-group row">
                     <div class="col-lg-12 col-md-12">
                         <div>
-                            <b>注意: 上传图片请选择链接形式，否则内容超过限定长度而报错</b><br>
                             <b>注意: 上传图片、视频宽高最好限制在 720 x 368 范围</b>
                         </div>
                     </div>
@@ -167,7 +169,7 @@
                 contents: '<i class="fa fa-trash"/>',
                 tooltip: '清除全部内容',
                 click: function () {
-                    context.invoke('editor.empty');
+                    MyEditor.summernote('code', '');
                 }
             });
             return button.render();

@@ -74,6 +74,7 @@
 
 .hb-w-body .hb-comment-info .label-item {
     width: 100%;
+    height: 45px;
     display: flex;
     flex-direction: row;
 }
@@ -85,12 +86,11 @@
     background: #ebeaea;
     border-radius: 0;
     border: 1px solid #afb2c1;
-    padding: 1rem;
+    line-height: 36px;
 }
 
 .hb-w-body .hb-comment-info input {
     width: calc(100% - 54px);
-    height: 42px;
     outline: none;
     font-size: 14px;
     border: 1px solid #afb2c1;
