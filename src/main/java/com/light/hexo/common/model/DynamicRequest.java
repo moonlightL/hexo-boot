@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 /**
  * @Author MoonlightL
@@ -18,6 +19,7 @@ import javax.validation.constraints.NotEmpty;
 @Getter
 public class DynamicRequest extends BaseRequest<Dynamic> {
 
+    @NotNull(message = "主键不能为空", groups = {BaseRequest.Update.class})
     private Integer id;
 
     /**

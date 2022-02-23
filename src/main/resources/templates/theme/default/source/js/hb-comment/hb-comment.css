@@ -111,7 +111,6 @@
     font-size: 14px;
     border: 1px solid #afb2c1;
     padding-left: 10px;
-    border-radius: 3px;
 }
 .hb-w-body .hb-comment-help {
     position: relative;
@@ -254,11 +253,10 @@
     border-top: 1px solid #ffeeba;
     border-left: none;
     border-bottom: 1px solid #ffeeba;
-    margin: 0 0 10px !important;
+    margin: 0 0 2rem !important;
     background-image: url(/admin/assets/custom/images/openquote.gif);
     background-position: top left;
     background-repeat: no-repeat;
-    text-indent: 23px;
     font-size: 14px;
     color: #856404;
 }
@@ -370,6 +368,7 @@
 }
 
 @media (max-width: 767px) {
+
     .hb-w-body.clone {
         transform: translateX(-7rem);
         width: calc(100% + 7rem);
@@ -386,7 +385,14 @@
 
     .hb-w-body .hb-comment-info input {
         margin-left: 0;
-        margin-bottom: 1rem;
     }
 
+    .hb-r-body .hb-r-body-item .replies .blogger {
+        display: none;
+    }
+
+    .hb-r-body .hb-r-body-item .extras .os-name,
+    .hb-r-body .hb-r-body-item .extras .browser {
+        font-size: 12px;
+    }
 }

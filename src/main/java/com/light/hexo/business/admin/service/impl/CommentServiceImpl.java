@@ -322,7 +322,7 @@ public class CommentServiceImpl extends BaseServiceImpl<Comment> implements Comm
         String decodePage = URLDecoder.decode(page, Charset.defaultCharset());
 
         Nav nav = this.navService.findByLink(decodePage);
-        if (nav == null) {
+        if (nav == null || nav.getId() == null) {
             // 查询为空，说明文章详情
             Post post = this.postService.getSimpleInfo(decodePage);
             if (post == null) {

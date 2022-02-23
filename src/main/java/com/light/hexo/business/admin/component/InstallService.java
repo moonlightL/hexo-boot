@@ -107,7 +107,7 @@ public class InstallService {
                 .setSort(99)
                 .setRemark("默认分类");
 
-        this.categoryService.saveModel(category);
+        this.categoryService.saveCategory(category);
 
         return category;
     }
@@ -170,7 +170,7 @@ public class InstallService {
                   .setBackgroundColor("#34495E")
                   .setSort(1)
                   .setRemark("技术博客");
-        this.friendLinkService.saveModel(friendLink);
+        this.friendLinkService.saveFriendLink(friendLink);
     }
 
     private void initConfig(User user, String blogName, String homePage, String description) {

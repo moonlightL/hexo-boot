@@ -184,10 +184,13 @@
                 });
             });
 
-            let $head = $('head');
             // 目录
             let Toc = APP.plugins.toc;
-            $head.append('<link href="' + Toc.css + '" rel="stylesheet" type="text/css" />');
+            let $head = $('head');
+            if ($head.find("#toc-css").length == 0) {
+                $head.append('<link id="toc-css" href="' + Toc.css + '" rel="stylesheet" type="text/css" />');
+            }
+
             $.getScript(Toc.js, function () {
                 $("#tocContainer").autoToc({offsetTop: 520});
             });

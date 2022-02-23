@@ -123,10 +123,7 @@
     </div>
 
     <!-- 评论 -->
-    <script type="text/javascript" th:inline="javascript">
-        window.canComment = [[${post.comment}]];
-    </script>
-    <div th:replace="~{theme/default/common :: comment}"></div>
+    <div th:replace="~{theme/default/common :: comment(${post.comment})}"></div>
 
 </div>
 </body>

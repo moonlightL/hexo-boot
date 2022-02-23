@@ -946,7 +946,6 @@ ul li {
     margin: 0 .5rem;
     padding: .75rem;
     position: relative;
-    border-radius: 50%;
     transition: all .5s;
     box-shadow: 0 1px 6px 1px var(--shadow-color);
     color: var(--text-color);
@@ -1163,34 +1162,34 @@ span.effect {
 /** 友链 start  */
 
 h3.friend-link-title {
-    padding: 1.5rem;
+    /*padding: 1.5rem;*/
     font-size: 18px;
     border-radius: 4px;
     text-shadow: none;
 }
 
-h3.friend-link-title.tool {
-    border-left: 3px solid #428bca;
-    background: #eef7fa;
-}
+/*h3.friend-link-title.tool {*/
+/*    border-left: 3px solid #428bca;*/
+/*    background: #eef7fa;*/
+/*}*/
 
-h3.friend-link-title.blogger {
-    border-left: 3px solid #f0ad4e;
-    background: #fdf8ea;
-}
+/*h3.friend-link-title.blogger {*/
+/*    border-left: 3px solid #f0ad4e;*/
+/*    background: #fdf8ea;*/
+/*}*/
 
 .friend-link-item {
     position: relative;
     width: 100%;
-    margin: 2rem 0;
-    padding: 1.6rem 1rem;
+    margin: 1rem 0;
+    padding: 1.4rem 1rem;
     transition: all .3s;
     border-radius: 4px;
     box-shadow: 0 1px 7px 1px var(--shadow-color);
 }
 
 .friend-link-item:hover {
-    box-shadow: 0 1px 7px 1px var(--shadow-hover-color);
+    box-shadow: 0 1px 18px 1px var(--shadow-hover-color);
 }
 
 .friend-link-item .bgColor {
@@ -1210,7 +1209,7 @@ h3.friend-link-title.blogger {
 
 .friend-link-item .info {
     position: absolute;
-    width: 180px;
+    width: calc(100% - 108px);
     height: 62px;
     top: 19px;
     left: 90px;
@@ -1220,10 +1219,17 @@ h3.friend-link-title.blogger {
     font-size: 15px;
 }
 
+.friend-link-item a:hover {
+    color: var(--theme-color);
+}
+
 .friend-link-item .remark {
     margin-top: 1rem;
     text-align: left;
     color: var(--text-color);
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 /** 友链 end  */

@@ -42,9 +42,9 @@ public class InstallController {
      * @return
      */
     @RequestMapping("/install.html")
-    public String install(Map<String, Object> resultMap) {
+    public String install(HttpServletRequest request, Map<String, Object> resultMap) {
         // 此处开头不能加 "/"，否则 jar 方式运行访问会报错
-        resultMap.put("webSite", "http://" + IpUtil.getHostIp() + ":" + environment.getProperty("server.port"));
+        resultMap.put("webSite", "http://" + IpUtil.getIpAddr(request) + ":" + environment.getProperty("server.port"));
         return "admin/install";
     }
 

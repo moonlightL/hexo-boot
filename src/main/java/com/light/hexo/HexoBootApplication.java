@@ -34,8 +34,10 @@ public class HexoBootApplication extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
         ConfigurableApplicationContext context = SpringApplication.run(HexoBootApplication.class, args);
-        log.info("访问地址：http://{}:{}/", IpUtil.getHostIp(), context.getEnvironment().getProperty("server.port"));
-        log.info("后台登录地址：http://{}:{}/admin/login.html", IpUtil.getHostIp(), context.getEnvironment().getProperty("server.port"));
+        String hostIp = IpUtil.getHostIp();
+        String port = context.getEnvironment().getProperty("server.port");
+        log.info("访问地址：http://{}:{}/", hostIp, port);
+        log.info("后台登录地址：http://{}:{}/admin/login.html", hostIp, port);
     }
 
 }

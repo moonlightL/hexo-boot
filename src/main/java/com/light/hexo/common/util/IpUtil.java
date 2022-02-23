@@ -156,6 +156,11 @@ public class IpUtil {
     }
 
     /**
+     * 对应 nginx 配置中的请求头，获取真实 ip 地址
+     */
+    private static final String[] HEADER_ARR = {"X-Real-IP", "X-Forwarded-For", "Proxy-Client-IP", "WL-Proxy-Client-IP"};
+
+    /**
      * 获取客户端真实IP
      *
      * @param request
@@ -163,17 +168,20 @@ public class IpUtil {
      */
     public static String getIpAddr(HttpServletRequest request) {
 
-        String ipAddress = request.getHeader("x-forwarded-for");
-
-        if (ipAddress == null || ipAddress.length() == 0 || UNKNOW.equalsIgnoreCase(ipAddress)) {
-            ipAddress = request.getHeader("Proxy-Client-IP");
+        String ipAddress = request.getHeader(HEADER_ARR[0]);
+        if (StringUtils.isBlank(ipAddress) || UNKNOW.equalsIgnoreCase(ipAddress)) {
+            ipAddress = request.getHeader(HEADER_ARR[1]);
         }
 
-        if (ipAddress == null || ipAddress.length() == 0 || UNKNOW.equalsIgnoreCase(ipAddress)) {
-            ipAddress = request.getHeader("WL-Proxy-Client-IP");
+        if (StringUtils.isBlank(ipAddress) || UNKNOW.equalsIgnoreCase(ipAddress)) {
+            ipAddress = request.getHeader(HEADER_ARR[2]);
         }
 
-        if (ipAddress == null || ipAddress.length() == 0 || UNKNOW.equalsIgnoreCase(ipAddress)) {
+        if (StringUtils.isBlank(ipAddress) || UNKNOW.equalsIgnoreCase(ipAddress)) {
+            ipAddress = request.getHeader(HEADER_ARR[3]);
+        }
+
+        if (StringUtils.isBlank(ipAddress) || UNKNOW.equalsIgnoreCase(ipAddress)) {
 
             ipAddress = request.getRemoteAddr();
 
@@ -191,7 +199,7 @@ public class IpUtil {
         }
 
         //对于通过多个代理的情况，第一个IP为客户端真实IP,多个IP按照','分割
-        if (ipAddress != null && ipAddress.length() > LENGTH) {
+        if (StringUtils.isNotBlank(ipAddress)  && ipAddress.length() > LENGTH) {
             if (ipAddress.indexOf(DEFAULT_SEPARATOR) > 0) {
                 ipAddress = ipAddress.substring(0, ipAddress.indexOf(DEFAULT_SEPARATOR));
             }
