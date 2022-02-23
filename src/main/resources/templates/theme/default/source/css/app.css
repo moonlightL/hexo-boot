@@ -946,7 +946,6 @@ ul li {
     margin: 0 .5rem;
     padding: .75rem;
     position: relative;
-    border-radius: 50%;
     transition: all .5s;
     box-shadow: 0 1px 6px 1px var(--shadow-color);
     color: var(--text-color);

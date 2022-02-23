@@ -111,7 +111,6 @@
     font-size: 14px;
     border: 1px solid #afb2c1;
     padding-left: 10px;
-    border-radius: 3px;
 }
 .hb-w-body .hb-comment-help {
     position: relative;
@@ -258,7 +257,6 @@
     background-image: url(/admin/assets/custom/images/openquote.gif);
     background-position: top left;
     background-repeat: no-repeat;
-    text-indent: 23px;
     font-size: 14px;
     color: #856404;
 }

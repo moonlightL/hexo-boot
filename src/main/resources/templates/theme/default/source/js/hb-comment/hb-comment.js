@@ -366,7 +366,7 @@
                 if (parent) {
                     let bloggerHtml = parent.blogger ? ' <span class="blogger">[博主]</span>' : '';
                     htmlArr.push('<blockquote class="original-content">');
-                    htmlArr.push('<p><b>'+ parent.nickname + bloggerHtml + ':</b> '+ formatContent(parent.content) +'</p>');
+                    htmlArr.push('<p><b>'+ parent.nickname + bloggerHtml + ':</b> <br>'+ formatContent(parent.content) +'</p>');
                     htmlArr.push('</blockquote>');
                 }
                 htmlArr.push('<div class="extras">');
