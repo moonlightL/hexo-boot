@@ -31,7 +31,7 @@
                                 </span>
                         <div class="info">
                             <a th:href="@{${link.homeUrl}}" th:text="${link.title}" target="_blank"></a>
-                            <div class="remark" th:text="${#strings.isEmpty(link.remark) == true? '无' : link.remark}"></div>
+                            <div class="remark" th:text="${#strings.isEmpty(link.remark) == true? '无' : link.remark}" th:title="${#strings.isEmpty(link.remark) == true? '无' : link.remark}"></div>
                         </div>
                     </div>
                 </div>
@@ -48,7 +48,7 @@
                                 </span>
                         <div class="info">
                             <a th:href="@{${link.homeUrl}}" th:text="${link.title}" target="_blank"></a>
-                            <div class="remark" th:text="${#strings.isEmpty(link.remark) == true? '无' : link.remark}"></div>
+                            <div class="remark" th:text="${#strings.isEmpty(link.remark) == true? '无' : link.remark}" th:title="${#strings.isEmpty(link.remark) == true? '无' : link.remark}"></div>
                         </div>
                     </div>
                 </div>
