@@ -1,6 +1,5 @@
 package com.light.hexo.business.admin.service.impl;
 
-import cn.hutool.core.net.URLDecoder;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.light.hexo.business.admin.component.BaiDuPushService;
@@ -535,6 +534,8 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
             .setDay(DateUtil.fillTime(now.getDayOfMonth()))
             .setLink(post.getYear() + "/" + post.getMonth() + "/" + post.getDay() + "/" + StringUtils.replace(dbPost.getTitle(), " ", "-") + "/");
         this.updateModel(post);
+        EhcacheUtil.clearByCacheName("postCache");
+        EhcacheUtil.clearByCacheName("categoryCache");
         this.baiDuPushService.push2BaiDu(post.getLink());
         this.eventPublisher.emit(new PostEvent(null, PostEvent.Type.POST_NUM));
     }
