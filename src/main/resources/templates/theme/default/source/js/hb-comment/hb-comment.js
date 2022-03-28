@@ -680,6 +680,7 @@
 
     HbComment.prototype.registerREvent = function() {
         let self = this;
+        let commentEL = document.querySelector(self.options.el);
         let replyArr = document.querySelectorAll(".action-reply");
         let hbW = document.querySelector(".hb-w");
         for (let i = 0; i < replyArr.length; i++) {
@@ -691,7 +692,7 @@
                 let index = infoNode.className.indexOf("reply");
                 if (index == -1) {
                     infoNode.setAttribute("class", "info reply");
-                    let mainArr = document.querySelectorAll(".main");
+                    let mainArr = getElementsByClassName(commentEL, "main");
                     for (let i = 0; i < mainArr.length; i++) {
                         let mainElement = mainArr[i];
                         let commentBody = getElementByClassName(mainElement, "hb-w-body");

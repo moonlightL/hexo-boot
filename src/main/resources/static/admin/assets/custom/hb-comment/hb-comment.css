@@ -254,7 +254,7 @@
     border-left: none;
     border-bottom: 1px solid #ffeeba;
     margin: 0 0 2rem !important;
-    background-image: url(/admin/assets/custom/images/openquote.gif);
+    background-image: url(./image/openquote.gif);
     background-position: top left;
     background-repeat: no-repeat;
     font-size: 14px;
@@ -263,7 +263,7 @@
 
 .hb-r-body .hb-r-body-item blockquote.original-content p {
     display: block;
-    background-image: url(/admin/assets/custom/images/closequote.gif);
+    background-image: url(./image/closequote.gif);
     background-repeat: no-repeat;
     background-position: bottom right;
     padding: 10px 5px !important;
