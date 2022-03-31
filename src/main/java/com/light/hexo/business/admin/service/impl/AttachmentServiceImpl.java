@@ -72,15 +72,18 @@ public class AttachmentServiceImpl extends BaseServiceImpl<Attachment> implement
         List<Integer> idList = idStrList.stream().map(Integer::valueOf).collect(Collectors.toList());
         List<Integer> data = new ArrayList<>(idList.size());
         for (Integer id : idList) {
-            Attachment attachment = super.findById(id);
-            FileRequest fileRequest = new FileRequest();
-            fileRequest.setFilename(attachment.getFilename())
-                       .setFilePath(attachment.getFilePath())
-                       .setFileUrl(attachment.getFileUrl())
-                       .setFileKey(attachment.getFileKey());
-            FileResponse fileResponse = this.defaultFileService.remove(fileRequest);
-            if (fileResponse.getSuccess()) {
-                data.add(id);
+            try {
+                Attachment attachment = super.findById(id);
+                if (attachment != null) {
+                    FileRequest fileRequest = new FileRequest();
+                    fileRequest.setFilename(attachment.getFilename())
+                            .setFilePath(attachment.getFilePath())
+                            .setFileUrl(attachment.getFileUrl())
+                            .setFileKey(attachment.getFileKey());
+                    this.defaultFileService.remove(fileRequest);
+                }
+            } catch (GlobalException e) {
+                e.printStackTrace();
             }
         }
 

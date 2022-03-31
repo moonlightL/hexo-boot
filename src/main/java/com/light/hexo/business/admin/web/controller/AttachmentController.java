@@ -13,7 +13,6 @@ import com.light.hexo.common.exception.GlobalExceptionEnum;
 import com.light.hexo.common.model.AttachmentRequest;
 import com.light.hexo.common.model.Result;
 import com.light.hexo.common.util.ExceptionUtil;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
