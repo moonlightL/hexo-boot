@@ -219,12 +219,12 @@
                 parallelUploads: 10, // 每次上传的文件数量，默认值 2
                 autoProcessQueue: false, // 是否自动上传
                 acceptedFiles: ".jpg, .jpeg, .png, .gif, .webp",
-                dictDefaultMessage: '+ <br>(支持上传的文件类型*.jpg,*.jpeg,*.png, *.gif,*.webp，最大上传20MB)',
-                dictMaxFilesExceeded: "每次最多只能上传1个文件",
+                dictDefaultMessage: '+ <br>(仅支持上传的文件类型*.jpg,*.jpeg,*.png, *.gif,*.webp，最大上传20MB)',
+                dictMaxFilesExceeded: "每次最多只能上传10个文件",
                 dictResponseError: '文件上传失败',
-                dictInvalidFileType: "支持上传的文件类型*.jpg,*.jpeg,*.png, *.gif,*.webp",
+                dictInvalidFileType: "仅支持上传的文件类型*.jpg,*.jpeg,*.png, *.gif,*.webp",
                 dictFallbackMessage: "浏览器不支持",
-                dictFileTooBig: "最大支持10MB文件上传",
+                dictFileTooBig: "最大支持20MB文件上传",
                 dictRemoveFile: "删除",
                 dictUploadCanceled: "取消",
                 thumbnailWidth:"120",
@@ -244,9 +244,7 @@
                     });
 
                     this.on("error", function (data, message) {
-                        if (message.status == 400) {
-                            $.hexo.modal.tip("上传失败: 源文件接收失败");
-                        }
+                        $.hexo.modal.tip("上传失败: " + message);
                         window.AlbumManager.initUploadEvent();
                     });
 

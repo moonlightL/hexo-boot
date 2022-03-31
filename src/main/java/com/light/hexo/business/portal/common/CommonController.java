@@ -29,6 +29,8 @@ public class CommonController {
 
     protected static final int PAGE_SIZE = 10;
 
+    protected static final String DEFAULT_CDN_ADDRESS = "https://cdn.jsdelivr.net/gh/moonlightL/CDN@%s/%s";
+
     @Autowired
     protected PostService postService;
 
@@ -110,7 +112,7 @@ public class CommonController {
         if (StringUtils.isNotBlank(useCDNStr) && StringUtils.isNotBlank(version)) {
             boolean useCDN = useCDNStr.equals("true");
             if (useCDN) {
-                resultMap.put("baseLink", StringUtils.isBlank(CDNAddress) ? "https://cdn.jsdelivr.net/gh/moonlightL/CDN@" + version + "/" + themeName : CDNAddress);
+                resultMap.put("baseLink", StringUtils.isBlank(CDNAddress) ? String.format(DEFAULT_CDN_ADDRESS, version, themeName) : CDNAddress);
             } else {
                 resultMap.put("baseLink", "/theme/" + themeName);
             }
@@ -118,7 +120,6 @@ public class CommonController {
             resultMap.put("baseLink", "/theme/" + themeName);
         }
     }
-
 
     private Map<String, Integer> getCountInfo() {
 

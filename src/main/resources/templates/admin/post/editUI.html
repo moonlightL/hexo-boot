@@ -299,9 +299,7 @@
                     dictFileTooBig: "最大支持10MB文件上传",
                     init: function () {
                         this.on("error", function (data, message) {
-                            if (message.status == 400) {
-                                $.hexo.modal.msg("上传失败: 源文件接收失败");
-                            }
+                            $.hexo.modal.tip("上传失败: " + message);
                             FileManager.initUploadEvent();
                         });
 

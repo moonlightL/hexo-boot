@@ -70,9 +70,6 @@ public class QiNiuFileService implements FileService {
             fileResponse = JsonUtil.string2Obj(response.bodyString(), FileResponse.class);
             fileResponse.setSuccess(true).setUrl(this.parseUrl(this.getDomain() + "/" + fileResponse.getKey()));
 
-        } catch(GlobalException e) {
-            throw e;
-
         } catch (Exception ex) {
             log.error("========【七牛云管理】文件 fileName: {} 文件上传失败=============", fileName);
             ex.printStackTrace();

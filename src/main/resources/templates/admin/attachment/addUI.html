@@ -49,10 +49,10 @@
             parallelUploads: 10, // 每次上传的文件数量，默认值 2
             autoProcessQueue: false, // 是否自动上传
             acceptedFiles: ".jpg, .jpeg, .png, .gif, .webp, .txt, .md, .sql, .pdf, .doc, .docx, .xls, .xlsx, .ppt",
-            dictDefaultMessage: '+<br>(支持上传的文件类型*.jpg,*.jpeg,*.png, *.gif,*.webp, *.txt, *.md, *.sql, *.pdf, *.doc, *.docx, *.xls, *.xlsx, *.ppt，最大上传100MB)',
-            dictMaxFilesExceeded: "每次最多只能上传1个文件",
+            dictDefaultMessage: '+<br>(仅支持上传的文件类型*.jpg,*.jpeg,*.png, *.gif,*.webp, *.txt, *.md, *.sql, *.pdf, *.doc, *.docx, *.xls, *.xlsx, *.ppt，最大上传100MB)',
+            dictMaxFilesExceeded: "每次最多只能上传10个文件",
             dictResponseError: '文件上传失败',
-            dictInvalidFileType: "支持上传的文件类型*.jpg,*.jpeg,*.png, *.gif,*.webp, *.txt, *.md, *.sql, *.pdf, *.doc, *.docx, *.xls, *.xlsx, *.ppt",
+            dictInvalidFileType: "仅支持上传的文件类型*.jpg,*.jpeg,*.png, *.gif,*.webp, *.txt, *.md, *.sql, *.pdf, *.doc, *.docx, *.xls, *.xlsx, *.ppt",
             dictFallbackMessage: "浏览器不支持",
             dictFileTooBig: "最大支持100MB文件上传",
             dictRemoveFile: "删除",
@@ -73,9 +73,7 @@
                 });
 
                 this.on("error", function (data, message) {
-                    if (message.status == 400) {
-                        $.hexo.modal.tip("上传失败: 源文件接收失败");
-                    }
+                    $.hexo.modal.tip("上传失败: " + message);
                 });
 
                 this.on("success", function () {

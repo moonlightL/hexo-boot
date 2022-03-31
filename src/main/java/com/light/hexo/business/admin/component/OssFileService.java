@@ -50,9 +50,6 @@ public class OssFileService implements FileService {
 
             fileResponse.setSuccess(true).setUrl(this.parseUrl(this.getBucket() + "." + this.getEndpoint() + "/" + fileName));
 
-        } catch (GlobalException e) {
-            throw e;
-
         } catch (Exception e) {
             log.error("========【OSS 管理】文件 fileName: {} 文件上传失败=============", fileName);
             e.printStackTrace();

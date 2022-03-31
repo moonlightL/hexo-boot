@@ -254,10 +254,10 @@
                 parallelUploads: 10, // 每次上传的文件数量，默认值 2
                 autoProcessQueue: false, // 是否自动上传
                 acceptedFiles: ".mp4, .avi, .rmvb, .rm, .wmv, .mov",
-                dictDefaultMessage: '+ <br>(支持上传的文件类型*.mp4,*.avi,*.rmvb,*.rm, *.wmv, *.mov, 最大上传100MB)',
+                dictDefaultMessage: '+ <br>(仅支持上传的文件类型*.mp4,*.avi,*.rmvb,*.rm, *.wmv, *.mov, 最大上传100MB)',
                 dictMaxFilesExceeded: "每次最多只能上传1个文件",
                 dictResponseError: '文件上传失败',
-                dictInvalidFileType: "支持上传的文件类型*.mp4,*.avi,*.rmvb,*.rm, *.wmv, *.mov",
+                dictInvalidFileType: "仅支持上传的文件类型*.mp4,*.avi,*.rmvb,*.rm, *.wmv, *.mov",
                 dictFallbackMessage: "浏览器不支持",
                 dictFileTooBig: "最大支持100MB文件上传",
                 dictRemoveFile: "删除",
@@ -279,9 +279,7 @@
                     });
 
                     this.on("error", function (data, message) {
-                        if (message.status == 400) {
-                            $.hexo.modal.tip("上传失败: 源文件接收失败");
-                        }
+                        $.hexo.modal.tip("上传失败: " + message);
                         window.AlbumManager.initUploadEvent();
                     });
 

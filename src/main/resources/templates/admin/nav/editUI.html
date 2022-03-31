@@ -42,7 +42,7 @@
                             <div class="form-group row">
                                 <label class="col-md-3 col-form-label" for="link">链接</label>
                                 <div class="col-md-9">
-                                    <input type="text" class="form-control" id="link" name="link" placeholder="链接 *" th:field="*{link}">
+                                    <input type="text" class="form-control" id="link" name="link" placeholder="链接 *" th:field="*{link}" th:readonly="${vo.navType == 1 ? 'readonly':'false'}">
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -88,12 +88,16 @@
                                     </select>
                                 </div>
                             </div>
-
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <button type="submit" class="btn btn-primary" id="submitBtn">保存</button>
                                     </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    注意：默认类型的导航链接禁止修改
                                 </div>
                             </div>
                         </div>

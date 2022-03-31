@@ -30,7 +30,9 @@ public class IndexTagController extends CommonController {
     public String tags(Map<String, Object> resultMap) {
         List<Tag> tagList = this.tagService.listTagsByIndex();
         resultMap.put("tagList", tagList);
+        // 兼容
         resultMap.put("count", tagList.size());
+        resultMap.put("tagNum", tagList.size());
         resultMap.put("currentNav", this.navService.findByLink("/tags/"));
         return render("tags", false, resultMap);
     }

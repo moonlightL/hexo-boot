@@ -21,8 +21,8 @@
     <properties>
         <java.version>1.8</java.version>
         <!-- 根据服务器环境选用依赖 -->
-        <java.platform>windows-x86_64</java.platform>
-<!--        <java.platform>linux-x86_64</java.platform>-->
+<!--        <java.platform>windows-x86_64</java.platform>-->
+        <java.platform>linux-x86_64</java.platform>
 <!--        <java.platform>macosx-x86_64</java.platform>-->
     </properties>
 
