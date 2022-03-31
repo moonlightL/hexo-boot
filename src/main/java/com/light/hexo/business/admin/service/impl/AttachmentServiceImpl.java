@@ -69,8 +69,11 @@ public class AttachmentServiceImpl extends BaseServiceImpl<Attachment> implement
     @Override
     public void removeAttachmentBatch(List<String> idStrList) throws GlobalException {
 
+        if (CollectionUtils.isEmpty(idStrList)) {
+            return;
+        }
+
         List<Integer> idList = idStrList.stream().map(Integer::valueOf).collect(Collectors.toList());
-        List<Integer> data = new ArrayList<>(idList.size());
         for (Integer id : idList) {
             try {
                 Attachment attachment = super.findById(id);
@@ -87,9 +90,7 @@ public class AttachmentServiceImpl extends BaseServiceImpl<Attachment> implement
             }
         }
 
-        if (!CollectionUtils.isEmpty(data)) {
-            super.removeBatch(data);
-        }
+        super.removeBatch(idList);
     }
 
 }
