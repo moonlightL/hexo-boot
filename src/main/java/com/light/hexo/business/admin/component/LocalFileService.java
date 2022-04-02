@@ -60,7 +60,7 @@ public class LocalFileService implements FileService {
             String blogPage = this.configService.getConfigValue(ConfigEnum.HOME_PAGE.getName());
             fileResponse.setSuccess(true)
                     .setPath(dest.getAbsolutePath())
-                    .setUrl((StringUtils.isNotBlank(blogPage) ? blogPage : "http://" + IpUtil.getHostIp() + ":" + environment.getProperty("server.port")) + "/images/" + dest.getName());
+                    .setUrl(this.parseUrl((StringUtils.isNotBlank(blogPage) ? blogPage : IpUtil.getHostIp() + ":" + this.environment.getProperty("server.port")) + "/images/" + dest.getName()));
             return fileResponse;
 
         } catch (GlobalException e) {
