@@ -44,13 +44,14 @@ public class DefaultFileService {
         THUMBNAIL_URL_MAP = new HashMap<>();
         THUMBNAIL_URL_MAP.put("doc", "/admin/assets/custom/images/doc.jpg");
         THUMBNAIL_URL_MAP.put("docx", "/admin/assets/custom/images/doc.jpg");
-        THUMBNAIL_URL_MAP.put("xls.jpg", "/admin/assets/custom/images/xls.jpg");
-        THUMBNAIL_URL_MAP.put("xlx.jpg", "/admin/assets/custom/images/xls.jpg");
+        THUMBNAIL_URL_MAP.put("xls", "/admin/assets/custom/images/xls.jpg");
+        THUMBNAIL_URL_MAP.put("xlsx", "/admin/assets/custom/images/xls.jpg");
         THUMBNAIL_URL_MAP.put("ppt", "/admin/assets/custom/images/pptx.jpg");
         THUMBNAIL_URL_MAP.put("pptx", "/admin/assets/custom/images/pptx.jpg");
         THUMBNAIL_URL_MAP.put("pdf", "/admin/assets/custom/images/pdf.jpg");
         THUMBNAIL_URL_MAP.put("txt", "/admin/assets/custom/images/txt.jpg");
         THUMBNAIL_URL_MAP.put("sql", "/admin/assets/custom/images/sql.jpg");
+        THUMBNAIL_URL_MAP.put("md", "/admin/assets/custom/images/markdown.jpg");
     }
 
     public FileResponse upload(FileRequest fileRequest) throws GlobalException {

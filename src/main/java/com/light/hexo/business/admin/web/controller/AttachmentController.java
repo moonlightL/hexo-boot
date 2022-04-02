@@ -19,10 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @Author MoonlightL
@@ -36,7 +33,7 @@ import java.util.Map;
 public class AttachmentController extends BaseController {
 
     private static final String[] VALID_SUFFIX = {".jpg", ".jpeg", ".png", ".gif", ".webp",
-            ".sql", ".xls", ".doc", ".txt", ".md"};
+            ".sql", ".xls", "xlsx", ".doc", "docx", ".txt", ".md"};
 
     @Autowired
     private AttachmentService attachmentService;
@@ -76,16 +73,18 @@ public class AttachmentController extends BaseController {
     @PostMapping("/uploadBatch.json")
     @ResponseBody
     @OperateLog(value = "上传附件", actionType = ActionEnum.ADMIN_ADD)
-    public Result uploadBatch(MultipartFile[] files) throws GlobalException {
+    public Result uploadBatch(@RequestParam(value = "file", required = false) MultipartFile[] files) throws GlobalException {
 
         if (files == null || files.length == 0) {
             ExceptionUtil.throwEx(GlobalExceptionEnum.ERROR_PARAM);
         }
 
+        Map<String, List<String>> result = new HashMap<>();
         List<String> urlList = new ArrayList<>(files.length);
+        List<String> errorList = new ArrayList<>();
         for (MultipartFile file : files) {
+            String originalName = file.getOriginalFilename();
             try {
-                String originalName = file.getOriginalFilename();
                 if (!StringUtils.endsWithAny(originalName, VALID_SUFFIX)) {
                     continue;
                 }
@@ -96,11 +95,15 @@ public class AttachmentController extends BaseController {
                 }
 
             } catch (IOException e) {
+                errorList.add(originalName);
                 e.printStackTrace();
             }
         }
 
-        return Result.success(urlList);
+        result.put("right", urlList);
+        result.put("error", errorList);
+
+        return Result.success(result);
     }
 
     /**

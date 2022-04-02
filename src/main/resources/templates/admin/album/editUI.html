@@ -111,7 +111,12 @@
                 dictFileTooBig: "最大支持5MB文件上传",
                 init: function () {
                     this.on("error", function (data, message) {
-                        $.hexo.modal.tip("上传失败: " + message);
+                        console.error(message);
+                        if (typeof message == "string") {
+                            $.hexo.modal.tip("上传失败: " + message);
+                        } else{
+                            $.hexo.modal.tip("上传失败: " + message.error);
+                        }
                         AlbumManager.initUploadEvent();
                     });
 

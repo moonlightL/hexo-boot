@@ -40,7 +40,7 @@
     $(function(){
         $("#dropz").dropzone({
             method: "POST",
-            url: "/admin/file/uploadBatch.json", //上传地址
+            url: "/admin/attachment/uploadBatch.json", //上传地址
             addRemoveLinks: true,
             maxFiles: 10,// 一次性上传的文件数量上限
             maxFilesize: 100, // 单个上传文件大小，单位：MB
@@ -73,10 +73,30 @@
                 });
 
                 this.on("error", function (data, message) {
-                    $.hexo.modal.tip("上传失败: " + message);
+                    console.error(message);
+                    if (typeof message == "string") {
+                        $.hexo.modal.tip("上传失败: " + message);
+                    } else{
+                        $.hexo.modal.tip("上传失败: " + message.error);
+                    }
                 });
 
-                this.on("success", function () {
+                this.on("success", function (data, resp) {
+                    console.log(resp);
+                    if (!resp.success) {
+                        $.hexo.modal.tip("上传失败: " + resp.message);
+                        return;
+                    }
+
+                    if (resp.data.error.length > 0) {
+                        let arr = [];
+                        for (let i = 0; i < resp.data.error.length; i++) {
+                            arr.push(resp.data.error[i]);
+                        }
+                        $.hexo.modal.tip(arr.join(",") + "上传失败");
+                        return;
+                    }
+
                     window.parent.AttachmentManager.query();
                 });
             }
