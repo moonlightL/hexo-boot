@@ -251,7 +251,7 @@
                 maxFilesize: 100, // 单个上传文件大小，单位：MB
                 previewsContainer: null,
                 uploadMultiple: true, // 允许批量上传
-                parallelUploads: 10, // 每次上传的文件数量，默认值 2
+                parallelUploads: 1, // 每次上传的文件数量，默认值 2
                 autoProcessQueue: false, // 是否自动上传
                 acceptedFiles: ".mp4, .avi, .rmvb, .rm, .wmv, .mov",
                 dictDefaultMessage: '+ <br>(仅支持上传的文件类型*.mp4,*.avi,*.rmvb,*.rm, *.wmv, *.mov, 最大上传100MB)',
@@ -265,12 +265,12 @@
                 thumbnailWidth:"120",
                 thumbnailHeight:"120",
                 init: function () {
-                    let myDropzone = this;
+                    let myDropZone = this;
                     $("#uploadBtn").off("click").on("click", function(e) {
                         e.preventDefault();
                         $(this).prop("disabled", true);
-                        // 手动上传所有图片
-                        myDropzone.processQueue();
+                        // 手动上传所有文件
+                        myDropZone.processQueue();
                     });
 
                     //当添加图片后的事件，上传按钮恢复可用

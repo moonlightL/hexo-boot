@@ -68,11 +68,11 @@
             thumbnailWidth:"120",
             thumbnailHeight:"120",
             init: function () {
-                let myDropzone = this;
+                let myDropZone = this;
                 $("#uploadBtn").on("click", function(e) {
                     e.preventDefault();
                     // 手动上传
-                    myDropzone.processQueue();
+                    myDropZone.processQueue();
                 });
 
                 //当添加图片后的事件，上传按钮恢复可用

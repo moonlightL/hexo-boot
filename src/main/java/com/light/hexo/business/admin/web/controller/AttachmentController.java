@@ -33,7 +33,7 @@ import java.util.*;
 public class AttachmentController extends BaseController {
 
     private static final String[] VALID_SUFFIX = {".jpg", ".jpeg", ".png", ".gif", ".webp",
-            ".sql", ".xls", "xlsx", ".doc", "docx", ".txt", ".md"};
+            ".sql", ".xls", "xlsx", ".doc", "docx", ".txt", ".md", ".pdf"};
 
     @Autowired
     private AttachmentService attachmentService;
@@ -86,6 +86,7 @@ public class AttachmentController extends BaseController {
             String originalName = file.getOriginalFilename();
             try {
                 if (!StringUtils.endsWithAny(originalName, VALID_SUFFIX)) {
+                    errorList.add(originalName);
                     continue;
                 }
 

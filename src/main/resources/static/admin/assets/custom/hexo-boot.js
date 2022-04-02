@@ -243,6 +243,7 @@
                 }
             },
             modal: {
+                // type: warning,error,success,info
                 tip: function(msg, type, callback) {
                     swal({
                         title: "",

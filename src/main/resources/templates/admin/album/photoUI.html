@@ -230,12 +230,12 @@
                 thumbnailWidth:"120",
                 thumbnailHeight:"120",
                 init: function () {
-                    let myDropzone = this;
+                    let myDropZone = this;
                     $("#uploadBtn").off("click").on("click", function(e) {
                         e.preventDefault();
                         $(this).prop("disabled", true);
-                        // 手动上传所有图片
-                        myDropzone.processQueue();
+                        // 手动上传所有文件
+                        myDropZone.processQueue();
                     });
 
                     //当添加图片后的事件，上传按钮恢复可用
@@ -253,7 +253,11 @@
                         window.AlbumManager.initUploadEvent();
                     });
 
-                    this.on("success", function () {
+                    this.on("success", function (data, resp) {
+                        if (!resp.success) {
+                            $.hexo.modal.tip("上传失败: " + resp.message);
+                            return;
+                        }
                         window.AlbumManager.initUploadEvent();
                         window.AlbumManager.query();
                     });

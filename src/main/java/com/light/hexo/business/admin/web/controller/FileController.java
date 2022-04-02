@@ -11,7 +11,6 @@ import com.light.hexo.common.model.Result;
 import com.light.hexo.common.model.bing.WebPic;
 import com.light.hexo.common.util.ExceptionUtil;
 import com.light.hexo.common.util.HttpClientUtil;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,7 +32,7 @@ import java.util.List;
 public class FileController {
 
     private static final String[] VALID_SUFFIX = {".jpg", ".jpeg", ".png", ".gif", ".webp",
-            ".sql", ".xls", ".xlsx",".doc",".docx", ".txt", ".pdf"};
+            ".sql", ".xls", "xlsx", ".doc", "docx", ".txt", ".md", ".pdf"};
 
     @Autowired
     private DefaultFileService defaultFileService;
