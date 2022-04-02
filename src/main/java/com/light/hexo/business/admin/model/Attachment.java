@@ -84,7 +84,7 @@ public class Attachment implements Serializable {
     private Long fileSize;
 
     /**
-     * 位置 1：本地 2：七牛云 3：OSS
+     * 位置 1：本地 2：七牛云 3：OSS 4: COS
      */
     private Integer position;
 

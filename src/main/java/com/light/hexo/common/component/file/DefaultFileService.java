@@ -9,14 +9,18 @@ import com.light.hexo.business.admin.service.ConfigService;
 import com.light.hexo.common.exception.GlobalException;
 import com.light.hexo.common.util.ExceptionUtil;
 import com.light.hexo.common.util.VideoUtil;
+import lombok.SneakyThrows;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @Author MoonlightL
@@ -56,9 +60,40 @@ public class DefaultFileService {
         THUMBNAIL_URL_MAP.put("md", "/admin/assets/custom/images/markdown.jpg");
     }
 
+    @SneakyThrows
     public FileResponse upload(FileRequest fileRequest) throws GlobalException {
 
-        FileResponse fileResponse = this.getFileService().upload(fileRequest);
+        CompletableFuture<String> firstFuture = CompletableFuture.supplyAsync(() -> {
+            long start = System.currentTimeMillis();
+            // 临时拷贝
+            File tmpDir = new File(System.getProperty("java.io.tmpdir"));
+            File dest = new File(tmpDir, fileRequest.getFilename());
+            try {
+                FileUtils.writeByteArrayToFile(dest, fileRequest.getData());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            System.out.println("拷贝临时文件：" + (System.currentTimeMillis() - start) + " ms");
+            return dest.getAbsolutePath();
+        }).thenApplyAsync((result) -> {
+            long start = System.currentTimeMillis();
+            String coverUrl = this.videoUtil.createCover(FilenameUtils.getBaseName(fileRequest.getOriginalName()), result);
+            System.out.println("生成封面：" + (System.currentTimeMillis() - start) + " ms");
+            return coverUrl;
+        });
+
+        CompletableFuture<FileResponse> secondFuture = CompletableFuture.supplyAsync(() -> {
+            long start = System.currentTimeMillis();
+            FileResponse fileResponse = this.getFileService().upload(fileRequest);
+            System.out.println("上传至远程图床：" + (System.currentTimeMillis() - start) + " ms");
+            return fileResponse;
+        });
+
+        CompletableFuture.allOf(firstFuture, secondFuture).join();
+
+        String coverUrl = firstFuture.get();
+        FileResponse fileResponse = secondFuture.get();
+
         if (fileResponse.isSuccess()) {
             fileResponse.setOriginalName(fileRequest.getOriginalName());
             fileResponse.setFilename(fileRequest.getFilename());
@@ -78,7 +113,7 @@ public class DefaultFileService {
                 attachment.setThumbnailUrl(THUMBNAIL_URL_MAP.get(fileRequest.getExtension()));
             } else {
                 if (attachment.getContentType().startsWith(FileTypeEnum.VIDEO.getCode())) {
-                    attachment.setThumbnailUrl(this.videoUtil.createCover(FilenameUtils.getBaseName(attachment.getOriginalName()), attachment.getFileUrl()));
+                    attachment.setThumbnailUrl(coverUrl);
                 } else {
                     attachment.setThumbnailUrl(attachment.getFileUrl());
                 }
@@ -118,7 +153,7 @@ public class DefaultFileService {
     }
 
     public FileResponse download (FileRequest fileRequest, Integer position) throws GlobalException {
-        if (!position.equals(this.getManageMode())) {
+        if (!this.getManageMode().equals(position.toString())) {
             ExceptionUtil.throwExToPage(HexoExceptionEnum.ERROR_ATTACHMENT_NOT_POSITION);
         }
 
@@ -127,7 +162,7 @@ public class DefaultFileService {
 
 
     public FileResponse remove(FileRequest fileRequest, Integer position) throws GlobalException {
-        if (!position.equals(this.getManageMode())) {
+        if (!this.getManageMode().equals(position.toString())) {
             ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_ATTACHMENT_NOT_POSITION);
         }
 

@@ -3,10 +3,11 @@ package com.light.hexo.business.admin.web.controller;
 import com.github.pagehelper.PageInfo;
 import com.light.hexo.business.admin.constant.HexoExceptionEnum;
 import com.light.hexo.business.admin.model.Attachment;
-import com.light.hexo.business.admin.model.Backup;
 import com.light.hexo.business.admin.service.AttachmentService;
 import com.light.hexo.common.base.BaseController;
-import com.light.hexo.common.component.file.*;
+import com.light.hexo.common.component.file.DefaultFileService;
+import com.light.hexo.common.component.file.FileRequest;
+import com.light.hexo.common.component.file.FileResponse;
 import com.light.hexo.common.component.log.ActionEnum;
 import com.light.hexo.common.component.log.OperateLog;
 import com.light.hexo.common.exception.GlobalException;
@@ -22,7 +23,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 /**
@@ -112,7 +115,7 @@ public class AttachmentController extends BaseController {
             ExceptionUtil.throwEx(GlobalExceptionEnum.ERROR_PARAM);
         }
 
-        Map<String, List<String>> result = new HashMap<>();
+        Map<String, List<String>> result = new HashMap<>(2);
         List<String> urlList = new ArrayList<>(files.length);
         List<String> errorList = new ArrayList<>();
         for (MultipartFile file : files) {

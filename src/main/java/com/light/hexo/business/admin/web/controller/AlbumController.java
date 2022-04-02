@@ -25,10 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @Author MoonlightL
@@ -151,11 +148,14 @@ public class AlbumController extends BaseController {
             ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_ALBUM_NOT_EXIST);
         }
 
+        Map<String, List<String>> result = new HashMap<>(2);
         List<String> urlList = new ArrayList<>(files.length);
+        List<String> errorList = new ArrayList<>();
         for (MultipartFile file : files) {
             try {
                 String originalName = file.getOriginalFilename();
                 if (!StringUtils.endsWithAny(originalName, album.getDetailType().equals(1) ? PHOTO_VALID_SUFFIX : VIDEO_VALID_SUFFIX)) {
+                    errorList.add(originalName);
                     continue;
                 }
 
@@ -170,7 +170,10 @@ public class AlbumController extends BaseController {
             }
         }
 
-        return Result.success(urlList);
+        result.put("right", urlList);
+        result.put("error", errorList);
+
+        return Result.success(result);
     }
 
     /**

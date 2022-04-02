@@ -230,16 +230,9 @@
                     $.fileDownload(url,{
                         httpMethod: type || 'GET',
                         // data:data,
-                        prepareCallback:function(resp){
-                            console.error(resp);
-                            // $.hexo.modal.tip("文件下载中...");
-                        },
-                        successCallback:function(resp){
-                            console.error(resp);
-                            // $.hexo.modal.tip("文件下载成功");
-                        },
                         failCallback: function (responseHtml, url, error) {
-
+                            console.error(url)
+                            $.hexo.modal.tip("下载失败，请检查图床管理类型和该文件存储位置是否相符", "error");
                         }
                     });
                 }

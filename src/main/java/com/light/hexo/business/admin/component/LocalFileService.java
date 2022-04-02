@@ -47,7 +47,6 @@ public class LocalFileService implements FileService {
         try {
 
             ByteArrayInputStream bis = new ByteArrayInputStream(fileRequest.getData());
-
             String uploadDir = this.getUploadDir();
 
             File dir = new File(uploadDir);
@@ -59,8 +58,8 @@ public class LocalFileService implements FileService {
             FileUtils.copyToFile(bis, dest);
             String blogPage = this.configService.getConfigValue(ConfigEnum.HOME_PAGE.getName());
             fileResponse.setSuccess(true)
-                    .setPath(dest.getAbsolutePath())
-                    .setUrl(this.parseUrl((StringUtils.isNotBlank(blogPage) ? blogPage : IpUtil.getHostIp() + ":" + this.environment.getProperty("server.port")) + "/images/" + dest.getName()));
+                        .setPath(dest.getAbsolutePath())
+                        .setUrl(this.parseUrl((StringUtils.isNotBlank(blogPage) ? blogPage : IpUtil.getHostIp() + ":" + this.environment.getProperty("server.port")) + "/images/" + dest.getName()));
             return fileResponse;
 
         } catch (GlobalException e) {

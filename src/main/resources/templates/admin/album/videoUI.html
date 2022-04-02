@@ -32,7 +32,7 @@
             overflow: auto;
         }
         .video-mask {
-            position: absolute;
+            position: fixed;
             width: 100%;
             height: 100%;
             top: 0;
@@ -72,7 +72,7 @@
                     <div class="form-group row">
                         <div class="col-lg-8">
                             注意： 每次上传只支持单个视频文件上传 <br>
-                            推荐： 由于网络传输延迟导致页面较长时间卡顿问题，推荐使用手动录入方式
+                            推荐： 上传文件越大，其上传至远程图床的时间可能会超出30s进而会中断上传请求，故推荐使用手动录入方式
                         </div>
                         <div class="col-lg-4 text-right">
                             <button type="button" class="btn btn-primary" id="uploadBtn">上传</button>
@@ -288,7 +288,8 @@
                         window.AlbumManager.initUploadEvent();
                     });
 
-                    this.on("success", function () {
+                    this.on("success", function (data, resp) {
+                        console.log(resp);
                         window.AlbumManager.initUploadEvent();
                         window.AlbumManager.query();
                     });
@@ -329,7 +330,7 @@
                 for (let i = 0; i < albumList.length; i++) {
                     let obj = albumList[i];
                     contentArr.push('<div class="col-md-4 col-lg-4 col-xl-4 animated fadeIn">');
-                    contentArr.push('<div class="text-center" style="padding: .5rem 0; background: #f0f2f5;">标题: ' + obj.name + '</div>')
+                    contentArr.push('<div class="text-center" style="padding: .5rem 0; background: #f0f2f5;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;" title="'+obj.name+'">标题: ' + obj.name + '</div>')
                     contentArr.push('<div class="options-container fx-item-zoom-in fx-overlay-slide-down">');
                     contentArr.push('<img class="img-fluid" src="' + obj.coverUrl + '" style="width: 100%;height: 203px; display: block">');
                     contentArr.push('<div class="options-overlay bg-black-op-75">');

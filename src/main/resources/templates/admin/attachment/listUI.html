@@ -37,7 +37,7 @@
             overflow: auto;
         }
         .video-mask {
-            position: absolute;
+            position: fixed;
             width: 100%;
             height: 100%;
             top: 0;
@@ -86,6 +86,7 @@
                         <option value="1">本地</option>
                         <option value="2">七牛云</option>
                         <option value="3">OSS</option>
+                        <option value="4">COS</option>
                     </select>
                 </div>
                 <label class="sr-only" for="fileType">文件类型</label>
@@ -221,7 +222,7 @@
                 let url = $target.data("url");
                 let $videoMask = $("<div class='video-mask'></div>");
                 $("#content").append($videoMask);
-                let $video = $("<video src='" + url + "' controls='controls' class='video-self'></video>");
+                let $video = $("<video src='" + url + "' controls='controls' class='video-self' autoplay='autoplay'></video>");
                 $videoMask.append($video);
 
                 $videoMask.on("click", function () {
@@ -239,6 +240,7 @@
                     params: AttachmentManager.params,
                     callback: function (resp) {
                         let attachment = resp.data;
+                        let positionType = ["占位", "本地", "七牛云", "OSS", "COS"];
                         for (let key in attachment) {
                             if (key == "fileUrl") {
                                 if (attachment.fileType == 1) {
@@ -249,7 +251,7 @@
                                 $("#detail-" + key).html(attachment[key]);
                             } else if (key == "position") {
                                 let position = attachment[key];
-                                $("#detail-" + key).html(position == 1 ? "本地" : (position == 2 ? "七牛云" : "OSS"));
+                                $("#detail-" + key).html(positionType[position]);
                             } else if (key == "fileType") {
                                 let fileType = attachment[key];
                                 $("#detail-" + key).html(fileType == 1 ? "图片" : (fileType == 2 ? "视频" : "其他"));
@@ -314,6 +316,7 @@
         renderBody: function (data) {
             let attachmentList = data.list;
             let contentArr = [];
+            let positionType = ["占位", "本地", "七牛云", "OSS", "COS"];
             if (attachmentList && attachmentList.length > 0) {
                 for (let i = 0; i < attachmentList.length; i++) {
                     let obj = attachmentList[i];
@@ -323,17 +326,9 @@
                     contentArr.push('<img class="img-fluid options-item" src="' + obj.thumbnailUrl + '" alt="" style="width: 331px;height: 200px; border: 1px solid #eee;display: block">');
                     contentArr.push('<div class="options-overlay bg-black-op-75">');
                     contentArr.push('<div class="options-overlay-content">');
-                    let pos = "";
-                    if (obj.position === 1) {
-                        pos = "本地";
-                    } else if (obj.position === 2) {
-                        pos = "七牛云";
-                    } else if (obj.position === 3) {
-                        pos = "OSS";
-                    }
                     contentArr.push('<h4 class="h6 text-white mb-15 original-name">原始名: ' + obj.originalName +'</h4>');
                     contentArr.push('<h4 class="h6 text-white-op mb-15">文件大小: ' + obj.fileSizeInfo +'</h4>');
-                    contentArr.push('<h4 class="h6 text-white-op mb-15">存储于: ' + pos +'</h4>');
+                    contentArr.push('<h4 class="h6 text-white-op mb-15">存储位置: ' + positionType[obj.position] +'</h4>');
                     if (obj.contentType.indexOf("image") > -1) {
                         contentArr.push(' <a class="btn btn-sm btn-rounded btn-noborder btn-alt-primary min-width-75 img-lightbox" target="_blank" href="' + obj.thumbnailUrl + '"><i class="fa fa-search-plus"></i> 浏览</a>');
                     } else if (obj.contentType.indexOf("video") > -1) {
@@ -344,7 +339,7 @@
                     contentArr.push('</div><br><div class="text-center">');
                     contentArr.push('<a class="btn btn-sm btn-rounded btn-noborder btn-alt-success min-width-75 detail-btn" href="javascript:void(0)" data-id="' + obj.id + '"><i class="fa fa-envelope-open-o"></i> 详情</a>');
                     contentArr.push(' <a class="btn btn-sm btn-rounded btn-noborder btn-alt-danger min-width-75 remove-btn" href="javascript:void(0)" data-id="' + obj.id + '"><i class="fa fa-trash"></i> 删除</a>');
-                    // contentArr.push(' <a class="btn btn-sm btn-rounded btn-noborder btn-alt-info min-width-75 download-btn" href="javascript:void(0)" data-id="' + obj.id + '"><i class="fa fa-download"></i> 下载</a>');
+                    contentArr.push(' <a class="btn btn-sm btn-rounded btn-noborder btn-alt-info min-width-75 download-btn" href="javascript:void(0)" data-id="' + obj.id + '"><i class="fa fa-download"></i> 下载</a>');
                     contentArr.push('</div></div></div>');
                 }
             } else {

@@ -1,5 +1,6 @@
 package com.light.hexo.common.util;
 
+import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.util.RandomUtil;
 import com.light.hexo.business.admin.config.BlogProperty;
 import com.light.hexo.business.admin.constant.ConfigEnum;
@@ -47,7 +48,9 @@ public class VideoUtil {
         String coverUrl = "";
         FFmpegFrameGrabber grabber = null;
         try {
+            String suffix = FileNameUtil.getSuffix(videoUrl);
             grabber = FFmpegFrameGrabber.createDefault(videoUrl);
+            grabber.setFormat(suffix);
             grabber.start();
             //设置视频截取帧（默认取第一帧）
             Frame frame = grabber.grabImage();
