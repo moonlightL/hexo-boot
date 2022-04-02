@@ -48,6 +48,10 @@
                                             <input type="radio" class="css-control-input" name="manage_mode" th:value="3" th:checked="${configMap['manage_mode'] == '3'}">
                                             <span class="css-control-indicator"></span> OSS
                                         </label>
+                                        <label class="css-control css-control-primary css-radio">
+                                            <input type="radio" class="css-control-input" name="manage_mode" th:value="4" th:checked="${configMap['manage_mode'] == '4'}">
+                                            <span class="css-control-indicator"></span> COS
+                                        </label>
                                     </div>
                                 </div>
                                 <div id="data-1" class="data-area">
@@ -99,7 +103,7 @@
                                 <div id="data-3" class="data-area">
                                     <div class="form-group row">
                                         <div class="col-12">
-                                            <label for="oss_endpoint">OSS域名</label>
+                                            <label for="oss_endpoint">OSS Endpoint</label>
                                             <input class="form-control form-control-lg" id="oss_endpoint" name="oss_endpoint" type="text"  th:value="${configMap['oss_endpoint']}">
                                         </div>
                                     </div>
@@ -119,6 +123,49 @@
                                         <div class="col-12">
                                             <label for="oss_bucket">OSS 桶</label>
                                             <input class="form-control form-control-lg" id="oss_bucket" name="oss_bucket" type="text" th:value="${configMap['oss_bucket']}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="data-4" class="data-area">
+                                    <div class="form-group row">
+                                        <div class="col-12">
+                                            <label for="qn_domain">COS 域名</label>
+                                            <input class="form-control form-control-lg" id="cos_domain" name="cos_domain" type="text" th:value="${configMap['cos_domain']}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-12">
+                                            <label for="oss_access_key">COS SecretId</label>
+                                            <input class="form-control form-control-lg" id="cos_secret_id" name="cos_secret_id" type="text"  th:value="${configMap['cos_secret_id']}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-12">
+                                            <label for="oss_secret_key">COS SecretKey</label>
+                                            <input class="form-control form-control-lg" id="cos_secret_key" name="cos_secret_key" type="text"  th:value="${configMap['cos_secret_key']}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-12">
+                                            <label for="oss_bucket">COS 桶</label>
+                                            <input class="form-control form-control-lg" id="cos_bucket" name="cos_bucket" type="text" th:value="${configMap['cos_bucket']}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-12">
+                                            <label for="qn_bucket">COS 域</label>
+                                            <select class="form-control form-control-lg" id="cos_region" name="cos_region">
+                                                <option th:text="北京一区" th:value="0" th:attr="selected=${'0' eq configMap['cos_region']}"></option>
+                                                <option th:text="北京" th:value="1" th:attr="selected=${'1' eq configMap['cos_region']}"></option>
+                                                <option th:text="南京" th:value="2" th:attr="selected=${'2' eq configMap['cos_region']}"></option>
+                                                <option th:text="上海" th:value="3" th:attr="selected=${'3' eq configMap['cos_region']}"></option>
+                                                <option th:text="广州" th:value="4" th:attr="selected=${'4' eq configMap['cos_region']}"></option>
+                                                <option th:text="成都" th:value="5" th:attr="selected=${'5' eq configMap['cos_region']}"></option>
+                                                <option th:text="重庆" th:value="6" th:attr="selected=${'6' eq configMap['cos_region']}"></option>
+                                                <option th:text="深圳金融" th:value="7" th:attr="selected=${'7' eq configMap['cos_region']}"></option>
+                                                <option th:text="上海金融" th:value="8" th:attr="selected=${'8' eq configMap['cos_region']}"></option>
+                                                <option th:text="北京金融" th:value="9" th:attr="selected=${'9' eq configMap['cos_region']}"></option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>

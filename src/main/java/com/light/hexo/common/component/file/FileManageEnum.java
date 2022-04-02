@@ -14,7 +14,9 @@ public enum FileManageEnum {
 
     LOCAL(1, "本地"),
     QI_NIU(2, "七牛云"),
-    OSS(3, "OSS");
+    OSS(3, "OSS"),
+    COS(4, "腾讯云")
+    ;
 
     private int code;
 

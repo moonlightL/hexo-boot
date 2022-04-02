@@ -226,18 +226,20 @@
                         }
                     });
                 },
-                download: function(url) {
+                download: function(url, type) {
                     $.fileDownload(url,{
-                        httpMethod: 'GET',
+                        httpMethod: type || 'GET',
                         // data:data,
-                        prepareCallback:function(url){
-                            $.hexo.modal.tip("文件下载中...");
+                        prepareCallback:function(resp){
+                            console.error(resp);
+                            // $.hexo.modal.tip("文件下载中...");
                         },
-                        successCallback:function(url){
-                            $.hexo.modal.tip("文件下载成功");
+                        successCallback:function(resp){
+                            console.error(resp);
+                            // $.hexo.modal.tip("文件下载成功");
                         },
-                        failCallback: function (html, url) {
-                            $.hexo.modal.tip("文件下载失败");
+                        failCallback: function (responseHtml, url, error) {
+
                         }
                     });
                 }

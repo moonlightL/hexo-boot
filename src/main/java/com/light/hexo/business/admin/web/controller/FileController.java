@@ -89,7 +89,7 @@ public class FileController {
                 }
 
                 FileResponse fileResponse = this.defaultFileService.upload(file);
-                if (fileResponse.getSuccess()) {
+                if (fileResponse.isSuccess()) {
                     urlList.add(fileResponse.getUrl());
                 }
 

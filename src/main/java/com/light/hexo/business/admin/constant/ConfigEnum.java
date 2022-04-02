@@ -50,6 +50,12 @@ public enum ConfigEnum {
     OSS_SECRET_KEY("oss_secret_key", "","OSS 密钥"),
     OSS_BUCKET("oss_bucket", "","OSS 桶"),
 
+    COS_DOMAIN("cos_domain", "","COS域名"),
+    COS_SECRET_ID("cos_secret_id", "","COS secretId"),
+    COS_SECRET_KEY("cos_secret_key", "","COS 密钥"),
+    COS_BUCKET("cos_bucket", "","COS 桶"),
+    COS_REGION("cos_region", "", "COS 机房"),
+
     /* 1:自动 0：非自动 */
     BACKUP_AUTO("backup_auto", "1","是否自动备份"),
     BACKUP_DIR("backup_dir", "","备份目录"),

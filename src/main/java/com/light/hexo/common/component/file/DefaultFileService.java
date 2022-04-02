@@ -2,10 +2,12 @@ package com.light.hexo.common.component.file;
 
 import com.light.hexo.business.admin.constant.ConfigEnum;
 import com.light.hexo.business.admin.constant.FileTypeEnum;
+import com.light.hexo.business.admin.constant.HexoExceptionEnum;
 import com.light.hexo.business.admin.model.Attachment;
 import com.light.hexo.business.admin.service.AttachmentService;
 import com.light.hexo.business.admin.service.ConfigService;
 import com.light.hexo.common.exception.GlobalException;
+import com.light.hexo.common.util.ExceptionUtil;
 import com.light.hexo.common.util.VideoUtil;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +59,7 @@ public class DefaultFileService {
     public FileResponse upload(FileRequest fileRequest) throws GlobalException {
 
         FileResponse fileResponse = this.getFileService().upload(fileRequest);
-        if (fileResponse.getSuccess()) {
+        if (fileResponse.isSuccess()) {
             fileResponse.setOriginalName(fileRequest.getOriginalName());
             fileResponse.setFilename(fileRequest.getFilename());
 
@@ -106,16 +108,29 @@ public class DefaultFileService {
         String extension = FilenameUtils.getExtension(originalName);
         String newFilename = baseName + "_" + System.currentTimeMillis() + "." + extension;
         fileRequest.setOriginalName(originalName)
-                .setFilename(newFilename)
-                .setData(file.getBytes())
-                .setFileSize(file.getSize())
-                .setContentType(file.getContentType())
-                .setExtension(extension);
+                   .setFilename(newFilename)
+                   .setData(file.getBytes())
+                   .setInputStream(file.getInputStream())
+                   .setFileSize(file.getSize())
+                   .setContentType(file.getContentType())
+                   .setExtension(extension);
         return this.upload(fileRequest);
     }
 
+    public FileResponse download (FileRequest fileRequest, Integer position) throws GlobalException {
+        if (!position.equals(this.getManageMode())) {
+            ExceptionUtil.throwExToPage(HexoExceptionEnum.ERROR_ATTACHMENT_NOT_POSITION);
+        }
 
-    public FileResponse remove(FileRequest fileRequest) throws GlobalException {
+        return this.getFileService().download(fileRequest);
+    }
+
+
+    public FileResponse remove(FileRequest fileRequest, Integer position) throws GlobalException {
+        if (!position.equals(this.getManageMode())) {
+            ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_ATTACHMENT_NOT_POSITION);
+        }
+
         return this.getFileService().remove(fileRequest);
     }
 
@@ -125,7 +140,11 @@ public class DefaultFileService {
      * @return
      */
     private FileService getFileService() {
-        String configValue = this.configService.getConfigValue(ConfigEnum.MANAGE_MODE.getName());
+        String configValue = this.getManageMode();
         return this.fileServiceFactory.getInstance(Integer.valueOf(configValue));
+    }
+
+    public String getManageMode() {
+        return this.configService.getConfigValue(ConfigEnum.MANAGE_MODE.getName());
     }
 }

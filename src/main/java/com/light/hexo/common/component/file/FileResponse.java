@@ -19,7 +19,7 @@ public class FileResponse {
     /**
      * 是否成功
      */
-    private Boolean success;
+    private boolean success;
 
     /**
      * 七牛云返回的 key

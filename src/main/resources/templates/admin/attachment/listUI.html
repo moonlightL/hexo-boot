@@ -272,6 +272,12 @@
                 });
             });
 
+            $document.on("click", ".download-btn", function () {
+                let $target = $(this);
+                let url = BASE_URL + "/download.html?id=" + $target.data("id");
+                $.hexo.action.download(url, "POST");
+            });
+
             // 绑定条件查询事件
             $("#queryBtn").on("click", function () {
                 let formParamArr = $("#queryForm").serializeArray();
@@ -338,6 +344,7 @@
                     contentArr.push('</div><br><div class="text-center">');
                     contentArr.push('<a class="btn btn-sm btn-rounded btn-noborder btn-alt-success min-width-75 detail-btn" href="javascript:void(0)" data-id="' + obj.id + '"><i class="fa fa-envelope-open-o"></i> 详情</a>');
                     contentArr.push(' <a class="btn btn-sm btn-rounded btn-noborder btn-alt-danger min-width-75 remove-btn" href="javascript:void(0)" data-id="' + obj.id + '"><i class="fa fa-trash"></i> 删除</a>');
+                    // contentArr.push(' <a class="btn btn-sm btn-rounded btn-noborder btn-alt-info min-width-75 download-btn" href="javascript:void(0)" data-id="' + obj.id + '"><i class="fa fa-download"></i> 下载</a>');
                     contentArr.push('</div></div></div>');
                 }
             } else {

@@ -3,6 +3,7 @@ package com.light.hexo.business.admin.web.controller;
 import com.github.pagehelper.PageInfo;
 import com.light.hexo.business.admin.constant.HexoExceptionEnum;
 import com.light.hexo.business.admin.model.Attachment;
+import com.light.hexo.business.admin.model.Backup;
 import com.light.hexo.business.admin.service.AttachmentService;
 import com.light.hexo.common.base.BaseController;
 import com.light.hexo.common.component.file.*;
@@ -18,7 +19,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import java.io.IOException;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.util.*;
 
 /**
@@ -65,6 +69,35 @@ public class AttachmentController extends BaseController {
     }
 
     /**
+     * 下载文件
+     * @param id
+     * @param request
+     * @param response
+     * @throws GlobalException
+     */
+    @RequestMapping("/download.html")
+    @OperateLog(value = "下载文件", actionType = ActionEnum.ADMIN_DOWNLOAD)
+    public void downloadFile(Long id, HttpServletRequest request, HttpServletResponse response) throws GlobalException {
+
+        Attachment attachment = this.attachmentService.findById(id);
+        if (attachment == null) {
+            ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_ATTACHMENT_NOT_EXIST);
+        }
+
+        FileRequest fileRequest = new FileRequest();
+        fileRequest.setFilename(attachment.getFilename());
+        fileRequest.setFileKey(attachment.getFileKey());
+        fileRequest.setFileUrl(attachment.getFileUrl());
+        FileResponse fileResponse = this.defaultFileService.download(fileRequest, attachment.getPosition());
+        if (fileResponse.isSuccess()) {
+            byte[] data = fileResponse.getData();
+            InputStream inputStream = new ByteArrayInputStream(data);
+            response.setHeader("Set-Cookie", "fileDownload=true; path=/");
+            super.download(inputStream, attachment.getFilename(), request, response);
+        }
+    }
+
+    /**
      * 上传附件
      * @param files
      * @return
@@ -91,7 +124,7 @@ public class AttachmentController extends BaseController {
                 }
 
                 FileResponse fileResponse = this.defaultFileService.upload(file);
-                if (fileResponse.getSuccess()) {
+                if (fileResponse.isSuccess()) {
                     urlList.add(fileResponse.getUrl());
                 }
 

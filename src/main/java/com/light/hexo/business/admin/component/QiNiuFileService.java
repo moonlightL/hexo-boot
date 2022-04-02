@@ -90,7 +90,7 @@ public class QiNiuFileService implements FileService {
             fileResponse.setSuccess(true).setData(data);
 
         } catch (Exception e) {
-            log.error("========【默认管理】文件 url: {} 文件下载失败=============", urlStr);
+            log.error("========【七牛云管理】文件 url: {} 文件下载失败=============", urlStr);
             e.printStackTrace();
         }
         return fileResponse;
