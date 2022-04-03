@@ -24,6 +24,7 @@ public class FileResponse {
     /**
      * 七牛云返回的 key
      */
+    @Deprecated
     private String key;
 
     /**
@@ -60,4 +61,10 @@ public class FileResponse {
      * 封面
      */
     private String coverUrl;
+
+    /**
+     * 错误信息
+     */
+    private String errorMsg;
+
 }

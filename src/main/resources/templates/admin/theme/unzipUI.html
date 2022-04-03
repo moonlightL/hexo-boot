@@ -89,7 +89,7 @@
                     }
                 });
 
-                this.on("success", function (e, resp) {
+                this.on("success", function (data, resp) {
 
                     if (!resp.success) {
                         $.hexo.modal.tip(resp.message, "error");

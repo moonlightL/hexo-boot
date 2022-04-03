@@ -64,8 +64,9 @@ public class Attachment implements Serializable {
     private String filePath;
 
     /**
-     * 文件 key (第三方返回)
+     * 文件 key (第三方返回)，即文件上传时设置的 filename
      */
+    @Deprecated
     private String fileKey;
 
     /**

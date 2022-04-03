@@ -10,17 +10,19 @@ import com.light.hexo.common.exception.GlobalException;
 import com.light.hexo.common.util.ExceptionUtil;
 import com.light.hexo.common.util.VideoUtil;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * @Author MoonlightL
@@ -30,6 +32,7 @@ import java.util.concurrent.CompletableFuture;
  * @DateTime 2020/9/11 9:36
  */
 @Component
+@Slf4j
 public class DefaultFileService {
 
     @Autowired
@@ -61,7 +64,9 @@ public class DefaultFileService {
     }
 
     @SneakyThrows
-    public FileResponse upload(FileRequest fileRequest) throws GlobalException {
+    public FileResponse upload(FileRequest fileRequest) {
+
+        FileService fileService = this.getFileService();
 
         CompletableFuture<String> firstFuture = CompletableFuture.supplyAsync(() -> {
             long start = System.currentTimeMillis();
@@ -73,41 +78,53 @@ public class DefaultFileService {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            System.out.println("拷贝临时文件：" + (System.currentTimeMillis() - start) + " ms");
-            return dest.getAbsolutePath();
-        }).thenApplyAsync((result) -> {
+            log.info("========== DefaultFileService 拷贝临时文件耗时: {} ms============", (System.currentTimeMillis() - start));
+            return dest;
+        }).thenApplyAsync((file) -> {
             long start = System.currentTimeMillis();
-            String coverUrl = this.videoUtil.createCover(FilenameUtils.getBaseName(fileRequest.getOriginalName()), result);
-            System.out.println("生成封面：" + (System.currentTimeMillis() - start) + " ms");
+            String coverUrl = this.videoUtil.createCover(FilenameUtils.getBaseName(fileRequest.getOriginalName()), file.getAbsolutePath());
+            FileUtils.deleteQuietly(file);
+            log.info("========== DefaultFileService 生成封面耗时: {} ms============", (System.currentTimeMillis() - start));
             return coverUrl;
         });
 
         CompletableFuture<FileResponse> secondFuture = CompletableFuture.supplyAsync(() -> {
             long start = System.currentTimeMillis();
-            FileResponse fileResponse = this.getFileService().upload(fileRequest);
-            System.out.println("上传至远程图床：" + (System.currentTimeMillis() - start) + " ms");
+            FileResponse fileResponse = fileService.upload(fileRequest);
+            log.info("========== DefaultFileService 上传至远程图床耗时: {} ms============", (System.currentTimeMillis() - start));
             return fileResponse;
         });
 
-        CompletableFuture.allOf(firstFuture, secondFuture).join();
-
         String coverUrl = firstFuture.get();
-        FileResponse fileResponse = secondFuture.get();
+
+        FileResponse fileResponse;
+
+        try {
+            fileResponse = secondFuture.get(10, TimeUnit.SECONDS);
+        } catch (Exception e) {
+            fileResponse = new FileResponse();
+            if (e instanceof TimeoutException) {
+                fileResponse.setSuccess(true);
+                fileResponse.setErrorMsg("上传等待超时，请稍等30秒后刷新页面再查看上传文件");
+            }
+            e.printStackTrace();
+        }
+
+        fileResponse.setOriginalName(fileRequest.getOriginalName());
+        fileResponse.setFilename(fileRequest.getFilename());
+        fileResponse.setUrl(fileService.getFileUrl(fileRequest.getFilename()));
+        fileResponse.setPath(fileService.getLocalPath(fileRequest.getFilename()));
 
         if (fileResponse.isSuccess()) {
-            fileResponse.setOriginalName(fileRequest.getOriginalName());
-            fileResponse.setFilename(fileRequest.getFilename());
-
             Attachment attachment = new Attachment();
             attachment.setFilename(fileRequest.getFilename())
-                    .setOriginalName(fileRequest.getOriginalName())
-                    .setContentType(fileRequest.getContentType())
-                    .setFileType(this.checkFileType(attachment.getContentType()).getType())
-                    .setFileUrl(fileResponse.getUrl())
-                    .setFilePath(fileResponse.getPath())
-                    .setFileSize(fileRequest.getFileSize())
-                    .setFileKey(fileResponse.getKey())
-                    .setPosition(Integer.valueOf(this.configService.getConfigValue(ConfigEnum.MANAGE_MODE.getName())));
+                      .setOriginalName(fileRequest.getOriginalName())
+                      .setContentType(fileRequest.getContentType())
+                      .setFileType(this.checkFileType(attachment.getContentType()).getType())
+                      .setFileUrl(fileResponse.getUrl())
+                      .setFilePath(fileResponse.getPath())
+                      .setFileSize(fileRequest.getFileSize())
+                      .setPosition(Integer.valueOf(this.configService.getConfigValue(ConfigEnum.MANAGE_MODE.getName())));
 
             if (THUMBNAIL_URL_MAP.containsKey(fileRequest.getExtension())) {
                 attachment.setThumbnailUrl(THUMBNAIL_URL_MAP.get(fileRequest.getExtension()));
@@ -134,22 +151,6 @@ public class DefaultFileService {
             return FileTypeEnum.VIDEO;
         }
         return FileTypeEnum.OTHER;
-    }
-
-    public FileResponse upload(MultipartFile file) throws GlobalException, IOException {
-        FileRequest fileRequest = new FileRequest();
-        String originalName = file.getOriginalFilename();
-        String baseName = FilenameUtils.getBaseName(originalName);
-        String extension = FilenameUtils.getExtension(originalName);
-        String newFilename = baseName + "_" + System.currentTimeMillis() + "." + extension;
-        fileRequest.setOriginalName(originalName)
-                   .setFilename(newFilename)
-                   .setData(file.getBytes())
-                   .setInputStream(file.getInputStream())
-                   .setFileSize(file.getSize())
-                   .setContentType(file.getContentType())
-                   .setExtension(extension);
-        return this.upload(fileRequest);
     }
 
     public FileResponse download (FileRequest fileRequest, Integer position) throws GlobalException {

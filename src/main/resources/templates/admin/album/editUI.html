@@ -120,9 +120,10 @@
                         AlbumManager.initUploadEvent();
                     });
 
-                    this.on("success", function (data, message) {
-                        if (message.success) {
-                            $("#coverUrl").val(message.data);
+                    this.on("success", function (data, resp) {
+                        if (resp.success) {
+                            $("#coverUrl").val(resp.data);
+                            $.hexo.modal.tip("封面上传成功");
                         }
                     });
                 }

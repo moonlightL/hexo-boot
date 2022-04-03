@@ -88,6 +88,10 @@
                         return;
                     }
 
+                    if (resp.data.extraMsg) {
+                        $.hexo.modal.tip("提示: " + resp.data.extraMsg);
+                    }
+
                     let errorArr = resp.data.error;
                     if (errorArr.length > 0) {
                         let arr = [];

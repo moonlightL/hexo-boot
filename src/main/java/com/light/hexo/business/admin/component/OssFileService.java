@@ -39,19 +39,19 @@ public class OssFileService implements FileService {
     public FileResponse upload(FileRequest fileRequest) throws GlobalException {
         FileResponse fileResponse = new FileResponse();
 
-        String fileName = fileRequest.getFilename();
+        String filename = fileRequest.getFilename();
         byte[] data = fileRequest.getData();
 
         OSS ossClient = null;
 
         try {
             ossClient = this.buildOssClient();
-            ossClient.putObject(this.getBucket(), fileName, new ByteArrayInputStream(data));
+            ossClient.putObject(this.getBucket(), filename, new ByteArrayInputStream(data));
 
-            fileResponse.setSuccess(true).setUrl(this.parseUrl(this.getBucket() + "." + this.getEndpoint() + "/" + fileName));
+            fileResponse.setSuccess(true).setUrl(this.getFileUrl(filename));
 
         } catch (Exception e) {
-            log.error("========【OSS 管理】文件 fileName: {} 文件上传失败=============", fileName);
+            log.error("========【OSS 管理】文件 fileName: {} 文件上传失败=============", filename);
             e.printStackTrace();
         } finally {
             if (ossClient != null) {
@@ -114,6 +114,11 @@ public class OssFileService implements FileService {
         }
 
         return fileResponse;
+    }
+
+    @Override
+    public String getFileUrl(String filename) throws GlobalException {
+        return this.parseUrl(this.getBucket() + "." + this.getEndpoint() + "/" + filename);
     }
 
     @Override

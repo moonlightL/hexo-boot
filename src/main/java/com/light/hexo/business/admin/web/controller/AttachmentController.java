@@ -24,7 +24,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
@@ -115,25 +114,23 @@ public class AttachmentController extends BaseController {
             ExceptionUtil.throwEx(GlobalExceptionEnum.ERROR_PARAM);
         }
 
-        Map<String, List<String>> result = new HashMap<>(2);
+        Map<String, Object> result = new HashMap<>(2);
         List<String> urlList = new ArrayList<>(files.length);
         List<String> errorList = new ArrayList<>();
         for (MultipartFile file : files) {
             String originalName = file.getOriginalFilename();
-            try {
-                if (!StringUtils.endsWithAny(originalName, VALID_SUFFIX)) {
-                    errorList.add(originalName);
-                    continue;
-                }
-
-                FileResponse fileResponse = this.defaultFileService.upload(file);
-                if (fileResponse.isSuccess()) {
-                    urlList.add(fileResponse.getUrl());
-                }
-
-            } catch (IOException e) {
+            if (!StringUtils.endsWithAny(originalName, VALID_SUFFIX)) {
                 errorList.add(originalName);
-                e.printStackTrace();
+                continue;
+            }
+
+            FileRequest fileRequest = FileRequest.createRequest(file);
+            FileResponse fileResponse = this.defaultFileService.upload(fileRequest);
+            if (fileResponse.isSuccess()) {
+                urlList.add(fileResponse.getUrl());
+                result.put("extraMsg", fileResponse.getErrorMsg());
+            } else {
+                errorList.add(originalName);
             }
         }
 

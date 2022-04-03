@@ -248,7 +248,7 @@
                                 } else if (attachment.fileType == 2) {
                                     $("#attachmentShow").html('<video src="' + attachment[key] + '" controls="controls" width="320" height="150" alt="">');
                                 }
-                                $("#detail-" + key).html(attachment[key]);
+                                $("#detail-" + key).html(attachment[key]).attr("title", attachment[key]);
                             } else if (key == "position") {
                                 let position = attachment[key];
                                 $("#detail-" + key).html(positionType[position]);
@@ -256,7 +256,7 @@
                                 let fileType = attachment[key];
                                 $("#detail-" + key).html(fileType == 1 ? "图片" : (fileType == 2 ? "视频" : "其他"));
                             } else {
-                                $("#detail-" + key).html(attachment[key]);
+                                $("#detail-" + key).html(attachment[key]).attr("title", attachment[key]);
                             }
                         }
 

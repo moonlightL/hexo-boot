@@ -6,7 +6,8 @@ import com.light.hexo.business.admin.service.AttachmentService;
 import com.light.hexo.common.base.BaseMapper;
 import com.light.hexo.common.base.BaseRequest;
 import com.light.hexo.common.base.BaseServiceImpl;
-import com.light.hexo.common.component.file.*;
+import com.light.hexo.common.component.file.DefaultFileService;
+import com.light.hexo.common.component.file.FileRequest;
 import com.light.hexo.common.exception.GlobalException;
 import com.light.hexo.common.model.AttachmentRequest;
 import org.apache.commons.lang3.StringUtils;
@@ -15,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import tk.mybatis.mapper.entity.Example;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -80,8 +80,7 @@ public class AttachmentServiceImpl extends BaseServiceImpl<Attachment> implement
                 FileRequest fileRequest = new FileRequest();
                 fileRequest.setFilename(attachment.getFilename())
                         .setFilePath(attachment.getFilePath())
-                        .setFileUrl(attachment.getFileUrl())
-                        .setFileKey(attachment.getFileKey());
+                        .setFileUrl(attachment.getFileUrl());
                 this.defaultFileService.remove(fileRequest, attachment.getPosition());
             }
         }

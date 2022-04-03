@@ -3,7 +3,10 @@ package com.light.hexo.common.component.file;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.apache.commons.io.FilenameUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -61,6 +64,7 @@ public class FileRequest {
     /**
      * 七牛云返回的 key
      */
+    @Deprecated
     private String fileKey;
 
     /**
@@ -72,4 +76,26 @@ public class FileRequest {
      * 文件后缀名
      */
     private String extension;
+
+
+    public static FileRequest createRequest(MultipartFile file) {
+        FileRequest fileRequest = null;
+        try {
+            fileRequest = new FileRequest();
+            String originalName = file.getOriginalFilename();
+            String baseName = FilenameUtils.getBaseName(originalName);
+            String extension = FilenameUtils.getExtension(originalName);
+            String newFilename = baseName + "_" + System.currentTimeMillis() + "." + extension;
+            fileRequest.setOriginalName(originalName)
+                       .setFilename(newFilename)
+                       .setData(file.getBytes())
+                       .setInputStream(file.getInputStream())
+                       .setFileSize(file.getSize())
+                       .setContentType(file.getContentType())
+                       .setExtension(extension);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return fileRequest;
+    }
 }

@@ -9,8 +9,11 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.lang.reflect.UndeclaredThrowableException;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeoutException;
 
 /**
  * @Author MoonlightL
@@ -48,15 +51,29 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * 数据校验异常处理器
+     * 其他异常
      * @param e
      * @return
      */
     @ExceptionHandler
     @ResponseBody
-    public Result handleBindException(BindException e) {
-        List<ObjectError> allErrors = e.getAllErrors();
-        return Result.fail(GlobalExceptionEnum.ERROR_PARAM.getCode(),allErrors.get(0).getDefaultMessage());
-    }
+    public Result handleOtherException(Exception e) {
+        log.error("======= GlobalExceptionHandler Exception: {} ======", e.getMessage());
 
+        if (e instanceof BindException) {
+            BindException bex = (BindException) e;
+            List<ObjectError> allErrors = bex.getAllErrors();
+            return Result.fail(GlobalExceptionEnum.ERROR_PARAM.getCode(),allErrors.get(0).getDefaultMessage());
+
+        } else if (e instanceof TimeoutException) {
+            return Result.fail(GlobalExceptionEnum.ERROR_TIME_OUT);
+
+        } else if (e instanceof UndeclaredThrowableException) {
+            return Result.fail(GlobalExceptionEnum.ERROR_TIME_OUT);
+
+        } else {
+            return Result.fail(GlobalExceptionEnum.ERROR_SERVER);
+
+        }
+    }
 }

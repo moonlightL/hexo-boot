@@ -14,7 +14,6 @@ import com.qcloud.cos.COSClient;
 import com.qcloud.cos.ClientConfig;
 import com.qcloud.cos.auth.BasicCOSCredentials;
 import com.qcloud.cos.auth.COSCredentials;
-import com.qcloud.cos.exception.CosClientException;
 import com.qcloud.cos.http.HttpProtocol;
 import com.qcloud.cos.model.GetObjectRequest;
 import com.qcloud.cos.model.ObjectMetadata;
@@ -30,6 +29,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import java.io.File;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -60,23 +60,21 @@ public class CosFileService implements FileService {
         FileResponse fileResponse = new FileResponse();
 
         InputStream inputStream = fileRequest.getInputStream();
-        String fileName = fileRequest.getFilename();
+        String filename = fileRequest.getFilename();
 
         TransferManager transferManager = this.createTransferManager();
 
         String bucketName = this.getBucket();
 
-        PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, fileName, inputStream, new ObjectMetadata());
+        PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, filename, inputStream, new ObjectMetadata());
 
         try {
-            // 可同步地调用 waitForUploadResult 方法等待上传完成，成功返回UploadResult, 失败抛出异常
             Upload upload = transferManager.upload(putObjectRequest);
             UploadResult uploadResult = upload.waitForUploadResult();
-            String key = uploadResult.getKey();
-            fileResponse.setSuccess(true).setKey(key).setUrl(this.parseUrl(this.getDomain() + "/" + key));
+            fileResponse.setSuccess(true).setUrl(this.getFileUrl(filename));
 
         } catch (Exception e) {
-            log.error("========【OSS 管理】文件 fileName: {} 文件上传失败=============", fileName);
+            log.error("========【OSS 管理】文件 fileName: {} 文件上传失败=============", filename);
             e.printStackTrace();
         } finally {
             if (transferManager != null) {
@@ -98,7 +96,6 @@ public class CosFileService implements FileService {
 
         try {
             File target = new File(this.getUploadDir() + fileRequest.getFilename());
-            // 返回一个异步结果 Donload, 可同步的调用 waitForCompletion 等待下载结束, 成功返回 void, 失败抛出异常
             Download download = transferManager.download(getObjectRequest, target);
             download.waitForCompletion();
 
@@ -120,7 +117,7 @@ public class CosFileService implements FileService {
     public FileResponse remove(FileRequest fileRequest) throws GlobalException {
 
         FileResponse fileResponse = new FileResponse();
-        String fileKey = fileRequest.getFileKey();
+        String fileKey = fileRequest.getFilename();
 
         COSClient cosClient = null;
         try {
@@ -129,7 +126,7 @@ public class CosFileService implements FileService {
             cosClient.deleteObject(bucket, fileKey);
             fileResponse.setSuccess(true);
             return fileResponse;
-        } catch (CosClientException e) {
+        } catch (Exception e) {
             log.error("========【COS 管理】文件 fileName: {} 文件删除失败=============", fileRequest.getFileKey());
             e.printStackTrace();
         } finally {
@@ -138,6 +135,11 @@ public class CosFileService implements FileService {
             }
         }
         return fileResponse;
+    }
+
+    @Override
+    public String getFileUrl(String filename) throws GlobalException {
+        return this.parseUrl(this.getDomain() + "/" + filename);
     }
 
     @Override
@@ -175,12 +177,9 @@ public class CosFileService implements FileService {
     private TransferManager createTransferManager() {
         COSClient cosClient = createCOSClient();
 
-        // 传入一个 threadpool, 若不传入线程池，默认 TransferManager 中会生成一个单线程的线程池。
         ExecutorService threadPool = Executors.newFixedThreadPool(32);
         TransferManager transferManager = new TransferManager(cosClient, threadPool);
 
-        // 设置高级接口的配置项
-        // 分块上传阈值和分块大小分别为 5MB 和 1MB
         TransferManagerConfiguration transferManagerConfiguration = new TransferManagerConfiguration();
         transferManagerConfiguration.setMultipartUploadThreshold(5 * 1024 * 1024);
         transferManagerConfiguration.setMinimumUploadPartSize(1 * 1024 * 1024);

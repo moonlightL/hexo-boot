@@ -254,10 +254,16 @@
                     });
 
                     this.on("success", function (data, resp) {
+                        console.log(resp);
                         if (!resp.success) {
                             $.hexo.modal.tip("上传失败: " + resp.message);
                             return;
                         }
+
+                        if (resp.data.extraMsg) {
+                            $.hexo.modal.tip("提示: " + resp.data.extraMsg);
+                        }
+
                         window.AlbumManager.initUploadEvent();
                         window.AlbumManager.query();
                     });

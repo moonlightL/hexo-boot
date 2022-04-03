@@ -308,10 +308,11 @@
                             FileManager.initUploadEvent();
                         });
 
-                        this.on("success", function (data, message) {
-                            if (message.success) {
-                                $("#postCover").attr("src", message.data);
-                                $("#coverUrl").val(message.data);
+                        this.on("success", function (data, resp) {
+                            if (resp.success) {
+                                $("#postCover").attr("src", resp.data);
+                                $("#coverUrl").val(resp.data);
+                                $.hexo.modal.tip("封面上传成功");
                             }
                             FileManager.initUploadEvent();
                         });

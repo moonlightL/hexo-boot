@@ -56,14 +56,10 @@ public class LocalFileService implements FileService {
 
             File dest = new File(uploadDir, fileRequest.getFilename());
             FileUtils.copyToFile(bis, dest);
-            String blogPage = this.configService.getConfigValue(ConfigEnum.HOME_PAGE.getName());
             fileResponse.setSuccess(true)
                         .setPath(dest.getAbsolutePath())
-                        .setUrl(this.parseUrl((StringUtils.isNotBlank(blogPage) ? blogPage : IpUtil.getHostIp() + ":" + this.environment.getProperty("server.port")) + "/images/" + dest.getName()));
+                        .setUrl(this.getFileUrl(dest.getName()));
             return fileResponse;
-
-        } catch (GlobalException e) {
-            throw e;
 
         } catch (Exception e) {
             log.error("========【默认管理】文件 fileName: {} 文件上传失败=============", fileRequest.getFilename());
@@ -113,6 +109,22 @@ public class LocalFileService implements FileService {
         }
 
         return fileResponse;
+    }
+
+    @Override
+    public String getFileUrl(String filename) throws GlobalException {
+        String blogPage = this.configService.getConfigValue(ConfigEnum.HOME_PAGE.getName());
+        return this.parseUrl((StringUtils.isNotBlank(blogPage) ? blogPage : IpUtil.getHostIp() + ":" + this.environment.getProperty("server.port")) + "/images/" + filename);
+    }
+
+    @Override
+    public String getLocalPath(String filename) {
+        String uploadDir = this.getUploadDir();
+        File dest = new File(uploadDir, filename);
+        if (!dest.exists()) {
+            return "";
+        }
+        return dest.getAbsolutePath();
     }
 
     @Override

@@ -17,6 +17,7 @@ public enum GlobalExceptionEnum implements GlobalExceptionMap {
     ERROR_UNAUTHORIZED(401, "用户未授权"),
     ERROR_FORBIDDEN(403, "资源被禁止访问"),
     ERROR_SERVER(500, "系统异常"),
+    ERROR_TIME_OUT(502, "超时操作"),
     ERROR_VERIFY_CODE_WRONG(600, "验证码不正确"),
     ERROR_NOT_LOGIN_TO_COMMENT(601, "请先登录再进行评论"),
     ERROR_USER_STATE_NOT_VALID(602, "账户异常，请联系博主"),

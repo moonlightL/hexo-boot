@@ -154,10 +154,10 @@
                         ProfileManager.initUploadEvent();
                     });
 
-                    this.on("success", function (data, message) {
-                        if (message.success) {
-                            $("#imgAvatar").attr("src", message.data);
-                            $("#avatar").val(message.data);
+                    this.on("success", function (data, resp) {
+                        if (resp.success) {
+                            $("#imgAvatar").attr("src", resp.data);
+                            $("#avatar").val(resp.data);
                         }
                         ProfileManager.initUploadEvent();
                     });

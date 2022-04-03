@@ -41,6 +41,23 @@ public interface FileService {
     FileResponse remove(FileRequest fileRequest) throws GlobalException;
 
     /**
+     * 获取文件远程访问地址
+     * @param filename
+     * @return
+     * @throws GlobalException
+     */
+    String getFileUrl(String filename) throws GlobalException;
+
+    /**
+     * 获取文件本地存储路径
+     * @param filename
+     * @return
+     */
+    default String getLocalPath(String filename) {
+        return "";
+    }
+
+    /**
      * 转换 url
      * @param url
      * @return

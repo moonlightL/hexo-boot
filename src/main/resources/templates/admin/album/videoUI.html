@@ -72,7 +72,7 @@
                     <div class="form-group row">
                         <div class="col-lg-8">
                             注意： 每次上传只支持单个视频文件上传 <br>
-                            推荐： 上传文件越大，其上传至远程图床的时间可能会超出30s进而会中断上传请求，故推荐使用手动录入方式
+                            推荐： 上传文件越大，其上传至远程图床的时间越长(超出30秒)，影响上传进度，故推荐使用手动录入方式
                         </div>
                         <div class="col-lg-4 text-right">
                             <button type="button" class="btn btn-primary" id="uploadBtn">上传</button>
@@ -290,6 +290,15 @@
 
                     this.on("success", function (data, resp) {
                         console.log(resp);
+                        if (!resp.success) {
+                            $.hexo.modal.tip("上传失败: " + resp.message);
+                            return;
+                        }
+
+                        if (resp.data.extraMsg) {
+                            $.hexo.modal.tip("提示: " + resp.data.extraMsg);
+                        }
+
                         window.AlbumManager.initUploadEvent();
                         window.AlbumManager.query();
                     });

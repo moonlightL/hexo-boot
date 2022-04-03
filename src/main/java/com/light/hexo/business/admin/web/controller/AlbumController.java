@@ -8,6 +8,7 @@ import com.light.hexo.business.admin.service.AlbumService;
 import com.light.hexo.common.base.BaseController;
 import com.light.hexo.common.base.BaseRequest;
 import com.light.hexo.common.component.file.DefaultFileService;
+import com.light.hexo.common.component.file.FileRequest;
 import com.light.hexo.common.component.file.FileResponse;
 import com.light.hexo.common.component.log.ActionEnum;
 import com.light.hexo.common.component.log.OperateLog;
@@ -24,7 +25,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -137,7 +137,7 @@ public class AlbumController extends BaseController {
     @PostMapping("/uploadBatch.json")
     @ResponseBody
     @OperateLog(value = "上传专辑文件", actionType = ActionEnum.ADMIN_ADD)
-    public Result uploadBatch(@RequestParam(value = "file", required = false) MultipartFile[] files, Integer albumId) throws GlobalException {
+    public Result uploadBatch(@RequestParam(value = "file", required = false) MultipartFile[] files, Integer albumId) {
 
         if (files == null || files.length == 0) {
             ExceptionUtil.throwEx(GlobalExceptionEnum.ERROR_PARAM);
@@ -148,25 +148,24 @@ public class AlbumController extends BaseController {
             ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_ALBUM_NOT_EXIST);
         }
 
-        Map<String, List<String>> result = new HashMap<>(2);
+        Map<String, Object> result = new HashMap<>(2);
         List<String> urlList = new ArrayList<>(files.length);
         List<String> errorList = new ArrayList<>();
         for (MultipartFile file : files) {
-            try {
-                String originalName = file.getOriginalFilename();
-                if (!StringUtils.endsWithAny(originalName, album.getDetailType().equals(1) ? PHOTO_VALID_SUFFIX : VIDEO_VALID_SUFFIX)) {
-                    errorList.add(originalName);
-                    continue;
-                }
+            String originalName = file.getOriginalFilename();
+            if (!StringUtils.endsWithAny(originalName, album.getDetailType().equals(1) ? PHOTO_VALID_SUFFIX : VIDEO_VALID_SUFFIX)) {
+                errorList.add(originalName);
+                continue;
+            }
 
-                FileResponse fileResponse = this.defaultFileService.upload(file);
-                if (fileResponse.isSuccess()) {
-                    urlList.add(fileResponse.getUrl());
-                    this.albumDetailService.saveAlbumDetail(albumId, fileResponse.getOriginalName(), fileResponse.getUrl(), fileResponse.getCoverUrl());
-                }
-
-            } catch (IOException e) {
-                e.printStackTrace();
+            FileRequest fileRequest = FileRequest.createRequest(file);
+            FileResponse fileResponse = this.defaultFileService.upload(fileRequest);
+            if (fileResponse.isSuccess()) {
+                this.albumDetailService.saveAlbumDetail(albumId, fileResponse.getOriginalName(), fileResponse.getUrl(), fileResponse.getCoverUrl());
+                urlList.add(fileResponse.getUrl());
+                result.put("extraMsg", fileResponse.getErrorMsg());
+            } else {
+                errorList.add(originalName);
             }
         }
 

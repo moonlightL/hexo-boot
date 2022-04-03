@@ -11,7 +11,6 @@ import com.light.hexo.common.exception.GlobalException;
 import com.light.hexo.common.util.ExceptionUtil;
 import com.light.hexo.common.util.JsonUtil;
 import com.qiniu.common.Region;
-import com.qiniu.common.Zone;
 import com.qiniu.http.Response;
 import com.qiniu.storage.BucketManager;
 import com.qiniu.storage.Configuration;
@@ -48,17 +47,18 @@ public class QiNiuFileService implements FileService {
         FileResponse fileResponse = new FileResponse();
 
         byte[] data = fileRequest.getData();
-        String fileName = fileRequest.getFilename();
+        String filename = fileRequest.getFilename();
 
         try {
-            UploadManager uploadManager = this.createUploadManager();
+            Configuration cfg = this.createConfiguration();
+            UploadManager uploadManager = new UploadManager(cfg);
             Auth auth = this.createAuth();
             String upToken = auth.uploadToken(this.getBucket());
 
-            Response response = uploadManager.put(data, fileName, upToken);
+            Response response = uploadManager.put(data, filename, upToken);
             int retry = 0;
             while(response.needRetry() && retry < RETRY_NUM) {
-                response = uploadManager.put(data, fileName, upToken);
+                response = uploadManager.put(data, filename, upToken);
                 retry++;
             }
 
@@ -66,13 +66,12 @@ public class QiNiuFileService implements FileService {
                 return fileResponse;
             }
 
-
             fileResponse = JsonUtil.string2Obj(response.bodyString(), FileResponse.class);
-            fileResponse.setSuccess(true).setUrl(this.parseUrl(this.getDomain() + "/" + fileResponse.getKey()));
+            fileResponse.setSuccess(true).setUrl(this.getFileUrl(filename));
 
-        } catch (Exception ex) {
-            log.error("========【七牛云管理】文件 fileName: {} 文件上传失败=============", fileName);
-            ex.printStackTrace();
+        } catch (Exception e) {
+            log.error("========【七牛云管理】文件 fileName: {} 文件上传失败=============", filename);
+            e.printStackTrace();
         }
 
         return fileResponse;
@@ -100,10 +99,10 @@ public class QiNiuFileService implements FileService {
     public FileResponse remove(FileRequest fileRequest) throws GlobalException {
         FileResponse fileResponse = new FileResponse();
 
-        String fileKey = fileRequest.getFileKey();
+        String fileKey = fileRequest.getFilename();
 
         try {
-            Configuration cfg = new Configuration(Zone.zone2());
+            Configuration cfg = this.createConfiguration();
             Auth auth = this.createAuth();
             BucketManager bucketManager = new BucketManager(auth, cfg);
 
@@ -134,6 +133,11 @@ public class QiNiuFileService implements FileService {
     }
 
     @Override
+    public String getFileUrl(String filename) throws GlobalException {
+        return this.parseUrl(this.getDomain() + "/" + filename);
+    }
+
+    @Override
     public int getCode() {
         return FileManageEnum.QI_NIU.getCode();
     }
@@ -154,15 +158,10 @@ public class QiNiuFileService implements FileService {
         REGION_MAP.put("4", Region.regionAs0());
     }
 
-    /**
-     * 创建配置
-     * @return
-     */
-    private UploadManager createUploadManager() {
+    private Configuration createConfiguration() {
         Map<String, String> configMap = this.configService.getConfigMap();
         String regionKey = configMap.get(ConfigEnum.QN_REGION.getName());
-        Configuration cfg = new Configuration(REGION_MAP.get(regionKey));
-        return new UploadManager(cfg);
+        return new Configuration(REGION_MAP.get(regionKey));
     }
 
     /**
