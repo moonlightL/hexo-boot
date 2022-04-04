@@ -113,9 +113,9 @@
                     this.on("error", function (data, message) {
                         console.error(message);
                         if (typeof message == "string") {
-                            $.hexo.modal.tip("上传失败: " + message);
+                            $.hexo.modal.tip("上传失败: " + message, "error");
                         } else{
-                            $.hexo.modal.tip("上传失败: " + message.error);
+                            $.hexo.modal.tip("上传失败: " + message.error, "error");
                         }
                         AlbumManager.initUploadEvent();
                     });

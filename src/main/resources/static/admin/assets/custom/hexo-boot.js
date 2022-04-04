@@ -243,7 +243,7 @@
                     swal({
                         title: "",
                         text: msg,
-                        type: type || "info",
+                        type: type || "success",
                         confirmButtonColor: "#DD6B55",
                         confirmButtonText: "确定",
                         onClose: function () {
