@@ -131,14 +131,14 @@
 .hb-w-body .hb-comment-help .emoji-panel {
     margin-top: 5px;
     box-shadow: 0 1px 10px #aaa;
-    max-height: 15rem;
+    max-height: 16.5rem;
     overflow: hidden;
     animation-duration: .5s;
     animation-name: slideIn;
 }
 
 .hb-w-body .hb-comment-help .emoji-panel .emoji-ul {
-    height: 96px;
+    height: 120px;
     overflow: auto;
     display: none;
 }
