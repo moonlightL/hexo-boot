@@ -36,7 +36,7 @@ Hexo Boot 是基于 Spring Boot + MySQL 开发的一套开源的博客系统。�
 ### 2.5 附件功能
 
 ```
-支持本地、七牛云、OSS 3种附件管理
+支持本地、七牛云、OSS、COS 4种对象存储方式
 ```
 
 ### 2.6 备份功能
@@ -261,6 +261,8 @@ curl -L -o ~/.hexo-boot/application.yml --create-dirs https://gitee.com/moonligh
 [码云 Wiki](https://gitee.com/moonlightL/hexo-boot/wikis/%E8%87%AA%E5%AE%9A%E4%B9%89%E4%B8%BB%E9%A2%98?sort_id=3151185)
 
 ## 六、更新日志
+
+2022-04-04 整合 COS（腾讯云）对象存储，优化文件上传代码
 
 2022-02-18 统一评论功能接口，重写评论区插件
 
