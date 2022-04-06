@@ -1015,12 +1015,17 @@ span.effect {
 }
 
 .footer-copyright {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    width: 100%;
     height: 80px;
     letter-spacing: 0;
     background-color: var(--content-color);
     border: 2px solid var(--content-color);
     box-shadow: 0 0 5px var(--shadow-color);
-    padding: 40px 10px;
     color: var(--text-color);
 }
 
@@ -1319,6 +1324,7 @@ h3.friend-link-title {
     position: relative;
     margin: 1.5rem auto;
     height: 100%;
+    box-shadow: 0 1px 3px 1px var(--shadow-color);
 }
 
 .album-detail-item a .mask {
@@ -1341,6 +1347,14 @@ h3.friend-link-title {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+
+.album-detail-item .name {
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 1rem 0;
 }
 
 .video-mask {

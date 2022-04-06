@@ -26,10 +26,10 @@
     },
     {
       "key": "CDNAddress",
-      "value": "",
+      "value": "https://cdn.jsdelivr.net/gh/moonlightL/default@3.4",
       "type": "input",
       "label": "CDN地址",
-      "update": false
+      "update": true
     },
     {
       "key": "PJAX",

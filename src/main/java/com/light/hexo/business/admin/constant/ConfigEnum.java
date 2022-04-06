@@ -21,7 +21,8 @@ public enum ConfigEnum {
     KEYWORDS("keywords", "技术博客","博客关键字"),
     LOGO_URL("logo_url", "", "Logo 地址"),
     FAVICON_URL("favicon_url", "", "Favicon 地址"),
-    RECORD("record", "浙ICP备00000000号","网站备案号"),
+    GONGAN_RECORD("gongan_record", "浙公网安备000000号","公安联网备案号"),
+    ICP_RECORD("icp_record", "浙ICP备00000000号","工信部备案号"),
     POWER_BY("power_by", "Copyright©2020. Design by MoonlightL","版权信息"),
 
     BLOG_AUTHOR("blog_author", "","博主名称"),

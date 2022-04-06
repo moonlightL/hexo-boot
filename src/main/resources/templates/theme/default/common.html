@@ -75,25 +75,28 @@
 
 <div th:fragment="footer">
     <footer class="footer-copyright" id="footer-copyright">
-        <div class="row">
-            <div style="padding-left: 2rem">
-                <span class="pull-left" style="left: 10px" th:utext="${#servletContext.getAttribute('configMap')['power_by']}"></span>
+        <div class="hidden-xs">
+            <span th:text="${#servletContext.getAttribute('configMap')['power_by']}"></span>
+        </div>
+        <div>
+            <ul class="contract-info">
+                <li class="wechat" th:if="${#strings.isEmpty(#servletContext.getAttribute('configMap')['wx_account']) != true}">
+                    <a th:title="${#servletContext.getAttribute('configMap')['wx_account']}" class="socialicon" href="javascript:void(0)" target="_blank"><i class="fa fa-weixin fa-lg" aria-hidden="true"></i></a>
+                </li>
+                <li th:if="${#strings.isEmpty(#servletContext.getAttribute('configMap')['qq_account']) != true}">
+                    <a th:title="${#servletContext.getAttribute('configMap')['qq_account']}" class="socialicon" href="javascript:void(0)" target="_blank"><i class="fa fa-qq fa-lg" aria-hidden="true"></i></a>
+                </li>
+                <li th:if="${#strings.isEmpty(#servletContext.getAttribute('configMap')['git_hub_account']) != true}">
+                    <a title="github" class="socialicon" th:href="@{${#servletContext.getAttribute('configMap')['git_hub_account']}}" target="_blank"><i class="fa fa-github-alt fa-lg" aria-hidden="true"></i></a>
+                </li>
+            </ul>
+        </div>
+        <div class="hidden-xs">
+            <div th:if="${#strings.isEmpty(#servletContext.getAttribute('configMap')['gongan_record']) != true}">
+                <img th:src="@{${baseLink} + '/source/images/beian.png'}" alt="">&nbsp;<a th:href="@{'http://www.beian.gov.cn/portal/registerSystemInfo?'}" target="_blank" th:text="${#servletContext.getAttribute('configMap')['gongan_record']}"></a>
             </div>
-            <div style="position: absolute; left: 50%; transform: translateX(-50%)">
-                <ul class="contract-info">
-                    <li class="wechat" th:if="${#strings.isEmpty(#servletContext.getAttribute('configMap')['wx_account']) != true}">
-                        <a th:title="${#servletContext.getAttribute('configMap')['wx_account']}" class="socialicon" href="javascript:void(0)" target="_blank"><i class="fa fa-weixin fa-lg" aria-hidden="true"></i></a>
-                    </li>
-                    <li th:if="${#strings.isEmpty(#servletContext.getAttribute('configMap')['qq_account']) != true}">
-                        <a th:title="${#servletContext.getAttribute('configMap')['qq_account']}" class="socialicon" href="javascript:void(0)" target="_blank"><i class="fa fa-qq fa-lg" aria-hidden="true"></i></a>
-                    </li>
-                    <li th:if="${#strings.isEmpty(#servletContext.getAttribute('configMap')['git_hub_account']) != true}">
-                        <a title="github" class="socialicon" th:href="@{${#servletContext.getAttribute('configMap')['git_hub_account']}}" target="_blank"><i class="fa fa-github-alt fa-lg" aria-hidden="true"></i></a>
-                    </li>
-                </ul>
-            </div>
-            <div class="hidden-xs" style="padding-right: 2rem">
-                <a class="pull-right" href="http://beian.miit.gov.cn/" target="_blank" th:utext="${#servletContext.getAttribute('configMap')['record']}"></a>
+            <div th:if="${#strings.isEmpty(#servletContext.getAttribute('configMap')['icp_record']) != true}" style="padding-left: 24px">
+                <a href="http://beian.miit.gov.cn/" target="_blank" th:text="${#servletContext.getAttribute('configMap')['icp_record']}"></a>
             </div>
         </div>
     </footer>

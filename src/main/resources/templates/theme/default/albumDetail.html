@@ -29,6 +29,7 @@
                             <img th:data-original="@{${detail.url}}" class="lazyload">
                             <div class="mask"><i class="fa fa-search-plus"></i></div>
                         </a>
+                        <div class="name" th:text="${detail.name}" th:title="${detail.name}"></div>
                     </div>
                 </div>
             </div>
@@ -39,6 +40,7 @@
                             <img th:data-original="@{${detail.coverUrl}}" class="lazyload">
                             <div class="mask"><i class="fa fa-play"></i></div>
                         </a>
+                        <div class="name" th:text="${detail.name}" th:title="${detail.name}"></div>
                     </div>
                 </div>
             </div>
