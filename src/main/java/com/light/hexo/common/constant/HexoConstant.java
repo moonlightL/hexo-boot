@@ -45,4 +45,9 @@ public class HexoConstant {
 	 * 评论插件用户头像目录
 	 */
 	public static final String COMMENT_USER_AVATAR_DIR = "/admin/assets/custom/hb-comment/image/avatar";
+
+	/**
+	 * 默认视频封面
+	 */
+	public static final String DEFAULT_VIDEO_COVER = DEFAULT_IMG_DIR + "/video.jpg";
 }

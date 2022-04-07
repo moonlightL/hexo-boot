@@ -8,6 +8,7 @@ import com.light.hexo.business.admin.constant.HexoExceptionEnum;
 import com.light.hexo.business.admin.model.Attachment;
 import com.light.hexo.business.admin.service.AttachmentService;
 import com.light.hexo.business.admin.service.ConfigService;
+import com.light.hexo.common.constant.HexoConstant;
 import com.light.hexo.common.exception.GlobalException;
 import com.light.hexo.common.util.ExceptionUtil;
 import com.light.hexo.common.util.IpUtil;
@@ -121,7 +122,7 @@ public class DefaultFileService {
                         // 解密
                         Base64.Decoder decoder = Base64.getDecoder();
 
-                        coverBase64 = coverBase64.substring(coverBase64.indexOf(",", 1) + 1, coverBase64.length());
+                        coverBase64 = coverBase64.substring(coverBase64.indexOf(",", 1) + 1);
                         byte[] data = decoder.decode(coverBase64);
                         // 处理数据
                         for (int i = 0; i < data.length; ++i) {
@@ -141,6 +142,8 @@ public class DefaultFileService {
                         String blogPage = this.configService.getConfigValue(ConfigEnum.HOME_PAGE.getName());
                         String coverUrl = (StringUtils.isNotBlank(blogPage) ? blogPage : "http://" + IpUtil.getHostIp() + ":" + this.environment.getProperty("server.port")) + "/cover/" + coverName;
                         attachment.setThumbnailUrl(coverUrl);
+                    } else {
+                        attachment.setThumbnailUrl(HexoConstant.DEFAULT_VIDEO_COVER);
                     }
 
                 } else {
