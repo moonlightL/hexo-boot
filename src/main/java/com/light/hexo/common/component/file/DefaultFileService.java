@@ -1,5 +1,7 @@
 package com.light.hexo.common.component.file;
 
+import cn.hutool.core.util.RandomUtil;
+import com.light.hexo.business.admin.config.BlogProperty;
 import com.light.hexo.business.admin.constant.ConfigEnum;
 import com.light.hexo.business.admin.constant.FileTypeEnum;
 import com.light.hexo.business.admin.constant.HexoExceptionEnum;
@@ -8,16 +10,18 @@ import com.light.hexo.business.admin.service.AttachmentService;
 import com.light.hexo.business.admin.service.ConfigService;
 import com.light.hexo.common.exception.GlobalException;
 import com.light.hexo.common.util.ExceptionUtil;
-import com.light.hexo.common.util.VideoUtil;
+import com.light.hexo.common.util.IpUtil;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
-
 import java.io.File;
-import java.io.IOException;
+import java.io.FileOutputStream;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -42,10 +46,13 @@ public class DefaultFileService {
     private ConfigService configService;
 
     @Autowired
-    private AttachmentService attachmentService;
+    private BlogProperty blogProperty;
 
     @Autowired
-    private VideoUtil videoUtil;
+    private Environment environment;
+
+    @Autowired
+    private AttachmentService attachmentService;
 
     private static final Map<String, String> THUMBNAIL_URL_MAP;
 
@@ -68,34 +75,12 @@ public class DefaultFileService {
 
         FileService fileService = this.getFileService();
 
-        CompletableFuture<String> firstFuture = CompletableFuture.supplyAsync(() -> {
-            long start = System.currentTimeMillis();
-            // 临时拷贝
-            File tmpDir = new File(System.getProperty("java.io.tmpdir"));
-            File dest = new File(tmpDir, fileRequest.getFilename());
-            try {
-                FileUtils.writeByteArrayToFile(dest, fileRequest.getData());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            log.info("========== DefaultFileService 拷贝临时文件耗时: {} ms============", (System.currentTimeMillis() - start));
-            return dest;
-        }).thenApplyAsync((file) -> {
-            long start = System.currentTimeMillis();
-            String coverUrl = this.videoUtil.createCover(FilenameUtils.getBaseName(fileRequest.getOriginalName()), file.getAbsolutePath());
-            FileUtils.deleteQuietly(file);
-            log.info("========== DefaultFileService 生成封面耗时: {} ms============", (System.currentTimeMillis() - start));
-            return coverUrl;
-        });
-
         CompletableFuture<FileResponse> secondFuture = CompletableFuture.supplyAsync(() -> {
             long start = System.currentTimeMillis();
             FileResponse fileResponse = fileService.upload(fileRequest);
             log.info("========== DefaultFileService 上传至远程图床耗时: {} ms============", (System.currentTimeMillis() - start));
             return fileResponse;
         });
-
-        String coverUrl = firstFuture.get();
 
         FileResponse fileResponse;
 
@@ -130,7 +115,34 @@ public class DefaultFileService {
                 attachment.setThumbnailUrl(THUMBNAIL_URL_MAP.get(fileRequest.getExtension()));
             } else {
                 if (attachment.getContentType().startsWith(FileTypeEnum.VIDEO.getCode())) {
-                    attachment.setThumbnailUrl(coverUrl);
+
+                    String coverBase64 = fileRequest.getCoverBase64();
+                    if (StringUtils.isNotBlank(coverBase64)) {
+                        // 解密
+                        Base64.Decoder decoder = Base64.getDecoder();
+
+                        coverBase64 = coverBase64.substring(coverBase64.indexOf(",", 1) + 1, coverBase64.length());
+                        byte[] data = decoder.decode(coverBase64);
+                        // 处理数据
+                        for (int i = 0; i < data.length; ++i) {
+                            if (data[i] < 0) {
+                                data[i] += 256;
+                            }
+                        }
+
+                        String filePath = this.configService.getConfigValue(ConfigEnum.LOCAL_FILE_PATH.getName());
+                        String localFilePath = StringUtils.isNotBlank(filePath) ? filePath  + File.separator : this.blogProperty.getAttachmentDir();
+                        String coverName = FilenameUtils.getBaseName(fileRequest.getOriginalName()) + "_" + RandomUtil.randomNumbers(6) + ".jpg";
+                        String coverPath = localFilePath + "/cover/" + coverName;
+                        File target = new File(coverPath);
+
+                        IOUtils.write(data, new FileOutputStream(target));
+
+                        String blogPage = this.configService.getConfigValue(ConfigEnum.HOME_PAGE.getName());
+                        String coverUrl = (StringUtils.isNotBlank(blogPage) ? blogPage : "http://" + IpUtil.getHostIp() + ":" + this.environment.getProperty("server.port")) + "/cover/" + coverName;
+                        attachment.setThumbnailUrl(coverUrl);
+                    }
+
                 } else {
                     attachment.setThumbnailUrl(attachment.getFileUrl());
                 }

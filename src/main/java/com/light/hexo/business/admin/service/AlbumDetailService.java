@@ -5,6 +5,7 @@ import com.light.hexo.business.portal.model.HexoPageInfo;
 import com.light.hexo.common.base.BaseService;
 import com.light.hexo.common.exception.GlobalException;
 
+import java.io.FileNotFoundException;
 import java.util.List;
 
 /**
@@ -41,7 +42,7 @@ public interface AlbumDetailService extends BaseService<AlbumDetail> {
      * @param albumDetail
      * @throws GlobalException
      */
-    void saveAlbumDetail(AlbumDetail albumDetail) throws GlobalException;
+    void saveAlbumDetail(AlbumDetail albumDetail);
 
     /**
      * 修改专辑详情

@@ -3,6 +3,7 @@ package com.light.hexo.business.admin.web.controller;
 import com.github.pagehelper.PageInfo;
 import com.light.hexo.business.admin.constant.HexoExceptionEnum;
 import com.light.hexo.business.admin.model.Album;
+import com.light.hexo.business.admin.model.AlbumDetail;
 import com.light.hexo.business.admin.service.AlbumDetailService;
 import com.light.hexo.business.admin.service.AlbumService;
 import com.light.hexo.common.base.BaseController;
@@ -25,6 +26,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileNotFoundException;
 import java.util.*;
 
 /**
@@ -137,7 +139,7 @@ public class AlbumController extends BaseController {
     @PostMapping("/uploadBatch.json")
     @ResponseBody
     @OperateLog(value = "上传专辑文件", actionType = ActionEnum.ADMIN_ADD)
-    public Result uploadBatch(@RequestParam(value = "file", required = false) MultipartFile[] files, Integer albumId) {
+    public Result uploadBatch(@RequestParam(value = "file", required = false) MultipartFile[] files, Integer albumId, String dataUrl) {
 
         if (files == null || files.length == 0) {
             ExceptionUtil.throwEx(GlobalExceptionEnum.ERROR_PARAM);
@@ -159,6 +161,7 @@ public class AlbumController extends BaseController {
             }
 
             FileRequest fileRequest = FileRequest.createRequest(file);
+            fileRequest.setCoverBase64(dataUrl);
             FileResponse fileResponse = this.defaultFileService.upload(fileRequest);
             if (fileResponse.isSuccess()) {
                 this.albumDetailService.saveAlbumDetail(albumId, fileResponse.getOriginalName(), fileResponse.getUrl(), fileResponse.getCoverUrl());

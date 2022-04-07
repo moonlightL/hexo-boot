@@ -38,6 +38,11 @@ public class AlbumDetailRequest extends BaseRequest<AlbumDetail> {
     private String url;
 
     /**
+     * 封面地址
+     */
+    private String coverUrl;
+
+    /**
      * 专辑 id
      */
     private Integer albumId;

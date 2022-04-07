@@ -42,6 +42,16 @@ public class FileRequest {
     private byte[] data;
 
     /**
+     * 文件流
+     */
+    private InputStream inputStream;
+
+    /**
+     * 封面（base64类型）
+     */
+    private String coverBase64;
+
+    /**
      * 文件类型
      */
     private String contentType;
@@ -50,11 +60,6 @@ public class FileRequest {
      * 文件大小
      */
     private Long fileSize;
-
-    /**
-     * 文件流
-     */
-    private InputStream inputStream;
 
     /**
      * 文件路径

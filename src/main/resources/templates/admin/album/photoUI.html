@@ -178,10 +178,8 @@
                         for (let key in albumDetail) {
                             if (key == "url") {
                                 $("#image-url").attr("src", albumDetail[key]);
-                                $("#" + key).val(albumDetail[key]);
-                            } else {
-                                $("#" + key).val(albumDetail[key]);
                             }
+                            $("#" + key).val(albumDetail[key]);
                         }
 
                         $.panelslider($('#leftPanel'));
@@ -231,9 +229,10 @@
                 thumbnailHeight:"120",
                 init: function () {
                     let myDropZone = this;
-                    $("#uploadBtn").off("click").on("click", function(e) {
+                    let $uploadBtn = $("#uploadBtn");
+                    $uploadBtn.off("click").on("click", function(e) {
                         e.preventDefault();
-                        $(this).prop("disabled", true);
+                        $uploadBtn.prop("disabled", true);
                         // 手动上传所有文件
                         myDropZone.processQueue();
                     });
@@ -245,6 +244,8 @@
 
                     this.on("error", function (data, message) {
                         console.error(message);
+                        $uploadBtn.prop("disabled", false);
+
                         if (typeof message == "string") {
                             $.hexo.modal.tip("上传失败: " + message, "error");
                         } else{
@@ -255,6 +256,8 @@
 
                     this.on("success", function (data, resp) {
                         console.log(resp);
+                        $uploadBtn.prop("disabled", false);
+
                         if (!resp.success) {
                             $.hexo.modal.tip("上传失败: " + resp.message, "error");
                             return;
