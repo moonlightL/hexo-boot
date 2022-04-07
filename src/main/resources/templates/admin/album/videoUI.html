@@ -104,7 +104,7 @@
                             <input type="hidden" name="albumId" id="albumId" th:value="${vo.id}">
                             <div class="form-group row">
                                 <div class="col-lg-12">
-                                    <img id="imageBox" src="" alt="" width="255" height="150">
+                                    <img id="imageBox" th:src="@{/admin/assets/custom/images/video.jpg}" alt="" width="255" height="150">
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -138,7 +138,7 @@
                             </div>
                             <div class="form-group row">
                                 <div class="col-lg-12">
-                                    <div style="color: #000">提示：首次保存视频生成封面，远程拉取资源时间较长，请耐心等待</div>
+                                    <div style="color: #000">提示：填写视频地址，再点击默认封面即可生成视频封面</div>
                                 </div>
                             </div>
                         </form>
@@ -169,6 +169,7 @@
                     let $saveForm = $("#saveForm");
                     $saveForm[0].reset();
                     $("#id").val("");
+                    $("#imageBox").attr("src", "/admin/assets/custom/images/video.jpg")
                     $.panelslider($('#leftPanel'));
                 } else if ($target.hasClass("hexo-upload")) {
                     let $uploadBody = $("#uploadBody");
@@ -230,7 +231,7 @@
                     callback: function (resp) {
                         let albumDetail = resp.data;
                         for (let key in albumDetail) {
-                            if (key == "url") {
+                            if (key == "coverUrl") {
                                 $("#imageBox").attr("src", albumDetail[key]);
                             }
                             $("#" + key).val(albumDetail[key]);
