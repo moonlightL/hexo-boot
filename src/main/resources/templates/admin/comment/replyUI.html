@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, initial-scale=1, shrink-to-fit=no">
     <div th:replace="~{admin/common :: common-link}"></div>
-    <link rel="stylesheet" th:href="@{'/admin/assets/custom/emoji/emoji.css'}">
+    <link rel="stylesheet" th:href="@{'/admin/assets/custom/hb-comment/extend/emoji.css'}">
     <style>
         .content {
             margin: 22px auto;
@@ -44,7 +44,7 @@
     </div>
 </div>
 <div th:replace="~{admin/common :: common-script}"></div>
-<script th:src="@{'/admin/assets/custom/emoji/emoji.js'}"></script>
+<script th:src="@{'/admin/assets/custom/hb-comment/extend/emoji.js'}"></script>
 <script type="text/javascript" th:inline="javascript">
     let originalContent = [[${vo.content}]];
     let baseUrl = "/admin/assets/custom";

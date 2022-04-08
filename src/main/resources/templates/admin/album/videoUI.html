@@ -134,11 +134,12 @@
                             <div class="form-group row">
                                 <div class="col-lg-12">
                                     <button type="button" class="btn btn-primary" id="submitBtn">提交</button>
+                                    <button type="button" class="btn btn-success" id="coverBtn">生成封面</button>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <div class="col-lg-12">
-                                    <div style="color: #000">提示：填写视频地址，再点击默认封面即可生成视频封面</div>
+                                    <div style="color: #000">提示：点击“生成封面”等待3秒即可</div>
                                 </div>
                             </div>
                         </form>
@@ -242,32 +243,44 @@
                 });
             });
 
-            $("#url").on("blur", function() {
-                let resourceUrl = $(this).val();
-
+            $("#coverBtn").on("click", function () {
+                let that = this;
+                let oldText = $(that).text();
+                let resourceUrl = $("#url").val();
                 let video = document.createElement('video');
                 video.setAttribute('crossOrigin', 'anonymous');
                 video.setAttribute('src', resourceUrl);
-                video.style.visibility = "hidden"
+                video.style.visibility = "hidden";
                 document.body.appendChild(video);
-
-                video.onloadeddata = function() {
-                    let scale = 1;
-                    let canvas = document.createElement("canvas");
-                    canvas.width = video.videoWidth * scale;
-                    canvas.height = video.videoHeight * scale;
-
-                    setTimeout(function() {
-                        canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-                        canvas.setAttribute("id", "canvas");
-                        let dataURL = canvas.toDataURL("image/png");
-                        document.getElementById('imageBox').setAttribute('src', dataURL);
-                        $("#coverUrl").val(dataURL);
-                        document.body.removeChild(video);
+                video.onplay = function() {
+                    video.pause();
+                    video.currentTime = 1;
+                    let second = 3;
+                    let timeInterval = setInterval(function() {
+                        $(that).text(oldText + "(" + second + "s)");
+                        if (second == 0) {
+                            let scale = 1;
+                            let canvas = document.createElement("canvas");
+                            canvas.width = video.videoWidth * scale;
+                            canvas.height = video.videoHeight * scale;
+                            canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+                            canvas.setAttribute("id", "canvas");
+                            let dataURL = canvas.toDataURL("image/png");
+                            document.getElementById('imageBox').setAttribute('src', dataURL);
+                            $("#coverUrl").val(dataURL);
+                            document.body.removeChild(video);
+                            clearInterval(timeInterval);
+                            $(that).text(oldText);
+                            return;
+                        }
+                        second --;
                     }, 1000)
                 };
-
+                video.onloadeddata = function() {
+                    video.play();
+                };
             });
+
 
             $document.on("click", ".remove-btn", function () {
                 let $target = $(this);

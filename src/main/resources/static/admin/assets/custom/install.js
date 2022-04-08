@@ -24,7 +24,8 @@
             },
             'confirm-password': {
                 required: true,
-                minlength: 6
+                minlength: 6,
+                equalTo: "#install-password"
             }
         },
         messages: {
@@ -38,7 +39,8 @@
             },
             'confirm-password': {
                 required: '请输入确认密码',
-                minlength: '密码长度至少6位数'
+                minlength: '密码长度至少6位数',
+                equalTo: "两次密码不一致"
             }
         },
         submitHandler: function (form) {

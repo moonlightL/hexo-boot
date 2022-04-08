@@ -50,15 +50,15 @@ public class InstallController {
 
     /**
      * 安装系统
-     * @param request
+     * @param installRequest
      * @return
      */
     @RequestMapping("/install.json")
     @ResponseBody
     @OperateLog(value = "安装博客系统", actionType = ActionEnum.INSTALL)
-    public Result install(@Validated(BaseRequest.Save.class) InstallRequest request, HttpServletRequest httpServletRequest) throws Exception{
+    public Result install(@Validated(BaseRequest.Save.class) InstallRequest installRequest, HttpServletRequest httpServletRequest) throws Exception{
         this.installService.installApplication(
-                request,
+                installRequest,
                 BrowserUtil.getOsName(httpServletRequest),
                 BrowserUtil.getBrowserName(httpServletRequest),
                 IpUtil.getIpAddr(httpServletRequest));

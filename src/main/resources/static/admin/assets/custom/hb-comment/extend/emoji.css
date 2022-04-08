@@ -1,0 +1,80 @@
+@-webkit-keyframes slideIn {
+    from { transform: translateY(-10%) }
+    to { transform: translateY(0) }
+}
+
+.emoji-container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.emoji-container .emoji_btn {
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.emoji-container .emoji_btn:hover {
+    color: #8fabbb;
+}
+
+.emoji-container .emoji-panel {
+    margin-top: 5px;
+    box-shadow: 0 1px 10px #aaa;
+    max-height: 16.5rem;
+    overflow: hidden;
+    animation-duration: .5s;
+    animation-name: slideIn;
+}
+
+.emoji-container .emoji-panel .emoji-ul {
+    height: 120px;
+    overflow: auto;
+    display: none;
+}
+
+.emoji-container .emoji-panel .emoji-ul.active {
+    display: block;
+}
+
+.emoji-container .emoji-panel li {
+    position: relative;
+    z-index: 2;
+    float: left;
+    width: 36px;
+    height: 36px;
+    padding: 4px;
+    margin-left: -1px;
+    margin-bottom: 2px;
+    border: 1px solid #e8e8e8;
+    cursor: pointer;
+    list-style-type: none;
+}
+
+.emoji-container .emoji-panel li:hover {
+    z-index: 3;
+    border-color: #eb7350;
+}
+
+.emoji-container .emoji-panel li img {
+    position: absolute;
+    top: 4px;
+    max-width: 30px;
+    max-height: 30px;
+}
+
+.emoji-container .emoji-panel .emoji-tab {
+    padding: .25rem .5rem;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.emoji-container .emoji-panel .emoji-tab:hover,
+.emoji-container .emoji-panel .emoji-tab.active {
+    background: #eee;
+}
+
+.emoji-container a.emoji-btn,
+.emoji-container a.emoji-btn:visited {
+    color:  #8fabbb;
+}

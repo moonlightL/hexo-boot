@@ -3,7 +3,6 @@ package com.light.hexo.business.admin.web.controller;
 import com.github.pagehelper.PageInfo;
 import com.light.hexo.business.admin.constant.HexoExceptionEnum;
 import com.light.hexo.business.admin.model.Album;
-import com.light.hexo.business.admin.model.AlbumDetail;
 import com.light.hexo.business.admin.service.AlbumDetailService;
 import com.light.hexo.business.admin.service.AlbumService;
 import com.light.hexo.common.base.BaseController;
@@ -196,13 +195,12 @@ public class AlbumController extends BaseController {
     /**
      * 详情页
      * @param id
-     * @param pageNum
      * @param resultMap
      * @return
      * @throws GlobalException
      */
     @GetMapping("/detailUI.html")
-    public String detailUI(Integer id, Integer pageNum, Map<String,Object> resultMap) throws GlobalException {
+    public String detailUI(Integer id, Map<String,Object> resultMap) throws GlobalException {
         Album album = this.albumService.findById(id);
         if (album == null) {
             ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_ALBUM_NOT_EXIST);

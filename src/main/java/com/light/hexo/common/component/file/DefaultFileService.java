@@ -119,18 +119,14 @@ public class DefaultFileService {
 
                     String coverBase64 = fileRequest.getCoverBase64();
                     if (StringUtils.isNotBlank(coverBase64)) {
-                        // 解密
                         Base64.Decoder decoder = Base64.getDecoder();
-
                         coverBase64 = coverBase64.substring(coverBase64.indexOf(",", 1) + 1);
                         byte[] data = decoder.decode(coverBase64);
-                        // 处理数据
                         for (int i = 0; i < data.length; ++i) {
                             if (data[i] < 0) {
                                 data[i] += 256;
                             }
                         }
-
                         String filePath = this.configService.getConfigValue(ConfigEnum.LOCAL_FILE_PATH.getName());
                         String localFilePath = StringUtils.isNotBlank(filePath) ? filePath  + File.separator : this.blogProperty.getAttachmentDir();
                         String coverName = FilenameUtils.getBaseName(fileRequest.getOriginalName()) + "_" + RandomUtil.randomNumbers(6) + ".jpg";

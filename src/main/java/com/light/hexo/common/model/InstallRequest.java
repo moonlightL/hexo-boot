@@ -15,7 +15,7 @@ import javax.validation.constraints.NotEmpty;
  */
 @Setter
 @Getter
-public class InstallRequest {
+public class InstallRequest extends BaseRequest<Object> {
 
     /**
      * 用户名

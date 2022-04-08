@@ -101,7 +101,7 @@
 </div>
 
 <div th:replace="~{admin/common :: common-script}"></div>
-<script th:src="@{'/admin/assets/custom/emoji/emoji.js'}"></script>
+<script th:src="@{'/admin/assets/custom/hb-comment/extend/emoji.js'}"></script>
 <script th:inline="javascript">
     let author = [[${#httpSession.getAttribute('currentUser')['nickname']}]];
     let homePage = [[${#servletContext.getAttribute('configMap')['home_page']}]];
