@@ -260,7 +260,21 @@ curl -L -o ~/.hexo-boot/application.yml --create-dirs https://gitee.com/moonligh
 
 [码云 Wiki](https://gitee.com/moonlightL/hexo-boot/wikis/%E8%87%AA%E5%AE%9A%E4%B9%89%E4%B8%BB%E9%A2%98?sort_id=3151185)
 
-## 六、更新日志
+## 六、问题反馈
+
+1.) 专辑列表中，手动录入方式保存视频时，点击“生成封面”没反应
+
+```
+出现跨域问题，需要再对应的图床中配置跨域来源。
+```
+
+2.）专辑列表中，保存视频时提示操作超时/报错
+
+```
+如果使用的是博客是3.4版本以及之前的版本，需要手动创建cover目录，即 mkdir -p ~/.hexo-boot/attachments/cover 。
+```
+
+## 七、更新日志
 
 2022-04-04 整合 COS（腾讯云）对象存储，优化文件上传代码
 
