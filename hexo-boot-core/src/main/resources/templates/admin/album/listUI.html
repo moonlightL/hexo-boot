@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, initial-scale=1, shrink-to-fit=no">
+    <div th:replace="~{admin/common :: common-link}"></div>
+    <style>
+        img {
+            object-fit: cover;
+        }
+        .original-name {
+            padding: 0 20px;
+            overflow: hidden;
+            text-overflow:ellipsis;
+            white-space: nowrap;
+        }
+        .visit-type {
+            position: absolute;
+            left: 26px;
+            top: 16px;
+            display: inline-block;
+            z-index: 100;
+            background: #3f9ce8;
+            color: #fff;
+            padding: 2px 4px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+<!-- Page Content -->
+<div class="content animated fadeIn">
+    <h2 class="content-heading" id="toolbar">
+        <button type="button" class="btn btn-sm btn-secondary float-right hexo-query" data-query-area="queryArea"><i class="fa fa-search text-success mr-5"></i> 查询</button>
+        <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-refresh"><i class="fa fa-refresh mr-5"></i> 刷新</button>
+        <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-add" title="创建专辑" data-width="640" data-height="520"><i class="fa fa-plus-square text-primary mr-5"></i> 创建</button>
+        <i class="fa fa fa-files-o"></i> 专辑列表 <span id="totalNum"></span>
+    </h2>
+    <div class="block block-fx-shadow hide" id="queryArea">
+        <div class="block-content block-content-full">
+            <form class="form-inline" method="post" id="queryForm">
+                <label class="sr-only" for="name">专辑名称</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <button type="button" class="btn btn-secondary">专辑名称</button>
+                    </div>
+                    <input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="name" name="name">
+                </div>
+                <button type="button" class="btn btn-alt-primary mr-5" id="queryBtn">提交</button>
+                <button type="reset" class="btn btn-alt-warning">重置</button>
+            </form>
+        </div>
+    </div>
+    <div class="block block-fx-shadow">
+        <div class="block-content">
+            <div class="row items-push js-gallery" id="attachmentBody"></div>
+            <hr>
+            <nav aria-label="Page navigation" id="pageBar"></nav>
+        </div>
+    </div>
+</div>
+<!-- END Page Content -->
+<div th:replace="~{admin/common :: common-script}"></div>
+<script th:inline="javascript">
+    let album = [[${vo}]];
+
+    window.AlbumManager = {
+        params: {},
+        init: function() {
+
+            $("#toolbar").find("button").on("click", function(e) {
+                let $target = $(this);
+                if ($target.hasClass("hexo-add")) {
+                    $.hexo.modal.window($target[0].title, BASE_URL + "/addUI.html", $target);
+                } else if ($target.hasClass("hexo-refresh")) {
+                    AlbumManager.query();
+                } else if ($target.hasClass("hexo-query")) {
+                    let $area = $("#" + $target.data("queryArea"));
+                    if ($area.hasClass("hide")) {
+                        $area.slideDown("slow");
+                        $area.removeClass("hide");
+                    } else {
+                        $area.addClass("hide");
+                        $area.slideUp("slow");
+                    }
+                }
+            });
+
+            $(document).on("click", ".func-btn", function () {
+                let $target = $(this);
+                if ($target.hasClass("open-btn")) {
+                    $.hexo.modal._window("专辑详情页", BASE_URL + "/detailUI.html?id=" + $target.data("id"), 800, 540, true);
+                } else if ($target.hasClass("edit-btn")) {
+                    $.hexo.modal._window("专辑页面", BASE_URL + "/editUI/" + $target.data("id") +".html", 640, 520, false);
+                } else if ($target.hasClass("remove-btn")) {
+                    $.hexo.action.remove($target.data("id"), function (resp) {
+                        $.hexo.modal.tip(resp.message, resp.success ? "success" : "error", function() {
+                            AlbumManager.query();
+                        });
+                    });
+                }
+            });
+
+            // 绑定条件查询事件
+            $("#queryBtn").on("click", function () {
+                let formParamArr = $("#queryForm").serializeArray();
+                let parameter = {};
+                for (let i = 0, len = formParamArr.length; i < len; i++) {
+                    parameter[formParamArr[i].name] = formParamArr[i].value;
+                }
+                AlbumManager.params = $.extend({}, AlbumManager.params, parameter);
+                AlbumManager.query();
+            });
+
+            AlbumManager.query();
+        },
+        query: function () {
+            $.hexo.action.sendRequest({
+                url: BASE_URL + "/list.json",
+                params: AlbumManager.params,
+                callback: function (resp) {
+                    AlbumManager.renderTable(resp.data);
+                    $("#totalNum").html("(" + resp.data.total + ")");
+                }
+            });
+        },
+        renderTable: function(data) {
+            AlbumManager.renderBody(data);
+            AlbumManager.renderPageBar(data);
+        },
+        renderBody: function (data) {
+            let albumList = data.list;
+            let contentArr = [];
+            if (albumList && albumList.length > 0) {
+                for (let i = 0; i < albumList.length; i++) {
+                    let obj = albumList[i];
+                    contentArr.push('<div class="col-md-3 col-lg-3 col-xl-3 animated fadeIn">');
+                    contentArr.push('<span class="visit-type">' + (obj.visitType == 1 ? "公开" : "私密") + '</span>');
+                    contentArr.push('<div class="options-container fx-overlay-slide-down" >');
+                    contentArr.push('<img class="img-fluid options-item" src="' + obj.coverUrl + '" alt="" style="width: 331px;height: 200px; border: 1px solid #eee;display: block">');
+                    contentArr.push('<div class="options-overlay bg-black-op-75">');
+                    contentArr.push('<div class="options-overlay-content">');
+                    contentArr.push('<h4 class="h6 text-white-op mb-15">描述: ' + obj.remark +'</h4>');
+                    contentArr.push(' <a class="btn btn-sm btn-rounded btn-noborder btn-alt-success min-width-75 func-btn open-btn" href="javascript:void(0)" data-id="' + obj.id + '"><i class="fa fa-envelope-open-o"></i> 打开</a>');
+                    contentArr.push(' <a class="btn btn-sm btn-rounded btn-noborder btn-alt-warning min-width-75 func-btn edit-btn" href="javascript:void(0)" data-id="' + obj.id + '"><i class="fa fa-pencil-square-o"></i> 修改</a>');
+                    contentArr.push(' <a class="btn btn-sm btn-rounded btn-noborder btn-alt-danger min-width-75 func-btn remove-btn" href="javascript:void(0)" data-id="' + obj.id + '"><i class="fa fa-trash"></i> 删除</a>');
+                    contentArr.push('</div>');
+                    contentArr.push('</div>');
+                    contentArr.push('</div>');
+                    contentArr.push('<br>');
+                    if (obj.detailType == 1) {
+                        contentArr.push('<div class="text-center"> <i class="fa fa-picture-o"></i> 专辑名称： ' + obj.name + '</div>');
+                    } else {
+                        contentArr.push('<div class="text-center"> <i class="fa fa-video-camera"></i>  专辑名称： ' + obj.name + '</div>');
+                    }
+                    contentArr.push('</div>');
+                }
+            } else {
+                contentArr.push('<div class="col-md-12 col-lg-12 col-xl-12 animated fadeIn text-center"><h5>暂无专辑</h5></div>');
+            }
+
+            $("#attachmentBody").html(contentArr.join(""));
+
+        },
+        renderPageBar: function (data) {
+            let $pageBar = $("#pageBar");
+            if (!data.list || data.list.length === 0) {
+                $pageBar.html("");
+                return;
+            }
+            let pageArr = [];
+            pageArr.push('<ul class="pagination justify-content-end mr-20">');
+            pageArr.push('<li class="page-item">');
+            pageArr.push('<a class="page-link" href="javascript:void(0)" aria-label="Previous" data-num="'+ data.prePage +'">');
+            pageArr.push('<span aria-hidden="true">');
+            pageArr.push('<i class="fa fa-angle-left"></i>');
+            pageArr.push('</span>');
+            pageArr.push('<span class="sr-only">Previous</span>');
+            pageArr.push('</a>');
+            pageArr.push('</li>');
+            let currentNum = data.pageNum;
+            let pageNumArr = data.navigatepageNums;
+            for (let i = 0; i < pageNumArr.length; i ++) {
+                let pageNum = pageNumArr[i];
+                let activeClass = (currentNum === pageNum ? 'active' : '');
+                pageArr.push('<li class="page-item ' + activeClass + '">');
+                pageArr.push('<a class="page-link" href="javascript:void(0)" data-num="' + pageNum + '">' + pageNum + '</a>');
+                pageArr.push('</li>');
+            }
+            pageArr.push('<li class="page-item">');
+            pageArr.push('<a class="page-link" href="javascript:void(0)" aria-label="Next" data-num="'+ data.nextPage +'">');
+            pageArr.push('<span aria-hidden="true">');
+            pageArr.push('<i class="fa fa-angle-right"></i>');
+            pageArr.push('</span>');
+            pageArr.push('<span class="sr-only">Next</span>');
+            pageArr.push('</a>');
+            pageArr.push('</li>');
+            pageArr.push('</ul>');
+
+            $pageBar.html(pageArr.join("")).find("a").off("click").on("click", function (e) {
+                let num = $(e.target).data("num");
+                if (!num || num < 1 ) {
+                    console.warn("=====当前列表不能翻页====");
+                    return;
+                }
+
+                AlbumManager.params = $.extend({}, AlbumManager.params, {"pageNum": num});
+                AlbumManager.query();
+            });
+        }
+    };
+
+    AlbumManager.init();
+
+</script>
+</body>
+</html>

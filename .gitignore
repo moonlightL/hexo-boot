@@ -21,9 +21,9 @@ target/
 *.iws
 *.iml
 *.ipr
-/src/main/resources/templates/theme/Grace/
-/src/main/resources/templates/theme/Pure/
-/src/main/resources/public/ads.txt
+!**/src/main/resources/templates/theme/Grace/
+!**/src/main/resources/templates/theme/Pure/
+!**/src/main/resources/public/ads.txt
 
 ### NetBeans ###
 /nbproject/private/

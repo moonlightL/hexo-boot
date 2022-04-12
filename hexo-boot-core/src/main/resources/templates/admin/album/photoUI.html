@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, initial-scale=1, shrink-to-fit=no">
+    <div th:replace="~{admin/common :: common-link}"></div>
+    <link th:href="@{'/admin/assets/js/plugins/dropzonejs/dist/min/dropzone.min.css'}" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/dropzonejs/dist/min/basic.min.css'}">
+    <style>
+        img {
+            object-fit: cover;
+        }
+        .original-name {
+            padding: 0 20px;
+            overflow: hidden;
+            text-overflow:ellipsis;
+            white-space: nowrap;
+        }
+        .hide {
+            display: none;
+        }
+        .panel {
+            display: none;
+            width: 320px;
+            padding: 20px;
+            color: #000;
+            background-color: #fff;
+            box-shadow: rgb(216 221 229) 0px 10px 14px;
+            overflow: auto;
+        }
+    </style>
+</head>
+<body>
+<!-- Page Content -->
+<div class="content animated fadeIn">
+    <h2 class="content-heading" id="toolbar">
+        <button type="button" class="btn btn-sm btn-secondary float-right hexo-remove" data-query-area="queryArea"><i class="fa fa-trash text-danger mr-5"></i> 全部删除</button>
+        <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-refresh"><i class="fa fa-refresh mr-5"></i> 刷新</button>
+        <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-upload" title="上传文件"><i class="fa fa-upload text-primary mr-5"></i> 上传图片</button>
+        <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-add" title="上传文件"><i class="fa fa-pencil text-primary mr-5"></i> 手动录入</button>
+        <i class="fa fa fa-picture-o"></i> 专辑名：【[[${vo.name}]]】 <span id="totalNum"></span>
+    </h2>
+
+    <div class="block block-fx-shadow">
+        <div class="block-content hide" id="uploadBody">
+            <div class="row justify-content-center py-20">
+                <div class="col-xl-12">
+                    <div class="form-group row" id="uploadContainer"></div>
+                    <div class="form-group row">
+                        <div class="col-lg-4">注意： 每次上传支持最多10个图片上传</div>
+                        <div class="col-lg-8 text-right">
+                            <button type="button" class="btn btn-primary" id="uploadBtn">上传</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="block-fx-shadow">
+        <div class="block-content">
+            <div class="row items-push js-gallery" id="detailBody"></div>
+            <hr>
+            <nav aria-label="Page navigation" id="pageBar"></nav>
+        </div>
+        <div id="leftPanel" class="panel">
+            <div class="block-content">
+                <div class="row justify-content-center py-20">
+                    <div class="col-xl-12 col-xs-12">
+                        <form id="saveForm" class="js-validation-bootstrap" method="post">
+                            <input type="hidden" name="id" id="id">
+                            <input type="hidden" name="albumId" id="albumId" th:value="${vo.id}">
+                            <div class="form-group row">
+                                <div class="col-lg-12">
+                                    <img id="imageBox" src="" alt="" width="255" height="150">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-4 col-form-label" for="url">地址 <span class="text-danger">*</span></label>
+                                <div class="col-lg-8">
+                                    <input type="text" class="form-control" id="url" name="url" placeholder="地址">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-4 col-form-label" for="name">名称 <span class="text-danger">*</span></label>
+                                <div class="col-lg-8">
+                                    <input type="text" class="form-control" id="name" name="name" placeholder="名称">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-4 col-form-label" for="sort">排序 </label>
+                                <div class="col-lg-8">
+                                    <input type="text" class="form-control" id="sort" name="sort" placeholder="排序">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-4 col-form-label" for="remark">备注 </label>
+                                <div class="col-lg-8">
+                                    <textarea id="remark" name="remark" class="form-control" aria-label="With textarea" style="resize: none; height: 80px;" placeholder="备注"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-lg-12">
+                                    <button type="button" class="btn btn-primary" id="submitBtn">提交</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END Page Content -->
+<div th:replace="~{admin/common :: common-script}"></div>
+<script th:src="@{'/admin/assets/js/plugins/dropzonejs/dist/min/dropzone.min.js'}"></script>
+<script th:src="@{'/admin/assets/js/plugins/jquery-panelslider/jquery.panelslider.min.js'}"></script>
+<script th:inline="javascript">
+    let album = [[${vo}]];
+    Dropzone.autoDiscover = false;
+
+    window.AlbumManager = {
+        params: {},
+        init: function() {
+            AlbumManager.initUploadEvent();
+
+            $("#toolbar").find("button").on("click", function(e) {
+                let $target = $(this);
+                if ($target.hasClass("hexo-add")) {
+                    let $saveForm = $("#saveForm");
+                    $saveForm[0].reset();
+                    $("#id").val("");
+                    $("#image-url").attr("src", "");
+                    $.panelslider($('#leftPanel'));
+                } else if ($target.hasClass("hexo-upload")) {
+                    let $uploadBody = $("#uploadBody");
+                    if ($uploadBody.hasClass("hide")) {
+                        $uploadBody.slideDown("slow");
+                        $uploadBody.removeClass("hide");
+                    } else {
+                        $uploadBody.addClass("hide");
+                        $uploadBody.slideUp("slow");
+                    }
+
+                } else if ($target.hasClass("hexo-refresh")) {
+                    AlbumManager.query();
+                } else if ($target.hasClass("hexo-remove")) {
+                    AlbumManager.removeAll();
+                }
+            });
+
+            $("#submitBtn").on("click", function () {
+                let $that = $(this);
+                let id = $("#id").val();
+                $that.prop("disabled", true);
+                $.hexo.action.sendRequest({
+                    url: BASE_URL + (id == "" ? "/saveAlbumDetail.json" : "/editAlbumDetail.json"),
+                    params: $("#saveForm").serialize(),
+                    callback: function (resp) {
+                        $that.prop("disabled", false);
+                        $.hexo.modal.tip("保存成功", "success", function () {
+                            window.AlbumManager.query();
+                        });
+                    }
+                });
+            });
+
+            $(document).on("click", ".edit-btn", function () {
+                let $target = $(this);
+                AlbumManager.params = $.extend({}, AlbumManager.params, {"detailId": $target.data("id")});
+
+                $.hexo.action.sendRequest({
+                    url: BASE_URL + "/getAlbumDetail.json",
+                    params: AlbumManager.params,
+                    callback: function (resp) {
+                        let albumDetail = resp.data;
+                        for (let key in albumDetail) {
+                            if (key == "url") {
+                                $("#image-url").attr("src", albumDetail[key]);
+                            }
+                            $("#" + key).val(albumDetail[key]);
+                        }
+
+                        $.panelslider($('#leftPanel'));
+                    }
+                });
+            });
+
+            $("#url").on("blur", function() {
+                let resourceUrl = $(this).val();
+                $("#imageBox").attr("src", resourceUrl);
+            });
+
+            // 绑定删除事件
+            $(document).on("click", ".remove-btn", function () {
+                let $target = $(this);
+                AlbumManager.params = $.extend({}, AlbumManager.params, {"detailId": $target.data("id")});
+                $.hexo.modal.confirm("确定要删除该文件吗?", function() {
+                    $.hexo.action.sendRequest({
+                        url: BASE_URL + "/removeDetail.json",
+                        params: AlbumManager.params,
+                        callback: function () {
+                            window.AlbumManager.query();
+                        }
+                    });
+                });
+            });
+
+            AlbumManager.query();
+        },
+        initUploadEvent: function() {
+            $("#uploadContainer").html('<span class="dropzone" id="dropz" style="border: 1px solid #D4DAE3;margin-left: 5px;margin-right: 5px;width: 100%;border-radius: 5px;"></span>');
+            $("#dropz").dropzone({
+                method: "POST",
+                url: "/admin/album/uploadBatch.json?albumId=" + album.id, //上传地址
+                addRemoveLinks: true,
+                maxFiles: 10,// 一次性上传的文件数量上限
+                maxFilesize: 20, // 单个上传文件大小，单位：MB
+                previewsContainer: null,
+                uploadMultiple: true, // 允许批量上传
+                parallelUploads: 10, // 每次上传的文件数量，默认值 2
+                autoProcessQueue: false, // 是否自动上传
+                acceptedFiles: ".jpg, .jpeg, .png, .gif, .webp",
+                dictDefaultMessage: '+ <br>(仅支持上传的文件类型*.jpg,*.jpeg,*.png, *.gif,*.webp，最大上传20MB)',
+                dictMaxFilesExceeded: "每次最多只能上传10个文件",
+                dictResponseError: '文件上传失败',
+                dictInvalidFileType: "仅支持上传的文件类型*.jpg,*.jpeg,*.png, *.gif,*.webp",
+                dictFallbackMessage: "浏览器不支持",
+                dictFileTooBig: "最大支持20MB文件上传",
+                dictRemoveFile: "删除",
+                dictUploadCanceled: "取消",
+                thumbnailWidth:"120",
+                thumbnailHeight:"120",
+                init: function () {
+                    let myDropZone = this;
+                    let $uploadBtn = $("#uploadBtn");
+                    $uploadBtn.off("click").on("click", function(e) {
+                        e.preventDefault();
+                        $uploadBtn.prop("disabled", true);
+                        // 手动上传所有文件
+                        myDropZone.processQueue();
+                    });
+
+                    //当添加图片后的事件，上传按钮恢复可用
+                    this.on("addedfile", function () {
+                        $("#uploadBtn").prop("disabled", false);
+                    });
+
+                    this.on("error", function (data, message) {
+                        console.error(message);
+                        $uploadBtn.prop("disabled", false);
+
+                        if (typeof message == "string") {
+                            $.hexo.modal.tip("上传失败: " + message, "error");
+                        } else{
+                            $.hexo.modal.tip("上传失败: " + message.error, "error");
+                        }
+                        window.AlbumManager.initUploadEvent();
+                    });
+
+                    this.on("success", function (data, resp) {
+                        console.log(resp);
+                        $uploadBtn.prop("disabled", false);
+
+                        if (!resp.success) {
+                            $.hexo.modal.tip("上传失败: " + resp.message, "error");
+                            return;
+                        }
+
+                        if (resp.data.extraMsg) {
+                            $.hexo.modal.tip("提示: " + resp.data.extraMsg, "info");
+                        }
+
+                        window.AlbumManager.initUploadEvent();
+                        window.AlbumManager.query();
+                    });
+                }
+            });
+        },
+        removeAll: function() {
+            AlbumManager.params = $.extend({}, AlbumManager.params, {"albumId": album.id});
+            $.hexo.modal.confirm("确定要删除全部的文件吗?", function() {
+                $.hexo.action.sendRequest({
+                    url: BASE_URL + "/removeAllDetail.json",
+                    params: AlbumManager.params,
+                    callback: function () {
+                        window.AlbumManager.query();
+                    }
+                });
+            });
+        },
+        query: function() {
+            AlbumManager.params = $.extend({}, AlbumManager.params, {"id": album.id});
+            $.hexo.action.sendRequest({
+                url: BASE_URL + "/detailList.json",
+                params: AlbumManager.params,
+                callback: function (resp) {
+                    AlbumManager.renderTable(resp.data);
+                    $("#totalNum").html("(共" + resp.data.total + "张)");
+                }
+            });
+        },
+        renderTable: function(data) {
+            AlbumManager.renderBody(data);
+            AlbumManager.renderPageBar(data);
+        },
+        renderBody: function (data) {
+            let albumList = data.list;
+            let contentArr = [];
+            if (albumList && albumList.length > 0) {
+                for (let i = 0; i < albumList.length; i++) {
+                    let obj = albumList[i];
+                    contentArr.push('<div class="col-md-3 col-lg-3 col-xl-3 animated fadeIn">');
+                    contentArr.push('<div class="options-container fx-item-zoom-in fx-overlay-slide-down">');
+                    contentArr.push('<img class="img-fluid options-item img-thumb" src="' + obj.url + '" style="width: 331px;height: 203px; display: block">');
+                    contentArr.push('<div class="options-overlay bg-black-op-75">');
+                    contentArr.push('<div class="options-overlay-content">');
+                    contentArr.push('<h4 class="h5 text-white mb-5" style="text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">名称: ' + obj.name + '</h4>');
+                    contentArr.push('<h4 class="h6 text-white-op mb-15">备注: ' + obj.remark + '</h4>');
+                    contentArr.push('<a class="btn btn-sm btn-rounded btn-noborder btn-alt-primary min-width-75 img-lightbox edit-btn" href="javascript:void(0)" data-id="' + obj.id + '"><i class="fa fa-pencil-square-o"></i> 编辑</a>');
+                    contentArr.push('&nbsp;<a class="btn btn-sm btn-rounded btn-noborder btn-alt-danger min-width-75 remove-btn" href="javascript:void(0)" data-id="' + obj.id + '"><i class="fa fa-trash"></i> 删除</a>');
+                    contentArr.push('</div></div></div></div>');
+                }
+            } else {
+                contentArr.push('<div class="col-md-12 col-lg-12 col-xl-12 animated fadeIn text-center"><h5>暂无内容</h5></div>');
+            }
+
+            $("#detailBody").html(contentArr.join(""));
+
+        },
+        renderPageBar: function (data) {
+            let $pageBar = $("#pageBar");
+            if (!data.list || data.list.length === 0) {
+                $pageBar.html("");
+                return;
+            }
+            let pageArr = [];
+            pageArr.push('<ul class="pagination justify-content-end mr-20">');
+            pageArr.push('<li class="page-item">');
+            pageArr.push('<a class="page-link" href="javascript:void(0)" aria-label="Previous" data-num="'+ data.prePage +'">');
+            pageArr.push('<span aria-hidden="true">');
+            pageArr.push('<i class="fa fa-angle-left"></i>');
+            pageArr.push('</span>');
+            pageArr.push('<span class="sr-only">Previous</span>');
+            pageArr.push('</a>');
+            pageArr.push('</li>');
+            let currentNum = data.pageNum;
+            let pageNumArr = data.navigatepageNums;
+            for (let i = 0; i < pageNumArr.length; i ++) {
+                let pageNum = pageNumArr[i];
+                let activeClass = (currentNum === pageNum ? 'active' : '');
+                pageArr.push('<li class="page-item ' + activeClass + '">');
+                pageArr.push('<a class="page-link" href="javascript:void(0)" data-num="' + pageNum + '">' + pageNum + '</a>');
+                pageArr.push('</li>');
+            }
+            pageArr.push('<li class="page-item">');
+            pageArr.push('<a class="page-link" href="javascript:void(0)" aria-label="Next" data-num="'+ data.nextPage +'">');
+            pageArr.push('<span aria-hidden="true">');
+            pageArr.push('<i class="fa fa-angle-right"></i>');
+            pageArr.push('</span>');
+            pageArr.push('<span class="sr-only">Next</span>');
+            pageArr.push('</a>');
+            pageArr.push('</li>');
+            pageArr.push('</ul>');
+
+            $pageBar.html(pageArr.join("")).find("a").off("click").on("click", function (e) {
+                let num = $(e.target).data("num");
+                if (!num || num < 1 ) {
+                    console.warn("=====当前列表不能翻页====");
+                    return;
+                }
+
+                AlbumManager.params = $.extend({}, AlbumManager.params, {"pageNum": num});
+                AlbumManager.query();
+            });
+        }
+    };
+
+    AlbumManager.init();
+
+</script>
+</body>
+</html>

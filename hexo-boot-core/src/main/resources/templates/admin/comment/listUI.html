@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, initial-scale=1, shrink-to-fit=no">
+    <div th:replace="~{admin/common :: common-link}"></div>
+    <style>
+        .table td, .table th {
+            padding: 10px;
+            vertical-align: inherit;
+            border-top: 1px solid #e4e7ed;
+        }
+        .red {
+            color: red;
+        }
+        .g-btn {
+            display: none;
+            color: #33373b;
+        }
+        tr:hover td div .g-btn {
+            display: inline-block;
+        }
+
+        blockquote.original-content {
+            padding: 8px 8px 8px 24px;
+            background-color: #faebbc;
+            border-top: 1px solid #e1cc89;
+            border-bottom: 1px solid #e1cc89;
+            margin: 5px 0;
+            background-image: url(/admin/assets/custom/images/openquote.gif);
+            background-position: top left;
+            background-repeat: no-repeat;
+        }
+
+        blockquote.original-content span {
+            display: block;
+            background-image: url(/admin/assets/custom/images/closequote.gif);
+            background-repeat: no-repeat;
+            background-position: bottom right;
+        }
+
+        .img-avatar {
+            border-radius: 5px;
+            border: 1px solid #e1e1e1;
+        }
+    </style>
+</head>
+<body>
+<div class="content animated fadeIn">
+    <h2 class="content-heading" id="toolbar">
+        <button type="button" class="btn btn-sm btn-secondary float-right hexo-query" data-query-area="queryArea"><i class="fa fa-search text-success mr-5"></i> 查询</button>
+        <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-refresh"><i class="fa fa-refresh mr-5"></i> 刷新</button>
+        <i class="fa fa fa-comments-o"></i> 评论列表 <span id="totalNum"></span>
+    </h2>
+    <div class="block block-fx-shadow hide" id="queryArea">
+        <div class="block-content block-content-full">
+            <form class="form-inline" method="post" id="queryForm">
+                <ul class="nav nav-pills">
+                    <li>
+                        <label class="sr-only" for="ipAddress">ip 地址</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <button type="button" class="btn btn-secondary">ip 地址</button>
+                            </div>
+                            <input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="ipAddress" name="ipAddress">
+                        </div>
+                    </li>
+                    <li>
+                        <label class="sr-only" for="delete">状态</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <button type="button" class="btn btn-secondary">状态</button>
+                            </div>
+                            <select class="form-control mb-2 mr-sm-2 mb-sm-0" id="delete" name="delete">
+                                <option value="">全部</option>
+                                <option value="false">未删除</option>
+                                <option value="true">已删除</option>
+                            </select>
+                        </div>
+                    </li>
+                    <li>
+                        <button type="button" class="btn btn-alt-primary mr-5" id="queryBtn">提交</button>
+                        <button type="reset" class="btn btn-alt-warning">重置</button>
+                    </li>
+                </ul>
+            </form>
+        </div>
+    </div>
+    <div class="block block-fx-shadow">
+        <div class="block-content">
+            <!-- Discussion -->
+            <table class="table table-borderless" id="listTable">
+                <tbody></tbody>
+            </table>
+            <!-- END Discussion -->
+            <hr>
+            <nav aria-label="Page navigation" id="pageBar"></nav>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{admin/common :: common-script}"></div>
+<script th:src="@{'/admin/assets/custom/hb-comment/extend/emoji.js'}"></script>
+<script th:inline="javascript">
+    let author = [[${#httpSession.getAttribute('currentUser')['nickname']}]];
+    let homePage = [[${#servletContext.getAttribute('configMap')['home_page']}]];
+    let root = "/admin/assets/custom/";
+    window.CommentManager = {
+        params: {},
+        init: function () {
+            $("#toolbar").find("button").on("click", function(e) {
+                let $target = $(this);
+                if ($target.hasClass("hexo-add")) {
+                    $.hexo.modal.window($target[0].title, BASE_URL + "/addUI.html", $target);
+                } else if ($target.hasClass("hexo-refresh")) {
+                    CommentManager.query();
+                } else if ($target.hasClass("hexo-query")) {
+                    let $area = $("#" + $target.data("queryArea"));
+                    if ($area.hasClass("hide")) {
+                        $area.slideDown("slow");
+                        $area.removeClass("hide");
+                    } else {
+                        $area.addClass("hide");
+                        $area.slideUp("slow");
+                    }
+                }
+            });
+
+            // 绑定回复/删除事件
+            $(document).on("click", ".g-btn", function () {
+                let $target = $(this);
+                if ($target.hasClass("blacklist-btn")) {
+                    $.hexo.modal.confirm("是否将该评论的ip地址加入黑名单?", function () {
+                        $.hexo.action.sendRequest({
+                            url: BASE_URL + "/addBlacklist.json",
+                            params: {id: $target.data("id")},
+                            callback: function (resp) {
+                                $.hexo.modal.tip("操作成功", "success", function() {
+                                    CommentManager.query();
+                                });
+                            }
+                        });
+                    })
+                } else if ($target.hasClass("remove-btn")) {
+                    $.hexo.action.remove($target.data("id"), function () {
+                        $.hexo.modal.tip("刪除成功", "success", function() {
+                            CommentManager.query();
+                        });
+                    });
+                } else if ($target.hasClass("reply-btn")) {
+                    $.hexo.modal.window("评论回复", BASE_URL + "/replyUI.html?id=" + $target.data("id"), $target);
+                }
+            });
+
+            // 绑定条件查询事件
+            $("#queryBtn").on("click", function () {
+                let formParamArr = $("#queryForm").serializeArray();
+                let parameter = {};
+                for (let i = 0, len = formParamArr.length; i < len; i++) {
+                    parameter[formParamArr[i].name] = formParamArr[i].value;
+                }
+                CommentManager.params = $.extend({}, CommentManager.params, parameter);
+                CommentManager.query();
+            });
+
+            CommentManager.query();
+            
+        },
+        query: function () {
+            $.hexo.action.sendRequest({
+                url: BASE_URL + "/list.json",
+                params: CommentManager.params || {"delete": ""},
+                callback: function (resp) {
+                    CommentManager.renderTable(resp.data);
+                    $("#totalNum").html("(" + resp.data.total + ")");
+                }
+            });
+        },
+        renderTable: function(data) {
+            CommentManager.renderBody(data);
+            CommentManager.renderPageBar(data);
+        },
+        renderBody: function (data) {
+            let commentList = data.list;
+            let contentArr = [];
+            if (commentList && commentList.length > 0) {
+                for (let i = 0; i < commentList.length; i++) {
+                    let obj = commentList[i];
+                    contentArr.push('<tr class="table-active">');
+                    contentArr.push('<td class="d-none d-sm-table-cell">');
+                    contentArr.push('</td>');
+                    contentArr.push('<td class="font-size-sm text-muted">');
+                    contentArr.push('评论于 <em>' + obj.createTime + '</em> ');
+                    contentArr.push('<span class="pull-right">评论页面: <a href="' + homePage + obj.page + '" target="_blank">' + decodeURIComponent(obj.page) + '</a><span>');
+                    contentArr.push('</td>');
+                    contentArr.push('</tr>');
+                    contentArr.push('<tr>');
+                    contentArr.push('<td class="d-none d-sm-table-cell text-center" style="width: 200px;">');
+                    contentArr.push('<div class="mb-10">');
+                    contentArr.push('<a href="javascript:void(0)">');
+                    contentArr.push('<img class="img-avatar" src="' + obj.avatar + '" alt="">');
+                    contentArr.push('</a>');
+                    contentArr.push('</div>');
+                    contentArr.push('<small>');
+                    contentArr.push('<a class="btn-block-option" href="javascript:void(0)" data-toggle="scroll-to">');
+                    if (obj.nickname === author) {
+                        contentArr.push('<b>博主: ' + obj.nickname + '</b>');
+                    } else {
+                        contentArr.push('<b>用户: ' + obj.nickname + '</b>');
+                    }
+                    contentArr.push('</a>');
+                    contentArr.push('</small>');
+                    contentArr.push('</td>');
+                    contentArr.push('<td>');
+                    if (obj.delete === true) {
+                        contentArr.push('<del style="margin: 10px auto;">' + $.formatContent(obj.content, root) + '</del>');
+                    } else {
+                        contentArr.push('<p style="margin: 10px auto;">' + $.formatContent(obj.content, root) + '</p>');
+                    }
+                    if (obj.parent) {
+                        contentArr.push('<blockquote class="original-content"><span>' + obj.parent.nickname + ': <br>' + $.formatContent(obj.parent.content, root) + '</span></blockquote>');
+                    }
+                    contentArr.push('<hr>');
+                    let cl = "";
+                    let browser = "";
+                    if (obj.browser.indexOf("Chrome") > -1) {
+                        cl = "fa fa-chrome";
+                        browser = "谷歌";
+                    } else if (obj.browser.indexOf("Firefox") > -1) {
+                        cl = "fa fa-firefox";
+                        browser = "火狐";
+                    } else if (obj.browser.indexOf("Opera") > -1) {
+                        cl = "fa fa-opera";
+                        browser = "欧朋";
+                    } else if (obj.browser.indexOf("Safari") > -1) {
+                        cl = "fa fa-safari";
+                        browser = "苹果";
+                    }
+                    let ipHtml = "";
+                    if (obj.blacklist === true) {
+                        ipHtml = '<del>' + obj.ipAddress + '</del>';
+                    } else {
+                        ipHtml = obj.ipAddress;
+                    }
+                    contentArr.push('<div class="font-size-sm">来自 <a href="http://www.ip138.com" target="_blank">' + ipHtml + '</a> 的网友通过 <i class="' + cl + '"></i> (' + browser + '浏览器)评论');
+                    contentArr.push('<span class="font-size-sm pull-right">');
+                    if (obj.blacklist === false) {
+                        contentArr.push(' <a class="g-btn blacklist-btn" href="javascript:void(0)" data-id="' + obj.id + '"><i class="fa fa-lock"></i> 加入黑名单</a> ');
+                    }
+                    if (obj.delete === false) {
+                        contentArr.push(' <a class="g-btn remove-btn" href="javascript:void(0)" data-id="' + obj.id + '"><i class="fa fa-trash"></i> 删除</a> <a class="g-btn reply-btn" href="javascript:void(0)"  data-id="' + obj.id + '" title="留言回复" data-height="520"><i class="fa fa-reply"></i> 回复</a>');
+                    } else {
+                        contentArr.push('&nbsp;<a href="javascript:void(0)" class="font-size-sm pull-right red">已删除</a>');
+                    }
+                    contentArr.push('</span>');
+                    contentArr.push('</div>');
+                    contentArr.push('</td>');
+                    contentArr.push('</tr>');
+                }
+            } else {
+                contentArr.push('<tr class="table-active">');
+                contentArr.push('<td class="d-none d-sm-table-cell" colspan="2">');
+                contentArr.push('<h5 align="center">暂无评论</h5>');
+                contentArr.push('<td>');
+                contentArr.push('</tr>');
+            }
+            $("#listTable").find("tbody").html(contentArr.join(""));
+        },
+        renderPageBar: function (data) {
+            let $pageBar = $("#pageBar");
+            if (!data.list || data.list.length === 0) {
+                $pageBar.html("");
+                return;
+            }
+            let pageArr = [];
+            pageArr.push('<ul class="pagination justify-content-end mr-20">');
+            pageArr.push('<li class="page-item">');
+            pageArr.push('<a class="page-link" href="javascript:void(0)" aria-label="Previous" data-num="'+ data.prePage +'">');
+            pageArr.push('<span aria-hidden="true">');
+            pageArr.push('<i class="fa fa-angle-left"></i>');
+            pageArr.push('</span>');
+            pageArr.push('<span class="sr-only">Previous</span>');
+            pageArr.push('</a>');
+            pageArr.push('</li>');
+            let currentNum = data.pageNum;
+            let pageNumArr = data.navigatepageNums;
+            for (let i = 0; i < pageNumArr.length; i ++) {
+                let pageNum = pageNumArr[i];
+                let activeClass = (currentNum === pageNum ? 'active' : '');
+                pageArr.push('<li class="page-item ' + activeClass + '">');
+                pageArr.push('<a class="page-link" href="javascript:void(0)" data-num="' + pageNum + '">' + pageNum + '</a>');
+                pageArr.push('</li>');
+            }
+            pageArr.push('<li class="page-item">');
+            pageArr.push('<a class="page-link" href="javascript:void(0)" aria-label="Next" data-num="'+ data.nextPage +'">');
+            pageArr.push('<span aria-hidden="true">');
+            pageArr.push('<i class="fa fa-angle-right"></i>');
+            pageArr.push('</span>');
+            pageArr.push('<span class="sr-only">Next</span>');
+            pageArr.push('</a>');
+            pageArr.push('</li>');
+            pageArr.push('</ul>');
+
+            $pageBar.html(pageArr.join("")).find("a").off("click").on("click", function (e) {
+                let num = $(e.target).data("num");
+                if (!num || num < 1 ) {
+                    console.warn("=====当前列表不能翻页====");
+                    return;
+                }
+
+                CommentManager.params = $.extend({}, CommentManager.params, {"pageNum": num});
+                CommentManager.query();
+            });
+        }
+    };
+
+    CommentManager.init();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, initial-scale=1, shrink-to-fit=no">
+    <div th:replace="~{admin/common :: common-link}"></div>
+    <link th:href="@{'/admin/assets/js/plugins/dropzonejs/dist/min/dropzone.min.css'}" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/dropzonejs/dist/min/basic.min.css'}">
+    <style>
+        #visitCodeRow {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="content">
+    <div class="block block-fx-shadow">
+        <div class="block-content">
+            <div class="row justify-content-center py-20">
+                <div class="col-xl-6">
+                    <form id="saveForm" th:action="@{${baseUrl} + '/add.json'}" class="js-validation-bootstrap" method="post">
+                        <div class="form-group row">
+                            <label class="col-lg-4 col-form-label" for="name">专辑名称 <span class="text-danger">*</span></label>
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="name" name="name" placeholder="专辑名称" data-bv-notempty="true" data-bv-notempty-message="名称不能为空">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-4 col-form-label" for="detailType">详情类型 <span class="text-danger">*</span></label>
+                            <div class="col-lg-8">
+                                <select class="js-select2 form-control" id="detailType" name="detailType" style="width: 100%;" data-placeholder="请选择详情类型" >
+                                    <option value="" disabled>请选择详情类型</option>
+                                    <option value="1">图片</option>
+                                    <option value="2">视频</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-4 col-form-label" for="visitType">访问类型 <span class="text-danger">*</span></label>
+                            <div class="col-lg-8">
+                                <select class="js-select2 form-control" id="visitType" name="visitType" style="width: 100%;" data-placeholder="请选择访问类型" >
+                                    <option value="" disabled>请选择访问类型</option>
+                                    <option value="1">公开</option>
+                                    <option value="0">私密</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row" id="visitCodeRow">
+                            <label class="col-lg-4 col-form-label" for="visitCode">访问密码 <span class="text-danger">*</span></label>
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="visitCode" name="visitCode" placeholder="访问密码">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-4 col-form-label" for="remark">描述 </label>
+                            <div class="col-lg-8">
+                                <textarea id="remark" name="remark" class="form-control" aria-label="With textarea" style="resize: none" placeholder="描述"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-4 col-form-label" for="coverUrl">封面 </label>
+                            <div class="col-lg-8">
+                                <input type="text" id="coverUrl" name="coverUrl" class="form-control" style="display: inline-block;width: 80%">
+                                <span id="btnContainer"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-lg-8 text-center">
+                                <button type="reset" class="btn btn-secondary">重置</button>
+                                <button type="submit" class="btn btn-primary" id="submitBtn">提交</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div th:replace="~{admin/common :: common-script}"></div>
+<script th:src="@{'/admin/assets/js/plugins/dropzonejs/dist/min/dropzone.min.js'}"></script>
+<script type="text/javascript" th:inline="javascript">
+
+    let AlbumManager = {
+        init: function () {
+            AlbumManager.bindEvent();
+            AlbumManager.initUploadEvent();
+        },
+        bindEvent: function () {
+            $("#submitBtn").on("click", function () {
+                $.hexo.action.save("saveForm", null, function() {
+                    window.parent.AlbumManager.query();
+                    window.parent.$.hexo.modal.close();
+                });
+            });
+        },
+        initUploadEvent: function () {
+            $("#btnContainer").html('<button id="uploadBtn" type="button" class="btn btn-primary" style="width: 19%">上传</button>');
+            Dropzone.autoDiscover = false;
+            $("#uploadBtn").dropzone({
+                method: "POST",
+                url: "/admin/file/upload.json",
+                addRemoveLinks: true,
+                maxFiles: 1,
+                maxFilesize: 5,
+                uploadMultiple: false,
+                previewsContainer: false,
+                acceptedFiles: ".jpg, .jpeg,.png",
+                dictFileTooBig: "最大支持5MB文件上传",
+                init: function () {
+                    this.on("error", function (data, message) {
+                        console.error(message);
+                        if (typeof message == "string") {
+                            $.hexo.modal.tip("上传失败: " + message, "error");
+                        } else{
+                            $.hexo.modal.tip("上传失败: " + message.error, "error");
+                        }
+                        AlbumManager.initUploadEvent();
+                    });
+
+                    this.on("success", function (data, resp) {
+                        if (resp.success) {
+                            $("#coverUrl").val(resp.data);
+                            $.hexo.modal.tip("封面上传成功");
+                        }
+                    });
+                }
+            });
+        }
+    };
+
+    AlbumManager.init();
+
+    $("#visitType").on("change", function() {
+       let val = $(this).val();
+       if (val == 0) {
+           $("#visitCodeRow").show();
+       } else {
+           $("#visitCodeRow").hide();
+       }
+    });
+</script>
+</body>
+</html>

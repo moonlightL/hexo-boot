@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>hexo-boot</artifactId>
+        <groupId>com.light</groupId>
+        <version>1.0.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>hexo-boot-core</artifactId>
+
+    <!-- 打 war 包时，放开下边的注释 -->
+    <!--    <packaging>war</packaging>-->
+    <name>hexo-boot</name>
+    <description>Hexo Boot 博客系统</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.light</groupId>
+            <artifactId>hexo-boot-mapper</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.light</groupId>
+            <artifactId>hexo-boot-common</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+    </dependencies>
+
+
+    <build>
+        <finalName>ROOT</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, initial-scale=1, shrink-to-fit=no">
+    <div th:replace="~{admin/common :: common-link}"></div>
+    <link th:href="@{'/admin/assets/js/plugins/dropzonejs/dist/min/dropzone.min.css'}" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/dropzonejs/dist/min/basic.min.css'}">
+</head>
+<body>
+
+<div class="content">
+    <div class="block block-fx-shadow">
+
+        <div class="block-content">
+            <div class="row justify-content-center py-20">
+                <div class="col-xl-6">
+                    <div class="form-group row">
+                        <span class="dropzone" id="dropz" style="border: 1px solid #D4DAE3;margin-left: 5px;margin-right: 5px;width: 100%;border-radius: 5px;"></span>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-lg-8 text-center">
+                            <button type="button" class="btn btn-primary" id="uploadBtn">解压安装</button>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-lg-12 col-md-12">
+                            <div>
+                                <b>获取主题: </b><a href="https://github.com/moonlightL" target="_blank">GitHub资源</a>&nbsp;&nbsp;
+                                <a href="https://gitee.com/moonlightL" target="_blank">码云资源（推荐）</a>&nbsp;&nbsp;
+                            </div>
+                            <div>
+                                <b>友情提示: 下载主题源码文件（zip)，直接上传至此处等待2~3秒即可完成</b>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="~{admin/common :: common-script}"></div>
+<script th:src="@{'/admin/assets/js/plugins/dropzonejs/dist/min/dropzone.min.js'}"></script>
+<script type="text/javascript" th:inline="javascript">
+
+    Dropzone.autoDiscover = false;
+    $(function(){
+        $("#dropz").dropzone({
+            method: "POST",
+            url: "/admin/theme/unzipTheme.json", //上传地址
+            addRemoveLinks: true,
+            maxFiles: 1,// 一次性上传的文件数量上限
+            maxFilesize: 20, // 单个上传文件大小，单位：MB
+            previewsContainer: null,
+            uploadMultiple: false, // 允许批量上传
+            parallelUploads: 1, // 每次上传的文件数量，默认值 2
+            autoProcessQueue: false, // 是否自动上传
+            acceptedFiles: ".zip",
+            dictDefaultMessage: '+<br>(上传主题源码zip)',
+            dictMaxFilesExceeded: "每次最多只能上传1个文件",
+            dictResponseError: '文件上传失败',
+            dictInvalidFileType: "支持上传主题源码 .zip 文件",
+            dictFallbackMessage: "浏览器不支持",
+            dictFileTooBig: "最大支持20MB文件上传",
+            dictRemoveFile: "删除",
+            dictUploadCanceled: "取消",
+            thumbnailWidth:"120",
+            thumbnailHeight:"120",
+            init: function () {
+                let myDropZone = this;
+                $("#uploadBtn").on("click", function(e) {
+                    e.preventDefault();
+                    // 手动上传
+                    myDropZone.processQueue();
+                });
+
+                //当添加图片后的事件，上传按钮恢复可用
+                this.on("addedfile", function () {
+                    $("#uploadBtn").removeAttr("disabled");
+                });
+
+                this.on("error", function (data, message) {
+                    console.error(message);
+                    if (typeof message == "string") {
+                        $.hexo.modal.tip("上传失败: " + message, "error");
+                    } else{
+                        $.hexo.modal.tip("上传失败: " + message.error, "error");
+                    }
+                });
+
+                this.on("success", function (data, resp) {
+
+                    if (!resp.success) {
+                        $.hexo.modal.tip(resp.message, "error");
+                        return;
+                    }
+
+                    let themeName = resp.data;
+
+                    let num = 0;
+                    let timer = setInterval(function() {
+                        $.ajax({
+                            type: "POST",
+                            url: BASE_URL + "/checkThemeName.json",
+                            data: {"themeName": themeName},
+                            dataType: "JSON",
+                            success: function (resp) {
+                                num++;
+                                if (resp.data === true) {
+                                    window.parent.ThemeManager.query();
+                                    clearInterval(timer);
+                                }
+
+                                // 10 秒内不能成功保存主题配置，视为失败
+                                if (num >= 10) {
+                                    clearInterval(timer);
+                                }
+                            }
+                        });
+                    }, 1000);
+                });
+            }
+        });
+
+    });
+</script>
+</body>
+</html>

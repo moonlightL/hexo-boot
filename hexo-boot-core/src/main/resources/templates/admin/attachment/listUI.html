@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, initial-scale=1, shrink-to-fit=no">
+    <div th:replace="~{admin/common :: common-link}"></div>
+    <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/magnific-popup/magnific-popup.css'}">
+    <style>
+        img {
+            object-fit: cover;
+        }
+        .original-name {
+            padding: 0 20px;
+            overflow: hidden;
+            text-overflow:ellipsis;
+            white-space: nowrap;
+        }
+        .content-type {
+            position: absolute;
+            left: 26px;
+            top: 16px;
+            display: inline-block;
+            z-index: 100;
+            background: #3f9ce8;
+            color: #fff;
+            padding: 2px 4px;
+            font-size: 12px;
+        }
+        .panel {
+            display: none;
+            width: 400px;
+            padding: 20px;
+            color: #000;
+            background-color: #fff;
+            box-shadow: rgb(216 221 229) 0px 10px 14px;
+            overflow: auto;
+        }
+        .video-mask {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background: rgba(0, 0, 0, .7);
+            z-index: 999;
+        }
+        .video-self {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 620px;
+            height: 420px;
+        }
+    </style>
+</head>
+<body>
+<!-- Page Content -->
+<div class="content animated fadeIn" id="content">
+    <h2 class="content-heading" id="toolbar">
+        <button type="button" class="btn btn-sm btn-secondary float-right hexo-query" data-query-area="queryArea"><i class="fa fa-search text-success mr-5"></i> 查询</button>
+        <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-refresh"><i class="fa fa-refresh mr-5"></i> 刷新</button>
+        <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-add" title="上传附件" data-width="720" data-height="340"><i class="fa fa-plus-square text-primary mr-5"></i> 上传</button>
+        <i class="fa fa fa-files-o"></i> 附件列表 <span id="totalNum"></span>
+    </h2>
+    <div class="block block-fx-shadow hide" id="queryArea">
+        <div class="block-content block-content-full">
+            <form class="form-inline" method="post" id="queryForm">
+                <label class="sr-only" for="filename">附件名称</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <button type="button" class="btn btn-secondary">附件名称</button>
+                    </div>
+                    <input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="filename" name="filename">
+                </div>
+                <label class="sr-only" for="position">存储位置</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <button type="button" class="btn btn-secondary">存储位置</button>
+                    </div>
+                    <select class="form-control mb-2 mr-sm-2 mb-sm-0" id="position" name="position">
+                        <option value="">全部</option>
+                        <option value="1">本地</option>
+                        <option value="2">七牛云</option>
+                        <option value="3">OSS</option>
+                        <option value="4">COS</option>
+                    </select>
+                </div>
+                <label class="sr-only" for="fileType">文件类型</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <button type="button" class="btn btn-secondary">文件类型</button>
+                    </div>
+                    <select class="form-control mb-2 mr-sm-2 mb-sm-0" id="fileType" name="fileType">
+                        <option value="">全部</option>
+                        <option value="1">图片</option>
+                        <option value="2">视频</option>
+                        <option value="3">其他</option>
+                    </select>
+                </div>
+                <button type="button" class="btn btn-alt-primary mr-5" id="queryBtn">提交</button>
+                <button type="reset" class="btn btn-alt-warning">重置</button>
+            </form>
+        </div>
+    </div>
+    <div class="block block-fx-shadow">
+        <div class="block-content">
+            <div class="row items-push js-gallery" id="attachmentBody"></div>
+            <hr>
+            <nav aria-label="Page navigation" id="pageBar"></nav>
+        </div>
+    </div>
+    <div id="leftPanel" class="panel">
+        <div class="block-content">
+            <div class="row justify-content-center py-20">
+                <div class="col-xl-12" >
+                    <div class="form-group row">
+                        <div class="col-md-12 col-xs-12">
+                            <span id="attachmentShow"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3 col-xs-2">文件名</div>
+                        <div class="col-md-9 col-xs-10">
+                            <span id="detail-filename" style="display: inline-block; width:180px; text-overflow: ellipsis;overflow: hidden;white-space: nowrap;"></span>&nbsp;<button class="btn" title="复制" data-clipboard-target="#detail-filename"><i class="fa fa-clone"></i></button>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3 col-xs-2">原始名称</div>
+                        <div class="col-md-9 col-xs-10">
+                            <span id="detail-originalName" style="display: inline-block; width:180px; text-overflow: ellipsis;overflow: hidden;white-space: nowrap;"></span>&nbsp;<button class="btn" title="复制" data-clipboard-target="#detail-originalName"><i class="fa fa-clone"></i></button>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3 col-xs-2">本地路径</div>
+                        <div class="col-md-9 col-xs-10">
+                            <span id="detail-filePath" style="display: inline-block; width:180px; text-overflow: ellipsis;overflow: hidden;white-space: nowrap;"></span>&nbsp;<button class="btn" title="复制" data-clipboard-target="#detail-filePath"><i class="fa fa-clone"></i></button>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3 col-xs-2">访问链接</div>
+                        <div class="col-md-9 col-xs-10">
+                            <span id="detail-fileUrl" style="display: inline-block; width:180px; text-overflow: ellipsis;overflow: hidden;white-space: nowrap;"></span>&nbsp;<button class="btn" title="复制" data-clipboard-target="#detail-fileUrl"><i class="fa fa-clone"></i></button>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3 col-xs-2">内容类型</div>
+                        <div class="col-md-9 col-xs-10">
+                            <span id="detail-contentType"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3 col-xs-2">文件类型</div>
+                        <div class="col-md-9 col-xs-10">
+                            <span id="detail-fileType"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3 col-xs-2">文件大小</div>
+                        <div class="col-md-9 col-xs-10">
+                            <span id="detail-fileSizeInfo"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3 col-xs-2">存储位置</div>
+                        <div class="col-md-9 col-xs-10">
+                            <span id="detail-position"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3 col-xs-2">上传时间</div>
+                        <div class="col-md-9 col-xs-10">
+                            <span id="detail-uploadTime"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END Page Content -->
+<div th:replace="~{admin/common :: common-script}"></div>
+<script th:src="@{'/admin/assets/js/plugins/magnific-popup/jquery.magnific-popup.min.js'}"></script>
+<script th:src="@{'/admin/assets/js/plugins/jquery-panelslider/jquery.panelslider.min.js'}"></script>
+<script th:src="@{'/admin/assets/js/plugins/clipboard/clipboard.min.js'}"></script>
+<script th:inline="javascript">
+
+    $("#attachmentBody").addClass('js-gallery-enabled').magnificPopup({
+        delegate: 'a.img-lightbox',
+        type: 'image',
+        gallery: {enabled: true}
+    });
+
+    window.AttachmentManager = {
+        params: {},
+        init: function() {
+
+            $("#toolbar").find("button").on("click", function(e) {
+                let $target = $(this);
+                if ($target.hasClass("hexo-add")) {
+                    $.hexo.modal.window($target[0].title, BASE_URL + "/addUI.html", $target);
+                } else if ($target.hasClass("hexo-refresh")) {
+                    AttachmentManager.query();
+                } else if ($target.hasClass("hexo-query")) {
+                    let $area = $("#" + $target.data("queryArea"));
+                    if ($area.hasClass("hide")) {
+                        $area.slideDown("slow");
+                        $area.removeClass("hide");
+                    } else {
+                        $area.addClass("hide");
+                        $area.slideUp("slow");
+                    }
+                }
+            });
+
+            let $document = $(document);
+            $document.on("click", ".play-btn", function () {
+                let $target = $(this);
+                let url = $target.data("url");
+                let $videoMask = $("<div class='video-mask'></div>");
+                $("#content").append($videoMask);
+                let $video = $("<video src='" + url + "' controls='controls' class='video-self' autoplay='autoplay'></video>");
+                $videoMask.append($video);
+
+                $videoMask.on("click", function () {
+                    $video.remove();
+                    $(this).remove();
+                });
+
+            });
+
+            $document.on("click", ".detail-btn", function () {
+                let $target = $(this);
+
+                $.hexo.action.sendRequest({
+                    url: BASE_URL + "/detail.json?id=" + $target.data("id"),
+                    params: AttachmentManager.params,
+                    callback: function (resp) {
+                        let attachment = resp.data;
+                        let positionType = ["占位", "本地", "七牛云", "OSS", "COS"];
+                        for (let key in attachment) {
+                            if (key == "fileUrl") {
+                                if (attachment.fileType == 1) {
+                                    $("#attachmentShow").html('<img src="' + attachment[key] + '" width="320" height="150" alt="">');
+                                } else if (attachment.fileType == 2) {
+                                    $("#attachmentShow").html('<video src="' + attachment[key] + '" controls="controls" width="320" height="150" alt="">');
+                                }
+                                $("#detail-" + key).html(attachment[key]).attr("title", attachment[key]);
+                            } else if (key == "position") {
+                                let position = attachment[key];
+                                $("#detail-" + key).html(positionType[position]);
+                            } else if (key == "fileType") {
+                                let fileType = attachment[key];
+                                $("#detail-" + key).html(fileType == 1 ? "图片" : (fileType == 2 ? "视频" : "其他"));
+                            } else {
+                                $("#detail-" + key).html(attachment[key]).attr("title", attachment[key]);
+                            }
+                        }
+
+                        $.panelslider($('#leftPanel'));
+                    }
+                });
+            });
+
+            $document.on("click", ".remove-btn", function () {
+                let $target = $(this);
+                $.hexo.action.remove($target.data("id"), function () {
+                    $.hexo.modal.tip("刪除成功", "success", function() {
+                        AttachmentManager.query();
+                    });
+                });
+            });
+
+            $document.on("click", ".download-btn", function () {
+                let $target = $(this);
+                let url = BASE_URL + "/download.html?id=" + $target.data("id");
+                $.hexo.action.download(url, "POST");
+            });
+
+            // 绑定条件查询事件
+            $("#queryBtn").on("click", function () {
+                let formParamArr = $("#queryForm").serializeArray();
+                let parameter = {};
+                for (let i = 0, len = formParamArr.length; i < len; i++) {
+                    parameter[formParamArr[i].name] = formParamArr[i].value;
+                }
+                AttachmentManager.params = $.extend({}, AttachmentManager.params, parameter);
+                AttachmentManager.query();
+            });
+
+            let clipboard = new ClipboardJS('.btn');
+            clipboard.on('success', function(e) {
+                layer.msg("复制成功");
+                e.clearSelection();
+            });
+
+            AttachmentManager.query();
+        },
+        query: function () {
+            $.hexo.action.sendRequest({
+                url: BASE_URL + "/list.json",
+                params: AttachmentManager.params,
+                callback: function (resp) {
+                    AttachmentManager.renderTable(resp.data);
+                    $("#totalNum").html("(" + resp.data.total + ")");
+                }
+            });
+        },
+        renderTable: function(data) {
+            AttachmentManager.renderBody(data);
+            AttachmentManager.renderPageBar(data);
+        },
+        renderBody: function (data) {
+            let attachmentList = data.list;
+            let contentArr = [];
+            let positionType = ["占位", "本地", "七牛云", "OSS", "COS"];
+            if (attachmentList && attachmentList.length > 0) {
+                for (let i = 0; i < attachmentList.length; i++) {
+                    let obj = attachmentList[i];
+                    contentArr.push('<div class="col-md-3 col-lg-3 col-xl-3 animated fadeIn">');
+                    contentArr.push('<span class="content-type">' + (obj.contentType.indexOf("image") > -1 ? "图片" : "视频") + '</span>');
+                    contentArr.push('<div class="options-container  fx-overlay-slide-down">');
+                    contentArr.push('<img class="img-fluid options-item" src="' + obj.thumbnailUrl + '" alt="" style="width: 331px;height: 200px; border: 1px solid #eee;display: block">');
+                    contentArr.push('<div class="options-overlay bg-black-op-75">');
+                    contentArr.push('<div class="options-overlay-content">');
+                    contentArr.push('<h4 class="h6 text-white mb-15 original-name">原始名: ' + obj.originalName +'</h4>');
+                    contentArr.push('<h4 class="h6 text-white-op mb-15">文件大小: ' + obj.fileSizeInfo +'</h4>');
+                    contentArr.push('<h4 class="h6 text-white-op mb-15">存储位置: ' + positionType[obj.position] +'</h4>');
+                    if (obj.contentType.indexOf("image") > -1) {
+                        contentArr.push(' <a class="btn btn-sm btn-rounded btn-noborder btn-alt-primary min-width-75 img-lightbox" target="_blank" href="' + obj.thumbnailUrl + '"><i class="fa fa-search-plus"></i> 浏览</a>');
+                    } else if (obj.contentType.indexOf("video") > -1) {
+                        contentArr.push('<a class="btn btn-sm btn-rounded btn-noborder btn-alt-primary min-width-75 play-btn" href="javascript:void(0)" data-url="' + obj.fileUrl + '"><i class="fa fa-play-circle-o"></i> 播放</a>');
+                    }
+                    contentArr.push('</div>');
+                    contentArr.push('</div>');
+                    contentArr.push('</div><br><div class="text-center">');
+                    contentArr.push('<a class="btn btn-sm btn-rounded btn-noborder btn-alt-success min-width-75 detail-btn" href="javascript:void(0)" data-id="' + obj.id + '"><i class="fa fa-envelope-open-o"></i> 详情</a>');
+                    contentArr.push(' <a class="btn btn-sm btn-rounded btn-noborder btn-alt-danger min-width-75 remove-btn" href="javascript:void(0)" data-id="' + obj.id + '"><i class="fa fa-trash"></i> 删除</a>');
+                    contentArr.push(' <a class="btn btn-sm btn-rounded btn-noborder btn-alt-info min-width-75 download-btn" href="javascript:void(0)" data-id="' + obj.id + '"><i class="fa fa-download"></i> 下载</a>');
+                    contentArr.push('</div></div></div>');
+                }
+            } else {
+                contentArr.push('<div class="col-md-12 col-lg-12 col-xl-12 animated fadeIn text-center"><h5>暂无附件</h5></div>');
+            }
+
+            $("#attachmentBody").html(contentArr.join(""));
+
+        },
+        renderPageBar: function (data) {
+            let $pageBar = $("#pageBar");
+            if (!data.list || data.list.length === 0) {
+                $pageBar.html("");
+                return;
+            }
+            let pageArr = [];
+            pageArr.push('<ul class="pagination justify-content-end mr-20">');
+            pageArr.push('<li class="page-item">');
+            pageArr.push('<a class="page-link" href="javascript:void(0)" aria-label="Previous" data-num="'+ data.prePage +'">');
+            pageArr.push('<span aria-hidden="true">');
+            pageArr.push('<i class="fa fa-angle-left"></i>');
+            pageArr.push('</span>');
+            pageArr.push('<span class="sr-only">Previous</span>');
+            pageArr.push('</a>');
+            pageArr.push('</li>');
+            let currentNum = data.pageNum;
+            let pageNumArr = data.navigatepageNums;
+            for (let i = 0; i < pageNumArr.length; i ++) {
+                let pageNum = pageNumArr[i];
+                let activeClass = (currentNum === pageNum ? 'active' : '');
+                pageArr.push('<li class="page-item ' + activeClass + '">');
+                pageArr.push('<a class="page-link" href="javascript:void(0)" data-num="' + pageNum + '">' + pageNum + '</a>');
+                pageArr.push('</li>');
+            }
+            pageArr.push('<li class="page-item">');
+            pageArr.push('<a class="page-link" href="javascript:void(0)" aria-label="Next" data-num="'+ data.nextPage +'">');
+            pageArr.push('<span aria-hidden="true">');
+            pageArr.push('<i class="fa fa-angle-right"></i>');
+            pageArr.push('</span>');
+            pageArr.push('<span class="sr-only">Next</span>');
+            pageArr.push('</a>');
+            pageArr.push('</li>');
+            pageArr.push('</ul>');
+
+            $pageBar.html(pageArr.join("")).find("a").off("click").on("click", function (e) {
+                let num = $(e.target).data("num");
+                if (!num || num < 1 ) {
+                    console.warn("=====当前列表不能翻页====");
+                    return;
+                }
+
+                AttachmentManager.params = $.extend({}, AttachmentManager.params, {"pageNum": num});
+                AttachmentManager.query();
+            });
+        }
+    };
+
+    AttachmentManager.init();
+
+</script>
+</body>
+</html>

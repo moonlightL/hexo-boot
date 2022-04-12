@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, initial-scale=1, shrink-to-fit=no">
+    <div th:replace="~{admin/common :: common-link}"></div>
+    <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/editor.md/css/editormd.min.css'}">
+    <style>
+        .editorArea {
+            display: inline-block;
+            width: calc(100% - 320px);
+            height: 100%;
+        }
+        .optionArea {
+            float: right;
+            display: inline-block;
+            width: 300px;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+<div class="content">
+    <div class="block block-fx-shadow">
+        <div class="block-content">
+            <div class="row justify-content-center py-20">
+                <div class="col-xl-12">
+                    <form id="saveForm" th:action="@{${baseUrl} + '/edit.json'}" th:object="${vo}">
+                        <input type="hidden" name="id" th:field="*{id}" />
+                        <input id="content" type="hidden" name="content" />
+                        <div class="editorArea">
+                            <div id="contentEditor"></div>
+                        </div>
+                        <div class="optionArea">
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label" for="name">名称</label>
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control" id="name" name="name"  placeholder="名称 *" data-bv-notempty="true" data-bv-notempty-message="名称不能为空" th:field="*{name}">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label" for="link">链接</label>
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control" id="link" name="link" placeholder="链接 *" th:field="*{link}" th:readonly="${vo.navType == 1 ? 'readonly':'false'}">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label" for="code">编码</label>
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control" id="code" name="code" placeholder="编码 *" th:field="*{code}">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label" for="icon">图标</label>
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control" id="icon" name="icon" placeholder="图标" th:field="*{icon}">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label" for="cover">封面</label>
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control" id="cover" name="cover" placeholder="封面" th:field="*{cover}">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label" for="sort">排序</label>
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control" id="sort" name="sort" placeholder="排序 *" data-bv-notempty="true" data-bv-notempty-message="排序不能为空" th:field="*{sort}">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label" for="parentId">父导航</label>
+                                <div class="col-md-9">
+                                    <select class="custom-select" id="parentId" name="parentId" th:field="*{parentId}">
+                                        <option value="0">父导航</option>
+                                        <option th:each="nav:${navList}" th:value="${nav.id}" th:text="${nav.name}"></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label" for="state">状态</label>
+                                <div class="col-md-9">
+                                    <select class="custom-select" id="state" name="state" th:field="*{state}">
+                                        <option value="" disabled selected>是否可用</option>
+                                        <option value="1">是</option>
+                                        <option value="0">否</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <button type="submit" class="btn btn-primary" id="submitBtn">保存</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    注意：默认类型的导航链接禁止修改
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div th:replace="~{admin/common :: common-script}"></div>
+<script th:src="@{'/admin/assets/js/plugins/editor.md/editormd.min.js'}"></script>
+<script type="text/javascript" th:inline="javascript">
+    let vo = [[${vo}]];
+    $(function(){
+        $("#submitBtn").on("click", function () {
+            $("#content").val(MyEditor.getMarkdown());
+            $.hexo.action.save("saveForm");
+        });
+
+        let MyEditor = editormd("contentEditor", {
+            width   : "100%",
+            height  :  $(window.parent).height(),
+            syncScrolling : "single",
+            path    : "/admin/assets/js/plugins/editor.md/lib/",
+            placeholder: "写点内容吧~~",
+            toolbarIcons : function() {
+                return ["undo","redo","bold","del","italic","quote","ucwords","uppercase","lowercase","h1","h2","h3","h4","h5","h6","list-ul","list-ol","hr","link","reference-link","image","code","preformatted-text","code-block","table","datetime","pagebreak","watch","unwatch","preview","clear","search"]
+            },
+            codeFold : true,
+            imageUpload : true,
+            imageFormats : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+            imageUploadURL : "/admin/file/mdUploadFile.json",
+            onload: function () {
+                $("#contentEditor").height($(window.parent).height() - 170);
+                MyEditor.setMarkdown(vo.content);
+            }
+        });
+
+    });
+</script>
+</body>
+</html>

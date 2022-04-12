@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" layout:decorate="~{theme/default/layout}">
+
+<head>
+    <meta property="og:title" th:content="${'专辑详情 | ' + #servletContext.getAttribute('configMap')['blog_name']}" />
+    <title>专辑详情 | [[${#servletContext.getAttribute('configMap')['blog_name']}]]</title>
+</head>
+
+<body>
+    <div id="wrap" class="content" layout:fragment="content">
+    <!-- 图片 -->
+    <div class="image-banner" style="color: #fff">
+        <div class="image-content" th:if="${#strings.startsWith(currentNav.cover,'http') == true}"><img th:data-original="@{${currentNav.cover}}" class="lazyload"></div>
+        <div class="image-content" th:if="${#strings.startsWith(currentNav.cover,'http') == false}"><img th:data-original="@{${prefix} + '/source/images/album.png'}" class="lazyload"></div>
+        <div class="descr">
+            <a data-pjax th:href="@{/}">首页  /  </a>
+            <a data-pjax th:href="@{'/albums/'}"> 专辑  /  </a>
+            <a href="javascript:void(0)">专辑详情</a>
+        </div>
+        <div class="title">【[[${album.name}]]】专辑</div>
+    </div>
+
+    <div class="ml-content">
+        <div class="ml-content-body">
+            <div class="row" th:if="${album.detailType == 1}">
+                <div class="col-sm-6 col-md-3" th:each="detail,iterStat: ${pageInfo.data}">
+                    <div class="album-detail-item animate-box" data-animate-effect="fadeIn">
+                        <a class="fancybox" th:href="@{${detail.url}}" data-fancybox="gallery">
+                            <img th:data-original="@{${detail.url}}" class="lazyload">
+                            <div class="mask"><i class="fa fa-search-plus"></i></div>
+                        </a>
+                        <div class="name" th:text="${detail.name}" th:title="${detail.name}"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" th:if="${album.detailType == 2}">
+                <div class="col-sm-12 col-md-4" th:each="detail,iterStat: ${pageInfo.data}">
+                    <div class="album-detail-item animate-box">
+                        <a href="javascript:void(0)" th:data-url="${detail.url}" class="play-btn">
+                            <img th:data-original="@{${detail.coverUrl}}" class="lazyload">
+                            <div class="mask"><i class="fa fa-play"></i></div>
+                        </a>
+                        <div class="name" th:text="${detail.name}" th:title="${detail.name}"></div>
+                    </div>
+                </div>
+            </div>
+            <div th:if="${pageInfo.total == 0}">
+                <div style="text-align:center;">
+                    ~~暂无数据~~
+                </div>
+            </div>
+        </div>
+
+        <div class="pagination">
+                    <span th:if="${pageInfo.hasPreviousPage}" class="page">
+                        <a data-pjax class="prev page-numbers" th:href="@{${pageInfo.pageNum-1} == 1 ? '/albumDetail/' + ${album.id} + '/': '/albumDetail/' + ${album.id} + '/' + ${pageInfo.pageNum-1}+'/'}" ><i class="fa fa-angle-left"></i></a>
+                    </span>
+            <span th:each="pageNum : ${pageInfo.navigatepageNums}" th:if="${pageInfo.navigatepageNums.length} le '4' ">
+                        <span th:if="${pageNum == pageInfo.pageNum}"  class="page current" th:text="${pageNum}"></span>
+                        <span class="page" th:if="${pageNum != pageInfo.pageNum}">
+                            <a data-pjax th:href="@{${pageNum} == 1 ? '/albumDetail/' + ${album.id} + '/': '/albumDetail/' + ${album.id} + '/' + ${pageNum}+'/'}" th:text="${pageNum}"></a>
+                        </span>
+                    </span>
+            <span th:each="pageNum, iterStat : ${pageInfo.navigatepageNums}" th:if="${pageInfo.navigatepageNums.length} gt '4' ">
+                           <span class="page" th:if="${pageNum == pageInfo.pageNum and iterStat.count gt 2 and iterStat.count le iterStat.size}">...</span>
+                           <span th:if="${pageNum == pageInfo.pageNum}" class="page current" th:text="${pageNum}"></span>
+                           <span class="page" th:if="${pageNum == pageInfo.pageNum and iterStat.count le (iterStat.size - 2)}">...</span>
+                           <span th:if="${pageNum != pageInfo.pageNum}">
+                               <span class="page" th:if="${iterStat.count == 1}" ><a data-pjax th:href="@{'/albumDetail/' + ${album.id} + '/1/'}" th:text="1"></a></span>
+                               <span class="page" th:if="${iterStat.count == (iterStat.size)}"><a data-pjax th:href="@{'/albumDetail/' + ${album.id} + '/' +  ${pageNum} +'/'}" th:text="${pageNum}"></a></span>
+                            </span>
+                       </span>
+            <span th:if="${pageInfo.hasNextPage}" class="page">
+                        <a data-pjax class="next page-numbers" th:href="@{'/albumDetail/' + ${album.id} + '/' +  ${pageInfo.pageNum + 1}+'/'}" ><i class="fa fa-angle-right"></i></a>
+                    </span>
+        </div>
+    </div>
+
+    <script>
+        let pageContainer = document.getElementById("pageContainer");
+        let playBtnList = document.getElementsByClassName("play-btn");
+        for (let i = 0; i < playBtnList.length; i++) {
+            let playBtn = playBtnList[i];
+            let url = playBtn.dataset.url;
+            playBtn.addEventListener("click", function (e) {
+                e.stopPropagation();
+                let videoMask = document.createElement("div");
+                videoMask.setAttribute("class", "video-mask");
+                pageContainer.appendChild(videoMask);
+                let video = document.createElement("video");
+                video.setAttribute("src", url);
+                video.setAttribute("class", "video-self");
+                video.setAttribute("controls", "controls");
+                video.setAttribute("autoplay", "autoplay");
+                videoMask.appendChild(video);
+                let close = document.createElement("div");
+                close.setAttribute("class", "video-close");
+                close.setAttribute("title", "关闭");
+                close.innerHTML = "x"
+                videoMask.appendChild(close);
+                close.addEventListener("click", function() {
+                    pageContainer.removeChild(videoMask);
+                });
+            });
+        }
+    </script>
+</div>
+
+</body>
+</html>

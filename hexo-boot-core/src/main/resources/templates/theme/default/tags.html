@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" layout:decorate="~{theme/default/layout}">
+
+<head>
+    <meta property="og:title" th:content="${'标签 | ' + #servletContext.getAttribute('configMap')['blog_name']}" />
+    <title>标签 | [[${#servletContext.getAttribute('configMap')['blog_name']}]]</title>
+</head>
+
+<body>
+    <div id="wrap" class="content" layout:fragment="content">
+    <!-- 图片 -->
+    <div class="image-banner" style="color: #fff">
+        <div class="image-content" th:if="${#strings.startsWith(currentNav.cover,'http') == true}"><img th:data-original="@{${currentNav.cover}}" class="lazyload"></div>
+        <div class="image-content" th:if="${#strings.startsWith(currentNav.cover,'http') == false}"><img th:data-original="@{${prefix} + '/source/images/category.png'}" class="lazyload"></div>
+        <div class="descr">
+            <a data-pjax th:href="@{/}">首页  /  </a>
+            <a href="javascript:void(0)">标签</a>
+        </div>
+        <div class="title">标签</div>
+    </div>
+
+    <div class="ml-content">
+        <div class="tags-content">
+            <a data-pjax class="tag" th:href="@{'/tags/'+${tag.name}+'/'}" th:each="tag,status : ${tagList}">[[${tag.name}]]&nbsp;</a>
+        </div>
+        <div th:if="${count == 0}" th:style="'text-align:center;'" th:text="'~~暂无标签~~'"></div>
+        <script>
+            let colorArr = ["#1ABC9C", "#2ECC71", "#3498DB", "#9B59B6", "#34495E", "#F1C40F", "#E67E22", "#E74C3C", "#000"];
+            let elements = document.getElementsByClassName("tag");
+            for (let i = 0; i < elements.length; i++) {
+                let element = elements[i];
+                let index = Math.floor(Math.random() * colorArr.length);
+                element.style.backgroundColor = colorArr[index];
+                element.style.color = "#fff";
+            }
+        </script>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, initial-scale=1, shrink-to-fit=no">
+    <div th:replace="~{admin/common :: common-link}"></div>
+    <style>
+        .data-area {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="content animated fadeIn">
+    <h2 class="content-heading"><i class="fa fa-cogs"></i> 个性配置</h2>
+    <div class="block block-fx-shadow">
+        <ul class="nav nav-tabs nav-tabs-block" data-toggle="tabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" href="#photoArea">图床配置</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#pushArea">文章推送</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#twikooArea">Twikoo(评论系统)</a>
+            </li>
+        </ul>
+        <div class="block-content tab-content overflow-hidden">
+            <div class="tab-pane fade fade-left show active" id="photoArea" role="tabpanel">
+                <div class="content content-full">
+                    <div class="row justify-content-center py-30">
+                        <div class="col-lg-8 col-xl-6">
+                            <form class="js-validation-be-contact" id="photoForm" method="post">
+                                <div class="form-group row">
+                                    <label for="qn_domain">&nbsp;&nbsp;&nbsp;图床管理类型</label>
+                                    <div class="col-12">
+                                        <label class="css-control css-control-primary css-radio">
+                                            <input type="radio" class="css-control-input" name="manage_mode" th:value="1" th:checked="${configMap['manage_mode'] == '1'}">
+                                            <span class="css-control-indicator"></span> 本地
+                                        </label>
+                                        <label class="css-control css-control-primary css-radio">
+                                            <input type="radio" class="css-control-input" name="manage_mode" th:value="2" th:checked="${configMap['manage_mode'] == '2'}">
+                                            <span class="css-control-indicator"></span> 七牛云
+                                        </label>
+                                        <label class="css-control css-control-primary css-radio">
+                                            <input type="radio" class="css-control-input" name="manage_mode" th:value="3" th:checked="${configMap['manage_mode'] == '3'}">
+                                            <span class="css-control-indicator"></span> OSS(阿里云)
+                                        </label>
+                                        <label class="css-control css-control-primary css-radio">
+                                            <input type="radio" class="css-control-input" name="manage_mode" th:value="4" th:checked="${configMap['manage_mode'] == '4'}">
+                                            <span class="css-control-indicator"></span> COS(腾讯云)
+                                        </label>
+                                    </div>
+                                </div>
+                                <div id="data-1" class="data-area">
+                                    <div class="form-group row">
+                                        <div class="col-12">
+                                            <label for="local_file_path">本地图床路径</label>
+                                            <input class="form-control form-control-lg" id="local_file_path" name="local_file_path" type="text" th:value="${configMap['local_file_path']}" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="data-2" class="data-area">
+                                    <div class="form-group row">
+                                        <div class="col-12">
+                                            <label for="qn_domain">七牛云域名</label>
+                                            <input class="form-control form-control-lg" id="qn_domain" name="qn_domain" type="text" th:value="${configMap['qn_domain']}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-12">
+                                            <label for="qn_access_key">七牛云 KEY</label>
+                                            <input class="form-control form-control-lg" id="qn_access_key" name="qn_access_key" type="text" th:value="${configMap['qn_access_key']}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-12">
+                                            <label for="qn_secret_key">七牛云密钥</label>
+                                            <input class="form-control form-control-lg" id="qn_secret_key" name="qn_secret_key" type="text"  th:value="${configMap['qn_secret_key']}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-12">
+                                            <label for="qn_bucket">七牛云桶</label>
+                                            <input class="form-control form-control-lg" id="qn_bucket" name="qn_bucket" type="text"  th:value="${configMap['qn_bucket']}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-12">
+                                            <label for="qn_bucket">七牛云机房</label>
+                                            <select class="form-control form-control-lg" id="qn_region" name="qn_region">
+                                                <option th:text="华东" th:value="0" th:attr="selected=${'0' eq configMap['qn_region']}"></option>
+                                                <option th:text="华北" th:value="1" th:attr="selected=${'1' eq configMap['qn_region']}"></option>
+                                                <option th:text="华南" th:value="2" th:attr="selected=${'2' eq configMap['qn_region']}"></option>
+                                                <option th:text="北美" th:value="3" th:attr="selected=${'3' eq configMap['qn_region']}"></option>
+                                                <option th:text="东南亚" th:value="4" th:attr="selected=${'4' eq configMap['qn_region']}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="data-3" class="data-area">
+                                    <div class="form-group row">
+                                        <div class="col-12">
+                                            <label for="oss_endpoint">OSS Endpoint</label>
+                                            <input class="form-control form-control-lg" id="oss_endpoint" name="oss_endpoint" type="text"  th:value="${configMap['oss_endpoint']}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-12">
+                                            <label for="oss_access_key">OSS KEY</label>
+                                            <input class="form-control form-control-lg" id="oss_access_key" name="oss_access_key" type="text"  th:value="${configMap['oss_access_key']}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-12">
+                                            <label for="oss_secret_key">OSS 密钥</label>
+                                            <input class="form-control form-control-lg" id="oss_secret_key" name="oss_secret_key" type="text"  th:value="${configMap['oss_secret_key']}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-12">
+                                            <label for="oss_bucket">OSS 桶</label>
+                                            <input class="form-control form-control-lg" id="oss_bucket" name="oss_bucket" type="text" th:value="${configMap['oss_bucket']}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="data-4" class="data-area">
+                                    <div class="form-group row">
+                                        <div class="col-12">
+                                            <label for="qn_domain">COS 域名</label>
+                                            <input class="form-control form-control-lg" id="cos_domain" name="cos_domain" type="text" th:value="${configMap['cos_domain']}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-12">
+                                            <label for="oss_access_key">COS SecretId</label>
+                                            <input class="form-control form-control-lg" id="cos_secret_id" name="cos_secret_id" type="text"  th:value="${configMap['cos_secret_id']}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-12">
+                                            <label for="oss_secret_key">COS SecretKey</label>
+                                            <input class="form-control form-control-lg" id="cos_secret_key" name="cos_secret_key" type="text"  th:value="${configMap['cos_secret_key']}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-12">
+                                            <label for="oss_bucket">COS 桶</label>
+                                            <input class="form-control form-control-lg" id="cos_bucket" name="cos_bucket" type="text" th:value="${configMap['cos_bucket']}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-12">
+                                            <label for="qn_bucket">COS 域</label>
+                                            <select class="form-control form-control-lg" id="cos_region" name="cos_region">
+                                                <option th:text="北京一区" th:value="0" th:attr="selected=${'0' eq configMap['cos_region']}"></option>
+                                                <option th:text="北京" th:value="1" th:attr="selected=${'1' eq configMap['cos_region']}"></option>
+                                                <option th:text="南京" th:value="2" th:attr="selected=${'2' eq configMap['cos_region']}"></option>
+                                                <option th:text="上海" th:value="3" th:attr="selected=${'3' eq configMap['cos_region']}"></option>
+                                                <option th:text="广州" th:value="4" th:attr="selected=${'4' eq configMap['cos_region']}"></option>
+                                                <option th:text="成都" th:value="5" th:attr="selected=${'5' eq configMap['cos_region']}"></option>
+                                                <option th:text="重庆" th:value="6" th:attr="selected=${'6' eq configMap['cos_region']}"></option>
+                                                <option th:text="深圳金融" th:value="7" th:attr="selected=${'7' eq configMap['cos_region']}"></option>
+                                                <option th:text="上海金融" th:value="8" th:attr="selected=${'8' eq configMap['cos_region']}"></option>
+                                                <option th:text="北京金融" th:value="9" th:attr="selected=${'9' eq configMap['cos_region']}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12 text-center">
+                                        <button type="button" class="btn btn-hero btn-alt-primary min-width-175 submit-btn">
+                                            <i class="fa fa-send mr-5"></i> 修改
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade fade-left" id="pushArea" role="tabpanel">
+                <div class="content content-full">
+                    <div class="row justify-content-center py-30">
+                        <div class="col-lg-8 col-xl-6">
+                            <form class="js-validation-be-contact" id="pushForm" method="post">
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <label for="bai_du_push_token">百度推送 Token</label>
+                                        <input class="form-control form-control-lg" id="bai_du_push_token" name="bai_du_push_token" type="text"  th:value="${configMap['bai_du_push_token']}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        友情提示: 点击 <a href="https://ziyuan.baidu.com/" target="_blank">百度搜索资源平台</a> 获取 token
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12 text-center">
+                                        <button type="button" class="btn btn-hero btn-alt-primary min-width-175 submit-btn">
+                                            <i class="fa fa-send mr-5"></i> 修改
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade fade-left" id="twikooArea" role="tabpanel">
+                <div class="content content-full">
+                    <div class="row justify-content-center py-30">
+                        <div class="col-lg-8 col-xl-6">
+                            <form class="js-validation-be-contact" id="twikooForm" method="post">
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <label for="bai_du_push_token">twikoo环境 id</label>
+                                        <input class="form-control form-control-lg" id="twikoo_env_id" name="twikoo_env_id" type="text"  th:value="${configMap['twikoo_env_id']}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        友情提示: 查看 <a href="https://twikoo.js.org/quick-start.html" target="_blank">Twikoo 中文文档</a> 或 <a href="https://www.bilibili.com/video/av372877356" target="_blank">视频教程</a> 获取环境 id
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12 text-center">
+                                        <button type="button" class="btn btn-hero btn-alt-primary min-width-175 submit-btn">
+                                            <i class="fa fa-send mr-5"></i> 修改
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="~{admin/common :: common-script}"></div>
+<script type="text/javascript" th:inline="javascript">
+    $(function () {
+
+        let value = $(".css-control-input:checked").val();
+        $("#data-" + value).show();
+
+        $(".css-control-input").on("click", function() {
+            let val = $(this).val();
+            $(".data-area").hide();
+            $("#data-" + val).show();
+        });
+
+        $(".submit-btn").on("click", function() {
+            $.hexo.action.sendRequest({
+                url: BASE_URL + "/save.json",
+                params: $(this).parents("form").serialize(),
+                callback: function () {
+                    $.hexo.modal.tip("修改成功", "success");
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

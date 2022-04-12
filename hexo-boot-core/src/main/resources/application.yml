@@ -1,0 +1,90 @@
+
+###################################【公共配置】##########################################
+server:
+  compression:
+    enabled: true
+    mime-types: application/javascript,text/css,application/json,application/xml,text/html,text/xml,text/plain
+  port: 8080
+  servlet:
+    context-path: /
+  tomcat:
+    uri-encoding: UTF-8
+    #最大链接数
+    max-connections: 1000
+    #最大等待队列长度
+    accept-count: 200
+    threads:
+      min-spare: 20
+      max: 500
+
+# spring 配置
+spring:
+  application:
+    name: hexo-boot
+  profiles:
+    active: dev
+  jackson:
+    time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size:  100MB
+      max-request-size:  100MB
+      file-size-threshold: 20MB
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      url: jdbc:mysql://127.0.0.1:3306/hexo-boot?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&rewriteBatchedStatements=true&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
+      username: root
+      password: tiger
+      initialSize: 10
+      minIdle: 5
+      maxActive: 20
+      maxWait: 60000
+      timeBetweenEvictionRunsMillis: 60000
+      minEvictableIdleTimeMillis: 300000
+      validationQuery: select 'x'
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+      poolPreparedStatements: true
+      maxOpenPreparedStatements: 20
+      useGlobalDataSourceStat: true
+      connectionProperties: druid.stat.slowSqlMillis=2000
+      driver-class-name: com.mysql.cj.jdbc.Driver
+  cache:
+    type: ehcache
+    ehcache:
+      config: classpath:ehcache.xml
+  main:
+    allow-bean-definition-overriding: true
+
+# mybatis 配置
+mybatis:
+  config-location: classpath:mybatis/mybatis-config.xml
+  mapper-locations:
+    - classpath:mybatis/mapper/*.xml
+
+# 通用 Mapper 配置
+mapper:
+  mappers:
+    - com.light.hexo.mapper.base.BaseMapper
+  not-empty: false
+  identity: MYSQL
+
+# 分页配置
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
+
+###########自定义##############
+
+blog:
+  home-dir: ${user.home}/.hexo-boot/
+  theme-dir: ${blog.home-dir}templates/theme/
+  attachment-dir: ${blog.home-dir}attachments/
+  log-dir: ${blog.home-dir}logs/
+  version: 4.0

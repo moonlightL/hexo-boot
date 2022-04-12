@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, initial-scale=1, shrink-to-fit=no">
+    <div th:replace="~{admin/common :: common-link}"></div>
+    <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/bootstrap/css/bootstrap.min.css'}">
+    <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css'}">
+    <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/flatpickr/flatpickr.min.css'}">
+    <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/editor.md/css/editormd.min.css'}">
+    <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/jquery-tags-input/jquery.tagsinput.min.css'}">
+    <link th:href="@{'/admin/assets/js/plugins/dropzonejs/dist/min/dropzone.min.css'}" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/dropzonejs/dist/min/basic.min.css'}">
+    <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/summernote/summernote.min.css'}">
+    <style>
+        .note-editor .dropdown-toggle::after {
+            display: none;
+        }
+        .editorArea {
+            display: inline-block;
+            width: calc(100% - 320px);
+            height: 100%;
+        }
+        .optionArea {
+            float: right;
+            display: inline-block;
+            width: 300px;
+            height: 100%;
+        }
+        .input-group-prepend {
+            margin-right: 0;
+            height: 34px;
+        }
+        .input-group-text {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div class="content">
+    <div class="block block-fx-shadow">
+        <div class="block-content">
+            <div class="row justify-content-center py-20">
+                <div class="col-xl-12">
+                    <form id="saveForm" th:action="@{${baseUrl} + '/add.json'}">
+                        <input id="content" type="hidden" name="content" />
+                        <input id="coverUrl" type="hidden" name="coverUrl" />
+                        <div class="editorArea">
+                            <div class="form-group row">
+                                <label class="col-md-1 col-form-label" for="title">标题名</label>
+                                <div class="col-md-5">
+                                    <input type="text" id="title" class="form-control" placeholder="标题名 *" name="title" data-bv-notempty="true" data-bv-notempty-message="标题不能为空">
+                                </div>
+                                <label class="col-md-1 col-form-label" for="customLink">链接</label>
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <input type="text" id="customLink" class="form-control" placeholder="自定义链接" name="customLink">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">.html</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="postEditor"></div>
+                        </div>
+                        <div class="optionArea">
+                            <div class="row">
+                                <img id="postCover" src="/admin/assets/custom/images/post/default_post.jpg" alt="文章封面" width="300" height="150" style="border: 1px solid #D4DAE3;margin: 0 15px 15px 15px;border-radius: 5px;">
+                                <div id="btnArr" style="margin: 0 15px 15px 15px"></div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label" for="title">封面布局 <i class="fa fa-info-circle" title="仅针对 Pure 主题生效"></i></label>
+                                <div class="col-md-8">
+                                    <select class="custom-select" id="coverType" name="coverType">
+                                        <option value="4">顶部封面</option>
+                                        <option value="1">全封面</option>
+                                        <option value="2">无封面</option>
+                                        <option value="3">左侧封面</option>
+                                    </select>
+                                </div>
+
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label" for="title">文章分类</label>
+                                <div class="col-md-8">
+                                    <select class="custom-select" id="categoryId" name="categoryId" data-bv-notempty="true" data-bv-notempty-message="分类不能为空">
+                                        <option value="" disabled selected>分类 *</option>
+                                        <option th:each="category:${categoryList}" th:value="${category.id}" th:text="${category.name}"></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label" for="title">文章标签</label>
+                                <div class="col-md-8">
+                                    <input type="text" id="tags" name="tags" class="js-tags-input form-control" placeholder="标签" data-height="32px" >
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label" for="title">是否转载</label>
+                                <div class="col-md-8">
+                                    <select class="custom-select" id="reprint" name="reprint" style="height:34px">
+                                        <option value="" disabled selected>是否转载</option>
+                                        <option value="0">否</option>
+                                        <option value="1">是</option>
+                                    </select> <br><br>
+                                </div>
+                                <div class="col-md-12" id="anchorInfo" style="display: none">
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label" for="title">作者</label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control" placeholder="原作者" name="author">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label" for="title">链接</label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control" placeholder="原文章地址" name="reprintLink">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label" for="jobTime">定时发布</label>
+                                <div class="col-md-8">
+                                    <input type="text" class="js-flatpickr form-control bg-white" id="jobTime" name="jobTime" placeholder="发布时间"
+                                           data-enable-time="true" data-date-format="Y-m-d H:i:ss" data-time_24hr="true">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label" for="authCode">访问密码 <i class="fa fa-info-circle" title="选填,长度不得超过20"></i></label>
+                                <div class="col-md-8">
+                                    <input type="text" id="authCode" name="authCode" class="form-control" placeholder="访问密码">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <button type="submit" class="btn btn-primary" id="submitBtn" style="width:100%">保存</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-4 col-md-4 col-sm-4">
+                                <div class="form-group">
+                                    <label class="css-control css-control-success css-switch css-control-sm css-switch-square">
+                                        <input type="checkbox" class="css-control-input" name="publish" checked>
+                                        <span class="css-control-indicator"></span> 是否发表
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4">
+                                <div class="form-group">
+                                    <label class="css-control css-control-success css-switch css-control-sm css-switch-square">
+                                        <input type="checkbox" class="css-control-input" name="comment" checked>
+                                        <span class="css-control-indicator"></span> 是否允许评论
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4">
+                                <div class="form-group">
+                                    <label class="css-control css-control-success css-switch css-control-sm css-switch-square">
+                                        <input type="checkbox" class="css-control-input" name="top">
+                                        <span class="css-control-indicator"></span> 是否置顶
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div th:replace="~{admin/common :: common-script}"></div>
+<script th:src="@{'/admin/assets/js/plugins/bootstrap/js/bootstrap.min.js'}"></script>
+<script th:src="@{'/admin/assets/js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js'}"></script>
+<script th:src="@{'/admin/assets/js/plugins/flatpickr/flatpickr.min.js'}"></script>
+<script th:src="@{'/admin/assets/js/plugins/dropzonejs/dist/min/dropzone.min.js'}"></script>
+<script th:src="@{'/admin/assets/js/plugins/editor.md/editormd.min.js'}"></script>
+<script th:src="@{'/admin/assets/js/plugins/summernote/summernote.min.js'}"></script>
+<script th:src="@{'/admin/assets/js/plugins/summernote/lang/summernote-zh-CN.min.js'}"></script>
+<script th:src="@{'/admin/assets/js/plugins/jquery-tags-input/jquery.tagsinput.min.js'}"></script>
+<script type="text/javascript" th:inline="javascript">
+    let editorType = [[${#servletContext.getAttribute('configMap')['editor_type']}]];
+    let MyEditor;
+    Dropzone.autoDiscover = false;
+    $(function(){
+
+        $("#reprint").on("change", function () {
+            let val = $(this).val();
+            if (val === "1") {
+                $("#anchorInfo").show();
+            } else {
+                $("#anchorInfo").hide();
+            }
+        });
+
+        Codebase.helpers(['tags-inputs','flatpickr','datepicker']);
+        $("#submitBtn").on("click", function () {
+            if (editorType === "markdown") {
+                $("#content").val(MyEditor.getMarkdown());
+            } else if (editorType === "html") {
+                $("#content").val(MyEditor.summernote('code'));
+            }
+            $.hexo.action.save("saveForm");
+        });
+
+        if (editorType === "markdown") {
+            MyEditor = editormd("postEditor", {
+                width   : "100%",
+                height  :  $(window.parent).height(),
+                syncScrolling : "single",
+                path    : "/admin/assets/js/plugins/editor.md/lib/",
+                placeholder: "写点内容吧~~",
+                toolbarIcons : function() {
+                    return ["undo","redo","bold","del","italic","quote","ucwords","uppercase","lowercase","h1","h2","h3","h4","h5","h6","list-ul","list-ol","hr","link","reference-link","image","code","preformatted-text","code-block","table","datetime","pagebreak","watch","unwatch","preview","clear","search"]
+                },
+                codeFold : true,
+                imageUpload : true,
+                watch : false,
+                imageFormats : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+                imageUploadURL : "/admin/file/mdUploadFile.json",
+                onload: function () {
+                    $("#postEditor").height($(window.parent).height() - 270)
+                }
+            });
+
+        } else if (editorType === "html") {
+            let EmptyButton = function (context) {
+                let ui = $.summernote.ui;
+                let button = ui.button({
+                    contents: '<i class="fa fa-trash"/>',
+                    tooltip: '清除全部内容',
+                    click: function () {
+                        context.invoke('editor.empty');
+                    }
+                });
+                return button.render();
+            };
+
+            MyEditor = $('#postEditor').summernote({
+                lang: "zh-CN",
+                placeholder: "写点内容吧~~",
+                tabsize: 4,
+                height: $(window.parent).height() - 270,
+                minHeight: $(window.parent).height() - 270,
+                maxHeight: $(window.parent).height() - 270,
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'underline', 'clear']],
+                    ['fontsize', ['fontsize']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['fullscreen', 'codeview', 'help']],
+                    ['empty', ['empty']],
+                    ['clearStyle', ['clearStyle']],
+                ],
+                buttons: {empty: EmptyButton},
+                callbacks: {
+                    onPaste: function (ne) {
+                        let bufferText = ((ne.originalEvent || ne).clipboardData || window.clipboardData).getData('Text/plain');
+                        ne.preventDefault ? ne.preventDefault() : (ne.returnValue = false);
+                        // Firefox fix
+                        setTimeout(function () {
+                            document.execCommand("insertText", false, bufferText);
+                        }, 10);
+                    }
+                }
+            });
+        }
+
+        let FileManager = {
+            initUploadEvent: function () {
+                $("#btnArr").html('<a id="uploadBtn" href="javascript:void(0)">选择文件</a>&nbsp;&nbsp;<a id="randomBtn" href="javascript:void(0)">随机获取</a> <i class="fa fa-info-circle" title="如不设置封面,则保存文章后系统随机生成"></i><p></p>');
+                $("#uploadBtn").dropzone({
+                    method: "POST",
+                    url: "/admin/file/upload.json", //上传地址
+                    addRemoveLinks: true,
+                    maxFiles: 1,// 一次性上传的文件数量上限
+                    maxFilesize: 10, // 单个上传文件大小，单位：MB
+                    previewsContainer: false,
+                    uploadMultiple: false, // 允许批量上传
+                    parallelUploads: 1, // 每次上传的文件数量，默认值 2
+                    autoProcessQueue: true, // 是否自动上传
+                    acceptedFiles: ".jpg, .jpeg, .png, .gif, .webp",
+                    dictDefaultMessage: '文章封面<br>(支持上传的文件类型*.jpg,*.jpeg,*.png,*.webp)',
+                    dictMaxFilesExceeded: "每次最多只能上传1个文件！",
+                    dictResponseError: '文件上传失败!',
+                    dictInvalidFileType: "支持上传的文件类型*.jpg,*.jpeg,*.png, *.gif,*.webp",
+                    dictFallbackMessage: "浏览器不支持",
+                    dictFileTooBig: "最大支持10MB文件上传",
+                    init: function () {
+                        this.on("error", function (data, message) {
+                            console.error(message);
+                            if (typeof message == "string") {
+                                $.hexo.modal.tip("上传失败: " + message, "error");
+                            } else{
+                                $.hexo.modal.tip("上传失败: " + message.error, "error");
+                            }
+                            FileManager.initUploadEvent();
+                        });
+
+                        this.on("success", function (data, resp) {
+                            if (resp.success) {
+                                $("#postCover").attr("src", resp.data);
+                                $("#coverUrl").val(resp.data);
+                                $.hexo.modal.tip("封面上传成功");
+                            }
+                            FileManager.initUploadEvent();
+                        });
+                    }
+                });
+
+                $("#randomBtn").off("click").on("click", function () {
+                    $.ajax({
+                        type: "POST",
+                        url: "/admin/file/randomPic.json",
+                        dataType: "JSON",
+                        success: function(resp) {
+                            if (resp.success == 1) {
+                                $("#postCover").attr("src", "").attr("src", resp.url);
+                                $("#coverUrl").val(resp.url);
+                            } else {
+                                $.hexo.modal.tip(resp.message, "error");
+                            }
+                        }
+                    })
+                });
+            }
+        };
+
+        FileManager.initUploadEvent();
+
+    });
+</script>
+</body>
+</html>

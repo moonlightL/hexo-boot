@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, initial-scale=1, shrink-to-fit=no">
+    <div th:replace="~{admin/common :: common-link}"></div>
+    <link th:href="@{'/admin/assets/js/plugins/dropzonejs/dist/min/dropzone.min.css'}" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/dropzonejs/dist/min/basic.min.css'}">
+</head>
+<body>
+
+<div class="content animated fadeIn">
+    <h2 class="content-heading"><i class="fa fa-user-o"></i> 个人详情</h2>
+    <div class="block block-fx-shadow">
+        <ul class="nav nav-tabs nav-tabs-block" data-toggle="tabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" href="#infoArea">个人信息</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#passwordArea">修改密码</a>
+            </li>
+        </ul>
+        <div class="block-content tab-content overflow-hidden">
+            <div class="tab-pane fade fade-left show active" id="infoArea" role="tabpanel">
+                <div class="content content-full">
+                    <form class="js-validation-be-contact" id="infoForm" method="post" th:object="${user}">
+                        <input type="hidden" name="id" th:field="*{id}">
+                        <div class="row  py-30">
+                            <div class="col-lg-4 col-xl-4">
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <div class="text-center">
+                                            <h6>用户头像</h6>
+                                            <input type="hidden" id="avatar" name="avatar" th:field="*{avatar}">
+                                            <img id="imgAvatar" th:src="@{*{avatar}}" alt="用户头像" width="128" height="128">
+                                            <div id="btnContainer" style="margin: 10px auto"></div>
+                                            <p>支持 .jpg, .jpeg, .png 类型图片上传</p>
+                                            <p>图片上传后，还需要点击“修改”按钮</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-8 col-xl-6">
+                            <div class="form-group row">
+                                <div class="col-12">
+                                    <label for="username">用户名</label>
+                                    <input type="text" class="form-control form-control-lg" id="username" name="username" th:field="*{username}" disabled>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-12" for="roleName">角色</label>
+                                <div class="col-12">
+                                    <input type="text" class="form-control form-control-lg" id="roleName" name="roleName" th:field="*{roleName}" disabled>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-12" for="nickname">昵称</label>
+                                <div class="col-12">
+                                    <input type="text" class="form-control form-control-lg" id="nickname" name="nickname" th:field="*{nickname}">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-12" for="email">邮箱</label>
+                                <div class="col-12">
+                                    <input type="text" class="form-control form-control-lg" id="email" name="email" th:field="*{email}">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-12 text-center">
+                                    <button type="submit" class="btn btn-hero btn-alt-primary min-width-175">
+                                        <i class="fa fa-send mr-5"></i> 修改
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="tab-pane fade fade-left" id="passwordArea" role="tabpanel">
+                <div class="content content-full">
+                    <div class="row justify-content-center py-30">
+                        <div class="col-lg-8 col-xl-6">
+                            <form id="passwordForm" method="post">
+                                <input type="hidden" name="id" th:value="${#httpSession.getAttribute('currentUser')['id']}">
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <label for="oldPassword">旧密码</label>
+                                        <input type="password" class="form-control form-control-lg" id="oldPassword" name="oldPassword">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-12" for="newPassword">新密码</label>
+                                    <div class="col-12">
+                                        <input type="password" class="form-control form-control-lg" id="newPassword" name="newPassword">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-12" for="confirmPassword">确认密码</label>
+                                    <div class="col-12">
+                                        <input type="password" class="form-control form-control-lg" id="confirmPassword" name="confirmPassword">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12 text-center">
+                                        <button type="submit" class="btn btn-hero btn-alt-primary min-width-175">
+                                            <i class="fa fa-send mr-5"></i> 修改
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<div th:replace="~{admin/common :: common-script}"></div>
+<!-- Page JS Plugins -->
+<script th:src="@{'/admin/assets/js/plugins/jquery-validation/jquery.validate.min.js'}"></script>
+<script th:src="@{'/admin/assets/js/plugins/dropzonejs/dist/min/dropzone.min.js'}"></script>
+<script th:inline="javascript">
+
+    let ProfileManager = {
+        init: function () {
+            ProfileManager.initUploadEvent();
+            ProfileManager.infoFormEvent();
+            ProfileManager.passwordFormEvent();
+        },
+        initUploadEvent: function () {
+            $("#btnContainer").html('<button type="button" class="btn btn-outline-success" id="uploadBtn">更换头像</button>');
+            Dropzone.autoDiscover = false;
+            $("#uploadBtn").dropzone({
+                method: "POST",
+                url: "/admin/file/upload.json",
+                addRemoveLinks: true,
+                maxFiles: 1,
+                maxFilesize: 5,
+                uploadMultiple: false,
+                previewsContainer: false,
+                acceptedFiles: ".jpg, .jpeg,.png",
+                dictFileTooBig: "最大支持5MB文件上传",
+                init: function () {
+                    this.on("error", function (data, message) {
+                        console.error(message);
+                        if (typeof message == "string") {
+                            $.hexo.modal.tip("上传失败: " + message, "error");
+                        } else{
+                            $.hexo.modal.tip("上传失败: " + message.error, "error");
+                        }
+                        ProfileManager.initUploadEvent();
+                    });
+
+                    this.on("success", function (data, resp) {
+                        if (resp.success) {
+                            $("#imgAvatar").attr("src", resp.data);
+                            $("#avatar").val(resp.data);
+                        }
+                        ProfileManager.initUploadEvent();
+                    });
+                }
+            });
+        },
+        infoFormEvent: function () {
+            $("#infoForm").validate({
+                errorClass: 'invalid-feedback animated fadeInDown',
+                errorElement: 'div',
+                errorPlacement: (error, e) => {
+                    jQuery(e).parents('.form-group > div').append(error);
+                },
+                highlight: e => {
+                    jQuery(e).closest('.form-group').removeClass('is-invalid').addClass('is-invalid');
+                },
+                success: e => {
+                    jQuery(e).closest('.form-group').removeClass('is-invalid');
+                    jQuery(e).remove();
+                },
+                rules: {
+                    'nickname': {
+                        required: true
+                    },
+                    'email': {
+                        required: true
+                    }
+                },
+                messages: {
+                    'nickname': {
+                        required: '请输入昵称'
+                    },
+                    'email': {
+                        required: '请输入邮箱地址'
+                    }
+                },
+                submitHandler: function (form) {
+                    let id = $(form).find("[name='id']").val();
+                    let avatar = $("#avatar").val();
+                    let nickname = $("#nickname").val();
+                    let email = $("#email").val();
+                    $.ajax({
+                        type: "POST",
+                        url: BASE_URL + "/updateInfo.json",
+                        data: {id: id, avatar: avatar, nickname: nickname, email: email},
+                        success: function (resp) {
+                            swal({
+                                title: "",
+                                text: resp.success ? "修改成功": resp.message,
+                                type: "info",
+                                confirmButtonColor: "#DD6B55",
+                                confirmButtonText: "确定"
+                            });
+                            window.location.reload();
+                        }
+                    });
+                }
+            });
+        },
+        passwordFormEvent: function () {
+            $("#passwordForm").validate({
+                errorClass: 'invalid-feedback animated fadeInDown',
+                errorElement: 'div',
+                errorPlacement: (error, e) => {
+                    jQuery(e).parents('.form-group > div').append(error);
+                },
+                highlight: e => {
+                    jQuery(e).closest('.form-group').removeClass('is-invalid').addClass('is-invalid');
+                },
+                success: e => {
+                    jQuery(e).closest('.form-group').removeClass('is-invalid');
+                    jQuery(e).remove();
+                },
+                rules: {
+                    'oldPassword': {
+                        required: true
+                    },
+                    'newPassword': {
+                        required: true,
+                        minlength: 6
+                    },
+                    'confirmPassword': {
+                        required: true,
+                        minlength: 6
+                    }
+                },
+                messages: {
+                    'oldPassword': {
+                        required: '请输入旧密码'
+                    },
+                    'newPassword': {
+                        required: '请输入新密码',
+                        minlength: '密码长度至少6位数'
+                    },
+                    'confirmPassword': {
+                        required: '请输入确认密码',
+                        minlength: '确认密码长度至少6位数'
+                    }
+                },
+                submitHandler: function (form) {
+                    let id = $(form).find("[name='id']").val();
+                    let oldPassword = $("#oldPassword").val();
+                    let newPassword = $("#newPassword").val();
+                    $.ajax({
+                        type: "POST",
+                        url: BASE_URL + "/updatePassword.json",
+                        data: {id: id, oldPassword: oldPassword, password: newPassword},
+                        success: function (resp) {
+                            swal({
+                                title: "",
+                                text: resp.success ? "修改成功": resp.message,
+                                type: "info",
+                                confirmButtonColor: "#DD6B55",
+                                confirmButtonText: "确定"
+                            });
+                            form.reset();
+                        }
+                    });
+                }
+            });
+        }
+    };
+
+    ProfileManager.init();
+</script>
+</html>
