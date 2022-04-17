@@ -71,6 +71,7 @@ public class DumpService {
             result = IOUtils.toString(in, StandardCharsets.UTF_8);
         } catch (IOException e) {
             e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
         } finally {
             if (process != null) {
                 process.destroy();

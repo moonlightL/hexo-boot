@@ -39,8 +39,14 @@
             color: #3a3939;
         }
 
-        #tab-container {
-            box-shadow: rgb(216 221 229) 0px 10px 14px;
+        /*#tab-container {*/
+        /*    box-shadow: rgb(216 221 229) 0px 10px 14px;*/
+        /*}*/
+
+        @media (min-width: 1200px) {
+            #page-container.main-content-narrow>#main-container .content, #page-container.main-content-narrow>#page-footer .content, #page-container.main-content-narrow>#page-header .content, #page-container.main-content-narrow>#page-header .content-header {
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -385,7 +391,7 @@
                 <!-- Notifications -->
                 <div class="btn-group" role="group">
                     <button type="button" class="btn btn-rounded btn-dual-secondary message-container" id="messageBtn" title="消息">
-                        <i class="fa fa-flag"></i>
+                        <i class="fa fa-comments"></i>
                         <span class="badge badge-primary badge-pill" id="messageNum"></span>
                     </button>
                     <div class="dropdown-menu dropdown-menu-right min-width-300 animated fadeIn message-content" id="messageContent">
@@ -402,7 +408,7 @@
                 <!-- END Notifications -->
                 <div class="btn-group" role="group">
                     <a href="/" target="_blank" class="btn btn-circle btn-dual-secondary" title="跳至主页">
-                        <i class="fa fa-plane"></i>
+                        <i class="fa fa-sign-in"></i>
                     </a>
                 </div>
                 <button type="button" class="btn btn-circle btn-dual-secondary" data-toggle="layout" data-action="side_overlay_toggle"  title="博客信息">
@@ -537,7 +543,7 @@
                                     <a class="block block-link-shadow text-center" href="javascript:void(0)" data-url="/admin/theme/listUI.html" data-name="更换主题">
                                         <div class="block-content">
                                             <p class="mt-5">
-                                                <i class="fa fa-css3 fa-3x"></i>
+                                                <i class="fa fa-coffee fa-3x"></i>
                                             </p>
                                             <p class="font-w600">更换主题</p>
                                         </div>
@@ -557,7 +563,7 @@
                                     <a class="block block-link-shadow text-center" href="javascript:void(0)" data-url="/admin/friendLink/listUI.html" data-name="友链列表">
                                         <div class="block-content">
                                             <p class="mt-5">
-                                                <i class="fa fa-anchor fa-3x"></i>
+                                                <i class="fa fa-link fa-3x"></i>
                                             </p>
                                             <p class="font-w600">友链列表</p>
                                         </div>
@@ -577,7 +583,7 @@
                                     <a class="block block-link-shadow text-center" href="javascript:void(0)" data-url="/admin/attachment/listUI.html" data-name="附件列表">
                                         <div class="block-content">
                                             <p class="mt-5">
-                                                <i class="fa fa-files-o fa-3x"></i>
+                                                <i class="fa fa-folder-o fa-3x"></i>
                                             </p>
                                             <p class="font-w600">查看附件</p>
                                         </div>
