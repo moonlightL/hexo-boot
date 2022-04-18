@@ -894,19 +894,20 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
         if (link.startsWith("/")) {
             link = link.substring(1);
         }
+
         Example.Builder builder = Example.builder(Post.class)
                 .select("id", "title", "author", "publishDate", "year", "month", "day", "top", "reprint", "reprintLink", "comment",
                         "coverUrl", "coverType", "link", "customLink", "categoryId", "tags", "readNum", "praiseNum", "commentNum", "authCode",
                         "topTime", "createTime");
-        builder.where(Sqls.custom().andEqualTo("link", link).andEqualTo("delete", false));
 
-        Post post = this.getBaseMapper().selectOneByExample(builder.build());
-        if (post == null) {
+        if (link.endsWith(".html")) {
+            link = link.split("\\.")[0];
             builder.where(Sqls.custom().andEqualTo("customLink", link).andEqualTo("delete", false));
-            post = this.getBaseMapper().selectOneByExample(builder.build());
+        } else {
+            builder.where(Sqls.custom().andEqualTo("link", link).andEqualTo("delete", false));
         }
 
-        return post;
+        return this.getBaseMapper().selectOneByExample(builder.build());
     }
 
     @Override
