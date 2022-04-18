@@ -77,7 +77,7 @@
         let id = $obj.data("id");
         let state = $obj.prop("checked");
 
-        $.hexo.modal.confirm("确定要修改开关吗？", function() {
+        $.hexo.modal.confirm("确定要修改状态吗？", function() {
             $.hexo.action.sendRequest({
                 url: BASE_URL + "/updateState.json",
                 params: {"id": id, "state": state},

@@ -1355,6 +1355,7 @@ h3.friend-link-title {
     text-overflow: ellipsis;
     white-space: nowrap;
     padding: 1rem 0;
+    color: var(--text-color);
 }
 
 .video-mask {

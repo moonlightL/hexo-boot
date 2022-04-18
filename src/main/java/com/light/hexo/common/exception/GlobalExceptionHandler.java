@@ -72,8 +72,7 @@ public class GlobalExceptionHandler {
             return Result.fail(GlobalExceptionEnum.ERROR_TIME_OUT);
 
         } else {
-            return Result.fail(GlobalExceptionEnum.ERROR_SERVER);
-
+            return Result.fail(GlobalExceptionEnum.ERROR_SERVER.getCode(), e.getMessage());
         }
     }
 }

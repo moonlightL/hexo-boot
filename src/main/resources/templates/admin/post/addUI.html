@@ -21,6 +21,7 @@
             display: inline-block;
             width: calc(100% - 320px);
             height: 100%;
+            min-height: 530px;
         }
         .optionArea {
             float: right;
@@ -224,7 +225,7 @@
                 imageFormats : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
                 imageUploadURL : "/admin/file/mdUploadFile.json",
                 onload: function () {
-                    $("#postEditor").height($(window.parent).height() - 270)
+                    $("#postEditor").height($(window.parent).height() - 80)
                 }
             });
 

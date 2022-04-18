@@ -177,7 +177,7 @@
                         let albumDetail = resp.data;
                         for (let key in albumDetail) {
                             if (key == "url") {
-                                $("#image-url").attr("src", albumDetail[key]);
+                                $("#imageBox").attr("src", albumDetail[key]);
                             }
                             $("#" + key).val(albumDetail[key]);
                         }

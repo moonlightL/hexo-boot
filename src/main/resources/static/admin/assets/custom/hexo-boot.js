@@ -101,12 +101,12 @@
                     if (!id) {
                         let selections = $.hexo.table.getSelections();
                         if (selections.length === 0) {
-                            $.hexo.modal.tip("请选择记录进行编辑操作");
+                            $.hexo.modal.tip("请选择记录进行编辑操作", "info");
                             return;
                         }
 
                         if (selections.length > 1) {
-                            $.hexo.modal.tip("只能选择一条记录进行编辑操作");
+                            $.hexo.modal.tip("只能选择一条记录进行编辑操作", "info");
                             return;
                         }
 
@@ -147,7 +147,7 @@
                 },
                 remove: function(id, fn) {
                     if (!$.hexo.table.options.removeUrl) {
-                        $.hexo.modal.tip("未设置删除地址");
+                        $.hexo.modal.tip("未设置删除地址", "info");
                         return;
                     }
 
@@ -155,7 +155,7 @@
                     if (!id) {
                         let selections = $.hexo.table.getSelections();
                         if (selections.length === 0) {
-                            $.hexo.modal.tip("请选择记录进行删除操作");
+                            $.hexo.modal.tip("请选择记录进行删除操作", "info");
                             return;
                         }
 
