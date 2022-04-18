@@ -1,7 +1,7 @@
 package com.light.hexo.core.portal.common;
 
 import com.light.hexo.common.util.MarkdownUtil;
-import com.light.hexo.config.BlogProperty;
+import com.light.hexo.core.admin.config.BlogConfig;
 import com.light.hexo.mapper.model.Theme;
 import com.light.hexo.core.admin.service.*;
 import com.light.hexo.common.component.event.EventPublisher;
@@ -73,7 +73,7 @@ public class CommonController {
     protected EventPublisher eventPublisher;
 
     @Autowired
-    private BlogProperty blogProperty;
+    private BlogConfig blogConfig;
 
     protected String render(String pageName, boolean isDetail, Map<String, Object> resultMap) {
 
@@ -88,7 +88,7 @@ public class CommonController {
 
         this.settingBaseLink(activeTheme, resultMap);
 
-        String version = this.blogProperty.getVersion();
+        String version = this.blogConfig.getVersion();
         if (StringUtils.isBlank(version) || Double.valueOf(version) > 3.0) {
             // 数量，兼容老版本主题
             Map<String, Integer> countInfo = this.getCountInfo();

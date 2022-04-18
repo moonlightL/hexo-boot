@@ -1,11 +1,11 @@
 package com.light.hexo.core.admin.service.impl;
 
 import com.light.hexo.common.base.BaseServiceImpl;
-import com.light.hexo.constant.ConfigEnum;
+import com.light.hexo.core.admin.constant.ConfigEnum;
 import com.light.hexo.mapper.mapper.ConfigMapper;
 import com.light.hexo.mapper.base.BaseMapper;
 import com.light.hexo.mapper.model.Config;
-import com.light.hexo.mapper.model.event.ConfigEvent;
+import com.light.hexo.common.event.ConfigEvent;
 import com.light.hexo.core.admin.service.ConfigService;
 import com.light.hexo.common.base.BaseRequest;
 import com.light.hexo.common.component.event.BaseEvent;

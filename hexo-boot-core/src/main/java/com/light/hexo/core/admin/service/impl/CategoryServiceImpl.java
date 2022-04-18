@@ -1,11 +1,11 @@
 package com.light.hexo.core.admin.service.impl;
 
 import com.light.hexo.common.base.BaseServiceImpl;
-import com.light.hexo.constant.HexoExceptionEnum;
+import com.light.hexo.core.admin.constant.HexoExceptionEnum;
 import com.light.hexo.mapper.mapper.CategoryMapper;
 import com.light.hexo.mapper.base.BaseMapper;
 import com.light.hexo.mapper.model.Category;
-import com.light.hexo.mapper.model.event.CategoryEvent;
+import com.light.hexo.common.event.CategoryEvent;
 import com.light.hexo.core.admin.service.CategoryService;
 import com.light.hexo.core.admin.service.PostService;
 import com.light.hexo.core.portal.constant.PageConstant;
@@ -16,7 +16,7 @@ import com.light.hexo.common.component.event.EventPublisher;
 import com.light.hexo.common.constant.HexoConstant;
 import com.light.hexo.common.exception.GlobalException;
 import com.light.hexo.common.exception.GlobalExceptionEnum;
-import com.light.hexo.common.model.CategoryRequest;
+import com.light.hexo.common.request.CategoryRequest;
 import com.light.hexo.common.util.EhcacheUtil;
 import com.light.hexo.common.util.ExceptionUtil;
 import com.light.hexo.common.util.SpringContextUtil;

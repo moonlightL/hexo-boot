@@ -59,6 +59,7 @@ public class GlobalExceptionHandler {
     @ResponseBody
     public Result handleOtherException(Exception e) {
         log.error("======= GlobalExceptionHandler Exception: {} ======", e.getMessage());
+        e.printStackTrace();
 
         if (e instanceof BindException) {
             BindException bex = (BindException) e;

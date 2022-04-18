@@ -1,11 +1,11 @@
 package com.light.hexo.core.admin.service.impl;
 
 import com.light.hexo.common.base.BaseServiceImpl;
-import com.light.hexo.constant.HexoExceptionEnum;
+import com.light.hexo.core.admin.constant.HexoExceptionEnum;
 import com.light.hexo.mapper.mapper.AlbumMapper;
 import com.light.hexo.mapper.base.BaseMapper;
 import com.light.hexo.mapper.model.Album;
-import com.light.hexo.mapper.model.event.AlbumEvent;
+import com.light.hexo.common.event.AlbumEvent;
 import com.light.hexo.core.admin.service.AlbumDetailService;
 import com.light.hexo.core.admin.service.AlbumService;
 import com.light.hexo.core.portal.constant.PageConstant;
@@ -15,7 +15,7 @@ import com.light.hexo.common.component.event.EventEnum;
 import com.light.hexo.common.component.event.EventPublisher;
 import com.light.hexo.common.constant.HexoConstant;
 import com.light.hexo.common.exception.GlobalException;
-import com.light.hexo.common.model.AlbumRequest;
+import com.light.hexo.common.request.AlbumRequest;
 import com.light.hexo.common.util.EhcacheUtil;
 import com.light.hexo.common.util.ExceptionUtil;
 import lombok.extern.slf4j.Slf4j;

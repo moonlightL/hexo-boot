@@ -1,7 +1,7 @@
 package com.light.hexo.core.portal.web.interceptor;
 
 import com.light.hexo.common.vo.Result;
-import com.light.hexo.mapper.model.event.VisitEvent;
+import com.light.hexo.common.event.VisitEvent;
 import com.light.hexo.core.admin.service.BlacklistService;
 import com.light.hexo.common.component.event.EventPublisher;
 import com.light.hexo.common.exception.GlobalExceptionEnum;

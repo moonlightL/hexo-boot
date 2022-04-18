@@ -1,6 +1,6 @@
 package com.light.hexo.core.portal.web.controller;
 
-import com.light.hexo.constant.ConfigEnum;
+import com.light.hexo.core.admin.constant.ConfigEnum;
 import com.light.hexo.mapper.model.Post;
 import com.light.hexo.core.admin.service.ConfigService;
 import com.light.hexo.core.admin.service.PostService;

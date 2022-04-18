@@ -5,7 +5,7 @@ import com.light.hexo.common.base.BaseServiceImpl;
 import com.light.hexo.mapper.mapper.VisitMapper;
 import com.light.hexo.mapper.base.BaseMapper;
 import com.light.hexo.mapper.model.Visit;
-import com.light.hexo.mapper.model.event.VisitEvent;
+import com.light.hexo.common.event.VisitEvent;
 import com.light.hexo.core.admin.service.VisitService;
 import com.light.hexo.common.base.BaseRequest;
 import com.light.hexo.common.component.event.BaseEvent;

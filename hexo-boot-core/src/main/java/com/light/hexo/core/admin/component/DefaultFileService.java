@@ -1,4 +1,4 @@
-package com.light.hexo.component;
+package com.light.hexo.core.admin.component;
 
 import cn.hutool.core.util.RandomUtil;
 import com.light.hexo.common.component.file.FileRequest;
@@ -9,7 +9,10 @@ import com.light.hexo.common.constant.HexoConstant;
 import com.light.hexo.common.exception.GlobalException;
 import com.light.hexo.common.util.ExceptionUtil;
 import com.light.hexo.common.util.IpUtil;
-import com.light.hexo.config.BlogProperty;
+import com.light.hexo.core.admin.config.BlogConfig;
+import com.light.hexo.core.admin.constant.ConfigEnum;
+import com.light.hexo.core.admin.constant.FileTypeEnum;
+import com.light.hexo.core.admin.constant.HexoExceptionEnum;
 import com.light.hexo.mapper.model.Attachment;
 import com.light.hexo.core.admin.service.AttachmentService;
 import com.light.hexo.core.admin.service.ConfigService;
@@ -49,7 +52,7 @@ public class DefaultFileService {
     private ConfigService configService;
 
     @Autowired
-    private BlogProperty blogProperty;
+    private BlogConfig blogConfig;
 
     @Autowired
     private Environment environment;
@@ -112,12 +115,12 @@ public class DefaultFileService {
                       .setFileUrl(fileResponse.getUrl())
                       .setFilePath(fileResponse.getPath())
                       .setFileSize(fileRequest.getFileSize())
-                      .setPosition(Integer.valueOf(this.configService.getConfigValue(com.light.hexo.constant.ConfigEnum.MANAGE_MODE.getName())));
+                      .setPosition(Integer.valueOf(this.configService.getConfigValue(ConfigEnum.MANAGE_MODE.getName())));
 
             if (THUMBNAIL_URL_MAP.containsKey(fileRequest.getExtension())) {
                 attachment.setThumbnailUrl(THUMBNAIL_URL_MAP.get(fileRequest.getExtension()));
             } else {
-                if (attachment.getContentType().startsWith(com.light.hexo.constant.FileTypeEnum.VIDEO.getCode())) {
+                if (attachment.getContentType().startsWith(FileTypeEnum.VIDEO.getCode())) {
 
                     String coverBase64 = fileRequest.getCoverBase64();
                     if (StringUtils.isNotBlank(coverBase64)) {
@@ -129,15 +132,17 @@ public class DefaultFileService {
                                 data[i] += 256;
                             }
                         }
-                        String filePath = this.configService.getConfigValue(com.light.hexo.constant.ConfigEnum.LOCAL_FILE_PATH.getName());
-                        String localFilePath = StringUtils.isNotBlank(filePath) ? filePath  + File.separator : this.blogProperty.getAttachmentDir();
+                        String filePath = this.configService.getConfigValue(ConfigEnum.LOCAL_FILE_PATH.getName());
+                        String localFilePath = StringUtils.isNotBlank(filePath) ? filePath  + File.separator : this.blogConfig.getAttachmentDir();
                         String coverName = FilenameUtils.getBaseName(fileRequest.getOriginalName()) + "_" + RandomUtil.randomNumbers(6) + ".jpg";
-                        String coverPath = localFilePath + "/cover/" + coverName;
-                        File target = new File(coverPath);
+                        File parent = new File(localFilePath + "/cover/");
+                        if (!parent.exists()) {
+                            parent.mkdirs();
+                        }
 
-                        IOUtils.write(data, new FileOutputStream(target));
+                        IOUtils.write(data, new FileOutputStream(new File(parent.getAbsolutePath(), coverName)));
 
-                        String blogPage = this.configService.getConfigValue(com.light.hexo.constant.ConfigEnum.HOME_PAGE.getName());
+                        String blogPage = this.configService.getConfigValue(ConfigEnum.HOME_PAGE.getName());
                         String coverUrl = (StringUtils.isNotBlank(blogPage) ? blogPage : "http://" + IpUtil.getHostIp() + ":" + this.environment.getProperty("server.port")) + "/cover/" + coverName;
                         attachment.setThumbnailUrl(coverUrl);
                     } else {
@@ -157,18 +162,18 @@ public class DefaultFileService {
         return fileResponse;
     }
 
-    private com.light.hexo.constant.FileTypeEnum checkFileType(String contentType) {
-        if (contentType.startsWith(com.light.hexo.constant.FileTypeEnum.IMAGE.getCode())) {
-            return com.light.hexo.constant.FileTypeEnum.IMAGE;
-        } else if (contentType.startsWith(com.light.hexo.constant.FileTypeEnum.VIDEO.getCode())) {
-            return com.light.hexo.constant.FileTypeEnum.VIDEO;
+    private FileTypeEnum checkFileType(String contentType) {
+        if (contentType.startsWith(FileTypeEnum.IMAGE.getCode())) {
+            return FileTypeEnum.IMAGE;
+        } else if (contentType.startsWith(FileTypeEnum.VIDEO.getCode())) {
+            return FileTypeEnum.VIDEO;
         }
-        return com.light.hexo.constant.FileTypeEnum.OTHER;
+        return FileTypeEnum.OTHER;
     }
 
     public FileResponse download (FileRequest fileRequest, Integer position) throws GlobalException {
         if (!this.getManageMode().equals(position.toString())) {
-            ExceptionUtil.throwExToPage(com.light.hexo.constant.HexoExceptionEnum.ERROR_ATTACHMENT_NOT_POSITION);
+            ExceptionUtil.throwExToPage(HexoExceptionEnum.ERROR_ATTACHMENT_NOT_POSITION);
         }
 
         return this.getFileService().download(fileRequest);
@@ -177,7 +182,7 @@ public class DefaultFileService {
 
     public FileResponse remove(FileRequest fileRequest, Integer position) throws GlobalException {
         if (!this.getManageMode().equals(position.toString())) {
-            ExceptionUtil.throwEx(com.light.hexo.constant.HexoExceptionEnum.ERROR_ATTACHMENT_NOT_POSITION);
+            ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_ATTACHMENT_NOT_POSITION);
         }
 
         return this.getFileService().remove(fileRequest);
@@ -194,6 +199,6 @@ public class DefaultFileService {
     }
 
     public String getManageMode() {
-        return this.configService.getConfigValue(com.light.hexo.constant.ConfigEnum.MANAGE_MODE.getName());
+        return this.configService.getConfigValue(ConfigEnum.MANAGE_MODE.getName());
     }
 }

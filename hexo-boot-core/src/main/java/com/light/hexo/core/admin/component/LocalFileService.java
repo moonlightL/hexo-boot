@@ -1,7 +1,7 @@
-package com.light.hexo.component;
+package com.light.hexo.core.admin.component;
 
-import com.light.hexo.config.BlogProperty;
-import com.light.hexo.constant.ConfigEnum;
+import com.light.hexo.core.admin.config.BlogConfig;
+import com.light.hexo.core.admin.constant.ConfigEnum;
 import com.light.hexo.core.admin.service.ConfigService;
 import com.light.hexo.common.component.file.FileManageEnum;
 import com.light.hexo.common.component.file.FileRequest;
@@ -34,7 +34,7 @@ public class LocalFileService implements FileService {
     private ConfigService configService;
 
     @Autowired
-    private BlogProperty blogProperty;
+    private BlogConfig blogConfig;
 
     @Autowired
     private Environment environment;
@@ -87,7 +87,7 @@ public class LocalFileService implements FileService {
 
     private String getUploadDir() {
         String uploadDir = this.configService.getConfigValue(ConfigEnum.LOCAL_FILE_PATH.getName());
-        return StringUtils.isBlank(uploadDir) ? this.blogProperty.getAttachmentDir() : uploadDir;
+        return StringUtils.isBlank(uploadDir) ? this.blogConfig.getAttachmentDir() : uploadDir;
     }
 
     @Override

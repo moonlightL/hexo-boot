@@ -10,7 +10,7 @@ import com.light.hexo.common.component.log.ActionEnum;
 import com.light.hexo.common.component.log.OperateLog;
 import com.light.hexo.common.constant.CacheKey;
 import com.light.hexo.common.exception.GlobalException;
-import com.light.hexo.common.model.BlackListRequest;
+import com.light.hexo.common.request.BlackListRequest;
 import com.light.hexo.common.util.CacheUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

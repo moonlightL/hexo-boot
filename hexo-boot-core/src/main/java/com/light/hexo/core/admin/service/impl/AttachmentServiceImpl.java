@@ -1,6 +1,7 @@
 package com.light.hexo.core.admin.service.impl;
 
 import com.light.hexo.common.base.BaseServiceImpl;
+import com.light.hexo.core.admin.component.DefaultFileService;
 import com.light.hexo.mapper.mapper.AttachmentMapper;
 import com.light.hexo.mapper.base.BaseMapper;
 import com.light.hexo.mapper.model.Attachment;
@@ -8,7 +9,7 @@ import com.light.hexo.core.admin.service.AttachmentService;
 import com.light.hexo.common.base.BaseRequest;
 import com.light.hexo.common.component.file.FileRequest;
 import com.light.hexo.common.exception.GlobalException;
-import com.light.hexo.common.model.AttachmentRequest;
+import com.light.hexo.common.request.AttachmentRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,7 @@ public class AttachmentServiceImpl extends BaseServiceImpl<Attachment> implement
     private AttachmentMapper attachmentMapper;
 
     @Autowired
-    private com.light.hexo.component.DefaultFileService defaultFileService;
+    private DefaultFileService defaultFileService;
 
     @Override
     public BaseMapper<Attachment> getBaseMapper() {

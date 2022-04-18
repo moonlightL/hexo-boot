@@ -1,4 +1,4 @@
-package com.light.hexo.constant;
+package com.light.hexo.core.admin.constant;
 
 import com.light.hexo.common.exception.GlobalExceptionMap;
 
@@ -85,6 +85,10 @@ public enum HexoExceptionEnum implements GlobalExceptionMap {
     ERROR_ALBUM_NAME_REPEAT(15002, "专辑名称重复"),
     ERROR_ALBUM_DETAIL_NOT_EMPTY(15003, "该专辑详情不为空，禁止删除"),
     ERROR_ALBUM_DETAIL_NOT_EXIST(15004, "该专辑详情不存在"),
+
+    // 16xxx --> 插件
+    ERROR_PLUGIN_NOT_EXIST(16001, "该插件不存在"),
+    ERROR_PLUGIN_HAD_INSTALLED(16002, "插件已安装"),
 
     // 50xxx --> 前端
     ERROR_REPEAT_PRAISE_POST(50001, "已点赞，请勿重复操作")

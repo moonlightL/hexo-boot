@@ -1,7 +1,7 @@
 package com.light.hexo.core.admin.service.impl;
 
 import com.light.hexo.common.base.BaseServiceImpl;
-import com.light.hexo.constant.ConfigEnum;
+import com.light.hexo.core.admin.constant.ConfigEnum;
 import com.light.hexo.mapper.mapper.BackupMapper;
 import com.light.hexo.mapper.base.BaseMapper;
 import com.light.hexo.mapper.model.Backup;
@@ -9,7 +9,7 @@ import com.light.hexo.core.admin.service.BackupService;
 import com.light.hexo.core.admin.service.ConfigService;
 import com.light.hexo.common.base.BaseRequest;
 import com.light.hexo.common.exception.GlobalException;
-import com.light.hexo.common.model.BackupRequest;
+import com.light.hexo.common.request.BackupRequest;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

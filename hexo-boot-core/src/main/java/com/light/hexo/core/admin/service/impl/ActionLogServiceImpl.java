@@ -1,7 +1,7 @@
 package com.light.hexo.core.admin.service.impl;
 
 import com.light.hexo.common.base.BaseServiceImpl;
-import com.light.hexo.constant.HexoExceptionEnum;
+import com.light.hexo.core.admin.constant.HexoExceptionEnum;
 import com.light.hexo.mapper.mapper.ActionLogDetailMapper;
 import com.light.hexo.mapper.mapper.ActionLogMapper;
 import com.light.hexo.mapper.base.BaseMapper;
@@ -13,7 +13,7 @@ import com.light.hexo.common.component.event.BaseEvent;
 import com.light.hexo.common.component.event.EventEnum;
 import com.light.hexo.common.component.log.ActionLogEvent;
 import com.light.hexo.common.exception.GlobalException;
-import com.light.hexo.common.model.ActionLogRequest;
+import com.light.hexo.common.request.ActionLogRequest;
 import com.light.hexo.common.util.ExceptionUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;

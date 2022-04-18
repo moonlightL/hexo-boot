@@ -7,11 +7,12 @@ import com.light.hexo.common.component.log.ActionEnum;
 import com.light.hexo.common.component.log.OperateLog;
 import com.light.hexo.common.exception.GlobalException;
 import com.light.hexo.common.exception.GlobalExceptionEnum;
-import com.light.hexo.common.model.FileResult;
-import com.light.hexo.common.model.bing.WebPic;
+import com.light.hexo.common.request.FileResult;
+import com.light.hexo.common.request.bing.WebPic;
 import com.light.hexo.common.util.ExceptionUtil;
 import com.light.hexo.common.util.HttpClientUtil;
 import com.light.hexo.common.vo.Result;
+import com.light.hexo.core.admin.component.DefaultFileService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -42,7 +42,7 @@ public class FileController {
             ".sql", ".xls", "xlsx", ".doc", "docx", ".txt", ".md", ".pdf"};
 
     @Autowired
-    private com.light.hexo.component.DefaultFileService defaultFileService;
+    private DefaultFileService defaultFileService;
 
     /**
      * 文件上传（分类、文章页）

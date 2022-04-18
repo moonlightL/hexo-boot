@@ -1,8 +1,8 @@
 package com.light.hexo.core.admin.service.impl;
 
 import com.light.hexo.common.base.BaseServiceImpl;
-import com.light.hexo.constant.ConfigEnum;
-import com.light.hexo.constant.HexoExceptionEnum;
+import com.light.hexo.core.admin.constant.ConfigEnum;
+import com.light.hexo.core.admin.constant.HexoExceptionEnum;
 import com.light.hexo.mapper.mapper.UserMapper;
 import com.light.hexo.mapper.base.BaseMapper;
 import com.light.hexo.mapper.model.User;
@@ -12,7 +12,7 @@ import com.light.hexo.common.base.BaseRequest;
 import com.light.hexo.common.constant.HexoConstant;
 import com.light.hexo.common.exception.GlobalException;
 import com.light.hexo.common.exception.GlobalExceptionEnum;
-import com.light.hexo.common.model.UserRequest;
+import com.light.hexo.common.request.UserRequest;
 import com.light.hexo.common.util.ExceptionUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

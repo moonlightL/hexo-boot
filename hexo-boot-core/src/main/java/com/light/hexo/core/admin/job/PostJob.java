@@ -1,4 +1,4 @@
-package com.light.hexo.job;
+package com.light.hexo.core.admin.job;
 
 import com.light.hexo.common.util.MarkdownUtil;
 import com.light.hexo.mapper.model.Post;
@@ -38,7 +38,7 @@ public class PostJob {
     /**
      * 扫描 contentHtml 内容为空的文章（兼容老版本）
      */
-    @Scheduled(cron = "0 0/1 * * * ?")
+//    @Scheduled(cron = "0 0/1 * * * ?")
     public void checkContentHtml() {
 
         List<Post> postList = this.postService.listEmptyHtml();

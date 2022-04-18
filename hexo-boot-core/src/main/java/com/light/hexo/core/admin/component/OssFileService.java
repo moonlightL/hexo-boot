@@ -1,10 +1,10 @@
-package com.light.hexo.component;
+package com.light.hexo.core.admin.component;
 
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
 import com.aliyun.oss.model.OSSObject;
-import com.light.hexo.constant.ConfigEnum;
-import com.light.hexo.constant.HexoExceptionEnum;
+import com.light.hexo.core.admin.constant.ConfigEnum;
+import com.light.hexo.core.admin.constant.HexoExceptionEnum;
 import com.light.hexo.core.admin.service.ConfigService;
 import com.light.hexo.common.component.file.FileManageEnum;
 import com.light.hexo.common.component.file.FileRequest;

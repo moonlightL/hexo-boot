@@ -10,7 +10,7 @@ import com.light.hexo.common.component.log.ActionEnum;
 import com.light.hexo.common.component.log.OperateLog;
 import com.light.hexo.common.constant.HexoConstant;
 import com.light.hexo.common.exception.GlobalExceptionEnum;
-import com.light.hexo.common.model.CommentRequest;
+import com.light.hexo.common.request.CommentRequest;
 import com.light.hexo.common.util.BrowserUtil;
 import com.light.hexo.common.util.ExceptionUtil;
 import com.light.hexo.common.util.IpUtil;

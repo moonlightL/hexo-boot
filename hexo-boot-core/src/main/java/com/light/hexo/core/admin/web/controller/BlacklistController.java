@@ -2,7 +2,7 @@ package com.light.hexo.core.admin.web.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.light.hexo.common.vo.Result;
-import com.light.hexo.constant.HexoExceptionEnum;
+import com.light.hexo.core.admin.constant.HexoExceptionEnum;
 import com.light.hexo.mapper.model.Blacklist;
 import com.light.hexo.core.admin.service.BlacklistService;
 import com.light.hexo.common.base.BaseController;
@@ -11,7 +11,7 @@ import com.light.hexo.common.component.log.ActionEnum;
 import com.light.hexo.common.component.log.OperateLog;
 import com.light.hexo.common.exception.GlobalException;
 import com.light.hexo.common.exception.GlobalExceptionEnum;
-import com.light.hexo.common.model.BlackListRequest;
+import com.light.hexo.common.request.BlackListRequest;
 import com.light.hexo.common.util.ExceptionUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

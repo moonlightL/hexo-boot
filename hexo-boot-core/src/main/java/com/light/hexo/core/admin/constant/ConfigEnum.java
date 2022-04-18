@@ -1,4 +1,4 @@
-package com.light.hexo.constant;
+package com.light.hexo.core.admin.constant;
 
 import lombok.Getter;
 

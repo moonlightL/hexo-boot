@@ -1,4 +1,4 @@
-package com.light.hexo.component.websocket;
+package com.light.hexo.core.admin.component.websocket;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

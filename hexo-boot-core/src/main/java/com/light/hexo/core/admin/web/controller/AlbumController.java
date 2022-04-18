@@ -2,7 +2,8 @@ package com.light.hexo.core.admin.web.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.light.hexo.common.vo.Result;
-import com.light.hexo.constant.HexoExceptionEnum;
+import com.light.hexo.core.admin.component.DefaultFileService;
+import com.light.hexo.core.admin.constant.HexoExceptionEnum;
 import com.light.hexo.mapper.model.Album;
 import com.light.hexo.core.admin.service.AlbumDetailService;
 import com.light.hexo.core.admin.service.AlbumService;
@@ -14,8 +15,8 @@ import com.light.hexo.common.component.log.ActionEnum;
 import com.light.hexo.common.component.log.OperateLog;
 import com.light.hexo.common.exception.GlobalException;
 import com.light.hexo.common.exception.GlobalExceptionEnum;
-import com.light.hexo.common.model.AlbumDetailRequest;
-import com.light.hexo.common.model.AlbumRequest;
+import com.light.hexo.common.request.AlbumDetailRequest;
+import com.light.hexo.common.request.AlbumRequest;
 import com.light.hexo.common.util.ExceptionUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +51,7 @@ public class AlbumController extends BaseController {
     private AlbumDetailService albumDetailService;
 
     @Autowired
-    private com.light.hexo.component.DefaultFileService defaultFileService;
+    private DefaultFileService defaultFileService;
 
     /**
      * 新增页面

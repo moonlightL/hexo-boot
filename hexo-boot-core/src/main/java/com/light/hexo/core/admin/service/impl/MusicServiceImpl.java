@@ -6,7 +6,7 @@ import com.light.hexo.mapper.base.BaseMapper;
 import com.light.hexo.mapper.model.Music;
 import com.light.hexo.core.admin.service.MusicService;
 import com.light.hexo.common.base.BaseRequest;
-import com.light.hexo.common.model.MusicRequest;
+import com.light.hexo.common.request.MusicRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

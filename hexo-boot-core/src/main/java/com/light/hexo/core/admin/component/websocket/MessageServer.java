@@ -1,4 +1,4 @@
-package com.light.hexo.component.websocket;
+package com.light.hexo.core.admin.component.websocket;
 
 import com.light.hexo.mapper.model.Message;
 import com.light.hexo.core.admin.service.MessageService;

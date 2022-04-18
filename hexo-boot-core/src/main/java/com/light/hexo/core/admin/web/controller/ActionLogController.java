@@ -6,7 +6,7 @@ import com.light.hexo.mapper.model.ActionLog;
 import com.light.hexo.core.admin.service.ActionLogService;
 import com.light.hexo.common.base.BaseController;
 import com.light.hexo.common.component.log.ActionEnum;
-import com.light.hexo.common.model.ActionLogRequest;
+import com.light.hexo.common.request.ActionLogRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

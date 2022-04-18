@@ -1,6 +1,6 @@
 package com.light.hexo.core.portal.web.controller;
 
-import com.light.hexo.constant.HexoExceptionEnum;
+import com.light.hexo.core.admin.constant.HexoExceptionEnum;
 import com.light.hexo.mapper.model.Album;
 import com.light.hexo.core.portal.common.CommonController;
 import com.light.hexo.core.portal.model.HexoPageInfo;

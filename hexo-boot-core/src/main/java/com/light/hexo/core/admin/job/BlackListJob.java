@@ -1,4 +1,4 @@
-package com.light.hexo.job;
+package com.light.hexo.core.admin.job;
 
 import com.light.hexo.mapper.model.Blacklist;
 import com.light.hexo.core.admin.service.BlacklistService;

@@ -9,7 +9,7 @@ import com.light.hexo.common.base.BaseRequest;
 import com.light.hexo.common.component.log.ActionEnum;
 import com.light.hexo.common.component.log.OperateLog;
 import com.light.hexo.common.exception.GlobalExceptionEnum;
-import com.light.hexo.common.model.TagRequest;
+import com.light.hexo.common.request.TagRequest;
 import com.light.hexo.common.util.ExceptionUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

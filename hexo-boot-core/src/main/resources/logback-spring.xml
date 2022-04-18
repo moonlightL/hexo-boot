@@ -26,6 +26,22 @@
         </encoder>
     </appender>
 
+    <appender name="FILE_ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${user.home}/.hexo-boot/logs/error.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <FileNamePattern>${user.home}/.hexo-boot/logs/error.%d{yyyy-MM-dd}.%i.log</FileNamePattern>
+            <maxHistory>7</maxHistory>
+            <maxFileSize>100MB</maxFileSize>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+        </encoder>
+        <!-- 过滤日志 -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+    </appender>
+
     <!--myibatis log configure，logger 的 name 值为需要记录日志的包名，不设置 level 则继承 root 上的 level -->
     <!--<logger name="org.apache.ibatis" level="DEBUG"/>-->
     <!--<logger name="java.sql.Connection" level="DEBUG"/>-->
@@ -39,6 +55,7 @@
     <root level="INFO">
         <appender-ref ref="STDOUT" />
         <appender-ref ref="FILE" />
+        <appender-ref ref="FILE_ERROR" />
     </root>
 
 </configuration>

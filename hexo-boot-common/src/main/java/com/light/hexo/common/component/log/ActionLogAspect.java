@@ -5,12 +5,12 @@ import com.light.hexo.common.component.event.EventPublisher;
 import com.light.hexo.common.util.BrowserUtil;
 import com.light.hexo.common.util.IpUtil;
 import com.light.hexo.common.util.JsonUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.jsoup.internal.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
@@ -118,6 +118,12 @@ public class ActionLogAspect {
                         if ("password".equals(f.getName())) {
                             map.put(f.getName(), DigestUtils.md5DigestAsHex(val.toString().trim().getBytes()));
                         } else {
+                            if (val instanceof String) {
+                                String v = (String) val;
+                                if (v.startsWith("data:image/png;base64,")) {
+                                    continue;
+                                }
+                            }
                             map.put(f.getName(), val);
                         }
                     }
@@ -129,7 +135,7 @@ public class ActionLogAspect {
         } else if (arg instanceof HttpServletRequest) {
             HttpServletRequest request = (HttpServletRequest) arg;
             Map<String, String[]> parameterMap = request.getParameterMap();
-            parameterMap.forEach((key, value) -> map.put(key, StringUtil.join(value, ",")));
+            parameterMap.forEach((key, value) -> map.put(key, StringUtils.join(value, ",")));
 
         } else if (arg instanceof MultipartFile[]) {
             MultipartFile[] files = (MultipartFile[]) arg;

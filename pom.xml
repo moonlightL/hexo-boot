@@ -22,6 +22,8 @@
     <artifactId>hexo-boot</artifactId>
     <version>1.0.0</version>
 
+    <name>hexo-boot-parent</name>
+
     <properties>
         <java.version>1.8</java.version>
         <spring.boot.version>2.3.4.RELEASE</spring.boot.version>
@@ -333,6 +335,12 @@
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-all</artifactId>
                 <version>5.7.2</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.pf4j</groupId>
+                <artifactId>pf4j-spring</artifactId>
+                <version>0.7.0</version>
             </dependency>
 
         </dependencies>

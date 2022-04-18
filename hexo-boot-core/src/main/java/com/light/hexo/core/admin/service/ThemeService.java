@@ -4,7 +4,7 @@ import com.light.hexo.common.base.BaseService;
 import com.light.hexo.mapper.model.Theme;
 import com.light.hexo.mapper.model.extend.ThemeFileExtension;
 import com.light.hexo.common.exception.GlobalException;
-import com.light.hexo.common.model.TreeNode;
+import com.light.hexo.common.request.TreeNode;
 
 import java.io.File;
 import java.io.IOException;

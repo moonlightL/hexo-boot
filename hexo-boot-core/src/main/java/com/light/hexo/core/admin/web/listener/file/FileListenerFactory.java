@@ -1,4 +1,4 @@
-package com.light.hexo.web.listener.file;
+package com.light.hexo.core.admin.web.listener.file;
 
 import com.light.hexo.core.admin.service.ThemeService;
 import org.apache.commons.io.filefilter.FileFilterUtils;

@@ -1,11 +1,11 @@
 package com.light.hexo.core.admin.service.impl;
 
 import com.light.hexo.common.base.BaseServiceImpl;
-import com.light.hexo.constant.HexoExceptionEnum;
+import com.light.hexo.core.admin.constant.HexoExceptionEnum;
 import com.light.hexo.mapper.mapper.NavMapper;
 import com.light.hexo.mapper.base.BaseMapper;
 import com.light.hexo.mapper.model.Nav;
-import com.light.hexo.mapper.model.event.NavEvent;
+import com.light.hexo.common.event.NavEvent;
 import com.light.hexo.core.admin.service.NavService;
 import com.light.hexo.core.portal.constant.PageConstant;
 import com.light.hexo.common.base.BaseRequest;
@@ -14,7 +14,7 @@ import com.light.hexo.common.component.event.EventEnum;
 import com.light.hexo.common.component.event.EventPublisher;
 import com.light.hexo.common.constant.CacheKey;
 import com.light.hexo.common.exception.GlobalException;
-import com.light.hexo.common.model.NavRequest;
+import com.light.hexo.common.request.NavRequest;
 import com.light.hexo.common.util.CacheUtil;
 import com.light.hexo.common.util.EhcacheUtil;
 import com.light.hexo.common.util.ExceptionUtil;
@@ -180,7 +180,7 @@ public class NavServiceImpl extends BaseServiceImpl<Nav> implements NavService {
     }
 
     @Override
-    public void initNav(ServletContext servletContext) {
+    public void loadNav(ServletContext servletContext) {
         List<Nav> navList = this.listNavs();
         List<Nav> firstNav = navList.stream().filter(i -> i.getParentId().equals(0)).collect(Collectors.toList());
         Map<Integer, List<Nav>> childrenMap = navList.stream().collect(Collectors.groupingBy(Nav::getParentId));
@@ -221,7 +221,8 @@ public class NavServiceImpl extends BaseServiceImpl<Nav> implements NavService {
                 log.info("===========NavService dealWithEvent 获取 servletContext 为空============");
                 return;
             }
-            this.initNav(servletContext);
+
+            this.loadNav(servletContext);
 
         } else if (NavEvent.Type.READ.getCode().equals(navEvent.getType().getCode())) {
             if (navEvent.getId() == null) {

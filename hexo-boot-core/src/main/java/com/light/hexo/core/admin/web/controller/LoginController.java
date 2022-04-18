@@ -1,17 +1,17 @@
 package com.light.hexo.core.admin.web.controller;
 
 import com.light.hexo.common.vo.Result;
+import com.light.hexo.core.admin.constant.HexoExceptionEnum;
 import com.light.hexo.core.admin.service.BlacklistService;
 import com.light.hexo.common.component.log.ActionEnum;
 import com.light.hexo.common.component.log.OperateLog;
 import com.light.hexo.common.constant.CacheKey;
 import com.light.hexo.common.constant.HexoConstant;
-import com.light.hexo.constant.HexoExceptionEnum;
 import com.light.hexo.mapper.model.User;
 import com.light.hexo.core.admin.service.UserService;
 import com.light.hexo.common.base.BaseController;
 import com.light.hexo.common.exception.GlobalExceptionEnum;
-import com.light.hexo.common.model.UserRequest;
+import com.light.hexo.common.request.UserRequest;
 import com.light.hexo.common.util.CacheUtil;
 import com.light.hexo.common.util.ExceptionUtil;
 import com.light.hexo.common.util.IpUtil;

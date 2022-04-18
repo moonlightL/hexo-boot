@@ -1,12 +1,12 @@
-package com.light.hexo.component;
+package com.light.hexo.core.admin.component;
 
-import com.light.hexo.config.BlogProperty;
-import com.light.hexo.constant.HexoExceptionEnum;
+import com.light.hexo.core.admin.config.BlogConfig;
+import com.light.hexo.core.admin.constant.ConfigEnum;
+import com.light.hexo.core.admin.constant.HexoExceptionEnum;
 import com.light.hexo.mapper.model.*;
 import com.light.hexo.core.admin.service.*;
 import com.light.hexo.common.constant.HexoConstant;
-import com.light.hexo.constant.ConfigEnum;
-import com.light.hexo.common.model.InstallRequest;
+import com.light.hexo.common.request.InstallRequest;
 import com.light.hexo.common.util.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +49,7 @@ public class InstallService {
     private FriendLinkService friendLinkService;
 
     @Autowired
-    private BlogProperty blogProperty;
+    private BlogConfig blogConfig;
 
     private static final String THEME_DIR = "templates/theme";
 
@@ -214,12 +214,12 @@ public class InstallService {
             }
 
             if (config.getConfigKey().equals(ConfigEnum.BACKUP_DIR.getName())) {
-                config.setConfigValue(this.blogProperty.getAttachmentDir());
+                config.setConfigValue(this.blogConfig.getAttachmentDir());
             }
 
             if (config.getConfigKey().equals(ConfigEnum.LOCAL_FILE_PATH.getName())) {
                 // 与 SpringMvcConfig 类中配置的 addResourceHandlers 保持一致
-                config.setConfigValue(this.blogProperty.getAttachmentDir());
+                config.setConfigValue(this.blogConfig.getAttachmentDir());
             }
 
             configList.add(config);

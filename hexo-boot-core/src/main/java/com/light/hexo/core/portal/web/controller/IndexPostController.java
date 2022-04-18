@@ -3,7 +3,7 @@ package com.light.hexo.core.portal.web.controller;
 import com.light.hexo.common.vo.Result;
 import com.light.hexo.mapper.model.Nav;
 import com.light.hexo.mapper.model.Post;
-import com.light.hexo.mapper.model.event.PostEvent;
+import com.light.hexo.common.event.PostEvent;
 import com.light.hexo.core.portal.common.CommonController;
 import com.light.hexo.common.util.IpUtil;
 import org.apache.commons.lang3.StringUtils;

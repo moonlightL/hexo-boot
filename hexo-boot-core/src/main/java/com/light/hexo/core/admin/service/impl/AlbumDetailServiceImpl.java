@@ -3,9 +3,9 @@ package com.light.hexo.core.admin.service.impl;
 import cn.hutool.core.util.RandomUtil;
 import com.github.pagehelper.PageHelper;
 import com.light.hexo.common.base.BaseServiceImpl;
-import com.light.hexo.config.BlogProperty;
-import com.light.hexo.constant.ConfigEnum;
-import com.light.hexo.constant.HexoExceptionEnum;
+import com.light.hexo.core.admin.config.BlogConfig;
+import com.light.hexo.core.admin.constant.ConfigEnum;
+import com.light.hexo.core.admin.constant.HexoExceptionEnum;
 import com.light.hexo.mapper.mapper.AlbumDetailMapper;
 import com.light.hexo.mapper.base.BaseMapper;
 import com.light.hexo.mapper.model.Album;
@@ -52,7 +52,7 @@ public class AlbumDetailServiceImpl extends BaseServiceImpl<AlbumDetail> impleme
     private ConfigService configService;
 
     @Autowired
-    private BlogProperty blogProperty;
+    private BlogConfig blogConfig;
 
     @Autowired
     private Environment environment;
@@ -117,12 +117,14 @@ public class AlbumDetailServiceImpl extends BaseServiceImpl<AlbumDetail> impleme
                 }
 
                 String filePath = this.configService.getConfigValue(ConfigEnum.LOCAL_FILE_PATH.getName());
-                String localFilePath = StringUtils.isNotBlank(filePath) ? filePath  + File.separator : this.blogProperty.getAttachmentDir();
+                String localFilePath = StringUtils.isNotBlank(filePath) ? filePath  + File.separator : this.blogConfig.getAttachmentDir();
                 String coverName = baseName + "_" + RandomUtil.randomNumbers(6) + ".jpg";
-                String coverPath = localFilePath + "/cover/" + coverName;
-                File target = new File(coverPath);
+                File parent = new File(localFilePath + "/cover/");
+                if (!parent.exists()) {
+                    parent.mkdirs();
+                }
 
-                IOUtils.write(data, new FileOutputStream(target));
+                IOUtils.write(data, new FileOutputStream(new File(parent.getAbsolutePath(), coverName)));
 
                 String blogPage = this.configService.getConfigValue(ConfigEnum.HOME_PAGE.getName());
                 coverUrl = (StringUtils.isNotBlank(blogPage) ? blogPage : "http://" + IpUtil.getHostIp() + ":" + this.environment.getProperty("server.port")) + "/cover/" + coverName;

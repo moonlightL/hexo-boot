@@ -7,7 +7,7 @@ import com.light.hexo.mapper.model.Theme;
 import com.light.hexo.core.portal.common.CommonController;
 import com.light.hexo.core.portal.component.RequestLimit;
 import com.light.hexo.common.exception.GlobalException;
-import com.light.hexo.common.model.CommentRequest;
+import com.light.hexo.common.request.CommentRequest;
 import com.light.hexo.common.util.BrowserUtil;
 import com.light.hexo.common.util.IpUtil;
 import org.springframework.stereotype.Controller;

@@ -1,10 +1,10 @@
 package com.light.hexo.core.admin.web.controller;
 
-import com.light.hexo.common.model.ServerInfo;
 import com.light.hexo.common.vo.Result;
 import com.light.hexo.mapper.model.Post;
 import com.light.hexo.core.admin.service.*;
 import com.light.hexo.common.base.BaseController;
+import org.apache.catalina.util.ServerInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -145,15 +145,5 @@ public class HomeController extends BaseController {
         return Result.success(list);
     }
 
-    /**
-     * 获取服务器信息
-     * @return
-     */
-    @RequestMapping("/getServerData.json")
-    @ResponseBody
-    public Result getServerData() {
-        ServerInfo server = new ServerInfo();
-        server.collectInfo();
-        return Result.success(server);
-    }
+
 }

@@ -1,8 +1,8 @@
-package com.light.hexo.web.interceptor;
+package com.light.hexo.core.admin.web.interceptor;
 
 import com.light.hexo.common.constant.HexoConstant;
 import com.light.hexo.common.vo.Result;
-import com.light.hexo.constant.HexoExceptionEnum;
+import com.light.hexo.core.admin.constant.HexoExceptionEnum;
 import com.light.hexo.mapper.model.User;
 import com.light.hexo.common.util.HttpUtil;
 import com.light.hexo.common.util.JsonUtil;

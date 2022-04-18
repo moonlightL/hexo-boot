@@ -1,6 +1,6 @@
-package com.light.hexo.component;
+package com.light.hexo.core.admin.component;
 
-import com.light.hexo.component.websocket.MessageServer;
+import com.light.hexo.core.admin.component.websocket.MessageServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;

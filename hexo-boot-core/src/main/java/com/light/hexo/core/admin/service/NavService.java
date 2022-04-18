@@ -60,10 +60,10 @@ public interface NavService extends BaseService<Nav>, EventService {
     List<Nav> listParentNav() throws GlobalException;
 
     /**
-     * 初始化数据
+     * 加载数据
      * @param servletContext
      */
-    void initNav(ServletContext servletContext);
+    void loadNav(ServletContext servletContext);
 
     /**
      * 获取自定义导航

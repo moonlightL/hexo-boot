@@ -2,8 +2,8 @@ package com.light.hexo.core.admin.service.impl;
 
 import cn.hutool.core.util.ZipUtil;
 import com.light.hexo.common.base.BaseServiceImpl;
-import com.light.hexo.config.BlogProperty;
-import com.light.hexo.constant.HexoExceptionEnum;
+import com.light.hexo.core.admin.config.BlogConfig;
+import com.light.hexo.core.admin.constant.HexoExceptionEnum;
 import com.light.hexo.mapper.mapper.ThemeMapper;
 import com.light.hexo.mapper.base.BaseMapper;
 import com.light.hexo.mapper.model.Theme;
@@ -14,8 +14,8 @@ import com.light.hexo.core.admin.service.ThemeService;
 import com.light.hexo.common.base.BaseRequest;
 import com.light.hexo.common.constant.CacheKey;
 import com.light.hexo.common.exception.GlobalException;
-import com.light.hexo.common.model.ThemeRequest;
-import com.light.hexo.common.model.TreeNode;
+import com.light.hexo.common.request.ThemeRequest;
+import com.light.hexo.common.request.TreeNode;
 import com.light.hexo.common.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
@@ -59,7 +59,7 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
     private ThemeExtendService themeExtendService;
 
     @Autowired
-    private BlogProperty blogProperty;
+    private BlogConfig blogConfig;
 
     private static final String THEME_DIR = "templates/theme";
 
@@ -193,7 +193,7 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
             URI themeUri = ResourceUtils.getURL(ResourceUtils.CLASSPATH_URL_PREFIX + THEME_DIR).toURI();
 
             if ("jar".equalsIgnoreCase(themeUri.getScheme())) {
-                dir = ResourceUtils.getFile(ResourceUtils.FILE_URL_PREFIX + this.blogProperty.getThemeDir() + theme.getName());
+                dir = ResourceUtils.getFile(ResourceUtils.FILE_URL_PREFIX + this.blogConfig.getThemeDir() + theme.getName());
             } else {
                 dir = ResourceUtils.getFile(themeUri.toString() + File.separator + theme.getName());
             }
@@ -294,6 +294,7 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
             FileUtils.deleteQuietly(tmpDir);
         }
 
+        // 返回 themeDir 目录
         File unzipThemeCog = ZipUtil.unzip(inputStream, tmpDir, Charset.defaultCharset());
 
         // 获取刚解压的主题文件夹
@@ -302,6 +303,7 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
             ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_THEME_UNZIP_WRONG);
         }
 
+        // 新主题目录
         File newThemeDir = childrenFile[0];
 
         // 读取 theme.json 文件
@@ -337,7 +339,7 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
             URI uri = ResourceUtils.getURL(ResourceUtils.CLASSPATH_URL_PREFIX + THEME_DIR).toURI();
 
             if ("jar".equalsIgnoreCase(uri.getScheme())) {
-                dir = ResourceUtils.getFile(ResourceUtils.FILE_URL_PREFIX + this.blogProperty.getThemeDir());
+                dir = ResourceUtils.getFile(ResourceUtils.FILE_URL_PREFIX + this.blogConfig.getThemeDir());
                 if (!dir.exists() || dir.listFiles() == null || dir.listFiles().length == 0) {
                     FileSystem fileSystem = FileSystems.newFileSystem(uri, Collections.emptyMap());
                     Path source = fileSystem.getPath("/BOOT-INF/classes/" + THEME_DIR);

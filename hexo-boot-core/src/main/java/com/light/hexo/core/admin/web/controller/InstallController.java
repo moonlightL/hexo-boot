@@ -1,13 +1,13 @@
 package com.light.hexo.core.admin.web.controller;
 
 import com.light.hexo.common.vo.Result;
-import com.light.hexo.component.InstallService;
 import com.light.hexo.common.base.BaseRequest;
 import com.light.hexo.common.component.log.ActionEnum;
 import com.light.hexo.common.component.log.OperateLog;
-import com.light.hexo.common.model.InstallRequest;
+import com.light.hexo.common.request.InstallRequest;
 import com.light.hexo.common.util.BrowserUtil;
 import com.light.hexo.common.util.IpUtil;
+import com.light.hexo.core.admin.component.InstallService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
