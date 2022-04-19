@@ -1,6 +1,5 @@
 package com.light.hexo.core.admin.web.listener;
 
-import com.light.hexo.common.extension.HexoBootExtensionPoint;
 import com.light.hexo.mapper.model.*;
 import com.light.hexo.core.admin.service.*;
 import lombok.extern.slf4j.Slf4j;
@@ -70,7 +69,7 @@ public class ConfigInitListener implements ApplicationListener<ContextRefreshedE
         this.loadBlogInfo(servletContext);
         log.info("==========ConfigInitListener 加载[博客信息（导航、分类、标签、友链）]===========");
 
-//        this.loadPlugins();
+        this.loadPlugins();
         log.info("==========ConfigInitListener 加载[插件信息]===========");
     }
 
@@ -119,16 +118,6 @@ public class ConfigInitListener implements ApplicationListener<ContextRefreshedE
             String pluginId = this.pluginManager.loadPlugin(Paths.get(plugin.getFilePath()));
             if (plugin.getState()) {
                 this.pluginManager.startPlugin(pluginId);
-            }
-
-
-            List<HexoBootExtensionPoint> extensions = this.pluginManager.getExtensions(plugin.getName());
-            if (CollectionUtils.isEmpty(extensions)) {
-                return;
-            }
-
-            for (HexoBootExtensionPoint extension : extensions) {
-                System.out.println(extension);
             }
 
         }

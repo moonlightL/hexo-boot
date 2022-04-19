@@ -1,10 +1,10 @@
 package com.light.hexo.plugin.server.plugin;
 
-import com.light.hexo.common.extension.HexoBootExtensionPoint;
 import org.apache.commons.lang3.StringUtils;
 import org.pf4j.Extension;
 import org.pf4j.Plugin;
 import org.pf4j.PluginWrapper;
+import org.pf4j.spring.SpringPluginManager;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
@@ -34,7 +34,37 @@ public class ServerPlugin extends Plugin {
 
     @Override
     public void start() {
-        System.out.println("ServerPlugin.start()");
+        System.out.println("ServerLiveTime.start()");
+
+        ApplicationContext applicationContext = ((SpringPluginManager) super.getWrapper().getPluginManager()).getApplicationContext();
+
+        System.out.println("applicationContext: " + applicationContext);
+
+        Class<?> clazz = null;
+        try {
+            clazz = Class.forName("com.light.hexo.plugin.server.controller.ServerController");
+            String beanName = StringUtils.uncapitalize(clazz.getName());
+            beanName = beanName.substring(beanName.lastIndexOf(".") + 1);
+            beanName = StringUtils.uncapitalize(beanName);
+
+            BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(clazz);
+            BeanDefinition beanDefinition = beanDefinitionBuilder.getRawBeanDefinition();
+            beanDefinition.setScope("singleton");
+            ConfigurableApplicationContext configurableApplicationContext = (ConfigurableApplicationContext) applicationContext;
+            DefaultListableBeanFactory defaultListableBeanFactory = (DefaultListableBeanFactory) configurableApplicationContext.getBeanFactory();
+            defaultListableBeanFactory.registerBeanDefinition(beanName, beanDefinition);
+
+            RequestMappingHandlerMapping requestMappingHandlerMapping = applicationContext.getBean(RequestMappingHandlerMapping.class);
+            if (requestMappingHandlerMapping != null) {
+                Method method = ReflectionUtils.findMethod(clazz, "getServerData");
+                PatternsRequestCondition patterns = new PatternsRequestCondition("plugin/getServerData.json");
+                RequestMethodsRequestCondition condition = new RequestMethodsRequestCondition(RequestMethod.GET);
+                RequestMappingInfo mappingInfo = new RequestMappingInfo(patterns, condition, null, null, null, null, null);
+                requestMappingHandlerMapping.registerMapping(mappingInfo, clazz.newInstance(), method);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -53,32 +83,6 @@ public class ServerPlugin extends Plugin {
         @Override
         public void action(ApplicationContext applicationContext) {
             System.out.println("============ServerExtension action============");
-
-            Class<?> clazz = null;
-            try {
-                clazz = Class.forName("com.light.hexo.plugin.server.controller.ServerController");
-                String beanName = StringUtils.uncapitalize(clazz.getName());
-                beanName = beanName.substring(beanName.lastIndexOf(".") + 1);
-                beanName = StringUtils.uncapitalize(beanName);
-
-                BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(clazz);
-                BeanDefinition beanDefinition = beanDefinitionBuilder.getRawBeanDefinition();
-                beanDefinition.setScope("singleton");
-                ConfigurableApplicationContext configurableApplicationContext = (ConfigurableApplicationContext) applicationContext;
-                DefaultListableBeanFactory defaultListableBeanFactory = (DefaultListableBeanFactory) configurableApplicationContext.getBeanFactory();
-                defaultListableBeanFactory.registerBeanDefinition(beanName, beanDefinition);
-
-                RequestMappingHandlerMapping requestMappingHandlerMapping = applicationContext.getBean(RequestMappingHandlerMapping.class);
-                if (requestMappingHandlerMapping != null) {
-                    Method method = ReflectionUtils.findMethod(clazz, "getServerData");
-                    PatternsRequestCondition patterns = new PatternsRequestCondition("plugin/getServerData.json");
-                    RequestMethodsRequestCondition condition = new RequestMethodsRequestCondition(RequestMethod.GET);
-                    RequestMappingInfo mappingInfo = new RequestMappingInfo(patterns, condition, null, null, null, null, null);
-                    requestMappingHandlerMapping.registerMapping(mappingInfo, clazz.newInstance(), method);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
 
         @Override

@@ -72,7 +72,7 @@ public class AlbumDetailServiceImpl extends BaseServiceImpl<AlbumDetail> impleme
     public List<AlbumDetail> findListByAlbumId(Integer albumId, Integer pageNum, Integer pageSize) throws GlobalException {
         Example example = new Example(AlbumDetail.class);
         example.createCriteria().andEqualTo("albumId", albumId);
-        example.orderBy("id").desc().orderBy("sort").asc();
+        example.orderBy("sort").asc();
         PageHelper.startPage(pageNum, pageSize);
         return this.albumDetailMapper.selectByExample(example);
     }

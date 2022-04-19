@@ -60,13 +60,13 @@
             let that = this;
             let themeUrl = $("#themeUrl").val();
             if (!themeUrl) {
-                $.hexo.modal.tip("主题地址不能为空");
+                $.hexo.modal.tip("主题地址不能为空", "error");
                 return;
             }
 
             let index = themeUrl.indexOf("hexo-boot-theme");
             if (index < 0) {
-                $.hexo.modal.tip("主题地址格式不正确");
+                $.hexo.modal.tip("主题地址格式不正确", "error");
                 return;
             }
 
