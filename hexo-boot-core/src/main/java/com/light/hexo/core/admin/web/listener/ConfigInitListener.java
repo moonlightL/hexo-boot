@@ -1,8 +1,10 @@
 package com.light.hexo.core.admin.web.listener;
 
+import com.light.hexo.core.admin.config.BlogConfig;
 import com.light.hexo.mapper.model.*;
 import com.light.hexo.core.admin.service.*;
 import lombok.extern.slf4j.Slf4j;
+import org.pf4j.PluginManager;
 import org.pf4j.spring.SpringPluginManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
@@ -29,6 +31,9 @@ import java.util.stream.Collectors;
 public class ConfigInitListener implements ApplicationListener<ContextRefreshedEvent> {
 
     @Autowired
+    private BlogConfig blogConfig;
+
+    @Autowired
     private ConfigService configService;
 
     @Autowired
@@ -50,7 +55,7 @@ public class ConfigInitListener implements ApplicationListener<ContextRefreshedE
     private PluginService pluginService;
 
     @Autowired
-    public SpringPluginManager pluginManager;
+    public PluginManager pluginManager;
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
@@ -107,6 +112,8 @@ public class ConfigInitListener implements ApplicationListener<ContextRefreshedE
             return;
         }
 
+        this.pluginManager.loadPlugins();
+
         for (Plugin plugin : pluginList) {
             String filePath = plugin.getFilePath();
             File pluginFile = new File(filePath);
@@ -115,11 +122,9 @@ public class ConfigInitListener implements ApplicationListener<ContextRefreshedE
                 continue;
             }
 
-            String pluginId = this.pluginManager.loadPlugin(Paths.get(plugin.getFilePath()));
             if (plugin.getState()) {
-                this.pluginManager.startPlugin(pluginId);
+                this.pluginManager.startPlugin(plugin.getName());
             }
-
         }
 
     }

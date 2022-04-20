@@ -1,7 +1,11 @@
 package com.light.hexo.plugin.server.controller;
 
+import com.light.hexo.common.plugin.PluginUtil;
+import com.light.hexo.common.util.SpringContextUtil;
 import com.light.hexo.common.vo.Result;
 import com.light.hexo.plugin.server.model.ServerInfo;
+import com.light.hexo.plugin.server.service.ServerService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -24,8 +28,9 @@ public class ServerController {
     @RequestMapping("/getServerData.json")
     @ResponseBody
     public Result getServerData() {
-        ServerInfo server = new ServerInfo();
-        server.collectInfo();
-        return Result.success(server);
+        ServerService serverService = SpringContextUtil.getBean(ServerService.class);
+        ServerInfo serverInfo = serverService.getServerInfo();
+        serverInfo.collectInfo();
+        return Result.success(serverInfo);
     }
 }

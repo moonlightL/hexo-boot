@@ -13,7 +13,7 @@
 
     <properties>
         <plugin.id>server-plugin</plugin.id>
-        <plugin.class>com.light.hexo.plugin.server.plugin.ServerPlugin</plugin.class>
+        <plugin.class>com.light.hexo.plugin.server.ServerPlugin</plugin.class>
         <plugin.version>1.0.0</plugin.version>
         <plugin.provider>MoonlightL</plugin.provider>
         <plugin.description>Server 服务信息</plugin.description>
@@ -53,23 +53,23 @@
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>2.4</version>
-                <configuration>
-                    <archive>
-                        <manifestEntries>
-                            <Plugin-Id>${plugin.id}</Plugin-Id>
-                            <Plugin-Class>${plugin.class}</Plugin-Class>
-                            <Plugin-Version>${plugin.version}</Plugin-Version>
-                            <Plugin-Provider>${plugin.provider}</Plugin-Provider>
-                            <Plugin-Description>${plugin.description}</Plugin-Description>
-                            <Plugin-Dependencies>${plugin.dependencies}</Plugin-Dependencies>
-                        </manifestEntries>
-                    </archive>
-                </configuration>
-            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-jar-plugin</artifactId>-->
+<!--                <version>2.4</version>-->
+<!--                <configuration>-->
+<!--                    <archive>-->
+<!--                        <manifestEntries>-->
+<!--                            <Plugin-Id>${plugin.id}</Plugin-Id>-->
+<!--                            <Plugin-Class>${plugin.class}</Plugin-Class>-->
+<!--                            <Plugin-Version>${plugin.version}</Plugin-Version>-->
+<!--                            <Plugin-Provider>${plugin.provider}</Plugin-Provider>-->
+<!--                            <Plugin-Description>${plugin.description}</Plugin-Description>-->
+<!--                            <Plugin-Dependencies>${plugin.dependencies}</Plugin-Dependencies>-->
+<!--                        </manifestEntries>-->
+<!--                    </archive>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>

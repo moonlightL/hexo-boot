@@ -15,6 +15,7 @@ import com.light.hexo.mapper.mapper.PluginMapper;
 import com.light.hexo.mapper.model.Plugin;
 import org.apache.commons.lang3.StringUtils;
 import org.pf4j.PluginDescriptor;
+import org.pf4j.PluginManager;
 import org.pf4j.PluginWrapper;
 import org.pf4j.spring.SpringPluginManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,7 @@ public class PluginServiceImpl extends BaseServiceImpl<Plugin> implements Plugin
     private BlogConfig blogConfig;
 
     @Autowired
-    private SpringPluginManager pluginManager;
+    private PluginManager pluginManager;
 
     @Override
     public BaseMapper<Plugin> getBaseMapper() {
@@ -68,11 +69,8 @@ public class PluginServiceImpl extends BaseServiceImpl<Plugin> implements Plugin
     @Override
     public void unzipPlugin(String originalFilename, InputStream inputStream) throws GlobalException {
 
-        String prefixName = FileNameUtil.getPrefix(originalFilename);
-        String filename = prefixName.substring(10);
-
         String pluginDir = this.blogConfig.getPluginDir();
-        File parentDir = new File(pluginDir, filename);
+        File parentDir = new File(pluginDir);
         if (!parentDir.exists()) {
             parentDir.mkdirs();
         }
