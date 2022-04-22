@@ -4,9 +4,10 @@ import cn.hutool.core.util.ZipUtil;
 import com.light.hexo.common.base.BaseRequest;
 import com.light.hexo.common.base.BaseServiceImpl;
 import com.light.hexo.common.exception.GlobalException;
-import com.light.hexo.common.exception.GlobalExceptionEnum;
 import com.light.hexo.common.plugin.BasePlugin;
+import com.light.hexo.common.plugin.HexoBootPluginManager;
 import com.light.hexo.common.request.PluginRequest;
+import com.light.hexo.common.util.DateUtil;
 import com.light.hexo.common.util.ExceptionUtil;
 import com.light.hexo.core.admin.config.BlogConfig;
 import com.light.hexo.core.admin.constant.HexoExceptionEnum;
@@ -15,18 +16,21 @@ import com.light.hexo.mapper.base.BaseMapper;
 import com.light.hexo.mapper.mapper.SysPluginMapper;
 import com.light.hexo.mapper.model.SysPlugin;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.pf4j.PluginDescriptor;
-import org.pf4j.PluginManager;
 import org.pf4j.PluginWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * @Author MoonlightL
@@ -45,7 +49,7 @@ public class SysPluginServiceImpl extends BaseServiceImpl<SysPlugin> implements 
     private BlogConfig blogConfig;
 
     @Autowired
-    private PluginManager pluginManager;
+    private HexoBootPluginManager pluginManager;
 
     @Override
     public BaseMapper<SysPlugin> getBaseMapper() {
@@ -65,6 +69,11 @@ public class SysPluginServiceImpl extends BaseServiceImpl<SysPlugin> implements 
         }
 
         return example;
+    }
+
+    @Override
+    public int removeModel(Serializable id) throws GlobalException {
+        return super.removeModel(id);
     }
 
     @Override
@@ -122,9 +131,9 @@ public class SysPluginServiceImpl extends BaseServiceImpl<SysPlugin> implements 
 
         Boolean state = plugin.getState();
         if (state) {
-            this.pluginManager.startPlugin(dbPlugin.getName());
+            this.pluginManager.startPlugin(dbPlugin.getName(), dbPlugin.getFilePath());
         } else {
-            this.pluginManager.stopPlugin(dbPlugin.getName());
+            this.pluginManager.stopPlugin(dbPlugin.getName(), dbPlugin.getFilePath());
         }
 
         super.updateModel(plugin);
@@ -140,21 +149,42 @@ public class SysPluginServiceImpl extends BaseServiceImpl<SysPlugin> implements 
 
         String pluginId = dbPlugin.getName();
         if (dbPlugin.getState()) {
-            this.pluginManager.stopPlugin(pluginId);
+            this.pluginManager.stopPlugin(pluginId, dbPlugin.getFilePath());
         }
 
-        this.pluginManager.unloadPlugin(pluginId);
+        boolean unloadResult = this.pluginManager.unloadPlugin(pluginId);
+        if (!unloadResult) {
+            ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_PLUGIN_CANNOT_UNLOAD);
+        }
 
-        File pluginFile = new File(dbPlugin.getFilePath());
+        this.deletePlugin(dbPlugin);
+    }
+
+    private void deletePlugin(SysPlugin sysPlugin) {
+        File pluginFile = new File(sysPlugin.getFilePath());
         if (pluginFile.exists()) {
-            boolean deleteQuietly = FileUtils.deleteQuietly(pluginFile);
-            if (!deleteQuietly) {
-                dbPlugin.setState(false).setUpdateTime(LocalDateTime.now());
-                super.updateModel(dbPlugin);
-                ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_PLUGIN_CANNOT_DELETE);
+            File parentFile = pluginFile.getParentFile();
+            File bakFileDir = new File(parentFile.getAbsolutePath(), "bak");
+            if (!bakFileDir.exists()) {
+                bakFileDir.mkdirs();
             }
 
-            super.removeModel(id);
+            try {
+                String dateTimeStr = DateUtil.ldtToStr(LocalDateTime.now(), DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+                File bakFile = new File(bakFileDir.getAbsolutePath(), FilenameUtils.getBaseName(pluginFile.getName()) + "-" + dateTimeStr + ".jar");
+                FileUtils.copyFile(pluginFile, bakFile);
+
+                boolean deleteQuietly = FileUtils.deleteQuietly(pluginFile);
+                if (!deleteQuietly) {
+                    sysPlugin.setState(false).setUpdateTime(LocalDateTime.now());
+                    super.updateModel(sysPlugin);
+                    ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_PLUGIN_CANNOT_DELETE);
+                }
+
+                super.removeModel(sysPlugin.getId());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

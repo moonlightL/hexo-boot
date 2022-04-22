@@ -24,6 +24,8 @@ import java.util.*;
  */
 public class ThymeleafRegistry extends AbstractModuleRegistry {
 
+    private Map<String, ITemplateResolver> pluginTemplateResolver = new HashMap<>();
+
     public ThymeleafRegistry(HexoBootPluginManager pluginManager) {
         super(pluginManager);
     }
@@ -48,8 +50,8 @@ public class ThymeleafRegistry extends AbstractModuleRegistry {
     @Override
     public void unRegister(String pluginId) throws Exception {
         String resolverName = this.templateResolverName(pluginId);
-        if (super.pluginTemplateResolver.containsKey(resolverName)) {
-            super.pluginTemplateResolver.remove(resolverName);
+        if (this.pluginTemplateResolver.containsKey(resolverName)) {
+            this.pluginTemplateResolver.remove(resolverName);
         }
     }
 
@@ -69,11 +71,11 @@ public class ThymeleafRegistry extends AbstractModuleRegistry {
         templateResolver.setCharacterEncoding("UTF-8");
         templateResolver.setCacheable(false);
         templateResolver.setCheckExistence(true);
-        super.pluginTemplateResolver.put(templateResolver.getName(), templateResolver);
+        this.pluginTemplateResolver.put(templateResolver.getName(), templateResolver);
 
         Set<ITemplateResolver> newTemplateResolvers = new HashSet<>();
         newTemplateResolvers.addAll(oldTemplateResolver);
-        newTemplateResolvers.addAll(super.pluginTemplateResolver.values());
+        newTemplateResolvers.addAll(this.pluginTemplateResolver.values());
 
         SpringTemplateEngine newSpringTemplateEngine = new SpringTemplateEngine();
         newSpringTemplateEngine.setEnableSpringELCompiler(true);

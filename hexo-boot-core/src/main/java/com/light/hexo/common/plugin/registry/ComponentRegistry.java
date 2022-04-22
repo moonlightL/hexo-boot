@@ -3,7 +3,6 @@ package com.light.hexo.common.plugin.registry;
 import com.light.hexo.common.plugin.HexoBootPluginManager;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,17 +21,25 @@ public class ComponentRegistry extends AbstractModuleRegistry {
 
     @Override
     public void register(String pluginId) throws Exception {
-        this.listComponentClasses(pluginId).forEach(item -> super.registryBean(item));
+        List<Class<?>> classList = this.listComponentClasses(pluginId);
+        for (Class<?> clazz : classList) {
+            super.registryBean(clazz);
+        }
     }
 
     @Override
     public void unRegister(String pluginId) throws Exception {
-        this.listComponentClasses(pluginId).forEach(item -> super.destroyBean(item));
+        List<Class<?>> classList = this.listComponentClasses(pluginId);
+        for (Class<?> clazz : classList) {
+            super.destroyBean(clazz);
+        }
     }
 
     private List<Class<?>> listComponentClasses(String pluginId) throws Exception {
         List<Class<?>> classList = new ArrayList<>();
-        for (Class<?> pluginClass : super.getPluginClasses(pluginId)) {
+
+        List<Class<?>> pluginClasses = super.getPluginClasses(pluginId);
+        for (Class<?> pluginClass : pluginClasses) {
             Component annotation = pluginClass.getAnnotation(Component.class);
             if(annotation != null) {
                 classList.add(pluginClass);

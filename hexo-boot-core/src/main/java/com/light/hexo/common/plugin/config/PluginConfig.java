@@ -21,7 +21,7 @@ import java.nio.file.Paths;
 public class PluginConfig {
 
     @Bean
-    public PluginManager pluginManager(BlogConfig blogConfig) {
+    public HexoBootPluginManager pluginManager(BlogConfig blogConfig) {
         String pluginDirPath = blogConfig.getPluginDir();
         File pluginDir = new File(pluginDirPath);
         if (!pluginDir.exists()) {

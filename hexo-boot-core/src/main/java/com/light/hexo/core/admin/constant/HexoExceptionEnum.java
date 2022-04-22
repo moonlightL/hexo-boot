@@ -89,7 +89,8 @@ public enum HexoExceptionEnum implements GlobalExceptionMap {
     // 16xxx --> 插件
     ERROR_PLUGIN_NOT_EXIST(16001, "该插件不存在"),
     ERROR_PLUGIN_HAD_INSTALLED(16002, "插件已安装"),
-    ERROR_PLUGIN_CANNOT_DELETE(16003, "插件删除失败"),
+    ERROR_PLUGIN_CANNOT_UNLOAD(16003, "插件卸载失败"),
+    ERROR_PLUGIN_CANNOT_DELETE(16004, "插件文件删除失败"),
 
     // 50xxx --> 前端
     ERROR_REPEAT_PRAISE_POST(50001, "已点赞，请勿重复操作")

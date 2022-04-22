@@ -4,9 +4,11 @@ import com.light.hexo.common.plugin.registry.CompoundModuleRegistry;
 import lombok.SneakyThrows;
 import org.pf4j.ExtensionFactory;
 import org.pf4j.PluginState;
+import org.pf4j.PluginWrapper;
 import org.springframework.beans.factory.InitializingBean;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * @Author MoonlightL
@@ -24,16 +26,22 @@ public class HexoBootPluginManager extends AbstractPluginManager implements Init
     }
 
     @SneakyThrows
-    @Override
-    public PluginState startPlugin(String pluginId) {
+    public PluginState startPlugin(String pluginId, String pluginPath) {
+        PluginWrapper plugin = super.getPlugin(pluginId);
+        if (plugin == null) {
+            super.loadPlugin(Paths.get(pluginPath));
+        }
         PluginState pluginState = super.startPlugin(pluginId);
         this.moduleRegistry.register(pluginId);
         return pluginState;
     }
 
     @SneakyThrows
-    @Override
-    public PluginState stopPlugin(String pluginId) {
+    public PluginState stopPlugin(String pluginId, String pluginPath) {
+        PluginWrapper plugin = super.getPlugin(pluginId);
+        if (plugin == null) {
+            return PluginState.STOPPED;
+        }
         PluginState pluginState = super.stopPlugin(pluginId);
         this.moduleRegistry.unRegister(pluginId);
         return pluginState;

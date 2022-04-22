@@ -2,8 +2,7 @@ package com.light.hexo.common.plugin.registry;
 
 import com.light.hexo.common.plugin.HexoBootPluginManager;
 import com.light.hexo.common.plugin.ModuleRegistry;
-import org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext;
-
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -22,12 +21,12 @@ public class CompoundModuleRegistry extends AbstractModuleRegistry implements Mo
     public CompoundModuleRegistry(HexoBootPluginManager pluginManager) {
         super(pluginManager);
         this.moduleRegistryList = Collections.synchronizedList(new ArrayList<>());
-//        this.moduleRegistryList.add(new MapperRegistry(pluginManager));
+        this.moduleRegistryList.add(new MapperRegistry(pluginManager));
         this.moduleRegistryList.add(new ComponentRegistry(pluginManager));
-//        this.moduleRegistryList.add(new ExtensionRegistry(pluginManager));
-//        this.moduleRegistryList.add(new HandlerRegistry(pluginManager));
-//        this.moduleRegistryList.add(new InterceptorRegistry(pluginManager));
-//        this.moduleRegistryList.add(new ThymeleafRegistry(pluginManager));
+        this.moduleRegistryList.add(new ExtensionRegistry(pluginManager));
+        this.moduleRegistryList.add(new HandlerRegistry(pluginManager));
+        this.moduleRegistryList.add(new InterceptorRegistry(pluginManager));
+        this.moduleRegistryList.add(new ThymeleafRegistry(pluginManager));
     }
 
     @Override
@@ -42,5 +41,9 @@ public class CompoundModuleRegistry extends AbstractModuleRegistry implements Mo
         for (ModuleRegistry moduleRegistry : this.moduleRegistryList) {
             moduleRegistry.unRegister(pluginId);
         }
+
+        ClassLoader pluginClassLoader = super.pluginManager.getPluginClassLoader(pluginId);
+        URLClassLoader urlClassLoader = (URLClassLoader) pluginClassLoader;
+        urlClassLoader.close();
     }
 }

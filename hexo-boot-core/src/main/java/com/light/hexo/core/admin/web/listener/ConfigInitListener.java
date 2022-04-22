@@ -1,5 +1,7 @@
 package com.light.hexo.core.admin.web.listener;
 
+import com.light.hexo.common.exception.GlobalException;
+import com.light.hexo.common.plugin.HexoBootPluginManager;
 import com.light.hexo.core.admin.config.BlogConfig;
 import com.light.hexo.mapper.model.*;
 import com.light.hexo.core.admin.service.*;
@@ -53,7 +55,7 @@ public class ConfigInitListener implements ApplicationListener<ContextRefreshedE
     private SysPluginService pluginService;
 
     @Autowired
-    public PluginManager pluginManager;
+    public HexoBootPluginManager pluginManager;
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
@@ -113,15 +115,19 @@ public class ConfigInitListener implements ApplicationListener<ContextRefreshedE
         this.pluginManager.loadPlugins();
 
         for (SysPlugin plugin : pluginList) {
-            String filePath = plugin.getFilePath();
-            File pluginFile = new File(filePath);
-            if (!pluginFile.exists()) {
-                this.pluginService.removeModel(plugin.getId());
-                continue;
-            }
+            try {
+                String filePath = plugin.getFilePath();
+                File pluginFile = new File(filePath);
+                if (!pluginFile.exists()) {
+                    this.pluginService.removeModel(plugin.getId());
+                    continue;
+                }
 
-            if (plugin.getState()) {
-                this.pluginManager.startPlugin(plugin.getName());
+                if (plugin.getState()) {
+                    this.pluginManager.startPlugin(plugin.getName(), plugin.getFilePath());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 

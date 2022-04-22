@@ -14,8 +14,6 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.type.classreading.CachingMetadataReaderFactory;
 import org.springframework.core.type.classreading.MetadataReader;
 import org.springframework.util.ClassUtils;
-import org.thymeleaf.templateresolver.ITemplateResolver;
-
 import java.util.*;
 
 /**
@@ -32,8 +30,6 @@ public abstract class AbstractModuleRegistry implements ModuleRegistry {
 
     protected DefaultListableBeanFactory beanFactory;
 
-    protected Map<String, ITemplateResolver> pluginTemplateResolver = new HashMap<>();
-
     public AbstractModuleRegistry(HexoBootPluginManager pluginManager) {
         this.pluginManager = pluginManager;
         this.beanFactory = (DefaultListableBeanFactory) this.pluginManager.getApplicationContext().getAutowireCapableBeanFactory();
@@ -47,14 +43,12 @@ public abstract class AbstractModuleRegistry implements ModuleRegistry {
         Resource[] resources = resourcePatternResolver.getResources(PathMatchingResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX + pluginBasePath + "/**/*.class");
         List<Class<?>> classList = new ArrayList<>();
         for (Resource resource : resources) {
-            if (resource.isReadable()) {
-                MetadataReader metadataReader = new CachingMetadataReaderFactory().getMetadataReader(resource);
-                Class clazz = pluginClassLoader.loadClass(metadataReader.getAnnotationMetadata().getClassName());
-                if(!BasePlugin.class.isAssignableFrom(clazz)
+            MetadataReader metadataReader = new CachingMetadataReaderFactory().getMetadataReader(resource);
+            Class clazz = pluginClassLoader.loadClass(metadataReader.getAnnotationMetadata().getClassName());
+            if(!BasePlugin.class.isAssignableFrom(clazz)
                     && !Plugin.class.isAssignableFrom(clazz)
                     && clazz.getAnnotation(Extension.class) == null) {
-                    classList.add(clazz);
-                }
+                classList.add(clazz);
             }
         }
         return classList;
@@ -72,9 +66,9 @@ public abstract class AbstractModuleRegistry implements ModuleRegistry {
     }
 
     protected void destroyBean(Class<?> clazz) {
+        this.beanFactory.destroySingleton(clazz.getName());
         HexoBootSpringExtensionFactory extensionFactory = (HexoBootSpringExtensionFactory) this.pluginManager.getExtensionFactory();
         extensionFactory.destroy(clazz);
-        this.beanFactory.destroySingleton(clazz.getName());
     }
 
 }
