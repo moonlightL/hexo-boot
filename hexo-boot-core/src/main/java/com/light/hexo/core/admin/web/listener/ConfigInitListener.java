@@ -1,12 +1,9 @@
 package com.light.hexo.core.admin.web.listener;
 
-import com.light.hexo.common.exception.GlobalException;
 import com.light.hexo.common.plugin.HexoBootPluginManager;
-import com.light.hexo.core.admin.config.BlogConfig;
 import com.light.hexo.mapper.model.*;
 import com.light.hexo.core.admin.service.*;
 import lombok.extern.slf4j.Slf4j;
-import org.pf4j.PluginManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -30,8 +27,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ConfigInitListener implements ApplicationListener<ContextRefreshedEvent> {
 
-    @Autowired
-    private BlogConfig blogConfig;
 
     @Autowired
     private ConfigService configService;

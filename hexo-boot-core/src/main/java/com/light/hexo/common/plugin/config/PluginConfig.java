@@ -2,12 +2,9 @@ package com.light.hexo.common.plugin.config;
 
 import com.light.hexo.common.plugin.HexoBootPluginManager;
 import com.light.hexo.core.admin.config.BlogConfig;
-import org.pf4j.PluginManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
 import java.io.File;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
@@ -27,7 +24,6 @@ public class PluginConfig {
         if (!pluginDir.exists()) {
             pluginDir.mkdirs();
         }
-        Path pluginPath = Paths.get(blogConfig.getPluginDir());
-        return new HexoBootPluginManager(pluginPath);
+        return new HexoBootPluginManager(Paths.get(blogConfig.getPluginDir()));
     }
 }

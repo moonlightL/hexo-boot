@@ -36,7 +36,6 @@ public class ThymeleafRegistry extends AbstractModuleRegistry {
         SpringTemplateEngine springTemplateEngine = super.beanFactory.getBean(SpringTemplateEngine.class);
         Set<ITemplateResolver> oldTemplateResolver = springTemplateEngine.getTemplateResolvers();
 
-        // 替换
         ContentNegotiatingViewResolver negotiatingViewResolver = this.beanFactory.getBean(ContentNegotiatingViewResolver.class);
         List<ViewResolver> viewResolvers = negotiatingViewResolver.getViewResolvers();
         for (ViewResolver viewResolver : viewResolvers) {

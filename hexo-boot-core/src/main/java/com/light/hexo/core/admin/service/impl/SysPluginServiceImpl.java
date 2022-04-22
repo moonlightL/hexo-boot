@@ -95,6 +95,8 @@ public class SysPluginServiceImpl extends BaseServiceImpl<SysPlugin> implements 
         String filePath = jarFile.getAbsolutePath();
 
         String pluginId = this.pluginManager.loadPlugin(Paths.get(filePath));
+        PluginWrapper pluginWrapper = this.pluginManager.getPlugin(pluginId);
+        PluginDescriptor descriptor = pluginWrapper.getDescriptor();
 
         Example example = new Example(SysPlugin.class);
         example.createCriteria().andEqualTo("name", pluginId);
@@ -102,9 +104,6 @@ public class SysPluginServiceImpl extends BaseServiceImpl<SysPlugin> implements 
         if (dbPlugin != null) {
             ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_PLUGIN_HAD_INSTALLED);
         }
-
-        PluginWrapper pluginWrapper = this.pluginManager.getPlugin(pluginId);
-        PluginDescriptor descriptor = pluginWrapper.getDescriptor();
 
         BasePlugin basePlugin = (BasePlugin) pluginWrapper.getPlugin();
 

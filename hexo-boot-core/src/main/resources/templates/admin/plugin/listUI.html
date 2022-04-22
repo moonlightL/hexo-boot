@@ -103,7 +103,7 @@
     function actionFormatter(val, row) {
         let btnArr = [];
         btnArr.push('<div class="btn-group">');
-        btnArr.push('<button type="button" class="btn btn-sm btn-secondary hexo-config" data-toggle="tooltip" title="配置" data-url="'+row.configUrl+'" onclick="window.configUI(this)"><i class="fa fa-pencil"></i></button>');
+        btnArr.push('<button type="button" class="btn btn-sm btn-secondary hexo-config" data-toggle="tooltip" title="配置" data-state="'+row.state+'" data-url="'+row.configUrl+'" onclick="window.configUI(this)"><i class="fa fa-pencil"></i></button>');
         btnArr.push('<button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="卸载" onclick="$.hexo.action.remove(\'' + row.id + '\')"><i class="fa fa-times"></i></button>');
         btnArr.push("</div>");
         return btnArr.join("");
@@ -113,9 +113,16 @@
         let $target = $(obj);
         let url = $target.data("url");
         if (url == "") {
-            $.hexo.modal.tip("该插件无配置页面", "info");
+            $.hexo.modal.tip("插件无信息页面", "info");
             return;
         }
+
+        let state = $target.data("state");
+        if (!state) {
+            $.hexo.modal.tip("插件未开启", "info");
+            return;
+        }
+
         let targetUrl = window.location.origin + url;
         // let targetUrl = BASE_URL + "/testUI.html";
         $.hexo.modal._window("插件信息", targetUrl , 780, 540, true);
