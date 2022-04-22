@@ -2,8 +2,6 @@ package com.light.hexo.common.plugin.registry;
 
 import com.light.hexo.common.plugin.HexoBootPluginManager;
 
-import java.util.Set;
-
 /**
  * @Author MoonlightL
  * @ClassName: ExtensionRegistry
@@ -19,7 +17,7 @@ public class ExtensionRegistry extends AbstractModuleRegistry {
 
     @Override
     public void register(String pluginId) throws Exception {
-        for (String extensionClassName : this.getExtensionClassNames(pluginId)) {
+        for (String extensionClassName : super.pluginManager.getExtensionClassNames(pluginId)) {
             try {
                 Class<?> extensionClass = super.pluginManager.getPlugin(pluginId).getPluginClassLoader().loadClass(extensionClassName);
                 super.registryBean(extensionClass);
@@ -31,7 +29,7 @@ public class ExtensionRegistry extends AbstractModuleRegistry {
 
     @Override
     public void unRegister(String pluginId) throws Exception {
-        for (String extensionClassName : this.getExtensionClassNames(pluginId)) {
+        for (String extensionClassName : super.pluginManager.getExtensionClassNames(pluginId)) {
             try {
                 Class<?> extensionClass = super.pluginManager.getPlugin(pluginId).getPluginClassLoader().loadClass(extensionClassName);
                 super.destroyBean(extensionClass);
@@ -39,9 +37,5 @@ public class ExtensionRegistry extends AbstractModuleRegistry {
                 e.printStackTrace();
             }
         }
-    }
-
-    private Set<String> getExtensionClassNames(String pluginId) {
-        return super.pluginManager.getExtensionClassNames(pluginId);
     }
 }

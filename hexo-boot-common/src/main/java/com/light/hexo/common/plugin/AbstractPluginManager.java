@@ -1,5 +1,8 @@
 package com.light.hexo.common.plugin;
 
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.jdbc.ScriptRunner;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.pf4j.DefaultPluginManager;
 import org.pf4j.PluginLoader;
 import org.springframework.beans.BeansException;
@@ -30,5 +33,16 @@ public abstract class AbstractPluginManager extends DefaultPluginManager impleme
 
     public ApplicationContext getApplicationContext() {
         return this.applicationContext;
+    }
+
+    public void runSqlFile(ClassLoader classLoader, String sqlFile) {
+        try {
+            SqlSessionFactory sqlSessionFactory = this.getApplicationContext().getBean(SqlSessionFactory.class);
+            ScriptRunner scriptRunner = new ScriptRunner(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource().getConnection());
+            scriptRunner.setLogWriter(null);
+            scriptRunner.runScript(Resources.getResourceAsReader(classLoader, sqlFile));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 
 /**
  * @Author MoonlightL
- * @ClassName: Plugin
+ * @ClassName: SysPlugin
  * @ProjectName hexo-boot
  * @Description: 插件
  * @DateTime 2022/4/13, 0013 10:20
@@ -23,8 +23,8 @@ import java.time.LocalDateTime;
 @Getter
 @Accessors(chain = true)
 @ToString
-@Table(name = "t_plugin")
-public class Plugin implements Serializable {
+@Table(name = "t_sys_plugin")
+public class SysPlugin implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -61,6 +61,11 @@ public class Plugin implements Serializable {
      * 本地路径
      */
     private String filePath;
+
+    /**
+     * 配置页面
+     */
+    private String configUrl;
 
     @CreateTime
     private LocalDateTime createTime;

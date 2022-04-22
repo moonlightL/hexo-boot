@@ -5,7 +5,6 @@ import com.light.hexo.mapper.model.*;
 import com.light.hexo.core.admin.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.pf4j.PluginManager;
-import org.pf4j.spring.SpringPluginManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -14,7 +13,6 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.context.WebApplicationContext;
 import javax.servlet.ServletContext;
 import java.io.File;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -52,7 +50,7 @@ public class ConfigInitListener implements ApplicationListener<ContextRefreshedE
     protected FriendLinkService friendLinkService;
 
     @Autowired
-    private PluginService pluginService;
+    private SysPluginService pluginService;
 
     @Autowired
     public PluginManager pluginManager;
@@ -107,14 +105,14 @@ public class ConfigInitListener implements ApplicationListener<ContextRefreshedE
 
     private void loadPlugins() {
 
-        List<Plugin> pluginList = this.pluginService.findAll();
+        List<SysPlugin> pluginList = this.pluginService.findAll();
         if (CollectionUtils.isEmpty(pluginList)) {
             return;
         }
 
         this.pluginManager.loadPlugins();
 
-        for (Plugin plugin : pluginList) {
+        for (SysPlugin plugin : pluginList) {
             String filePath = plugin.getFilePath();
             File pluginFile = new File(filePath);
             if (!pluginFile.exists()) {

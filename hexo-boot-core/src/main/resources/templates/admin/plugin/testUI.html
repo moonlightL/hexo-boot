@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, initial-scale=1, shrink-to-fit=no">
+    <div th:replace="~{admin/common :: common-link}"></div>
+</head>
+<body>
+
+<div class="content">
+    <div class="block">
+        <div class="block-content">
+            <div class="row justify-content-center py-20">
+                <div class="col-6 col-xl-2">
+                    <a class="block block-link-shadow text-right bg-primary text-white">
+                        <div class="block-content block-content-full clearfix">
+                            <div class="float-left mt-10 d-none d-sm-block">
+                                <i class="fa fa-edit fa-3x text-body-bg-dark"></i>
+                            </div>
+                            <div class="font-size-h3 font-w600" data-toggle="countTo" data-speed="1000" id="totalMemory">正在加载...</div>
+                            <div class="font-size-sm font-w600 text-uppercase text-white">JVM 总内存</div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-6 col-xl-2">
+                    <a class="block block-link-shadow text-right bg-corporate text-white">
+                        <div class="block-content block-content-full clearfix">
+                            <div class="float-left mt-10 d-none d-sm-block">
+                                <i class="fa fa-bars fa-3x text-body-bg-dark"></i>
+                            </div>
+                            <div class="font-size-h3 font-w600" data-toggle="countTo" data-speed="1000" id="runTimeMemory">正在加载...</div>
+                            <div class="font-size-sm font-w600 text-uppercase text-white">JVM 已用内存</div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-6 col-xl-2">
+                    <a class="block block-link-shadow text-right bg-warning text-white">
+                        <div class="block-content block-content-full clearfix">
+                            <div class="float-left mt-10 d-none d-sm-block">
+                                <i class="fa fa-comments-o fa-3x text-body-bg-dark"></i>
+                            </div>
+                            <div class="font-size-h3 font-w600" data-toggle="countTo" data-speed="1000" id="freeMemory">正在加载...</div>
+                            <div class="font-size-sm font-w600 text-uppercase text-white">JVM 剩余内存</div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-6 col-xl-2">
+                    <a class="block block-link-shadow text-right bg-flat text-white">
+                        <div class="block-content block-content-full clearfix">
+                            <div class="float-left mt-10 d-none d-sm-block">
+                                <i class="fa fa-comment-o fa-3x text-body-bg-dark"></i>
+                            </div>
+                            <div class="font-size-h3 font-w600" data-toggle="countTo" data-speed="1000" id="home">正在加载...</div>
+                            <div class="font-size-sm font-w600 text-uppercase text-white">JDK 目录</div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-6 col-xl-2">
+                    <a class="block block-link-shadow text-right bg-black-op-75 text-white">
+                        <div class="block-content block-content-full clearfix">
+                            <div class="float-left mt-10 d-none d-sm-block">
+                                <i class="fa fa-comment-o fa-3x text-body-bg-dark"></i>
+                            </div>
+                            <div class="font-size-h3 font-w600" data-toggle="countTo" data-speed="1000" id="startTime">正在加载...</div>
+                            <div class="font-size-sm font-w600 text-uppercase text-white">启动时间</div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-6 col-xl-2">
+                    <a class="block block-link-shadow text-right bg-earth text-white">
+                        <div class="block-content block-content-full clearfix">
+                            <div class="float-left mt-10 d-none d-sm-block">
+                                <i class="fa fa-comment-o fa-3x text-body-bg-dark"></i>
+                            </div>
+                            <div class="font-size-h3 font-w600" data-toggle="countTo" data-speed="1000" id="runTime">正在加载...</div>
+                            <div class="font-size-sm font-w600 text-uppercase text-white">运行时长</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="block-content">
+            <div class="row justify-content-center py-20">
+                <div class="col-12 col-xl-12">
+                    <div class="block-header block-header-default">
+                        <h3 class="block-title">系统信息</h3>
+                    </div>
+                    <div class="block-content">
+                        <table class="table table-striped table-vcenter">
+                            <tbody>
+                            <tr>
+                                <td><span style="font-weight: 600">名称</span></td>
+                                <td id="sysName">正在加载...</td>
+                                <td><span style="font-weight: 600">架构</span></td>
+                                <td id="sysArch">正在加载...</td>
+                            </tr>
+                            <tr>
+                                <td><span style="font-weight: 600">版本</span></td>
+                                <td id="sysVersion">正在加载...</td>
+                                <td><span style="font-weight: 600">IP 地址</span></td>
+                                <td id="sysIp">正在加载...</td>
+                            </tr>
+                            <tr>
+                                <td><span style="font-weight: 600">项目部署目录</span></td>
+                                <td id="userDir" colspan="3">正在加载...</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="block-content">
+            <div class="row justify-content-center py-20">
+                <div class="col-6 col-xl-6">
+                    <div class="block-header block-header-default">
+                        <h3 class="block-title">CPU 信息</h3>
+                    </div>
+                    <div class="block-content">
+                        <table class="table table-striped table-vcenter">
+                            <tbody>
+                            <tr>
+                                <th>名称</th>
+                                <td id="name">正在加载...</td>
+                            </tr>
+                            <tr>
+                                <th>核心数</th>
+                                <td id="physicalCount">正在加载...</td>
+                            </tr>
+                            <tr>
+                                <th>逻辑数</th>
+                                <td id="logicalCount">正在加载...</td>
+                            </tr>
+                            <tr>
+                                <th>当前线程数</th>
+                                <td id="threadCount">正在加载...</td>
+                            </tr>
+                            <tr>
+                                <th>其他</th>
+                                <td id="other" ></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-6 col-xl-6">
+                    <div class="block-header block-header-default">
+                        <h3 class="block-title">内存信息</h3>
+                    </div>
+                    <div class="block-content">
+                        <table class="table table-striped table-vcenter">
+                            <tbody>
+                                <tr>
+                                    <th>总内存</th>
+                                    <td id="total">正在加载...</td>
+                                </tr>
+                                <tr>
+                                    <th>已使用内存</th>
+                                    <td id="used">正在加载...</td>
+                                </tr>
+                                <tr>
+                                    <th>可用内存</th>
+                                    <td id="available">正在加载...</td>
+                                </tr>
+                                <tr>
+                                    <th>总交换内存</th>
+                                    <td id="swapTotal">正在加载...</td>
+                                </tr>
+                                <tr>
+                                    <th>已使用交换内存</th>
+                                    <td id="swapUsed">正在加载...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="block-content">
+            <div class="row justify-content-center py-20">
+                <div class="col-12 col-xl-12">
+                    <div class="block-header block-header-default">
+                        <h3 class="block-title">硬盘信息</h3>
+                    </div>
+                    <div class="block-content">
+                        <table class="table table-striped table-vcenter">
+                            <thead>
+                                <tr class="bg-light">
+                                    <th class="">盘符</th>
+                                    <th class="">格式类型</th>
+                                    <th class="">总容量</th>
+                                    <th class="">已用容量</th>
+                                    <th class="">可用容量</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td colspan="5">正在加载...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:replace="~{admin/common :: common-script}"></div>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    console.log(BASE_URL);
+    console.log([[${baseUrl}]]);
+    let ServerInfo = {
+        init: function() {
+            $.hexo.action.sendRequest({
+                url: [[${baseUrl}]] + "/getServerData.json",
+                callback: function (resp) {
+                    if (resp.success) {
+                        let server = resp.data;
+                        ServerInfo.setJvmInfo(server.jvm);
+                        ServerInfo.setBasicInfo(server.basic);
+                        ServerInfo.setCpuInfo(server.cpu);
+                        ServerInfo.setMemoryInfo(server.memory);
+                        ServerInfo.setHardwareInfo(server.hardwareList);
+                    }
+                }
+            });
+        },
+        setJvmInfo: function(jvm) {
+            for (let key in jvm) {
+                $("#" + key).text(jvm[key]);
+            }
+        },
+        setBasicInfo: function(basic) {
+            for (let key in basic) {
+                $("#" + key).text(basic[key]);
+            }
+        },
+        setCpuInfo: function(cpu) {
+            for (let key in cpu) {
+                $("#" + key).text(cpu[key]);
+            }
+        },
+        setMemoryInfo: function(memory) {
+            for (let key in memory) {
+                $("#" + key).text(memory[key]);
+            }
+        },
+        setHardwareInfo: function(hardwareList) {
+            let html = [];
+            for(let i = 0, len = hardwareList.length; i < len; i++) {
+                let hardware = hardwareList[i];
+                html.push("<tr><td class='w200' style='text-align: left'>" + hardware.name + "</td>");
+                html.push("<td class=''>" + hardware.type + "</td>");
+                html.push("<td class=''>" + hardware.totalSpace + "</td>");
+                html.push("<td class=''>" + hardware.usabledSpace + "</td>");
+                html.push("<td class=''>" + hardware.freeSpace + "</td></tr>");
+            }
+
+            $("#hardwareTable").find("tbody").html(html.join(""));
+        }
+
+    }
+    ServerInfo.init();
+</script>
+</body>
+</html>

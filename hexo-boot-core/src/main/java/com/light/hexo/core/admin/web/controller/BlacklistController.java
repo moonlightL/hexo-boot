@@ -52,7 +52,7 @@ public class BlacklistController extends BaseController {
      * @return
      * @throws GlobalException
      */
-    @GetMapping("/editUI/{id}.html")
+    @GetMapping("editUI/{id}.html")
     public String updateUI(@PathVariable("id") Long id, Map<String,Object> map) throws GlobalException {
         Blacklist blacklist = this.blacklistService.findById(id);
         if (blacklist == null) {

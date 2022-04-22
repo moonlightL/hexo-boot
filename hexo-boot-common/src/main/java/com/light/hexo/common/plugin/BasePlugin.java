@@ -1,13 +1,8 @@
 package com.light.hexo.common.plugin;
 
-import org.pf4j.Plugin;
 import org.pf4j.PluginWrapper;
-import org.springframework.boot.web.context.WebServerApplicationContext;
-import org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext;
+import org.pf4j.spring.SpringPlugin;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.support.GenericApplicationContext;
 
 /**
  * @Author MoonlightL
@@ -16,7 +11,7 @@ import org.springframework.context.support.GenericApplicationContext;
  * @Description: 插件生命周期管理基类
  * @DateTime 2022/4/19, 0019 20:41
  */
-public abstract class BasePlugin extends Plugin {
+public abstract class BasePlugin extends SpringPlugin {
 
     private ApplicationContext applicationContext;
 
@@ -26,25 +21,13 @@ public abstract class BasePlugin extends Plugin {
 
     @Override
     public void start() {
-        getApplicationContext();
+        this.applicationContext = this.createApplicationContext();
+        PluginUtil.put(super.wrapper.getPluginId(), this.applicationContext);
     }
 
     @Override
     public void stop() {
-        if ((this.applicationContext != null) && (this.applicationContext instanceof ConfigurableApplicationContext)) {
-            ((ConfigurableApplicationContext) this.applicationContext).close();
-        }
-    }
-
-    public final ApplicationContext getApplicationContext() {
-        if (this.applicationContext == null) {
-            this.applicationContext = this.createApplicationContext();
-            if(this.applicationContext != null) {
-//                ((AnnotationConfigServletWebServerApplicationContext) this.applicationContext).refresh();
-                PluginUtil.put(super.wrapper.getPluginId(), this.applicationContext);
-            }
-        }
-        return applicationContext;
+        PluginUtil.remove(super.wrapper.getPluginId());
     }
 
     protected ApplicationContext createApplicationContext() {
@@ -52,4 +35,6 @@ public abstract class BasePlugin extends Plugin {
         ApplicationContext applicationContext = pluginManager.getApplicationContext();
         return applicationContext;
     }
+
+    public abstract String getConfigUrl();
 }

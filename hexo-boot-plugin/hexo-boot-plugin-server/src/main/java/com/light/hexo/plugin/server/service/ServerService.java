@@ -11,5 +11,9 @@ import com.light.hexo.plugin.server.model.ServerInfo;
  */
 public interface ServerService {
 
+    /**
+     * 获取服务器信息
+     * @return
+     */
     ServerInfo getServerInfo();
 }

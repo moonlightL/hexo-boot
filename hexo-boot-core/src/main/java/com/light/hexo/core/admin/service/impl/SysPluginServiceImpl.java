@@ -1,23 +1,23 @@
 package com.light.hexo.core.admin.service.impl;
 
-import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.util.ZipUtil;
 import com.light.hexo.common.base.BaseRequest;
 import com.light.hexo.common.base.BaseServiceImpl;
 import com.light.hexo.common.exception.GlobalException;
+import com.light.hexo.common.plugin.BasePlugin;
 import com.light.hexo.common.request.PluginRequest;
 import com.light.hexo.common.util.ExceptionUtil;
 import com.light.hexo.core.admin.config.BlogConfig;
 import com.light.hexo.core.admin.constant.HexoExceptionEnum;
-import com.light.hexo.core.admin.service.PluginService;
+import com.light.hexo.core.admin.service.SysPluginService;
 import com.light.hexo.mapper.base.BaseMapper;
-import com.light.hexo.mapper.mapper.PluginMapper;
-import com.light.hexo.mapper.model.Plugin;
+import com.light.hexo.mapper.mapper.SysPluginMapper;
+import com.light.hexo.mapper.model.SysPlugin;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.pf4j.PluginDescriptor;
 import org.pf4j.PluginManager;
 import org.pf4j.PluginWrapper;
-import org.pf4j.spring.SpringPluginManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
@@ -29,16 +29,16 @@ import java.time.LocalDateTime;
 
 /**
  * @Author MoonlightL
- * @ClassName: PluginServiceImpl
+ * @ClassName: SysPluginServiceImpl
  * @ProjectName hexo-boot
  * @Description: 插件 Service 实现
  * @DateTime 2022/4/13, 0013 10:34
  */
 @Service
-public class PluginServiceImpl extends BaseServiceImpl<Plugin> implements PluginService {
+public class SysPluginServiceImpl extends BaseServiceImpl<SysPlugin> implements SysPluginService {
 
     @Autowired
-    private PluginMapper pluginMapper;
+    private SysPluginMapper pluginMapper;
 
     @Autowired
     private BlogConfig blogConfig;
@@ -47,14 +47,14 @@ public class PluginServiceImpl extends BaseServiceImpl<Plugin> implements Plugin
     private PluginManager pluginManager;
 
     @Override
-    public BaseMapper<Plugin> getBaseMapper() {
+    public BaseMapper<SysPlugin> getBaseMapper() {
         return this.pluginMapper;
     }
 
     @Override
     protected Example getExample(BaseRequest request) {
         PluginRequest pluginRequest = (PluginRequest) request;
-        Example example = new Example(Plugin.class);
+        Example example = new Example(SysPlugin.class);
 
         Example.Criteria criteria = example.createCriteria();
 
@@ -86,9 +86,9 @@ public class PluginServiceImpl extends BaseServiceImpl<Plugin> implements Plugin
 
         String pluginId = this.pluginManager.loadPlugin(Paths.get(filePath));
 
-        Example example = new Example(Plugin.class);
+        Example example = new Example(SysPlugin.class);
         example.createCriteria().andEqualTo("name", pluginId);
-        Plugin dbPlugin = this.pluginMapper.selectOneByExample(example);
+        SysPlugin dbPlugin = this.pluginMapper.selectOneByExample(example);
         if (dbPlugin != null) {
             ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_PLUGIN_HAD_INSTALLED);
         }
@@ -96,22 +96,25 @@ public class PluginServiceImpl extends BaseServiceImpl<Plugin> implements Plugin
         PluginWrapper pluginWrapper = this.pluginManager.getPlugin(pluginId);
         PluginDescriptor descriptor = pluginWrapper.getDescriptor();
 
-        Plugin plugin = new Plugin();
+        BasePlugin basePlugin = (BasePlugin) pluginWrapper.getPlugin();
+
+        SysPlugin plugin = new SysPlugin();
         plugin.setName(pluginId)
               .setState(false)
               .setRemark(descriptor.getPluginDescription())
               .setVersion(descriptor.getVersion())
               .setAuthor(descriptor.getProvider())
               .setFilePath(filePath)
+              .setConfigUrl(basePlugin.getConfigUrl())
               .setCreateTime(LocalDateTime.now())
               .setUpdateTime(plugin.getCreateTime());
         this.pluginMapper.insert(plugin);
     }
 
     @Override
-    public void updatePlugin(Plugin plugin) throws GlobalException {
+    public void updatePlugin(SysPlugin plugin) throws GlobalException {
 
-        Plugin dbPlugin = super.findById(plugin.getId());
+        SysPlugin dbPlugin = super.findById(plugin.getId());
         if (dbPlugin == null) {
             ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_PLUGIN_NOT_EXIST);
         }
@@ -129,7 +132,7 @@ public class PluginServiceImpl extends BaseServiceImpl<Plugin> implements Plugin
     @Override
     public void removePlugin(Integer id) throws GlobalException {
 
-        Plugin dbPlugin = super.findById(id);
+        SysPlugin dbPlugin = super.findById(id);
         if (dbPlugin == null) {
             ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_PLUGIN_NOT_EXIST);
         }
@@ -142,6 +145,11 @@ public class PluginServiceImpl extends BaseServiceImpl<Plugin> implements Plugin
         this.pluginManager.unloadPlugin(pluginId);
 
         super.removeModel(id);
+
+        File pluginFile = new File(dbPlugin.getFilePath());
+        if (pluginFile.exists()) {
+            FileUtils.deleteQuietly(pluginFile);
+        }
     }
 
 }

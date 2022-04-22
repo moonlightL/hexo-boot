@@ -14,36 +14,32 @@ import java.util.*;
  */
 public class HexoBootSpringExtensionFactory extends SpringExtensionFactory implements HexoBootExtensionFactory {
 
-//    private Map<String, Object> cacheMap;
+    private Map<String, Object> cacheMap;
 
     public HexoBootSpringExtensionFactory(PluginManager pluginManager) {
         super(pluginManager, true);
-//        this.cacheMap = Collections.synchronizedMap(new HashMap<>());
+        this.cacheMap = Collections.synchronizedMap(new HashMap<>());
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public <T> T create(Class<T> extensionClass) {
-        return this.create(extensionClass.getName(), extensionClass);
-    }
+        String beanName = extensionClass.getName();
 
-    @Override
-    public <T> T create(String beanName, Class<T> extensionClass) {
-//        if (this.cacheMap.containsKey(beanName)) {
-//            return (T) this.cacheMap.get(beanName);
-//        }
+        if (this.cacheMap.containsKey(beanName)) {
+            return (T) this.cacheMap.get(beanName);
+        }
 
         T extension = super.create(extensionClass);
-//        this.cacheMap.put(beanName, extension);
+        this.cacheMap.put(beanName, extension);
 
         return extension;
     }
 
     @Override
     public void destroy(Class<?> extensionClass) {
-        String extensionClassName = extensionClass.getName();
-//        if(this.cacheMap.containsKey(extensionClassName)) {
-//            this.cacheMap.remove(extensionClassName);
-//        }
+        String beanName = extensionClass.getName();
+        if(this.cacheMap.containsKey(beanName)) {
+            this.cacheMap.remove(beanName);
+        }
     }
 }

@@ -1,7 +1,7 @@
 package com.light.hexo.common.request;
 
 import com.light.hexo.common.base.BaseRequest;
-import com.light.hexo.mapper.model.Plugin;
+import com.light.hexo.mapper.model.SysPlugin;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,7 +17,7 @@ import javax.validation.constraints.NotNull;
  */
 @Setter
 @Getter
-public class PluginRequest extends BaseRequest<Plugin> {
+public class PluginRequest extends BaseRequest<SysPlugin> {
 
     /**
      * 主键

@@ -11,7 +11,7 @@
     <h2 class="content-heading" id="toolbar">
         <button type="button" class="btn btn-sm btn-secondary float-right hexo-query" data-query-area="queryArea"><i class="fa fa-search text-success mr-5"></i> 查询</button>
         <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-refresh"><i class="fa fa-refresh mr-5"></i> 刷新</button>
-        <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-unzip" title="加载插件" data-width="550" data-height="580"><i class="fa fa-plus-square text-primary mr-5"></i> 加载</button>
+        <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-unzip" title="安装插件" data-width="550" data-height="580"><i class="fa fa-plus-square text-primary mr-5"></i> 安装</button>
         <i class="fa fa-plug"></i> 插件列表
     </h2>
     <div class="block block-fx-shadow hide" id="queryArea">
@@ -103,9 +103,22 @@
     function actionFormatter(val, row) {
         let btnArr = [];
         btnArr.push('<div class="btn-group">');
+        btnArr.push('<button type="button" class="btn btn-sm btn-secondary hexo-config" data-toggle="tooltip" title="配置" data-url="'+row.configUrl+'" onclick="window.configUI(this)"><i class="fa fa-pencil"></i></button>');
         btnArr.push('<button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="卸载" onclick="$.hexo.action.remove(\'' + row.id + '\')"><i class="fa fa-times"></i></button>');
         btnArr.push("</div>");
         return btnArr.join("");
+    }
+
+    function configUI(obj) {
+        let $target = $(obj);
+        let url = $target.data("url");
+        if (url == "") {
+            $.hexo.modal.tip("该插件无配置页面", "info");
+            return;
+        }
+        let targetUrl = window.location.origin + url;
+        // let targetUrl = BASE_URL + "/testUI.html";
+        $.hexo.modal._window("插件信息", targetUrl , 780, 540, true);
     }
 
     $(function() {

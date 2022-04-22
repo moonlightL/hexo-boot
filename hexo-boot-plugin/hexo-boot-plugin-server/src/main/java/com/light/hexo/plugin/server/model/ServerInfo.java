@@ -1,6 +1,5 @@
 package com.light.hexo.plugin.server.model;
 
-import com.light.hexo.common.util.FileSizeUtil;
 import com.light.hexo.common.util.IpUtil;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,10 +9,8 @@ import lombok.experimental.Accessors;
 import oshi.SystemInfo;
 import oshi.hardware.CentralProcessor;
 import oshi.hardware.GlobalMemory;
-import oshi.hardware.VirtualMemory;
 import oshi.software.os.FileSystem;
 import oshi.software.os.OSFileStore;
-
 import java.io.Serializable;
 import java.lang.management.ManagementFactory;
 import java.time.Duration;
@@ -109,12 +106,12 @@ public class ServerInfo implements Serializable {
         Runtime runtime = Runtime.getRuntime();
         // jvm 总内存
         long totalMemory = runtime.totalMemory();
-        jvmInfo.setTotalMemory(FileSizeUtil.getPrintSize(totalMemory));
+        jvmInfo.setTotalMemory(this.getPrintSize(totalMemory));
         // jvm 空闲内容
         long freeMemory = runtime.freeMemory();
-        jvmInfo.setFreeMemory(FileSizeUtil.getPrintSize(freeMemory));
+        jvmInfo.setFreeMemory(this.getPrintSize(freeMemory));
         // jvm 已使用内容
-        jvmInfo.setRunTimeMemory(FileSizeUtil.getPrintSize(totalMemory - freeMemory));
+        jvmInfo.setRunTimeMemory(this.getPrintSize(totalMemory - freeMemory));
 
         this.setJvm(jvmInfo);
     }
@@ -122,7 +119,9 @@ public class ServerInfo implements Serializable {
     private void collectCpuInfo(SystemInfo sysInfo) {
 
         Cpu cpuInfo = new Cpu();
+
         CentralProcessor processor = sysInfo.getHardware().getProcessor();
+
         // 名称
         cpuInfo.setName(processor.getProcessorIdentifier().getName());
         // 线程数
@@ -137,30 +136,30 @@ public class ServerInfo implements Serializable {
 
     private void collectMemoryInfo(SystemInfo sysInfo) {
         GlobalMemory globalMemory = sysInfo.getHardware().getMemory();
+
         Memory memoryInfo = new Memory();
         // 系统空闲内存
         long available = globalMemory.getAvailable();
-        memoryInfo.setAvailable(FileSizeUtil.getPrintSize(available));
+        memoryInfo.setAvailable(this.getPrintSize(available));
         // 系统总内存
         long total = globalMemory.getTotal();
-        memoryInfo.setTotal(FileSizeUtil.getPrintSize(total));
+        memoryInfo.setTotal(this.getPrintSize(total));
         // 系统已使用内存
-        memoryInfo.setUsed(FileSizeUtil.getPrintSize(total - available));
+        memoryInfo.setUsed(this.getPrintSize(total - available));
         // 交换内存相关
-        VirtualMemory virtualMemory = globalMemory.getVirtualMemory();
-        memoryInfo.setSwapUsed(FileSizeUtil.getPrintSize(virtualMemory.getSwapUsed()));
-        memoryInfo.setSwapTotal(FileSizeUtil.getPrintSize(virtualMemory.getSwapTotal()));
+        memoryInfo.setSwapUsed(this.getPrintSize(globalMemory.getVirtualMemory().getSwapUsed()));
+        memoryInfo.setSwapTotal(this.getPrintSize(globalMemory.getVirtualMemory().getSwapTotal()));
 
         this.setMemory(memoryInfo);
     }
 
     private void collectHardwareInfo(SystemInfo sysInfo) {
         FileSystem fileSystem = sysInfo.getOperatingSystem().getFileSystem();
-        List<OSFileStore> fileStores = fileSystem.getFileStores();
+        List<OSFileStore> fileStoreList = fileSystem.getFileStores();
 
-        List<Hardware> hardwareList = new ArrayList<Hardware>();
+        List<Hardware> hardwareList = new ArrayList<>();
         Hardware hardwareInfo;
-        for (OSFileStore osFileStore : fileStores) {
+        for (OSFileStore osFileStore : fileStoreList) {
             hardwareInfo = new Hardware();
             // 盘符名
             hardwareInfo.setName(osFileStore.getName());
@@ -168,19 +167,42 @@ public class ServerInfo implements Serializable {
             hardwareInfo.setType(osFileStore.getType());
             // 可用容量
             long freeSpace = osFileStore.getUsableSpace();
-            hardwareInfo.setFreeSpace(FileSizeUtil.getPrintSize(freeSpace));
+            hardwareInfo.setFreeSpace(this.getPrintSize(freeSpace));
             // 总容量
             long totalSpace = osFileStore.getTotalSpace();
-            hardwareInfo.setTotalSpace(FileSizeUtil.getPrintSize(totalSpace));
+            hardwareInfo.setTotalSpace(this.getPrintSize(totalSpace));
             // 已使用容量
-            hardwareInfo.setUsabledSpace(FileSizeUtil.getPrintSize(totalSpace - freeSpace));
+            hardwareInfo.setUsabledSpace(this.getPrintSize(totalSpace - freeSpace));
             hardwareList.add(hardwareInfo);
         }
 
         this.setHardwareList(hardwareList);
     }
 
+    private String getPrintSize(long size) {
+        long rest = 0;
 
+        if (size < SIZE) {
+            return String.valueOf(size) + "B";
+        } else {
+            size /= SIZE;
+        }
+
+        if (size < SIZE) {
+            return String.valueOf(size) + "KB";
+        } else {
+            rest = size % SIZE;
+            size /= SIZE;
+        }
+
+        if (size < SIZE) {
+            size = size * 100;
+            return String.valueOf((size / 100)) + "." + String.valueOf((rest * 100 / SIZE % 100)) + "MB";
+        } else {
+            size = size * 100 / SIZE;
+            return String.valueOf((size / 100)) + "." + String.valueOf((size % 100)) + "GB";
+        }
+    }
 
     @Setter
     @Getter

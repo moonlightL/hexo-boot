@@ -27,6 +27,7 @@ public class CompoundModuleRegistry extends AbstractModuleRegistry implements Mo
         this.addRegister(new ExtensionRegistry(pluginManager));
         this.addRegister(new HandlerRegistry(pluginManager));
         this.addRegister(new InterceptorRegistry(pluginManager));
+        this.addRegister(new ThymeleafRegistry(pluginManager));
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.light.hexo.common.config;
+package com.light.hexo.mapper.config;
 
 import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.annotation.Value;

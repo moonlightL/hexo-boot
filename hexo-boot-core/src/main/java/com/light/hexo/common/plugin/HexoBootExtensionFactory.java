@@ -10,15 +10,6 @@ package com.light.hexo.common.plugin;
 public interface HexoBootExtensionFactory {
 
     /**
-     * 指定beanName创建Spring实例
-     * @param beanName
-     * @param extensionClass
-     * @param <T>
-     * @return
-     */
-    <T> T create(String beanName, Class<T> extensionClass);
-
-    /**
      * 销毁扩展实例
      * @param extensionClass
      */

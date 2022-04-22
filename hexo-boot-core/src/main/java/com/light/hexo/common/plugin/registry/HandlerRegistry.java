@@ -71,7 +71,7 @@ public class HandlerRegistry extends AbstractModuleRegistry {
             if (annotation != null || restAnnotation != null) {
                 Method[] methods = clazz.getMethods();
                 for (Method method : methods) {
-                    RequestMappingInfo requestMappingInfo = (RequestMappingInfo) getMappingForMethod.invoke(requestMappingHandlerMapping, method, clazz);
+                    RequestMappingInfo requestMappingInfo = (RequestMappingInfo) this.getMappingForMethod.invoke(this.requestMappingHandlerMapping, method, clazz);
                     requestMappingInfoList.add(requestMappingInfo);
                 }
                 super.destroyBean(clazz);

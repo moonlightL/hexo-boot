@@ -8,18 +8,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.pf4j.Extension;
 import org.pf4j.Plugin;
 import org.pf4j.PluginWrapper;
-import org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory;
-import org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.type.classreading.CachingMetadataReaderFactory;
 import org.springframework.core.type.classreading.MetadataReader;
 import org.springframework.util.ClassUtils;
+import org.thymeleaf.templateresolver.ITemplateResolver;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @Author MoonlightL
@@ -31,26 +28,28 @@ import java.util.Map;
 @Slf4j
 public abstract class AbstractModuleRegistry implements ModuleRegistry {
 
-    protected final HexoBootPluginManager pluginManager;
+    protected HexoBootPluginManager pluginManager;
 
-    protected final AbstractAutowireCapableBeanFactory beanFactory;
+    protected DefaultListableBeanFactory beanFactory;
+
+    protected Map<String, ITemplateResolver> pluginTemplateResolver = new HashMap<>();
 
     public AbstractModuleRegistry(HexoBootPluginManager pluginManager) {
         this.pluginManager = pluginManager;
-        this.beanFactory = (AbstractAutowireCapableBeanFactory) this.pluginManager.getApplicationContext().getAutowireCapableBeanFactory();
+        this.beanFactory = (DefaultListableBeanFactory) this.pluginManager.getApplicationContext().getAutowireCapableBeanFactory();
     }
 
     protected List<Class<?>> getPluginClasses(String pluginId) throws Exception {
         PluginWrapper pluginWrapper = this.pluginManager.getPlugin(pluginId);
-        PathMatchingResourcePatternResolver pathMatchingResourcePatternResolver = new PathMatchingResourcePatternResolver(pluginWrapper.getPluginClassLoader());
+        ClassLoader pluginClassLoader = pluginWrapper.getPluginClassLoader();
+        PathMatchingResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver(pluginClassLoader);
         String pluginBasePath = ClassUtils.classPackageAsResourcePath(pluginWrapper.getPlugin().getClass());
-        //扫描 继承 Plugin 类以及所在子包下的文件
-        Resource[] resources = pathMatchingResourcePatternResolver.getResources(PathMatchingResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX + pluginBasePath + "/**/*.class");
+        Resource[] resources = resourcePatternResolver.getResources(PathMatchingResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX + pluginBasePath + "/**/*.class");
         List<Class<?>> classList = new ArrayList<>();
         for (Resource resource : resources) {
             if (resource.isReadable()) {
                 MetadataReader metadataReader = new CachingMetadataReaderFactory().getMetadataReader(resource);
-                Class clazz = pluginWrapper.getPluginClassLoader().loadClass(metadataReader.getAnnotationMetadata().getClassName());
+                Class clazz = pluginClassLoader.loadClass(metadataReader.getAnnotationMetadata().getClassName());
                 if(!BasePlugin.class.isAssignableFrom(clazz)
                     && !Plugin.class.isAssignableFrom(clazz)
                     && clazz.getAnnotation(Extension.class) == null) {
@@ -62,13 +61,14 @@ public abstract class AbstractModuleRegistry implements ModuleRegistry {
     }
 
     protected Object registryBean(Class<?> clazz) {
-        Object object = null;
+        Object object;
         Map<String, ?> extensionBeanMap = this.pluginManager.getApplicationContext().getBeansOfType(clazz);
         if (extensionBeanMap.isEmpty()) {
             object = this.pluginManager.getExtensionFactory().create(clazz);
             this.beanFactory.registerSingleton(clazz.getName(), object);
+            return object;
         }
-        return object;
+        return extensionBeanMap.get(clazz.getName());
     }
 
     protected void destroyBean(Class<?> clazz) {

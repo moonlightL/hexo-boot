@@ -8,8 +8,8 @@ import com.light.hexo.common.exception.GlobalExceptionEnum;
 import com.light.hexo.common.request.PluginRequest;
 import com.light.hexo.common.util.ExceptionUtil;
 import com.light.hexo.common.vo.Result;
-import com.light.hexo.core.admin.service.PluginService;
-import com.light.hexo.mapper.model.Plugin;
+import com.light.hexo.core.admin.service.SysPluginService;
+import com.light.hexo.mapper.model.SysPlugin;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,8 +20,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -36,7 +34,7 @@ import java.util.Map;
 public class PluginController extends BaseController {
 
     @Autowired
-    private PluginService pluginService;
+    private SysPluginService pluginService;
 
     /**
      * 修改状态
@@ -65,7 +63,7 @@ public class PluginController extends BaseController {
 
     @RequestMapping("/unzipPlugin.json")
     @ResponseBody
-    @OperateLog(value = "解压插件", actionType = ActionEnum.ADMIN_ADD)
+    @OperateLog(value = "按钮插件", actionType = ActionEnum.ADMIN_ADD)
     public Result unzipTheme(MultipartFile file) {
 
         if (file == null) {
@@ -116,7 +114,17 @@ public class PluginController extends BaseController {
     @RequestMapping("list.json")
     @ResponseBody
     public Result list(PluginRequest request) {
-        PageInfo<Plugin> pageInfo = this.pluginService.findPage(request);
+        PageInfo<SysPlugin> pageInfo = this.pluginService.findPage(request);
         return Result.success(pageInfo);
+    }
+
+    /**
+     * 用于测试
+     * @param map
+     * @return
+     */
+    @RequestMapping("testUI.html")
+    public String testUI(Map<String, Object> map) {
+        return this.render("testUI", map);
     }
 }

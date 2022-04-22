@@ -1,7 +1,6 @@
 package com.light.hexo.plugin.server.controller;
 
-import com.light.hexo.common.plugin.PluginUtil;
-import com.light.hexo.common.util.SpringContextUtil;
+import com.light.hexo.common.base.BaseController;
 import com.light.hexo.common.vo.Result;
 import com.light.hexo.plugin.server.model.ServerInfo;
 import com.light.hexo.plugin.server.service.ServerService;
@@ -9,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.Map;
 
 /**
  * @Author MoonlightL
@@ -19,18 +20,30 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @RequestMapping("/plugin/server")
 @Controller
-public class ServerController {
+public class ServerController extends BaseController {
+
+    @Autowired
+    private ServerService serverService;
 
     /**
      * 获取服务器信息
      * @return
      */
-    @RequestMapping("/getServerData.json")
+    @RequestMapping("getServerData.json")
     @ResponseBody
     public Result getServerData() {
-        ServerService serverService = SpringContextUtil.getBean(ServerService.class);
-        ServerInfo serverInfo = serverService.getServerInfo();
+        ServerInfo serverInfo = this.serverService.getServerInfo();
         serverInfo.collectInfo();
         return Result.success(serverInfo);
+    }
+
+    /**
+     * 配置页面
+     * @param map
+     * @return
+     */
+    @RequestMapping("configUI.html")
+    public String configUI(Map<String, Object> map) {
+        return this.render("configUI", map);
     }
 }

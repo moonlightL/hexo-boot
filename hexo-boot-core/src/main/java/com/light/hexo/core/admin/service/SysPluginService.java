@@ -2,18 +2,18 @@ package com.light.hexo.core.admin.service;
 
 import com.light.hexo.common.base.BaseService;
 import com.light.hexo.common.exception.GlobalException;
-import com.light.hexo.mapper.model.Plugin;
+import com.light.hexo.mapper.model.SysPlugin;
 
 import java.io.InputStream;
 
 /**
  * @Author MoonlightL
- * @ClassName: PluginService
+ * @ClassName: SysPluginService
  * @ProjectName hexo-boot
  * @Description: 插件 Service
  * @DateTime 2022/4/13, 0013 10:33
  */
-public interface PluginService extends BaseService<Plugin> {
+public interface SysPluginService extends BaseService<SysPlugin> {
 
     /**
      * 解压插件
@@ -26,7 +26,7 @@ public interface PluginService extends BaseService<Plugin> {
      * 修改插件
      * @param plugin
      */
-    void updatePlugin(Plugin plugin) throws GlobalException;
+    void updatePlugin(SysPlugin plugin) throws GlobalException;
 
     /**
      * 卸载插件

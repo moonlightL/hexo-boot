@@ -59,7 +59,7 @@ public class LoginController extends BaseController {
         CaptchaUtil.setHeader(response);
 
         // 三个参数分别为宽、高、位数
-        SpecCaptcha specCaptcha = new SpecCaptcha(130, 32, 5);
+        SpecCaptcha specCaptcha = new SpecCaptcha(130, 32, 4);
 
         // 设置类型，纯数字、纯字母、字母数字混合
         specCaptcha.setCharType(Captcha.TYPE_NUM_AND_UPPER);

@@ -10,6 +10,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.thymeleaf.ITemplateEngine;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import javax.mail.internet.MimeMessage;
@@ -27,7 +28,7 @@ import java.util.Properties;
 public class EmailService {
 
     @Autowired
-    private TemplateEngine templateEngine;
+    private ITemplateEngine templateEngine;
 
     @Autowired
     private ConfigService configService;

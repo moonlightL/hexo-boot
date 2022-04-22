@@ -21,6 +21,10 @@ public class PluginUtil {
         map.putIfAbsent(pluginId, applicationContext);
     }
 
+    public static final void remove(String pluginId) {
+        map.remove(pluginId);
+    }
+
     public static final ApplicationContext get(String pluginId) {
         return map.get(pluginId);
     }
