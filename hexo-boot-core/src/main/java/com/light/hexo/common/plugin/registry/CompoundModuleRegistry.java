@@ -22,12 +22,12 @@ public class CompoundModuleRegistry extends AbstractModuleRegistry implements Mo
     public CompoundModuleRegistry(HexoBootPluginManager pluginManager) {
         super(pluginManager);
         this.moduleRegistryList = Collections.synchronizedList(new ArrayList<>());
-        this.moduleRegistryList.add(new MapperRegistry(pluginManager));
+//        this.moduleRegistryList.add(new MapperRegistry(pluginManager));
         this.moduleRegistryList.add(new ComponentRegistry(pluginManager));
-        this.moduleRegistryList.add(new ExtensionRegistry(pluginManager));
-        this.moduleRegistryList.add(new HandlerRegistry(pluginManager));
-        this.moduleRegistryList.add(new InterceptorRegistry(pluginManager));
-        this.moduleRegistryList.add(new ThymeleafRegistry(pluginManager));
+//        this.moduleRegistryList.add(new ExtensionRegistry(pluginManager));
+//        this.moduleRegistryList.add(new HandlerRegistry(pluginManager));
+//        this.moduleRegistryList.add(new InterceptorRegistry(pluginManager));
+//        this.moduleRegistryList.add(new ThymeleafRegistry(pluginManager));
     }
 
     @Override

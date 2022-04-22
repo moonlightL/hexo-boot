@@ -4,6 +4,7 @@ import cn.hutool.core.util.ZipUtil;
 import com.light.hexo.common.base.BaseRequest;
 import com.light.hexo.common.base.BaseServiceImpl;
 import com.light.hexo.common.exception.GlobalException;
+import com.light.hexo.common.exception.GlobalExceptionEnum;
 import com.light.hexo.common.plugin.BasePlugin;
 import com.light.hexo.common.request.PluginRequest;
 import com.light.hexo.common.util.ExceptionUtil;
@@ -144,11 +145,16 @@ public class SysPluginServiceImpl extends BaseServiceImpl<SysPlugin> implements 
 
         this.pluginManager.unloadPlugin(pluginId);
 
-        super.removeModel(id);
-
         File pluginFile = new File(dbPlugin.getFilePath());
         if (pluginFile.exists()) {
-            FileUtils.deleteQuietly(pluginFile);
+            boolean deleteQuietly = FileUtils.deleteQuietly(pluginFile);
+            if (!deleteQuietly) {
+                dbPlugin.setState(false).setUpdateTime(LocalDateTime.now());
+                super.updateModel(dbPlugin);
+                ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_PLUGIN_CANNOT_DELETE);
+            }
+
+            super.removeModel(id);
         }
     }
 
