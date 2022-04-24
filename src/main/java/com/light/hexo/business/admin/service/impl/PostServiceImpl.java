@@ -932,6 +932,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
 
             EhcacheUtil.clearByCacheName("postCache");
             EhcacheUtil.clearByCacheName("categoryCache");
+            EhcacheUtil.clearByCacheName("tagCache");
 
             WebApplicationContext webApplicationContext = (WebApplicationContext) SpringContextUtil.applicationContext;
             ServletContext servletContext = webApplicationContext.getServletContext();
