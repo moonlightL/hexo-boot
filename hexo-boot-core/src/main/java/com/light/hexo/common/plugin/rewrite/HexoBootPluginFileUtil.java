@@ -213,6 +213,7 @@ public class HexoBootPluginFileUtil {
     }
 
     public static Path getPath(URI uri, String first, String... more) throws IOException {
+        // rewrite these
         try (FileSystem fs = getFileSystem(uri)) {
             return fs.getPath(first, more);
         }
