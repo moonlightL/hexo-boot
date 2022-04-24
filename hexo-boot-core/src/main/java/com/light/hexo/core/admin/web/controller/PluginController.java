@@ -61,9 +61,9 @@ public class PluginController extends BaseController {
     }
 
 
-    @RequestMapping("/unzipPlugin.json")
+    @RequestMapping("/installPlugin.json")
     @ResponseBody
-    @OperateLog(value = "按钮插件", actionType = ActionEnum.ADMIN_ADD)
+    @OperateLog(value = "安装插件", actionType = ActionEnum.ADMIN_ADD)
     public Result unzipTheme(MultipartFile file) {
 
         if (file == null) {
@@ -78,7 +78,7 @@ public class PluginController extends BaseController {
         try {
             String originalFilename = file.getOriginalFilename();
             InputStream inputStream = file.getInputStream();
-            this.pluginService.unzipPlugin(originalFilename, inputStream);
+            this.pluginService.installPlugin(originalFilename, inputStream);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -101,7 +101,7 @@ public class PluginController extends BaseController {
         }
 
         String[] split = idStr.split(",");
-        this.pluginService.removePlugin(Integer.valueOf(split[0]));
+        this.pluginService.uninstallPlugin(Integer.valueOf(split[0]));
         return Result.success();
     }
 

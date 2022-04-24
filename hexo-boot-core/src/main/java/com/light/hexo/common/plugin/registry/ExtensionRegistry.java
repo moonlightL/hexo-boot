@@ -16,7 +16,7 @@ public class ExtensionRegistry extends AbstractModuleRegistry {
     }
 
     @Override
-    public void register(String pluginId) throws Exception {
+    public void register(String pluginId) {
         for (String extensionClassName : super.pluginManager.getExtensionClassNames(pluginId)) {
             try {
                 Class<?> extensionClass = super.pluginManager.getPlugin(pluginId).getPluginClassLoader().loadClass(extensionClassName);
@@ -28,7 +28,7 @@ public class ExtensionRegistry extends AbstractModuleRegistry {
     }
 
     @Override
-    public void unRegister(String pluginId) throws Exception {
+    public void unRegister(String pluginId) {
         for (String extensionClassName : super.pluginManager.getExtensionClassNames(pluginId)) {
             try {
                 Class<?> extensionClass = super.pluginManager.getPlugin(pluginId).getPluginClassLoader().loadClass(extensionClassName);

@@ -1,6 +1,8 @@
 package com.light.hexo.core.admin.web.controller;
 
+import com.light.hexo.common.vo.BlogMetaData;
 import com.light.hexo.common.vo.Result;
+import com.light.hexo.core.admin.config.BlogConfig;
 import com.light.hexo.mapper.model.Post;
 import com.light.hexo.core.admin.service.*;
 import com.light.hexo.common.base.BaseController;
@@ -37,6 +39,9 @@ public class HomeController extends BaseController {
     @Autowired
     private VisitService visitService;
 
+    @Autowired
+    private BlogConfig blogConfig;
+
     /**
      * 主页
      * @param resultMap
@@ -55,27 +60,6 @@ public class HomeController extends BaseController {
         resultMap.put("guestBookNum", guestBookNum);
         return super.render("index", resultMap);
     }
-
-    /**
-     * 仪表盘页
-     * @param resultMap
-     * @return
-     */
-//    @RequestMapping("/dashboard.html")
-//    public String dashboard(Map<String, Object> resultMap) {
-//
-//        int postNum = this.postService.getPostNum();
-//        int postCommentNum = this.postCommentService.getPostCommentNum();
-//        int categoryNum = this.categoryService.getCategoryNum();
-//        int guestBookNum = this.guestBookService.getGuestBookNum();
-//
-//        resultMap.put("postNum", postNum);
-//        resultMap.put("postCommentNum", postCommentNum);
-//        resultMap.put("categoryNum", categoryNum);
-//        resultMap.put("guestBookNum", guestBookNum);
-//
-//        return super.render("dashboard", resultMap);
-//    }
 
     /**
      * 获取访问人数
@@ -145,5 +129,19 @@ public class HomeController extends BaseController {
         return Result.success(list);
     }
 
-
+    /**
+     * 获取博客元数据
+     * @return
+     */
+    @RequestMapping("/getMetaData.json")
+    @ResponseBody
+    public Result getMetaData() {
+        BlogMetaData metaData = new BlogMetaData();
+        metaData.setHomeDir(this.blogConfig.getHomeDir());
+        metaData.setAttachmentDir(this.blogConfig.getAttachmentDir());
+        metaData.setLogDir(this.blogConfig.getLogDir());
+        metaData.setPluginDir(this.blogConfig.getPluginDir());
+        metaData.setVersion(this.blogConfig.getVersion());
+        return Result.success(metaData);
+    }
 }

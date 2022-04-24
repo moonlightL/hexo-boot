@@ -7,14 +7,14 @@ import java.lang.annotation.Target;
 
 /**
  * @Author MoonlightL
- * @ClassName: InterceptMapping
+ * @ClassName: InterceptPathPattern
  * @ProjectName hexo-boot
  * @Description: 拦截器映射
  * @DateTime 2022/4/20, 0020 10:36
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface InterceptMapping {
+public @interface InterceptPathPattern {
 
     String[] value();
 }

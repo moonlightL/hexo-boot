@@ -27,11 +27,11 @@
                     <div class="form-group row">
                         <div class="col-lg-12 col-md-12">
                             <div>
-                                <b>获取主题: </b><a href="https://github.com/moonlightL" target="_blank">GitHub资源</a>&nbsp;&nbsp;
+                                <b>获取插件: </b><a href="https://github.com/moonlightL" target="_blank">GitHub资源</a>&nbsp;&nbsp;
                                 <a href="https://gitee.com/moonlightL" target="_blank">码云资源（推荐）</a>&nbsp;&nbsp;
                             </div>
                             <div>
-                                <b>友情提示: 下载主题源码文件（zip)，直接上传至此处等待2~3秒即可完成</b>
+                                <b>友情提示: 下载插件文件（zip)，直接上传至此处等待2~3秒即可完成</b>
                             </div>
                         </div>
                     </div>
@@ -48,7 +48,7 @@
     $(function(){
         $("#dropz").dropzone({
             method: "POST",
-            url: "/admin/plugin/unzipPlugin.json", //上传地址
+            url: "/admin/plugin/installPlugin.json", //上传地址
             addRemoveLinks: true,
             maxFiles: 1,// 一次性上传的文件数量上限
             maxFilesize: 100, // 单个上传文件大小，单位：MB
@@ -57,7 +57,7 @@
             parallelUploads: 1, // 每次上传的文件数量，默认值 2
             autoProcessQueue: false, // 是否自动上传
             acceptedFiles: ".zip",
-            dictDefaultMessage: '+<br>(上传插件文件.zip)',
+            dictDefaultMessage: '+<br>(上传插件文件.zip，每次仅上传1个插件)',
             dictMaxFilesExceeded: "每次最多只能上传1个文件",
             dictResponseError: '文件上传失败',
             dictInvalidFileType: "支持上传主题源码 .zip 文件",
@@ -93,6 +93,7 @@
 
                     if (!resp.success) {
                         $.hexo.modal.tip(resp.message, "error");
+                        window.parent.$.hexo.table.refreshData();
                         return;
                     }
 

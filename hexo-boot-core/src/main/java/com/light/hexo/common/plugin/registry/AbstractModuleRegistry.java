@@ -4,6 +4,7 @@ import com.light.hexo.common.plugin.BasePlugin;
 import com.light.hexo.common.plugin.HexoBootPluginManager;
 import com.light.hexo.common.plugin.HexoBootSpringExtensionFactory;
 import com.light.hexo.common.plugin.ModuleRegistry;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.pf4j.Extension;
 import org.pf4j.Plugin;
@@ -35,7 +36,8 @@ public abstract class AbstractModuleRegistry implements ModuleRegistry {
         this.beanFactory = (DefaultListableBeanFactory) this.pluginManager.getApplicationContext().getAutowireCapableBeanFactory();
     }
 
-    protected List<Class<?>> getPluginClasses(String pluginId) throws Exception {
+    @SneakyThrows
+    protected List<Class<?>> getPluginClasses(String pluginId) {
         PluginWrapper pluginWrapper = this.pluginManager.getPlugin(pluginId);
         ClassLoader pluginClassLoader = pluginWrapper.getPluginClassLoader();
         PathMatchingResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver(pluginClassLoader);

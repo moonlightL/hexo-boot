@@ -1,6 +1,7 @@
 package com.light.hexo.common.plugin.registry;
 
 import com.light.hexo.common.plugin.HexoBootPluginManager;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
@@ -19,16 +20,18 @@ public class ComponentRegistry extends AbstractModuleRegistry {
         super(pluginManager);
     }
 
+    @SneakyThrows
     @Override
-    public void register(String pluginId) throws Exception {
+    public void register(String pluginId) {
         List<Class<?>> classList = this.listComponentClasses(pluginId);
         for (Class<?> clazz : classList) {
             super.registryBean(clazz);
         }
     }
 
+    @SneakyThrows
     @Override
-    public void unRegister(String pluginId) throws Exception {
+    public void unRegister(String pluginId) {
         List<Class<?>> classList = this.listComponentClasses(pluginId);
         for (Class<?> clazz : classList) {
             super.destroyBean(clazz);

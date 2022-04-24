@@ -253,7 +253,7 @@
                         }
                     });
                 },
-                confirm: function(content, callback) {
+                confirm: function(content, callback, cancelCallback) {
                     swal({
                         title: content,
                         type: "warning",
@@ -264,6 +264,10 @@
                     }).then(function(dismiss) {
                         if (dismiss.value === true && typeof callback == 'function') {
                             callback();
+                        } else {
+                            if (typeof cancelCallback == 'function') {
+                                cancelCallback();
+                            }
                         }
                     });
                 },
@@ -335,6 +339,12 @@ $.ajaxSetup({
                 $.hexo.modal.tip(xhr.responseJSON.message, "error", function() {
                     if (xhr.responseJSON.code == 1003 || xhr.responseJSON.code == 1004) {
                         window.parent.location.href = "/admin/login.html";
+                    }
+
+                    try {
+                        $.hexo.table.refreshData();
+                    } catch (e) {
+                        console.error(e);
                     }
                 });
             }

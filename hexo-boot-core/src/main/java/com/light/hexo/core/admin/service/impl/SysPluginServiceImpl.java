@@ -1,6 +1,7 @@
 package com.light.hexo.core.admin.service.impl;
 
 import cn.hutool.core.util.ZipUtil;
+import cn.hutool.system.oshi.OshiUtil;
 import com.light.hexo.common.base.BaseRequest;
 import com.light.hexo.common.base.BaseServiceImpl;
 import com.light.hexo.common.exception.GlobalException;
@@ -18,8 +19,7 @@ import com.light.hexo.mapper.model.SysPlugin;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.pf4j.PluginDescriptor;
-import org.pf4j.PluginWrapper;
+import org.pf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.nio.charset.Charset;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -77,24 +78,29 @@ public class SysPluginServiceImpl extends BaseServiceImpl<SysPlugin> implements 
     }
 
     @Override
-    public void unzipPlugin(String originalFilename, InputStream inputStream) throws GlobalException {
+    public void installPlugin(String originalFilename, InputStream inputStream) throws GlobalException {
 
-        String pluginDir = this.blogConfig.getPluginDir();
-        File parentDir = new File(pluginDir);
-        if (!parentDir.exists()) {
-            parentDir.mkdirs();
+        Path pluginsRoot = this.pluginManager.getPluginsRoot();
+        String parentDirPath = pluginsRoot.toString();
+        File unzipPluginCog = ZipUtil.unzip(inputStream, new File(parentDirPath), Charset.defaultCharset());
+        File jarFile = new File(unzipPluginCog.getAbsolutePath(), FilenameUtils.getBaseName(originalFilename) + ".jar");
+        if (!jarFile.exists()) {
+            ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_PLUGIN_INVALID);
         }
 
-        File unzipPluginCog = ZipUtil.unzip(inputStream, parentDir, Charset.defaultCharset());
-        File[] childrenFile = unzipPluginCog.listFiles(pathname -> pathname.getName().endsWith("jar"));
-        if (childrenFile == null || childrenFile.length == 0) {
-            return;
-        }
-
-        File jarFile = childrenFile[0];
         String filePath = jarFile.getAbsolutePath();
 
-        String pluginId = this.pluginManager.loadPlugin(Paths.get(filePath));
+        String pluginId = null;
+        try {
+            pluginId = this.pluginManager.loadPlugin(Paths.get(filePath));
+        } catch (Exception e) {
+            if (e instanceof PluginAlreadyLoadedException) {
+                // do nothing
+            } else if (e instanceof PluginRuntimeException) {
+                ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_PLUGIN_INVALID);
+            }
+        }
+
         PluginWrapper pluginWrapper = this.pluginManager.getPlugin(pluginId);
         PluginDescriptor descriptor = pluginWrapper.getDescriptor();
 
@@ -102,14 +108,16 @@ public class SysPluginServiceImpl extends BaseServiceImpl<SysPlugin> implements 
         example.createCriteria().andEqualTo("name", pluginId);
         SysPlugin dbPlugin = this.pluginMapper.selectOneByExample(example);
         if (dbPlugin != null) {
-            ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_PLUGIN_HAD_INSTALLED);
+            ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_PLUGIN_INSTALLED);
         }
+
+        this.pluginManager.startPlugin(pluginId, filePath);
 
         BasePlugin basePlugin = (BasePlugin) pluginWrapper.getPlugin();
 
         SysPlugin plugin = new SysPlugin();
         plugin.setName(pluginId)
-              .setState(false)
+              .setState(true)
               .setRemark(descriptor.getPluginDescription())
               .setVersion(descriptor.getVersion())
               .setAuthor(descriptor.getProvider())
@@ -128,18 +136,21 @@ public class SysPluginServiceImpl extends BaseServiceImpl<SysPlugin> implements 
             ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_PLUGIN_NOT_EXIST);
         }
 
-        Boolean state = plugin.getState();
-        if (state) {
-            this.pluginManager.startPlugin(dbPlugin.getName(), dbPlugin.getFilePath());
-        } else {
-            this.pluginManager.stopPlugin(dbPlugin.getName(), dbPlugin.getFilePath());
-        }
+        try {
+            String pluginId = dbPlugin.getName();
+            PluginState pluginState = plugin.getState() ? this.pluginManager.startPlugin(pluginId, dbPlugin.getFilePath()) : this.pluginManager.stopPlugin(pluginId);
+            if (pluginState.toString().equals(PluginState.STARTED.toString())
+            || pluginState.toString().equals(PluginState.STOPPED.toString())) {
+                super.updateModel(plugin);
+            }
 
-        super.updateModel(plugin);
+        } catch (Exception e) {
+            ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_PLUGIN_MODIFY_STATE);
+        }
     }
 
     @Override
-    public void removePlugin(Integer id) throws GlobalException {
+    public void uninstallPlugin(Integer id) throws GlobalException {
 
         SysPlugin dbPlugin = super.findById(id);
         if (dbPlugin == null) {
@@ -147,9 +158,8 @@ public class SysPluginServiceImpl extends BaseServiceImpl<SysPlugin> implements 
         }
 
         String pluginId = dbPlugin.getName();
-        if (dbPlugin.getState()) {
-            this.pluginManager.stopPlugin(pluginId, dbPlugin.getFilePath());
-        }
+
+        this.pluginManager.stopPlugin(pluginId);
 
         boolean unloadResult = this.pluginManager.unloadPlugin(pluginId);
         if (!unloadResult) {
@@ -163,7 +173,7 @@ public class SysPluginServiceImpl extends BaseServiceImpl<SysPlugin> implements 
         File pluginFile = new File(sysPlugin.getFilePath());
         if (pluginFile.exists()) {
             File parentFile = pluginFile.getParentFile();
-            File bakFileDir = new File(parentFile.getAbsolutePath(), "bak");
+            File bakFileDir = new File(parentFile.getParentFile().getAbsolutePath(), "plugins-bak");
             if (!bakFileDir.exists()) {
                 bakFileDir.mkdirs();
             }

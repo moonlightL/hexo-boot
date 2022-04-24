@@ -1,12 +1,12 @@
 package com.light.hexo.common.plugin.registry;
 
 import com.light.hexo.common.plugin.HexoBootPluginManager;
-import com.light.hexo.common.plugin.annotation.InterceptMapping;
+import com.light.hexo.common.plugin.annotation.InterceptPathPattern;
+import lombok.SneakyThrows;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.handler.AbstractHandlerMapping;
 import org.springframework.web.servlet.handler.MappedInterceptor;
-
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Objects;
@@ -36,10 +36,12 @@ public class InterceptorRegistry extends AbstractModuleRegistry {
         }
     }
 
+    @SneakyThrows
     @Override
-    public void register(String pluginId) throws Exception {
-        for (Class<?> clazz : getPluginClasses(pluginId)) {
-            InterceptMapping interceptPaths = clazz.getAnnotation(InterceptMapping.class);
+    public void register(String pluginId) {
+        List<Class<?>> pluginClassList = super.getPluginClasses(pluginId);
+        for (Class<?> clazz : pluginClassList) {
+            InterceptPathPattern interceptPaths = clazz.getAnnotation(InterceptPathPattern.class);
             if(interceptPaths != null && interceptPaths.value() != null) {
                 HandlerInterceptor handlerInterceptor = (HandlerInterceptor) super.registryBean(clazz);
                 MappedInterceptor mappedInterceptor = new MappedInterceptor(interceptPaths.value(), handlerInterceptor);
@@ -48,10 +50,12 @@ public class InterceptorRegistry extends AbstractModuleRegistry {
         }
     }
 
+    @SneakyThrows
     @Override
-    public void unRegister(String pluginId) throws Exception {
-        for (Class<?> clazz : getPluginClasses(pluginId)) {
-            InterceptMapping interceptPaths = clazz.getAnnotation(InterceptMapping.class);
+    public void unRegister(String pluginId) {
+        List<Class<?>> pluginClassList = super.getPluginClasses(pluginId);
+        for (Class<?> clazz : pluginClassList) {
+            InterceptPathPattern interceptPaths = clazz.getAnnotation(InterceptPathPattern.class);
             if(interceptPaths != null && interceptPaths.value() != null) {
                 for (HandlerInterceptor handlerInterceptor : handlerInterceptorList) {
                     if(handlerInterceptor instanceof MappedInterceptor) {

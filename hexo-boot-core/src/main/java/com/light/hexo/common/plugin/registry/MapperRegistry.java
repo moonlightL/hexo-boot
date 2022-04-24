@@ -2,6 +2,7 @@ package com.light.hexo.common.plugin.registry;
 
 import com.light.hexo.common.plugin.HexoBootPluginManager;
 import com.light.hexo.mapper.base.BaseMapper;
+import lombok.SneakyThrows;
 import org.apache.ibatis.builder.xml.XMLMapperBuilder;
 import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.io.Resources;
@@ -34,8 +35,9 @@ public class MapperRegistry extends AbstractModuleRegistry {
         super(pluginManager);
     }
 
+    @SneakyThrows
     @Override
-    public void register(String pluginId) throws Exception {
+    public void register(String pluginId) {
         //注册mapper
         for (Class<?> mapperClass : this.getMapperClassList(pluginId)) {
             GenericBeanDefinition definition = new GenericBeanDefinition();
@@ -75,8 +77,9 @@ public class MapperRegistry extends AbstractModuleRegistry {
         }
     }
 
+    @SneakyThrows
     @Override
-    public void unRegister(String pluginId) throws Exception {
+    public void unRegister(String pluginId) {
         for (Class<?> mapperClass : this.getMapperClassList(pluginId)) {
             ((GenericWebApplicationContext) super.pluginManager.getApplicationContext()).removeBeanDefinition(mapperClass.getName());
             destroyBean(mapperClass);

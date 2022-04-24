@@ -159,6 +159,8 @@
                     $.hexo.modal.tip("操作成功", "success");
                 }
             });
+        }, function() {
+            $.hexo.table.refreshData();
         });
     }
 

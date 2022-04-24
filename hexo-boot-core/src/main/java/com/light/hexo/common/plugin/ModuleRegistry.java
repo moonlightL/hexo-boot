@@ -13,11 +13,11 @@ public interface ModuleRegistry {
      * 注册模块
      * @param pluginId
      */
-    void register(String pluginId) throws Exception;
+    void register(String pluginId);
 
     /**
      * 卸载模块
      * @param pluginId
      */
-    void unRegister(String pluginId) throws Exception;
+    void unRegister(String pluginId);
 }

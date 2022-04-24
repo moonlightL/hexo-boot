@@ -48,6 +48,10 @@
                 width: 98%;
             }
         }
+
+        .content-side .nav-users {
+            margin-bottom: 0;
+        }
     </style>
 </head>
 <body>
@@ -165,8 +169,7 @@
             <div class="block pull-r-l">
                 <div class="block-header bg-body-light">
                     <h3 class="block-title">
-                        <i class="fa fa-fw fa-bars font-size-default mr-5"></i>JVM 信息
-                        <small>（安装插件查看详情）</small>
+                        <i class="fa fa-fw fa-bars font-size-default mr-5"></i>博客元数据
                     </h3>
                     <div class="block-options">
                         <button type="button" class="btn-block-option" data-toggle="block-option" data-action="content_toggle"></button>
@@ -176,22 +179,27 @@
                     <ul class="nav-users push">
                         <li>
                             <a href="javascript:void(0)">
-                                <div class="font-w400 font-size-xs text-muted">JVM 总内存：<span id="totalMemory">正在加载...</span></div>
+                                <div class="font-w400 font-size-xs text-muted">当前版本：<span id="version">正在加载...</span></div>
                             </a>
                         </li>
                         <li>
                             <a href="javascript:void(0)">
-                                <div class="font-w400 font-size-xs text-muted">JVM 已用内存：<span id="runTimeMemory">正在加载...</span></div>
+                                <div class="font-w400 font-size-xs text-muted">工作目录：<span id="homeDir">正在加载...</span></div>
                             </a>
                         </li>
                         <li>
                             <a href="javascript:void(0)">
-                                <div class="font-w400 font-size-xs text-muted">JVM 剩余内存：<span id="freeMemory">正在加载...</span></div>
+                                <div class="font-w400 font-size-xs text-muted">附件目录：<span id="attachmentDir">正在加载...</span></div>
                             </a>
                         </li>
                         <li>
                             <a href="javascript:void(0)">
-                                <div class="font-w400 font-size-xs text-muted">JDK 目录：<span id="home">正在加载...</span></div>
+                                <div class="font-w400 font-size-xs text-muted">日志目录：<span id="logDir">正在加载...</span></div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)">
+                                <div class="font-w400 font-size-xs text-muted">插件目录：<span id="pluginDir">正在加载...</span></div>
                             </a>
                         </li>
                     </ul>
@@ -643,6 +651,7 @@
                 DashboardManager.bindEvent();
                 DashboardManager.createVisitLine();
                 DashboardManager.queryPostList();
+                DashboardManager.getMetaData();
                 DashboardManager.checkRunDay();
                 DashboardManager.connectServer();
             },
@@ -712,6 +721,16 @@
                         }
 
                         $("#postTable").find("tbody").html(htmlArr.join(""));
+                    }
+                });
+            },
+            getMetaData: function() {
+                $.getJSON("/admin/home/getMetaData.json", function (resp) {
+                    if (resp.success) {
+                        let meatData = resp.data;
+                        for (let key in meatData) {
+                            $("#" + key).text(meatData[key]);
+                        }
                     }
                 });
             },

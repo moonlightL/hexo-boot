@@ -1,12 +1,10 @@
 package com.light.hexo.common.plugin;
 
 import com.light.hexo.common.plugin.registry.CompoundModuleRegistry;
+import com.light.hexo.common.plugin.rewrite.HexoBootPropertiesPluginDescriptorFinder;
 import lombok.SneakyThrows;
-import org.pf4j.ExtensionFactory;
-import org.pf4j.PluginState;
-import org.pf4j.PluginWrapper;
+import org.pf4j.*;
 import org.springframework.beans.factory.InitializingBean;
-
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -25,25 +23,38 @@ public class HexoBootPluginManager extends AbstractPluginManager implements Init
         super(pluginsRoots);
     }
 
+    @Override
+    protected PluginDescriptorFinder createPluginDescriptorFinder() {
+        return new CompoundPluginDescriptorFinder()
+                .add(new HexoBootPropertiesPluginDescriptorFinder())
+                .add(new ManifestPluginDescriptorFinder());
+    }
+
+
     @SneakyThrows
     public PluginState startPlugin(String pluginId, String pluginPath) {
         PluginWrapper plugin = super.getPlugin(pluginId);
         if (plugin == null) {
             super.loadPlugin(Paths.get(pluginPath));
         }
+
         PluginState pluginState = super.startPlugin(pluginId);
         this.moduleRegistry.register(pluginId);
+
         return pluginState;
     }
 
     @SneakyThrows
-    public PluginState stopPlugin(String pluginId, String pluginPath) {
+    @Override
+    public PluginState stopPlugin(String pluginId) {
         PluginWrapper plugin = super.getPlugin(pluginId);
         if (plugin == null) {
             return PluginState.STOPPED;
         }
+
         PluginState pluginState = super.stopPlugin(pluginId);
         this.moduleRegistry.unRegister(pluginId);
+
         return pluginState;
     }
 
@@ -55,5 +66,9 @@ public class HexoBootPluginManager extends AbstractPluginManager implements Init
     @Override
     public void afterPropertiesSet() throws Exception {
         this.moduleRegistry = new CompoundModuleRegistry(this);
+    }
+
+    public ModuleRegistry getModuleRegistry() {
+        return this.moduleRegistry;
     }
 }

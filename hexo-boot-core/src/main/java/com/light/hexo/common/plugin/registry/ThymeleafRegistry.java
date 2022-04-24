@@ -1,7 +1,8 @@
 package com.light.hexo.common.plugin.registry;
 
 import com.light.hexo.common.plugin.HexoBootPluginManager;
-import nz.net.ultraq.thymeleaf.layoutdialect.LayoutDialect;
+import lombok.SneakyThrows;
+import nz.net.ultraq.thymeleaf.LayoutDialect;
 import org.pf4j.PluginWrapper;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.DefaultResourceLoader;
@@ -31,7 +32,7 @@ public class ThymeleafRegistry extends AbstractModuleRegistry {
     }
 
     @Override
-    public void register(String pluginId) throws Exception {
+    public void register(String pluginId) {
 
         SpringTemplateEngine springTemplateEngine = super.beanFactory.getBean(SpringTemplateEngine.class);
         Set<ITemplateResolver> oldTemplateResolver = springTemplateEngine.getTemplateResolvers();
@@ -47,14 +48,15 @@ public class ThymeleafRegistry extends AbstractModuleRegistry {
     }
 
     @Override
-    public void unRegister(String pluginId) throws Exception {
+    public void unRegister(String pluginId) {
         String resolverName = this.templateResolverName(pluginId);
         if (this.pluginTemplateResolver.containsKey(resolverName)) {
             this.pluginTemplateResolver.remove(resolverName);
         }
     }
 
-    private SpringTemplateEngine createSpringTemplateEngine(String pluginId, Set<ITemplateResolver> oldTemplateResolver) throws Exception {
+    @SneakyThrows
+    private SpringTemplateEngine createSpringTemplateEngine(String pluginId, Set<ITemplateResolver> oldTemplateResolver) {
 
         ApplicationContext applicationContext = super.pluginManager.getApplicationContext();
         PluginWrapper pluginWrapper = this.pluginManager.getPlugin(pluginId);

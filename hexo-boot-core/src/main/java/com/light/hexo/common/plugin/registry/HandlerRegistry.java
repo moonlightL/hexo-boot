@@ -1,6 +1,7 @@
 package com.light.hexo.common.plugin.registry;
 
 import com.light.hexo.common.plugin.HexoBootPluginManager;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,10 +35,11 @@ public class HandlerRegistry extends AbstractModuleRegistry {
         this.getMappingForMethod.setAccessible(true);
     }
 
+    @SneakyThrows
     @Override
-    public void register(String pluginId) throws Exception {
-
-        for (Class<?> clazz : super.getPluginClasses(pluginId)) {
+    public void register(String pluginId) {
+        List<Class<?>> pluginClassList = super.getPluginClasses(pluginId);
+        for (Class<?> clazz : pluginClassList) {
             Controller annotation = clazz.getAnnotation(Controller.class);
             RestController restAnnotation = clazz.getAnnotation(RestController.class);
             if(annotation != null || restAnnotation != null) {
@@ -56,16 +58,19 @@ public class HandlerRegistry extends AbstractModuleRegistry {
 
     }
 
+    @SneakyThrows
     @Override
-    public void unRegister(String pluginId) throws Exception {
-        for (RequestMappingInfo requestMappingInfo : this.getRequestMappingInfo(pluginId)) {
+    public void unRegister(String pluginId) {
+        List<RequestMappingInfo> requestMappingInfoList = this.getRequestMappingInfo(pluginId);
+        for (RequestMappingInfo requestMappingInfo : requestMappingInfoList) {
             this.requestMappingHandlerMapping.unregisterMapping(requestMappingInfo);
         }
     }
 
     private List<RequestMappingInfo> getRequestMappingInfo(String pluginId) throws Exception {
         List<RequestMappingInfo> requestMappingInfoList = new ArrayList<>();
-        for (Class<?> clazz : super.getPluginClasses(pluginId)) {
+        List<Class<?>> pluginClassList = super.getPluginClasses(pluginId);
+        for (Class<?> clazz : pluginClassList) {
             Controller annotation = clazz.getAnnotation(Controller.class);
             RestController restAnnotation = clazz.getAnnotation(RestController.class);
             if (annotation != null || restAnnotation != null) {

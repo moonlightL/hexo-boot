@@ -2,7 +2,6 @@ package com.light.hexo.common.plugin.registry;
 
 import com.light.hexo.common.plugin.HexoBootPluginManager;
 import com.light.hexo.common.plugin.ModuleRegistry;
-import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -30,20 +29,16 @@ public class CompoundModuleRegistry extends AbstractModuleRegistry implements Mo
     }
 
     @Override
-    public void register(String pluginId) throws Exception {
+    public void register(String pluginId) {
         for (ModuleRegistry moduleRegistry : this.moduleRegistryList) {
             moduleRegistry.register(pluginId);
         }
     }
 
     @Override
-    public void unRegister(String pluginId) throws Exception {
+    public void unRegister(String pluginId) {
         for (ModuleRegistry moduleRegistry : this.moduleRegistryList) {
             moduleRegistry.unRegister(pluginId);
         }
-
-        ClassLoader pluginClassLoader = super.pluginManager.getPluginClassLoader(pluginId);
-        URLClassLoader urlClassLoader = (URLClassLoader) pluginClassLoader;
-        urlClassLoader.close();
     }
 }

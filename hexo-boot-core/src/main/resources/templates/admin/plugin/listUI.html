@@ -87,6 +87,8 @@
                     }
                 }
             });
+        }, function() {
+            $.hexo.table.refreshData();
         });
     }
 
@@ -103,7 +105,7 @@
     function actionFormatter(val, row) {
         let btnArr = [];
         btnArr.push('<div class="btn-group">');
-        btnArr.push('<button type="button" class="btn btn-sm btn-secondary hexo-config" data-toggle="tooltip" title="配置" data-state="'+row.state+'" data-url="'+row.configUrl+'" onclick="window.configUI(this)"><i class="fa fa-pencil"></i></button>');
+        btnArr.push('<button type="button" class="btn btn-sm btn-secondary hexo-config" data-toggle="tooltip" title="查看" data-state="'+row.state+'" data-url="'+row.configUrl+'" onclick="window.configUI(this)"><i class="fa fa-search"></i></button>');
         btnArr.push('<button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="卸载" onclick="$.hexo.action.remove(\'' + row.id + '\')"><i class="fa fa-times"></i></button>');
         btnArr.push("</div>");
         return btnArr.join("");

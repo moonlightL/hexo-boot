@@ -9,6 +9,14 @@
         .block-content {
             min-height: 100px;
         }
+        .jvm-block {
+            position: relative;
+        }
+        .jvm-label {
+            position: absolute;
+            right: 20px;
+            bottom: 20px;
+        }
     </style>
 </head>
 <body>
@@ -17,69 +25,69 @@
     <div class="block">
         <div class="block-content">
             <div class="row justify-content-center py-20">
-                <div class="col-6 col-xl-2">
-                    <a class="block block-link-shadow text-right bg-primary text-white">
+                <div class="col-6 col-xl-4">
+                    <a class="block block-link-shadow text-right bg-primary text-white jvm-block">
                         <div class="block-content block-content-full clearfix">
                             <div class="float-left mt-10 d-none d-sm-block">
                                 <i class="fa fa-thermometer-half fa-3x text-body-bg-dark"></i>
                             </div>
                             <div id="totalMemory">正在加载...</div>
-                            <div class="font-size-sm font-w600 text-uppercase text-white">JVM 总内存</div>
+                            <div class="font-size-sm font-w600 text-uppercase text-white jvm-label">JVM 总内存</div>
                         </div>
                     </a>
                 </div>
-                <div class="col-6 col-xl-2">
-                    <a class="block block-link-shadow text-right bg-corporate text-white">
+                <div class="col-6 col-xl-4">
+                    <a class="block block-link-shadow text-right bg-corporate text-white jvm-block">
                         <div class="block-content block-content-full clearfix">
                             <div class="float-left mt-10 d-none d-sm-block">
                                 <i class="fa fa-thermometer-half fa-3x text-body-bg-dark"></i>
                             </div>
                             <div id="runTimeMemory">正在加载...</div>
-                            <div class="font-size-sm font-w600 text-uppercase text-white">JVM 已用内存</div>
+                            <div class="font-size-sm font-w600 text-uppercase text-white jvm-label">JVM 已用内存</div>
                         </div>
                     </a>
                 </div>
-                <div class="col-6 col-xl-2">
-                    <a class="block block-link-shadow text-right bg-warning text-white">
+                <div class="col-6 col-xl-4">
+                    <a class="block block-link-shadow text-right bg-warning text-white jvm-block">
                         <div class="block-content block-content-full clearfix">
                             <div class="float-left mt-10 d-none d-sm-block">
                                 <i class="fa fa-thermometer-half fa-3x text-body-bg-dark"></i>
                             </div>
                             <div id="freeMemory">正在加载...</div>
-                            <div class="font-size-sm font-w600 text-uppercase text-white">JVM 剩余内存</div>
+                            <div class="font-size-sm font-w600 text-uppercase text-white jvm-label">JVM 剩余内存</div>
                         </div>
                     </a>
                 </div>
-                <div class="col-6 col-xl-2">
-                    <a class="block block-link-shadow text-right bg-flat text-white">
+                <div class="col-6 col-xl-4">
+                    <a class="block block-link-shadow text-right bg-flat text-white jvm-block">
                         <div class="block-content block-content-full clearfix">
                             <div class="float-left mt-10 d-none d-sm-block">
                                 <i class="fa fa-home fa-3x text-body-bg-dark"></i>
                             </div>
                             <div id="home" style="word-wrap: break-word;word-break: normal;">正在加载...</div>
-                            <div class="font-size-sm font-w600 text-uppercase text-white">JDK 目录</div>
+                            <div class="font-size-sm font-w600 text-uppercase text-white jvm-label">JDK 目录</div>
                         </div>
                     </a>
                 </div>
-                <div class="col-6 col-xl-2">
-                    <a class="block block-link-shadow text-right bg-black-op-75 text-white">
+                <div class="col-6 col-xl-4">
+                    <a class="block block-link-shadow text-right bg-black-op-75 text-white jvm-block">
                         <div class="block-content block-content-full clearfix">
                             <div class="float-left mt-10 d-none d-sm-block">
                                 <i class="fa fa-circle-o fa-3x text-body-bg-dark"></i>
                             </div>
                             <div id="startTime">正在加载...</div>
-                            <div class="font-size-sm font-w600 text-uppercase text-white">启动时间</div>
+                            <div class="font-size-sm font-w600 text-uppercase text-white jvm-label">启动时间</div>
                         </div>
                     </a>
                 </div>
-                <div class="col-6 col-xl-2">
-                    <a class="block block-link-shadow text-right bg-earth text-white">
+                <div class="col-6 col-xl-4">
+                    <a class="block block-link-shadow text-right bg-earth text-white jvm-block">
                         <div class="block-content block-content-full clearfix">
                             <div class="float-left mt-10 d-none d-sm-block">
                                 <i class="fa fa-clock-o fa-3x text-body-bg-dark"></i>
                             </div>
                             <div id="runTime">正在加载...</div>
-                            <div class="font-size-sm font-w600 text-uppercase text-white">运行时长</div>
+                            <div class="font-size-sm font-w600 text-uppercase text-white jvm-label">运行时长</div>
                         </div>
                     </a>
                 </div>
@@ -130,11 +138,11 @@
                                 <td id="name">正在加载...</td>
                             </tr>
                             <tr>
-                                <th>核心数</th>
+                                <th>内核数</th>
                                 <td id="physicalCount">正在加载...</td>
                             </tr>
                             <tr>
-                                <th>逻辑数</th>
+                                <th>逻辑处理数</th>
                                 <td id="logicalCount">正在加载...</td>
                             </tr>
                             <tr>
@@ -142,8 +150,12 @@
                                 <td id="threadCount">正在加载...</td>
                             </tr>
                             <tr>
-                                <th>其他</th>
-                                <td id="other" ></td>
+                                <th>利用率</th>
+                                <td id="cupUsedRatio">正在加载...</td>
+                            </tr>
+                            <tr>
+                                <th>空闲率</th>
+                                <td id="freeRatio">正在加载...</td>
                             </tr>
                             </tbody>
                         </table>
@@ -175,6 +187,10 @@
                                 <tr>
                                     <th>已使用交换内存</th>
                                     <td id="swapUsed">正在加载...</td>
+                                </tr>
+                                <tr>
+                                    <th>使用率</th>
+                                    <td id="memoryUsedRatio">正在加载...</td>
                                 </tr>
                             </tbody>
                         </table>

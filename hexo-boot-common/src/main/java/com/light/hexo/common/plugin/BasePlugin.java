@@ -13,7 +13,7 @@ import org.springframework.context.ApplicationContext;
  */
 public abstract class BasePlugin extends SpringPlugin {
 
-    private ApplicationContext applicationContext;
+    protected ApplicationContext applicationContext;
 
     public BasePlugin(PluginWrapper wrapper) {
         super(wrapper);

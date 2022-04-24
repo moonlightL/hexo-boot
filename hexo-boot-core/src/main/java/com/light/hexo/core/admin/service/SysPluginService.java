@@ -16,11 +16,11 @@ import java.io.InputStream;
 public interface SysPluginService extends BaseService<SysPlugin> {
 
     /**
-     * 解压插件
+     * 安装插件
      * @param originalFilename
      * @param inputStream
      */
-    void unzipPlugin(String originalFilename, InputStream inputStream) throws GlobalException;
+    void installPlugin(String originalFilename, InputStream inputStream) throws GlobalException;
 
     /**
      * 修改插件
@@ -33,5 +33,5 @@ public interface SysPluginService extends BaseService<SysPlugin> {
      * @param id
      * @throws GlobalException
      */
-    void removePlugin(Integer id) throws GlobalException;
+    void uninstallPlugin(Integer id) throws GlobalException;
 }
