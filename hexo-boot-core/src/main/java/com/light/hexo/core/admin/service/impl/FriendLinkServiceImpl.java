@@ -75,14 +75,14 @@ public class FriendLinkServiceImpl extends BaseServiceImpl<FriendLink> implement
     public void saveFriendLink(FriendLink friendLink) throws GlobalException {
         super.saveModel(friendLink);
         // 清除缓存
-        this.eventPublisher.emit(new FriendLinkEvent());
+        this.eventPublisher.emit(new FriendLinkEvent(this));
     }
 
     @Override
     public void updateFriendLink(FriendLink friendLink) throws GlobalException {
         super.updateModel(friendLink);
         // 清除缓存
-        this.eventPublisher.emit(new FriendLinkEvent());
+        this.eventPublisher.emit(new FriendLinkEvent(this));
     }
 
     @Override
@@ -92,7 +92,7 @@ public class FriendLinkServiceImpl extends BaseServiceImpl<FriendLink> implement
         example.createCriteria().andIn("id", idList);
         this.getBaseMapper().deleteByExample(example);
         // 清除缓存
-        this.eventPublisher.emit(new FriendLinkEvent());
+        this.eventPublisher.emit(new FriendLinkEvent(this));
     }
 
     @Cacheable(key = "'" + PageConstant.FRIEND_LINK_LIST + "'")
@@ -110,8 +110,8 @@ public class FriendLinkServiceImpl extends BaseServiceImpl<FriendLink> implement
     }
 
     @Override
-    public EventEnum getEventType() {
-        return EventEnum.FRIEND_LINK;
+    public String getEventType() {
+        return EventEnum.FRIEND_LINK.getType();
     }
 
     @Override

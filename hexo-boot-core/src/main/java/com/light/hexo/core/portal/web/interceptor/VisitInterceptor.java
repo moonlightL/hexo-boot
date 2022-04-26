@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -37,8 +36,7 @@ public class VisitInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
-        boolean isBlack = this.blacklistService.isBlacklist(IpUtil.getIpAddr(request));
-        if (isBlack) {
+        if (this.blacklistService.isBlacklist(IpUtil.getIpAddr(request))) {
             if (HttpUtil.isAjax(request)) {
                 this.print(response, JsonUtil.obj2String(Result.fail(GlobalExceptionEnum.ERROR_IN_BLACKLIST)));
             } else {
@@ -47,11 +45,7 @@ public class VisitInterceptor extends HandlerInterceptorAdapter {
             return false;
         }
 
-        // 后台请求不需要走访问埋点
-        String requestURI = request.getRequestURI();
-        if (!requestURI.contains("/admin") && !requestURI.contains("/druid") && !requestURI.contains(".json") && !requestURI.contains("/favicon.ico")) {
-            this.eventPublisher.emit(new VisitEvent(IpUtil.getIpAddr(request), BrowserUtil.getBrowserName(request)));
-        }
+        this.eventPublisher.emit(new VisitEvent(this, IpUtil.getIpAddr(request), BrowserUtil.getBrowserName(request)));
 
         request.setAttribute("time", System.currentTimeMillis());
 

@@ -30,6 +30,7 @@ public abstract class BasePlugin extends SpringPlugin {
         PluginUtil.remove(super.wrapper.getPluginId());
     }
 
+    @Override
     protected ApplicationContext createApplicationContext() {
         AbstractPluginManager pluginManager = (AbstractPluginManager) super.getWrapper().getPluginManager();
         ApplicationContext applicationContext = pluginManager.getApplicationContext();

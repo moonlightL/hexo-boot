@@ -133,7 +133,7 @@ public class CommentServiceImpl extends BaseServiceImpl<Comment> implements Comm
             // 减评论数
             Post post = this.postService.getSimpleInfo(comment.getPage());
             if (post != null) {
-                this.eventPublisher.emit(new PostEvent(post.getId(), PostEvent.Type.COMMENT_MINUS));
+                this.eventPublisher.emit(new PostEvent(this, post.getId(), PostEvent.Type.COMMENT_MINUS));
             }
         }
 
@@ -193,7 +193,7 @@ public class CommentServiceImpl extends BaseServiceImpl<Comment> implements Comm
 
         Post post = this.postService.getSimpleInfo(parent.getPage());
         if (post != null) {
-            this.eventPublisher.emit(new PostEvent(post.getId(), PostEvent.Type.COMMENT_ADD));
+            this.eventPublisher.emit(new PostEvent(this, post.getId(), PostEvent.Type.COMMENT_ADD));
         }
 
         if (StringUtils.isBlank(parent.getEmail())) {
@@ -360,7 +360,7 @@ public class CommentServiceImpl extends BaseServiceImpl<Comment> implements Comm
 
             Post post = this.postService.getSimpleInfo(comment.getPage());
             if (post != null) {
-                this.eventPublisher.emit(new PostEvent(post.getId(), PostEvent.Type.COMMENT_ADD));
+                this.eventPublisher.emit(new PostEvent(this, post.getId(), PostEvent.Type.COMMENT_ADD));
                 this.eventPublisher.emit(new MessageEvent(this, comment.getNickname() + "对你的文章评论了", MessageEvent.Type.POST_COMMENT));
             } else {
                 this.eventPublisher.emit(new MessageEvent(this, comment.getNickname() + "在你的博客留言了", MessageEvent.Type.GUEST_BOOK));

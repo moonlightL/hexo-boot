@@ -1,7 +1,6 @@
 package com.light.hexo.core.admin.service.impl;
 
 import cn.hutool.core.util.ZipUtil;
-import cn.hutool.system.oshi.OshiUtil;
 import com.light.hexo.common.base.BaseRequest;
 import com.light.hexo.common.base.BaseServiceImpl;
 import com.light.hexo.common.exception.GlobalException;
@@ -10,7 +9,6 @@ import com.light.hexo.common.plugin.HexoBootPluginManager;
 import com.light.hexo.common.request.PluginRequest;
 import com.light.hexo.common.util.DateUtil;
 import com.light.hexo.common.util.ExceptionUtil;
-import com.light.hexo.core.admin.config.BlogConfig;
 import com.light.hexo.core.admin.constant.HexoExceptionEnum;
 import com.light.hexo.core.admin.service.SysPluginService;
 import com.light.hexo.mapper.base.BaseMapper;
@@ -47,9 +45,6 @@ public class SysPluginServiceImpl extends BaseServiceImpl<SysPlugin> implements 
     private SysPluginMapper pluginMapper;
 
     @Autowired
-    private BlogConfig blogConfig;
-
-    @Autowired
     private HexoBootPluginManager pluginManager;
 
     @Override
@@ -64,9 +59,9 @@ public class SysPluginServiceImpl extends BaseServiceImpl<SysPlugin> implements 
 
         Example.Criteria criteria = example.createCriteria();
 
-        String name = pluginRequest.getName();
-        if (StringUtils.isNotBlank(name)) {
-            criteria.andLike("name", name.trim() + "%");
+        String pluginId = pluginRequest.getPluginId();
+        if (StringUtils.isNotBlank(pluginId)) {
+            criteria.andLike("pluginId", pluginId.trim() + "%");
         }
 
         return example;
@@ -80,52 +75,45 @@ public class SysPluginServiceImpl extends BaseServiceImpl<SysPlugin> implements 
     @Override
     public void installPlugin(String originalFilename, InputStream inputStream) throws GlobalException {
 
-        Path pluginsRoot = this.pluginManager.getPluginsRoot();
-        String parentDirPath = pluginsRoot.toString();
-        File unzipPluginCog = ZipUtil.unzip(inputStream, new File(parentDirPath), Charset.defaultCharset());
-        File jarFile = new File(unzipPluginCog.getAbsolutePath(), FilenameUtils.getBaseName(originalFilename) + ".jar");
-        if (!jarFile.exists()) {
-            ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_PLUGIN_INVALID);
-        }
-
-        String filePath = jarFile.getAbsolutePath();
-
-        String pluginId = null;
-        try {
-            pluginId = this.pluginManager.loadPlugin(Paths.get(filePath));
-        } catch (Exception e) {
-            if (e instanceof PluginAlreadyLoadedException) {
-                // do nothing
-            } else if (e instanceof PluginRuntimeException) {
-                ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_PLUGIN_INVALID);
-            }
-        }
-
-        PluginWrapper pluginWrapper = this.pluginManager.getPlugin(pluginId);
-        PluginDescriptor descriptor = pluginWrapper.getDescriptor();
-
+        String originName = FilenameUtils.getBaseName(originalFilename);
         Example example = new Example(SysPlugin.class);
-        example.createCriteria().andEqualTo("name", pluginId);
+        example.createCriteria().andEqualTo("originName", originName);
         SysPlugin dbPlugin = this.pluginMapper.selectOneByExample(example);
         if (dbPlugin != null) {
             ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_PLUGIN_INSTALLED);
         }
 
-        this.pluginManager.startPlugin(pluginId, filePath);
+        Path pluginsRoot = this.pluginManager.getPluginsRoot();
+        String parentDirPath = pluginsRoot.toString();
+        File unzipPluginCog = ZipUtil.unzip(inputStream, new File(parentDirPath), Charset.defaultCharset());
+        File jarFile = new File(unzipPluginCog.getAbsolutePath(), originName + ".jar");
+        if (!jarFile.exists()) {
+            ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_PLUGIN_INVALID);
+        }
 
-        BasePlugin basePlugin = (BasePlugin) pluginWrapper.getPlugin();
+        String filePath = jarFile.getAbsolutePath();
+        String pluginId = this.pluginManager.loadPlugin(Paths.get(filePath));
+        PluginWrapper pluginWrapper = this.pluginManager.getPlugin(pluginId);
+        PluginDescriptor descriptor = pluginWrapper.getDescriptor();
+
+        PluginState pluginState = this.pluginManager.startPlugin(pluginId, filePath);
 
         SysPlugin plugin = new SysPlugin();
-        plugin.setName(pluginId)
-              .setState(true)
-              .setRemark(descriptor.getPluginDescription())
-              .setVersion(descriptor.getVersion())
-              .setAuthor(descriptor.getProvider())
-              .setFilePath(filePath)
-              .setConfigUrl(basePlugin.getConfigUrl())
-              .setCreateTime(LocalDateTime.now())
-              .setUpdateTime(plugin.getCreateTime());
+        plugin.setPluginId(pluginId)
+                .setOriginName(originName)
+                .setState(pluginState.toString().equals(PluginState.STARTED.toString()))
+                .setRemark(descriptor.getPluginDescription())
+                .setVersion(descriptor.getVersion())
+                .setAuthor(descriptor.getProvider())
+                .setFilePath(filePath)
+                .setConfigUrl(((BasePlugin) pluginWrapper.getPlugin()).getConfigUrl())
+                .setCreateTime(LocalDateTime.now())
+                .setUpdateTime(plugin.getCreateTime());
         this.pluginMapper.insert(plugin);
+
+        if (!plugin.getState()) {
+            ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_PLUGIN_START);
+        }
     }
 
     @Override
@@ -136,17 +124,20 @@ public class SysPluginServiceImpl extends BaseServiceImpl<SysPlugin> implements 
             ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_PLUGIN_NOT_EXIST);
         }
 
-        try {
-            String pluginId = dbPlugin.getName();
-            PluginState pluginState = plugin.getState() ? this.pluginManager.startPlugin(pluginId, dbPlugin.getFilePath()) : this.pluginManager.stopPlugin(pluginId);
-            if (pluginState.toString().equals(PluginState.STARTED.toString())
-            || pluginState.toString().equals(PluginState.STOPPED.toString())) {
-                super.updateModel(plugin);
-            }
-
-        } catch (Exception e) {
-            ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_PLUGIN_MODIFY_STATE);
+        // 修改状态与当前插件状态一致
+        if (dbPlugin.getState().equals(plugin.getState())) {
+            return;
         }
+
+        String pluginId = dbPlugin.getPluginId();
+
+        if (plugin.getState()) {
+            this.pluginManager.startPlugin(pluginId, dbPlugin.getFilePath());
+        } else {
+            this.pluginManager.stopPlugin(pluginId);
+        }
+
+        super.updateModel(plugin);
     }
 
     @Override
@@ -157,43 +148,26 @@ public class SysPluginServiceImpl extends BaseServiceImpl<SysPlugin> implements 
             ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_PLUGIN_NOT_EXIST);
         }
 
-        String pluginId = dbPlugin.getName();
+        String pluginId = dbPlugin.getPluginId();
 
-        this.pluginManager.stopPlugin(pluginId);
+        try {
+            File pluginFile = new File(dbPlugin.getFilePath());
+            if (pluginFile.exists()) {
+                File parentFile = pluginFile.getParentFile();
+                File bakFileDir = new File(parentFile.getParentFile().getAbsolutePath(), "plugins-bak");
+                if (!bakFileDir.exists()) {
+                    bakFileDir.mkdirs();
+                }
 
-        boolean unloadResult = this.pluginManager.unloadPlugin(pluginId);
-        if (!unloadResult) {
-            ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_PLUGIN_CANNOT_UNLOAD);
-        }
-
-        this.deletePlugin(dbPlugin);
-    }
-
-    private void deletePlugin(SysPlugin sysPlugin) {
-        File pluginFile = new File(sysPlugin.getFilePath());
-        if (pluginFile.exists()) {
-            File parentFile = pluginFile.getParentFile();
-            File bakFileDir = new File(parentFile.getParentFile().getAbsolutePath(), "plugins-bak");
-            if (!bakFileDir.exists()) {
-                bakFileDir.mkdirs();
-            }
-
-            try {
                 String dateTimeStr = DateUtil.ldtToStr(LocalDateTime.now(), DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
                 File bakFile = new File(bakFileDir.getAbsolutePath(), FilenameUtils.getBaseName(pluginFile.getName()) + "-" + dateTimeStr + ".jar");
                 FileUtils.copyFile(pluginFile, bakFile);
-
-                boolean deleteQuietly = FileUtils.deleteQuietly(pluginFile);
-                if (!deleteQuietly) {
-                    sysPlugin.setState(false).setUpdateTime(LocalDateTime.now());
-                    super.updateModel(sysPlugin);
-                    ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_PLUGIN_CANNOT_DELETE);
-                }
-
-                super.removeModel(sysPlugin.getId());
-            } catch (IOException e) {
-                e.printStackTrace();
             }
+
+            this.pluginManager.deletePlugin(pluginId);
+            super.removeModel(pluginId);
+        } catch (IOException | IllegalArgumentException e) {
+            e.printStackTrace();
         }
     }
 

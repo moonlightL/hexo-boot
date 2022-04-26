@@ -89,7 +89,7 @@ public class NavServiceImpl extends BaseServiceImpl<Nav> implements NavService {
         List<Nav> navList = this.listNavs();
         Optional<Nav> first = navList.stream().filter(i -> i.getLink().equals(link)).findFirst();
         Nav nav = first.orElseGet(() -> new Nav("tmp", "/tmp", "", "tmp"));
-        this.eventPublisher.emit(new NavEvent(nav.getId(), NavEvent.Type.READ));
+        this.eventPublisher.emit(new NavEvent(this, nav.getId(), NavEvent.Type.READ));
         return nav;
     }
 
@@ -120,7 +120,7 @@ public class NavServiceImpl extends BaseServiceImpl<Nav> implements NavService {
         this.removeBatch(idList);
         EhcacheUtil.clearByCacheName("navCache");
         CacheUtil.remove(CacheKey.NAV_LIST);
-        this.eventPublisher.emit(new NavEvent(NavEvent.Type.LOAD));
+        this.eventPublisher.emit(new NavEvent(this, NavEvent.Type.LOAD));
     }
 
     @Override
@@ -133,7 +133,7 @@ public class NavServiceImpl extends BaseServiceImpl<Nav> implements NavService {
         super.saveModel(nav);
         EhcacheUtil.clearByCacheName("navCache");
         CacheUtil.remove(CacheKey.NAV_LIST);
-        this.eventPublisher.emit(new NavEvent(NavEvent.Type.LOAD));
+        this.eventPublisher.emit(new NavEvent(this, NavEvent.Type.LOAD));
     }
 
     @Override
@@ -156,7 +156,7 @@ public class NavServiceImpl extends BaseServiceImpl<Nav> implements NavService {
         super.updateModel(nav);
         EhcacheUtil.clearByCacheName("navCache");
         CacheUtil.remove(CacheKey.NAV_LIST);
-        this.eventPublisher.emit(new NavEvent(NavEvent.Type.LOAD));
+        this.eventPublisher.emit(new NavEvent(this, NavEvent.Type.LOAD));
     }
 
     @Override
@@ -174,7 +174,7 @@ public class NavServiceImpl extends BaseServiceImpl<Nav> implements NavService {
         if (num > 0) {
             EhcacheUtil.clearByCacheName("navCache");
             CacheUtil.remove(CacheKey.NAV_LIST);
-            this.eventPublisher.emit(new NavEvent(NavEvent.Type.LOAD));
+            this.eventPublisher.emit(new NavEvent(this, NavEvent.Type.LOAD));
         }
         return num;
     }
@@ -205,8 +205,8 @@ public class NavServiceImpl extends BaseServiceImpl<Nav> implements NavService {
     }
 
     @Override
-    public EventEnum getEventType() {
-        return EventEnum.NAV;
+    public String getEventType() {
+        return EventEnum.NAV.getType();
     }
 
     @Override

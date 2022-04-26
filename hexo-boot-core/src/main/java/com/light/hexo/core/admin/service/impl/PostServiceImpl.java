@@ -171,7 +171,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
         example.createCriteria().andIn("id", idList);
         int num = this.getBaseMapper().deleteByExample(example);
         if (num > 0) {
-            this.eventPublisher.emit(new PostEvent(null, PostEvent.Type.POST_NUM));
+            this.eventPublisher.emit(new PostEvent(this,null, PostEvent.Type.POST_NUM));
         }
     }
 
@@ -272,7 +272,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
             this.postTaskService.savePostTask(postId, jobTime);
         }
 
-        this.eventPublisher.emit(new PostEvent(null, PostEvent.Type.POST_NUM));
+        this.eventPublisher.emit(new PostEvent(this,null, PostEvent.Type.POST_NUM));
     }
 
     @Override
@@ -378,7 +378,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
             this.postTaskService.savePostTask(postId, jobTime);
         }
 
-        this.eventPublisher.emit(new PostEvent(null, PostEvent.Type.POST_NUM));
+        this.eventPublisher.emit(new PostEvent(this, null, PostEvent.Type.POST_NUM));
         CacheUtil.remove(PageConstant.MARKDOWN_KEY + ":" + post.getId() + ":1");
         CacheUtil.remove(PageConstant.MARKDOWN_KEY + ":" + post.getId() + ":2");
     }
@@ -407,7 +407,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
 
         // 清理缓存
         EhcacheUtil.clearAll();
-        this.eventPublisher.emit(new PostEvent(null, PostEvent.Type.POST_NUM));
+        this.eventPublisher.emit(new PostEvent(this, null, PostEvent.Type.POST_NUM));
     }
 
     @Override
@@ -438,7 +438,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
 
             // 清理缓存
             EhcacheUtil.clearAll();
-            this.eventPublisher.emit(new PostEvent(null, PostEvent.Type.POST_NUM));
+            this.eventPublisher.emit(new PostEvent(this,null, PostEvent.Type.POST_NUM));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -536,7 +536,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
         EhcacheUtil.clearByCacheName("postCache");
         EhcacheUtil.clearByCacheName("categoryCache");
         this.baiDuPushService.push2BaiDu(post.getLink());
-        this.eventPublisher.emit(new PostEvent(null, PostEvent.Type.POST_NUM));
+        this.eventPublisher.emit(new PostEvent(this,null, PostEvent.Type.POST_NUM));
     }
 
     @Override
@@ -792,7 +792,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
         }
 
         CacheUtil.put(cacheKey, postId, 60 * 1000);
-        this.eventPublisher.emit(new PostEvent(postId, PostEvent.Type.PRAISE));
+        this.eventPublisher.emit(new PostEvent(this, postId, PostEvent.Type.PRAISE));
         return post.getPraiseNum() + 1;
     }
 
@@ -920,8 +920,8 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
     }
 
     @Override
-    public EventEnum getEventType() {
-        return EventEnum.POST;
+    public String getEventType() {
+        return EventEnum.POST.getType();
     }
 
     @Override
@@ -932,6 +932,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
 
             EhcacheUtil.clearByCacheName("postCache");
             EhcacheUtil.clearByCacheName("categoryCache");
+            EhcacheUtil.clearByCacheName("tagCache");
 
             WebApplicationContext webApplicationContext = (WebApplicationContext) SpringContextUtil.applicationContext;
             ServletContext servletContext = webApplicationContext.getServletContext();

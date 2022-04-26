@@ -1,6 +1,7 @@
 CREATE TABLE `t_sys_plugin` (
 	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
-	`name` VARCHAR(50) NOT NULL DEFAULT '' COMMENT '插件名称',
+	`plugin_id` VARCHAR(32) NOT NULL DEFAULT '' COMMENT '插件唯一标识',
+	`origin_name` VARCHAR(32) NOT NULL DEFAULT '' COMMENT '插件名称',
 	`state` TINYINT NOT NULL DEFAULT '0' COMMENT '状态 1：开启 0：关闭',
 	`remark` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '描述',
 	`version` VARCHAR(50) NOT NULL DEFAULT '' COMMENT '版本',
@@ -10,7 +11,7 @@ CREATE TABLE `t_sys_plugin` (
 	`create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 	`update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间',
 	PRIMARY KEY (`id`),
-	UNIQUE INDEX `uni_name` (`name`)
+	UNIQUE INDEX `uni_plugin_id` (`plugin_id`)
 )
 COMMENT='插件'
 ENGINE=InnoDB

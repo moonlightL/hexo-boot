@@ -34,7 +34,11 @@ public class ActionLogEvent extends BaseEvent {
 
     private LocalDateTime createTime;
 
-    protected EventEnum getEventType() {
-        return EventEnum.LOG;
+    public ActionLogEvent(Object source) {
+        super(source);
+    }
+
+    protected String getEventType() {
+        return EventEnum.LOG.getType();
     }
 }

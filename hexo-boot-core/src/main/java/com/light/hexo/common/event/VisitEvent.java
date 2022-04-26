@@ -22,13 +22,16 @@ public class VisitEvent extends BaseEvent {
 
     private String browser;
 
-    @Override
-    protected EventEnum getEventType() {
-        return EventEnum.VISIT;
-    }
-
-    public VisitEvent(String ipAddress, String browser) {
+    public VisitEvent(Object source, String ipAddress, String browser) {
+        super(source);
         this.ipAddress = ipAddress;
         this.browser = browser;
     }
+
+    @Override
+    protected String getEventType() {
+        return EventEnum.VISIT.getType();
+    }
+
+
 }

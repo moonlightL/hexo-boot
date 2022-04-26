@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, initial-scale=1, shrink-to-fit=no">
+    <div th:replace="~{admin/common :: common-link}"></div>
+    <style>
+        .block-content {
+            min-height: 100px;
+        }
+        .visit-block {
+            position: relative;
+        }
+        .visit-label {
+            position: absolute;
+            right: 20px;
+            bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="content">
+    <div class="block">
+        <div class="block-content">
+            <div class="row justify-content-center py-20">
+                <div class="col-6 col-xl-3">
+                    <a class="block block-link-shadow text-right bg-primary text-white visit-block">
+                        <div class="block-content block-content-full clearfix">
+                            <div class="float-left mt-10 d-none d-sm-block">
+                                <i class="fa fa-thermometer-half fa-3x text-body-bg-dark"></i>
+                            </div>
+                            <div id="todayPV">正在加载...</div>
+                            <div class="font-size-sm font-w600 text-uppercase text-white visit-label">当日 PV</div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-6 col-xl-3">
+                    <a class="block block-link-shadow text-right bg-corporate text-white visit-block">
+                        <div class="block-content block-content-full clearfix">
+                            <div class="float-left mt-10 d-none d-sm-block">
+                                <i class="fa fa-thermometer-half fa-3x text-body-bg-dark"></i>
+                            </div>
+                            <div id="todayUV">正在加载...</div>
+                            <div class="font-size-sm font-w600 text-uppercase text-white visit-label">当日 UV</div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-6 col-xl-3">
+                    <a class="block block-link-shadow text-right bg-warning text-white visit-block">
+                        <div class="block-content block-content-full clearfix">
+                            <div class="float-left mt-10 d-none d-sm-block">
+                                <i class="fa fa-thermometer-half fa-3x text-body-bg-dark"></i>
+                            </div>
+                            <div id="totalPV">正在加载...</div>
+                            <div class="font-size-sm font-w600 text-uppercase text-white visit-label">总 PV</div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-6 col-xl-3">
+                    <a class="block block-link-shadow text-right bg-flat text-white visit-block">
+                        <div class="block-content block-content-full clearfix">
+                            <div class="float-left mt-10 d-none d-sm-block">
+                                <i class="fa fa-home fa-3x text-body-bg-dark"></i>
+                            </div>
+                            <div id="totalUV" style="word-wrap: break-word;word-break: normal;">正在加载...</div>
+                            <div class="font-size-sm font-w600 text-uppercase text-white visit-label">总 UV</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:replace="~{admin/common :: common-script}"></div>
+</div>
+<script type="text/javascript" th:inline="javascript">
+
+    let VisitInfo = {
+        init: function() {
+            $.hexo.action.sendRequest({
+                url: [[${baseUrl}]] + "/getSitePageInfo.json",
+                callback: function (resp) {
+                    if (resp.success) {
+                        let data = resp.data;
+                        for (let key in data) {
+                            $("#" + key).text(data[key]);
+                        }
+                    }
+                }
+            });
+        }
+    };
+
+    VisitInfo.init();
+
+</script>
+</body>
+</html>

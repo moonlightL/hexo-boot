@@ -26,10 +26,14 @@ public class PluginRequest extends BaseRequest<SysPlugin> {
     private Integer id;
 
     /**
+     * 插件唯一标识
+     */
+    private String pluginId;
+
+    /**
      * 插件名称
      */
-    @NotEmpty(message = "插件名称不能为空", groups = {BaseRequest.Save.class, BaseRequest.Update.class})
-    private String name;
+    private String originName;
 
     /**
      * 可用状态

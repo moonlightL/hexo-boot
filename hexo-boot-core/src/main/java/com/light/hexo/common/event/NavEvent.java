@@ -43,17 +43,19 @@ public class NavEvent extends BaseEvent {
         }
     }
 
-    public NavEvent(Type type) {
+    public NavEvent(Object source, Type type) {
+        super(source);
         this.type = type;
     }
 
-    public NavEvent(Integer id, Type type) {
+    public NavEvent(Object source, Integer id, Type type) {
+        super(source);
         this.id = id;
         this.type = type;
     }
 
     @Override
-    protected EventEnum getEventType() {
-        return EventEnum.NAV;
+    protected String getEventType() {
+        return EventEnum.NAV.getType();
     }
 }

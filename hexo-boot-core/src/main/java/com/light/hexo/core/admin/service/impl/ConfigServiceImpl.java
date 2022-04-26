@@ -83,7 +83,7 @@ public class ConfigServiceImpl extends BaseServiceImpl<Config> implements Config
 
         this.configMapper.updateByConfigKey(configList);
         CacheUtil.remove(CacheKey.CONFIG_LIST);
-        this.eventPublisher.emit(new ConfigEvent());
+        this.eventPublisher.emit(new ConfigEvent(this));
 
         EhcacheUtil.clearByCacheName("postCache");
 
@@ -122,12 +122,12 @@ public class ConfigServiceImpl extends BaseServiceImpl<Config> implements Config
     public void saveConfigBatch(List<Config> configList) throws GlobalException {
         this.configMapper.updateByConfigKey(configList);
         CacheUtil.remove(CacheKey.CONFIG_LIST);
-        this.eventPublisher.emit(new ConfigEvent());
+        this.eventPublisher.emit(new ConfigEvent(this));
     }
 
     @Override
-    public EventEnum getEventType() {
-        return EventEnum.CONFIG;
+    public String getEventType() {
+        return EventEnum.CONFIG.getType();
     }
 
     @Override

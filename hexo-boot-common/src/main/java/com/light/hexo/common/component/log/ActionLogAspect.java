@@ -78,7 +78,7 @@ public class ActionLogAspect {
 
             OperateLog operateLog = method.getAnnotation(OperateLog.class);
             if (operateLog != null) {
-                ActionLogEvent event = new ActionLogEvent();
+                ActionLogEvent event = new ActionLogEvent(this);
                 event.setMethodName(method.getDeclaringClass().getName() + "." + method.getName())
                      .setMethodParam(this.getParameter(parameterNames, args))
                      .setIpAddress(IpUtil.getIpAddr(request))

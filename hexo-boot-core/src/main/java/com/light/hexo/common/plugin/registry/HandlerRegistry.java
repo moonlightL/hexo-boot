@@ -38,8 +38,7 @@ public class HandlerRegistry extends AbstractModuleRegistry {
     @SneakyThrows
     @Override
     public void register(String pluginId) {
-        List<Class<?>> pluginClassList = super.getPluginClasses(pluginId);
-        for (Class<?> clazz : pluginClassList) {
+        for (Class<?> clazz : super.getPluginClasses(pluginId)) {
             Controller annotation = clazz.getAnnotation(Controller.class);
             RestController restAnnotation = clazz.getAnnotation(RestController.class);
             if(annotation != null || restAnnotation != null) {
@@ -61,8 +60,7 @@ public class HandlerRegistry extends AbstractModuleRegistry {
     @SneakyThrows
     @Override
     public void unRegister(String pluginId) {
-        List<RequestMappingInfo> requestMappingInfoList = this.getRequestMappingInfo(pluginId);
-        for (RequestMappingInfo requestMappingInfo : requestMappingInfoList) {
+        for (RequestMappingInfo requestMappingInfo : this.getRequestMappingInfo(pluginId)) {
             this.requestMappingHandlerMapping.unregisterMapping(requestMappingInfo);
         }
     }

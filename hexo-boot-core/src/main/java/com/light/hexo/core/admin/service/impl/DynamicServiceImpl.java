@@ -152,13 +152,13 @@ public class DynamicServiceImpl extends BaseServiceImpl<Dynamic> implements Dyna
         }
 
         CacheUtil.put(cacheKey, dynamicId, 60 * 1000);
-        this.eventPublisher.emit(new DynamicEvent(dynamicId));
+        this.eventPublisher.emit(new DynamicEvent(this, dynamicId));
         return dynamic.getPraiseNum() + 1;
     }
 
     @Override
-    public EventEnum getEventType() {
-        return EventEnum.DYNAMIC;
+    public String getEventType() {
+        return EventEnum.DYNAMIC.getType();
     }
 
     @Override

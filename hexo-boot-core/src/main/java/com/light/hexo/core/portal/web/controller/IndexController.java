@@ -106,7 +106,7 @@ public class IndexController extends CommonController {
     public String page(@PathVariable String link, Map<String, Object> resultMap) {
         Nav nav = this.navService.findCustomLink(link);
         resultMap.put("currentNav", nav);
-        this.eventPublisher.emit(new NavEvent(nav.getId(), NavEvent.Type.READ));
+        this.eventPublisher.emit(new NavEvent(this, nav.getId(), NavEvent.Type.READ));
         return render("custom", true, resultMap);
     }
 

@@ -8,18 +8,31 @@ import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.mybatis.spring.mapper.MapperFactoryBean;
 import org.pf4j.PluginWrapper;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.NestedIOException;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.util.ClassUtils;
 import org.springframework.web.context.support.GenericWebApplicationContext;
+import tk.mybatis.mapper.entity.Config;
+import tk.mybatis.mapper.entity.EntityTable;
+import tk.mybatis.mapper.mapperhelper.EntityHelper;
+import tk.mybatis.mapper.mapperhelper.MapperHelper;
+import tk.mybatis.spring.mapper.MapperFactoryBean;
+import tk.mybatis.spring.mapper.SpringBootBindUtil;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -38,28 +51,44 @@ public class MapperRegistry extends AbstractModuleRegistry {
     @SneakyThrows
     @Override
     public void register(String pluginId) {
-        //注册mapper
+
+        SqlSessionFactory sqlSessionFactory = super.beanFactory.getBean(SqlSessionFactory.class);
+        Configuration configuration = sqlSessionFactory.getConfiguration();
+
+        Environment environment = super.beanFactory.getBean(Environment.class);
+        Config config = SpringBootBindUtil.bind(environment,Config.class, Config.PREFIX);
+        MapperHelper mapperHelper = new MapperHelper();
+        mapperHelper.setConfig(config);
+
+        ClassLoader pluginClassLoader = super.pluginManager.getPluginClassLoader(pluginId);
+        Thread.currentThread().setContextClassLoader(pluginClassLoader);
+        GenericWebApplicationContext applicationContext = (GenericWebApplicationContext) super.pluginManager.getApplicationContext();
+
         for (Class<?> mapperClass : this.getMapperClassList(pluginId)) {
             GenericBeanDefinition definition = new GenericBeanDefinition();
             definition.getConstructorArgumentValues().addGenericArgumentValue(mapperClass);
-            definition.setBeanClass(MapperFactoryBean.class);
+            MapperFactoryBean mapperFactoryBean = new MapperFactoryBean();
+            mapperFactoryBean.setMapperInterface(mapperClass);
+            definition.setBeanClass(mapperFactoryBean.getClass());
+            definition.getPropertyValues().add("mapperHelper", mapperHelper);
             definition.getPropertyValues().add("addToConfig", true);
             definition.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_TYPE);
-            ((GenericWebApplicationContext) super.pluginManager.getApplicationContext()).registerBeanDefinition(mapperClass.getName(), definition);
+            applicationContext.registerBeanDefinition(mapperClass.getName(), definition);
+
+            Type[] baseMapperClass = mapperClass.getGenericInterfaces();
+            if (baseMapperClass == null || baseMapperClass.length == 0) {
+                continue;
+            }
+
+            Class<?> entityClass = (Class<?>) ((ParameterizedType) baseMapperClass[0]).getActualTypeArguments()[0];
+            EntityHelper.initEntityNameMap(entityClass, mapperHelper.getConfig());
         }
 
-        PluginWrapper pluginWrapper = super.pluginManager.getPlugin(pluginId);
-        PathMatchingResourcePatternResolver pathMatchingResourcePatternResolver = new PathMatchingResourcePatternResolver(pluginWrapper.getPluginClassLoader());
-        String pluginBasePath = ClassUtils.classPackageAsResourcePath(pluginWrapper.getPlugin().getClass());
-        //扫描 plugin 所有的mapper.xml文件
-        Resource[] mapperXmlResources = pathMatchingResourcePatternResolver.getResources(PathMatchingResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX + pluginBasePath + "/*Mapper.xml");
-
-        //注册 mapper.xml
-        SqlSessionFactory sqlSessionFactory = (SqlSessionFactory) super.beanFactory.getBean("sqlSessionFactory");
-        Configuration configuration = sqlSessionFactory.getConfiguration();
+        PathMatchingResourcePatternResolver pathMatchingResourcePatternResolver = new PathMatchingResourcePatternResolver(pluginClassLoader);
+        Resource[] mapperXmlResources = pathMatchingResourcePatternResolver.getResources(PathMatchingResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX + "mapper/*Mapper.xml");
 
         try {
-            Resources.setDefaultClassLoader(pluginWrapper.getPluginClassLoader());
+            Resources.setDefaultClassLoader(pluginClassLoader);
             for (Resource mapperXmlResource : Arrays.asList(mapperXmlResources)) {
                 if(mapperXmlResource != null && mapperXmlResource.getFilename().endsWith("Mapper.xml")) {
                     try {
@@ -80,13 +109,34 @@ public class MapperRegistry extends AbstractModuleRegistry {
     @SneakyThrows
     @Override
     public void unRegister(String pluginId) {
+
+        GenericWebApplicationContext applicationContext = (GenericWebApplicationContext) super.pluginManager.getApplicationContext();
+
+        Field field = EntityHelper.class.getDeclaredField("entityTableMap");
+        field.setAccessible(true);
+        Map<Class<?>, EntityTable> entityTableMap = (Map<Class<?>, EntityTable>) field.get(EntityHelper.class);
+
         for (Class<?> mapperClass : this.getMapperClassList(pluginId)) {
-            ((GenericWebApplicationContext) super.pluginManager.getApplicationContext()).removeBeanDefinition(mapperClass.getName());
-            destroyBean(mapperClass);
+            try {
+                applicationContext.removeBeanDefinition(mapperClass.getName());
+                super.destroyBean(mapperClass);
+
+                Type[] baseMapperClass = mapperClass.getGenericInterfaces();
+                if (baseMapperClass == null || baseMapperClass.length == 0) {
+                    continue;
+                }
+
+                Class<?> entityClass = (Class<?>) ((ParameterizedType) baseMapperClass[0]).getActualTypeArguments()[0];
+                entityTableMap.remove(entityClass);
+
+            } catch (NoSuchBeanDefinitionException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     private List<Class<?>> getMapperClassList(String pluginId) throws Exception {
         return super.getPluginClasses(pluginId).stream().filter(clazz -> BaseMapper.class.isAssignableFrom(clazz)).collect(Collectors.toList());
     }
+
 }

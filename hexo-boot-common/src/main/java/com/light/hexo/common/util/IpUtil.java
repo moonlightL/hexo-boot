@@ -9,6 +9,7 @@ import org.lionsoul.ip2region.DbSearcher;
 import org.lionsoul.ip2region.Util;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.net.Inet4Address;
@@ -37,38 +38,35 @@ public class IpUtil {
 
     private static final String DEFAULT_SEPARATOR = ",";
 
-    private static DbSearcher searcher;
+    static {
+        try (InputStream inputStream = IpUtil.class.getClassLoader().getResourceAsStream("ip2region.db")) {
+            // 打包后无法读取 db 文件， 因此使用临时文件方式解决
+            FileUtils.copyInputStreamToFile(inputStream, new File(System.getProperties().getProperty("java.io.tmpdir") , "ip.db"));
+        } catch (IOException e) {
+            log.error("=============== IpUtil 加载 ip2region.db 文件失败==================");
+            e.printStackTrace();
+        }
+    }
 
     private IpUtil() {}
 
-    private static DbSearcher getSearcher() throws Exception {
-        InputStream inputStream = IpUtil.class.getClassLoader().getResourceAsStream("ip2region.db");
-        // 打包后无法读取 db 文件， 因此使用临时文件方式解决
-        File file = new File(System.getProperties().getProperty("java.io.tmpdir") , "ip.db");
-        FileUtils.copyInputStreamToFile(inputStream, file);
-
-        if (!file.exists()) {
-            log.error("=======ip2region.db 文件不存在=========");
-            return null;
-        }
-
-        //查询算法
-        DbConfig config = new DbConfig();
-        return new DbSearcher(config, file.getAbsolutePath());
-    }
-
+    /**
+     * 获取 ip 对应的信息
+     * @param ip
+     * @return  格式： 中国|0|浙江|杭州|电信
+     */
     public static String getInfo(String ip) {
 
         if (!Util.isIpAddress(ip)) {
             log.warn("========非法 IP 格式========");
-            return "神秘";
+            return "未知";
         }
 
-        DbSearcher searcher = null;
+        int algorithm = DbSearcher.BTREE_ALGORITHM;
 
         try {
-            searcher = getSearcher();
-            int algorithm = DbSearcher.BTREE_ALGORITHM;
+            String ipDbPath = System.getProperties().getProperty("java.io.tmpdir") + "/ip.db";
+            DbSearcher searcher = new DbSearcher(new DbConfig(), ipDbPath);
             Method method = null;
             switch (algorithm) {
                 case DbSearcher.BTREE_ALGORITHM:
@@ -101,6 +99,20 @@ public class IpUtil {
         String info = getInfo(ip);
         String[] split = info.split("\\|");
         String result = !StringUtils.isBlank(info) ? split[2] + split[3] : "神秘";
+        if (result.contains("内网")) {
+            return "神秘";
+        }
+        return result;
+    }
+
+    /**
+     * 获取国家
+     * @param ip
+     * @return
+     */
+    public static String getCountry(String ip) {
+        String info = getInfo(ip);
+        String result = !StringUtils.isBlank(info) ? info.split("\\|")[0] : "神秘";
         if (result.contains("内网")) {
             return "神秘";
         }

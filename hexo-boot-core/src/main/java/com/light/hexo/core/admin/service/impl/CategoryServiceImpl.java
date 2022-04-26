@@ -97,7 +97,7 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category> implements Ca
 
         this.saveModel(category);
         // 清除缓存
-        this.eventPublisher.emit(new CategoryEvent());
+        this.eventPublisher.emit(new CategoryEvent(this));
     }
 
     @Override
@@ -109,7 +109,7 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category> implements Ca
 
         this.updateModel(category);
         // 清除缓存
-        this.eventPublisher.emit(new CategoryEvent());
+        this.eventPublisher.emit(new CategoryEvent(this));
     }
 
     @Override
@@ -136,7 +136,7 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category> implements Ca
         }
 
         // 清除缓存
-        this.eventPublisher.emit(new CategoryEvent());
+        this.eventPublisher.emit(new CategoryEvent(this));
     }
 
     @Override
@@ -197,8 +197,8 @@ public class CategoryServiceImpl extends BaseServiceImpl<Category> implements Ca
     }
 
     @Override
-    public EventEnum getEventType() {
-        return EventEnum.CATEGORY;
+    public String getEventType() {
+        return EventEnum.CATEGORY.getType();
     }
 
     @Override

@@ -1029,6 +1029,11 @@ span.effect {
     color: var(--text-color);
 }
 
+.footer-copyright > div {
+    flex: 1;
+    text-align: center;
+}
+
 .footer-copyright a {
     display: inline-block;
     color: #6c757d;

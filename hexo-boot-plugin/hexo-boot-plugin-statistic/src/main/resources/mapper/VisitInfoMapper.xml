@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.light.hexo.plugin.statistic.mapper.VisitInfoMapper">
+
+
+    <select id="sumVisitInfo" resultType="com.light.hexo.plugin.statistic.model.VisitInfo">
+        SELECT
+            sum(pv) as pv,
+            sum(uv) as uv
+        FROM
+            t_ext_visit_info
+    </select>
+</mapper>

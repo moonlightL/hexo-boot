@@ -23,8 +23,7 @@ public class ComponentRegistry extends AbstractModuleRegistry {
     @SneakyThrows
     @Override
     public void register(String pluginId) {
-        List<Class<?>> classList = this.listComponentClasses(pluginId);
-        for (Class<?> clazz : classList) {
+        for (Class<?> clazz : this.listComponentClasses(pluginId)) {
             super.registryBean(clazz);
         }
     }
@@ -32,8 +31,7 @@ public class ComponentRegistry extends AbstractModuleRegistry {
     @SneakyThrows
     @Override
     public void unRegister(String pluginId) {
-        List<Class<?>> classList = this.listComponentClasses(pluginId);
-        for (Class<?> clazz : classList) {
+        for (Class<?> clazz : this.listComponentClasses(pluginId)) {
             super.destroyBean(clazz);
         }
     }
@@ -41,8 +39,7 @@ public class ComponentRegistry extends AbstractModuleRegistry {
     private List<Class<?>> listComponentClasses(String pluginId) throws Exception {
         List<Class<?>> classList = new ArrayList<>();
 
-        List<Class<?>> pluginClasses = super.getPluginClasses(pluginId);
-        for (Class<?> pluginClass : pluginClasses) {
+        for (Class<?> pluginClass : super.getPluginClasses(pluginId)) {
             Component annotation = pluginClass.getAnnotation(Component.class);
             if(annotation != null) {
                 classList.add(pluginClass);

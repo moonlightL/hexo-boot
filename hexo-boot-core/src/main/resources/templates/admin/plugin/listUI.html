@@ -17,12 +17,12 @@
     <div class="block block-fx-shadow hide" id="queryArea">
         <div class="block-content block-content-full">
             <form class="form-inline" method="post" id="queryForm">
-                <label class="sr-only" for="name">插件名称</label>
+                <label class="sr-only" for="pluginId">插件唯一标识</label>
                 <div class="input-group">
                     <div class="input-group-prepend">
-                        <button type="button" class="btn btn-secondary">插件名称</button>
+                        <button type="button" class="btn btn-secondary">插件唯一标识</button>
                     </div>
-                    <input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="name" name="name">
+                    <input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="pluginId" name="pluginId">
                 </div>
                 <label class="sr-only" for="state">状态</label>
                 <div class="input-group">
@@ -52,11 +52,12 @@
                                 <span class="css-control-indicator"></span>
                             </label>
                         </th>
-                        <th data-field="name">名称</th>
-                        <th width="8%" data-field="version">版本</th>
+                        <th data-field="pluginId">唯一标识</th>
+                        <th data-field="originName">原始名称</th>
+                        <th width="5%" data-field="version">版本</th>
                         <th width="32%" data-field="remark">描述</th>
-                        <th width="10%" data-field="author">作者</th>
-                        <th width="16%" data-field="updateTime">安装时间</th>
+                        <th width="8%" data-field="author">作者</th>
+                        <th width="10%" data-field="updateTime">安装时间</th>
                         <th width="5%" align="center" data-field="state" data-formatter="stateFormatter">状态</th>
                         <th width="10%" align="center" data-formatter="actionFormatter">操作</th>
                     </tr>
@@ -73,7 +74,7 @@
         let id = $obj.data("id");
         let state = $obj.prop("checked");
 
-        $.hexo.modal.confirm("确定要修改开关吗？", function() {
+        $.hexo.modal.confirm("确定要修改插件状态吗？", function() {
             $.hexo.action.sendRequest({
                 url: BASE_URL + "/updateState.json",
                 params: {"id": id, "state": state},
@@ -106,7 +107,7 @@
         let btnArr = [];
         btnArr.push('<div class="btn-group">');
         btnArr.push('<button type="button" class="btn btn-sm btn-secondary hexo-config" data-toggle="tooltip" title="查看" data-state="'+row.state+'" data-url="'+row.configUrl+'" onclick="window.configUI(this)"><i class="fa fa-search"></i></button>');
-        btnArr.push('<button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="卸载" onclick="$.hexo.action.remove(\'' + row.id + '\')"><i class="fa fa-times"></i></button>');
+        btnArr.push('<button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="卸载并备份" onclick="$.hexo.action.remove(\'' + row.id + '\')"><i class="fa fa-trash"></i></button>');
         btnArr.push("</div>");
         return btnArr.join("");
     }

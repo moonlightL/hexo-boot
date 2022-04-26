@@ -18,8 +18,12 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class CategoryEvent extends BaseEvent {
 
+    public CategoryEvent(Object source) {
+        super(source);
+    }
+
     @Override
-    protected EventEnum getEventType() {
-        return EventEnum.CATEGORY;
+    protected String getEventType() {
+        return EventEnum.CATEGORY.getType();
     }
 }

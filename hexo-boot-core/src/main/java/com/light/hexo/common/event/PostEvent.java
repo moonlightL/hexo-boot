@@ -47,13 +47,14 @@ public class PostEvent extends BaseEvent {
         }
     }
 
-    public PostEvent(Integer id, Type type) {
+    public PostEvent(Object source, Integer id, Type type) {
+        super(source);
         this.id = id;
         this.type = type;
     }
 
     @Override
-    protected EventEnum getEventType() {
-        return EventEnum.POST;
+    protected String getEventType() {
+        return EventEnum.POST.getType();
     }
 }

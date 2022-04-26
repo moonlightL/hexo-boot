@@ -27,7 +27,7 @@ public class InterceptorRegistry extends AbstractModuleRegistry {
     public InterceptorRegistry(HexoBootPluginManager pluginManager) {
         super(pluginManager);
         this.handlerMapping = super.pluginManager.getApplicationContext().getBean(AbstractHandlerMapping.class);
-        Field adaptedInterceptorsField = ReflectionUtils.findField(handlerMapping.getClass(), "adaptedInterceptors", List.class);
+        Field adaptedInterceptorsField = ReflectionUtils.findField(this.handlerMapping.getClass(), "adaptedInterceptors", List.class);
         adaptedInterceptorsField.setAccessible(true);
         try {
             this.handlerInterceptorList = (List<HandlerInterceptor>) adaptedInterceptorsField.get(handlerMapping);
@@ -39,8 +39,7 @@ public class InterceptorRegistry extends AbstractModuleRegistry {
     @SneakyThrows
     @Override
     public void register(String pluginId) {
-        List<Class<?>> pluginClassList = super.getPluginClasses(pluginId);
-        for (Class<?> clazz : pluginClassList) {
+        for (Class<?> clazz : super.getPluginClasses(pluginId)) {
             InterceptPathPattern interceptPaths = clazz.getAnnotation(InterceptPathPattern.class);
             if(interceptPaths != null && interceptPaths.value() != null) {
                 HandlerInterceptor handlerInterceptor = (HandlerInterceptor) super.registryBean(clazz);
@@ -53,11 +52,10 @@ public class InterceptorRegistry extends AbstractModuleRegistry {
     @SneakyThrows
     @Override
     public void unRegister(String pluginId) {
-        List<Class<?>> pluginClassList = super.getPluginClasses(pluginId);
-        for (Class<?> clazz : pluginClassList) {
+        for (Class<?> clazz : super.getPluginClasses(pluginId)) {
             InterceptPathPattern interceptPaths = clazz.getAnnotation(InterceptPathPattern.class);
             if(interceptPaths != null && interceptPaths.value() != null) {
-                for (HandlerInterceptor handlerInterceptor : handlerInterceptorList) {
+                for (HandlerInterceptor handlerInterceptor : this.handlerInterceptorList) {
                     if(handlerInterceptor instanceof MappedInterceptor) {
                         MappedInterceptor mappedInterceptor = (MappedInterceptor) handlerInterceptor;
                         if(Objects.equals(super.pluginManager.getExtensionFactory().create(clazz), mappedInterceptor.getInterceptor())) {

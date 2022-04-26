@@ -20,4 +20,5 @@ public class ServerPlugin extends BasePlugin {
     public String getConfigUrl() {
         return "/plugin/server/configUI.html";
     }
+
 }

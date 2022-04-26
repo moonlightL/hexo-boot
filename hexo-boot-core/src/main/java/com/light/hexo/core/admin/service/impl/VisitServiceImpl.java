@@ -59,8 +59,8 @@ public class VisitServiceImpl extends BaseServiceImpl<Visit> implements VisitSer
     }
 
     @Override
-    public EventEnum getEventType() {
-        return EventEnum.VISIT;
+    public String getEventType() {
+        return EventEnum.VISIT.getType();
     }
 
     @Override

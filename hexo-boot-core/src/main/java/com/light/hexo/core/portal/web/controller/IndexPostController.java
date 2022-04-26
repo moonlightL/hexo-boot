@@ -61,7 +61,7 @@ public class IndexPostController extends CommonController {
         resultMap.put("previousPost", post.getPrevPost());
         resultMap.put("nextPost", post.getNextPost());
         resultMap.put("currentNav", new Nav(post.getTitle(), post.getLink(), post.getCoverUrl(), "detail"));
-        this.eventPublisher.emit(new PostEvent(post.getId(), PostEvent.Type.READ));
+        this.eventPublisher.emit(new PostEvent(this, post.getId(), PostEvent.Type.READ));
         return render("detail", true, resultMap);
     }
 
@@ -92,7 +92,7 @@ public class IndexPostController extends CommonController {
         resultMap.put("previousPost", post.getPrevPost());
         resultMap.put("nextPost", post.getNextPost());
         resultMap.put("currentNav", new Nav(post.getTitle(), post.getLink(), post.getCoverUrl(), "detail"));
-        this.eventPublisher.emit(new PostEvent(post.getId(), PostEvent.Type.READ));
+        this.eventPublisher.emit(new PostEvent(this, post.getId(), PostEvent.Type.READ));
         return render("detail", true, resultMap);
     }
 

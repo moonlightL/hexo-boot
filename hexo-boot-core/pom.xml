@@ -17,11 +17,6 @@
     <description>Hexo Boot 博客系统</description>
 
     <dependencies>
-        <dependency>
-            <groupId>com.light</groupId>
-            <artifactId>hexo-boot-mapper</artifactId>
-            <version>1.0.0</version>
-        </dependency>
 
         <dependency>
             <groupId>com.light</groupId>

@@ -44,12 +44,13 @@ public class MessageEvent extends BaseEvent {
     }
 
     public MessageEvent(Object source, String content, Type type) {
+        super(source);
         this.content = content;
         this.type = type;
     }
 
     @Override
-    protected EventEnum getEventType() {
-        return EventEnum.MESSAGE;
+    protected String getEventType() {
+        return EventEnum.MESSAGE.getType();
     }
 }

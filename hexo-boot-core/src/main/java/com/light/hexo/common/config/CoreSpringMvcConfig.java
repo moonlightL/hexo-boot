@@ -72,8 +72,14 @@ public class CoreSpringMvcConfig extends SpringMvcConfig {
 
         registry.addInterceptor(visitInterceptor)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/admin/assets/**")
+                .excludePathPatterns(
+                        "/**/*.ico",
+                        "/**/*.js.map",
+                        "/**/*.css.map",
+                        "/**/*.json")
+                .excludePathPatterns("/admin/**")
                 .excludePathPatterns("/theme/**")
+                .excludePathPatterns("/images/**")
                 .excludePathPatterns("/error");
 
         registry.addInterceptor(userInterceptor)

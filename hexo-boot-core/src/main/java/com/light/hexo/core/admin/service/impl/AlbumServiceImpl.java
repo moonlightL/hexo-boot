@@ -92,7 +92,7 @@ public class AlbumServiceImpl extends BaseServiceImpl<Album> implements AlbumSer
         this.saveModel(album);
 
         // 清除缓存
-        this.eventPublisher.emit(new AlbumEvent());
+        this.eventPublisher.emit(new AlbumEvent(this));
     }
 
     @Override
@@ -108,7 +108,7 @@ public class AlbumServiceImpl extends BaseServiceImpl<Album> implements AlbumSer
         this.updateModel(album);
 
         // 清除缓存
-        this.eventPublisher.emit(new AlbumEvent());
+        this.eventPublisher.emit(new AlbumEvent(this));
     }
 
     @Override
@@ -128,7 +128,7 @@ public class AlbumServiceImpl extends BaseServiceImpl<Album> implements AlbumSer
         this.removeModel(albumId);
 
         // 清除缓存
-        this.eventPublisher.emit(new AlbumEvent());
+        this.eventPublisher.emit(new AlbumEvent(this));
     }
 
     @Cacheable(key = "'" + PageConstant.ALBUM_LIST + "'")
@@ -150,8 +150,8 @@ public class AlbumServiceImpl extends BaseServiceImpl<Album> implements AlbumSer
     }
 
     @Override
-    public EventEnum getEventType() {
-        return EventEnum.ALBUM;
+    public String getEventType() {
+        return EventEnum.ALBUM.getType();
     }
 
     @Override

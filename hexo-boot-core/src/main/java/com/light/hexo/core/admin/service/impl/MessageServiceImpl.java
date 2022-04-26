@@ -63,8 +63,8 @@ public class MessageServiceImpl extends BaseServiceImpl<Message> implements Mess
     }
 
     @Override
-    public EventEnum getEventType() {
-        return EventEnum.MESSAGE;
+    public String getEventType() {
+        return EventEnum.MESSAGE.getType();
     }
 
     @Override

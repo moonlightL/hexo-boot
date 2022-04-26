@@ -18,8 +18,12 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class TagEvent extends BaseEvent {
 
+    public TagEvent(Object source) {
+        super(source);
+    }
+
     @Override
-    protected EventEnum getEventType() {
-        return EventEnum.TAG;
+    protected String getEventType() {
+        return EventEnum.TAG.getType();
     }
 }

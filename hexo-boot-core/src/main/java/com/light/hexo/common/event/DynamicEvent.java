@@ -23,12 +23,13 @@ public class DynamicEvent extends BaseEvent {
      */
     private Integer id;
 
-    public DynamicEvent(Integer id) {
+    public DynamicEvent(Object source, Integer id) {
+        super(source);
         this.id = id;
     }
 
     @Override
-    protected EventEnum getEventType() {
-        return EventEnum.DYNAMIC;
+    protected String getEventType() {
+        return EventEnum.DYNAMIC.getType();
     }
 }

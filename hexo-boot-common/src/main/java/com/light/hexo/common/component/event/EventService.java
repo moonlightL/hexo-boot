@@ -9,7 +9,7 @@ package com.light.hexo.common.component.event;
  */
 public interface EventService {
 
-    EventEnum getEventType();
+    String getEventType();
 
     void dealWithEvent(BaseEvent event);
 }

@@ -78,7 +78,7 @@ public class TagServiceImpl extends BaseServiceImpl<Tag> implements TagService {
         example.createCriteria().andIn("id", idList);
         this.getBaseMapper().deleteByExample(example);
         // 清除缓存
-        this.eventPublisher.emit(new TagEvent());
+        this.eventPublisher.emit(new TagEvent(this));
     }
 
     @Override
@@ -134,8 +134,8 @@ public class TagServiceImpl extends BaseServiceImpl<Tag> implements TagService {
     }
 
     @Override
-    public EventEnum getEventType() {
-        return EventEnum.TAG;
+    public String getEventType() {
+        return EventEnum.TAG.getType();
     }
 
     @Override

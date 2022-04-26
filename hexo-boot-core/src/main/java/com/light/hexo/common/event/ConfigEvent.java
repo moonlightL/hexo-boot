@@ -18,8 +18,12 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class ConfigEvent extends BaseEvent {
 
+    public ConfigEvent(Object source) {
+        super(source);
+    }
+
     @Override
-    protected EventEnum getEventType() {
-        return EventEnum.CONFIG;
+    protected String getEventType() {
+        return EventEnum.CONFIG.getType();
     }
 }

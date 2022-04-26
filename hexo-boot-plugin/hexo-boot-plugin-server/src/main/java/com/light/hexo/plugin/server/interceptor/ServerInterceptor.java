@@ -24,7 +24,7 @@ public class ServerInterceptor implements HandlerInterceptor {
         Object obj = request.getSession().getAttribute(HexoConstant.CURRENT_USER);
         if (obj == null) {
             log.info("==================非法请求 server-plugin=====================");
-            response.sendRedirect("/index.html");
+            response.sendRedirect("/");
             return false;
         }
         return true;

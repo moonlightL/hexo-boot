@@ -16,7 +16,7 @@
         <plugin.class>com.light.hexo.plugin.server.ServerPlugin</plugin.class>
         <plugin.version>1.0.0</plugin.version>
         <plugin.provider>MoonlightL</plugin.provider>
-        <plugin.description>系统服务信息</plugin.description>
+        <plugin.description>系统信息(JVM、CPU、内存、硬盘等信息)</plugin.description>
         <plugin.dependencies />
     </properties>
 

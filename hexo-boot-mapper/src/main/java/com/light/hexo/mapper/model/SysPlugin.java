@@ -33,9 +33,14 @@ public class SysPlugin implements Serializable {
     private Integer id;
 
     /**
+     * 插件唯一标识
+     */
+    private String pluginId;
+
+    /**
      * 名称
      */
-    private String name;
+    private String originName;
 
     /**
      * 状态

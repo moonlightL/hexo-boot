@@ -12,6 +12,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.context.WebApplicationContext;
 import javax.servlet.ServletContext;
 import java.io.File;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -26,7 +27,6 @@ import java.util.stream.Collectors;
 @Component
 @Slf4j
 public class ConfigInitListener implements ApplicationListener<ContextRefreshedEvent> {
-
 
     @Autowired
     private ConfigService configService;
@@ -107,8 +107,6 @@ public class ConfigInitListener implements ApplicationListener<ContextRefreshedE
             return;
         }
 
-        this.pluginManager.loadPlugins();
-
         for (SysPlugin plugin : pluginList) {
             try {
                 String filePath = plugin.getFilePath();
@@ -119,7 +117,8 @@ public class ConfigInitListener implements ApplicationListener<ContextRefreshedE
                 }
 
                 if (plugin.getState()) {
-                    this.pluginManager.startPlugin(plugin.getName(), plugin.getFilePath());
+                    this.pluginManager.loadPlugin(Paths.get(plugin.getFilePath()));
+                    this.pluginManager.startPlugin(plugin.getPluginId(), plugin.getFilePath());
                 }
             } catch (Exception e) {
                 e.printStackTrace();

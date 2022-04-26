@@ -61,8 +61,8 @@ public class ActionLogServiceImpl extends BaseServiceImpl<ActionLog> implements 
     }
 
     @Override
-    public EventEnum getEventType() {
-        return EventEnum.LOG;
+    public String getEventType() {
+        return EventEnum.LOG.getType();
     }
 
     @Override

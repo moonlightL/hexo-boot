@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
  * @Author MoonlightL
  * @ClassName: InterceptPathPattern
  * @ProjectName hexo-boot
- * @Description: 拦截器映射
+ * @Description: 插件拦截器注解
  * @DateTime 2022/4/20, 0020 10:36
  */
 @Retention(RetentionPolicy.RUNTIME)

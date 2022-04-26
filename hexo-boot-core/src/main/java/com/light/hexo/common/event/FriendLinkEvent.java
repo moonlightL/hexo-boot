@@ -18,8 +18,12 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class FriendLinkEvent extends BaseEvent {
 
+    public FriendLinkEvent(Object source) {
+        super(source);
+    }
+
     @Override
-    protected EventEnum getEventType() {
-        return EventEnum.FRIEND_LINK;
+    protected String getEventType() {
+        return EventEnum.FRIEND_LINK.getType();
     }
 }

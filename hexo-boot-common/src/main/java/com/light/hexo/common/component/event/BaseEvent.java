@@ -1,5 +1,7 @@
 package com.light.hexo.common.component.event;
 
+import org.springframework.context.ApplicationEvent;
+
 /**
  * @Author MoonlightL
  * @ClassName: BaseEvent
@@ -7,9 +9,13 @@ package com.light.hexo.common.component.event;
  * @Description: 事件基类
  * @DateTime 2020/9/16 10:51
  */
-public class BaseEvent {
+public class BaseEvent extends ApplicationEvent {
 
-    protected EventEnum getEventType() {
-        return EventEnum.NAV;
+    public BaseEvent(Object source) {
+        super(source);
+    }
+
+    protected String getEventType() {
+        return EventEnum.NAV.getType();
     }
 }

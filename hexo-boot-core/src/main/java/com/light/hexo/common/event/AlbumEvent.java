@@ -18,8 +18,12 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class AlbumEvent extends BaseEvent {
 
+    public AlbumEvent(Object source) {
+        super(source);
+    }
+
     @Override
-    protected EventEnum getEventType() {
-        return EventEnum.ALBUM;
+    protected String getEventType() {
+        return EventEnum.ALBUM.getType();
     }
 }

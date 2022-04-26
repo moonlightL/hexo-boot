@@ -2,6 +2,8 @@ package com.light.hexo.common.plugin;
 
 import org.pf4j.PluginManager;
 import org.pf4j.spring.SpringExtensionFactory;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.context.ApplicationContext;
 
 import java.util.*;
 
@@ -33,6 +35,15 @@ public class HexoBootSpringExtensionFactory extends SpringExtensionFactory imple
         this.cacheMap.put(beanName, extension);
 
         return extension;
+    }
+
+    @Override
+    protected <T> T createWithSpring(Class<T> extensionClass, ApplicationContext applicationContext) {
+        AutowireCapableBeanFactory beanFactory = applicationContext.getAutowireCapableBeanFactory();
+        Object autowiredExtension = beanFactory.autowire(extensionClass, 3, false);
+        beanFactory.autowireBean(autowiredExtension);
+        beanFactory.initializeBean(autowiredExtension, extensionClass.getName());
+        return (T) autowiredExtension;
     }
 
     @Override
