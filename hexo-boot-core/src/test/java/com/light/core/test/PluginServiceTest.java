@@ -10,6 +10,7 @@ import org.pf4j.PluginWrapper;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.core.type.classreading.CachingMetadataReaderFactory;
 import org.springframework.core.type.classreading.MetadataReader;
 import org.springframework.util.ClassUtils;
@@ -41,7 +42,7 @@ public class PluginServiceTest {
         ClassLoader pluginClassLoader = pluginManager.getPluginClassLoader(pluginId);
 
         PluginWrapper pluginWrapper = pluginManager.getPlugin(pluginId);
-        PathMatchingResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver(pluginClassLoader);
+        ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver(pluginClassLoader);
         String pluginBasePath = ClassUtils.classPackageAsResourcePath(pluginWrapper.getPlugin().getClass());
         Resource[] resources = resourcePatternResolver.getResources(PathMatchingResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX + pluginBasePath + "/**/*.class");
         List<Class<?>> classList = new ArrayList<>();

@@ -14,6 +14,8 @@ import com.light.hexo.core.admin.service.SysPluginService;
 import com.light.hexo.mapper.base.BaseMapper;
 import com.light.hexo.mapper.mapper.SysPluginMapper;
 import com.light.hexo.mapper.model.SysPlugin;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -39,6 +41,7 @@ import java.time.format.DateTimeFormatter;
  * @DateTime 2022/4/13, 0013 10:34
  */
 @Service
+@Slf4j
 public class SysPluginServiceImpl extends BaseServiceImpl<SysPlugin> implements SysPluginService {
 
     @Autowired
@@ -100,15 +103,15 @@ public class SysPluginServiceImpl extends BaseServiceImpl<SysPlugin> implements 
 
         SysPlugin plugin = new SysPlugin();
         plugin.setPluginId(pluginId)
-                .setOriginName(originName)
-                .setState(pluginState.toString().equals(PluginState.STARTED.toString()))
-                .setRemark(descriptor.getPluginDescription())
-                .setVersion(descriptor.getVersion())
-                .setAuthor(descriptor.getProvider())
-                .setFilePath(filePath)
-                .setConfigUrl(((BasePlugin) pluginWrapper.getPlugin()).getConfigUrl())
-                .setCreateTime(LocalDateTime.now())
-                .setUpdateTime(plugin.getCreateTime());
+              .setOriginName(originName)
+              .setState(pluginState.toString().equals(PluginState.STARTED.toString()))
+              .setRemark(descriptor.getPluginDescription())
+              .setVersion(descriptor.getVersion())
+              .setAuthor(descriptor.getProvider())
+              .setFilePath(filePath)
+              .setConfigUrl(((BasePlugin) pluginWrapper.getPlugin()).getConfigUrl())
+              .setCreateTime(LocalDateTime.now())
+              .setUpdateTime(plugin.getCreateTime());
         this.pluginMapper.insert(plugin);
 
         if (!plugin.getState()) {
@@ -150,25 +153,53 @@ public class SysPluginServiceImpl extends BaseServiceImpl<SysPlugin> implements 
 
         String pluginId = dbPlugin.getPluginId();
 
-        try {
-            File pluginFile = new File(dbPlugin.getFilePath());
-            if (pluginFile.exists()) {
-                File parentFile = pluginFile.getParentFile();
-                File bakFileDir = new File(parentFile.getParentFile().getAbsolutePath(), "plugins-bak");
-                if (!bakFileDir.exists()) {
-                    bakFileDir.mkdirs();
-                }
+        File pluginFile = new File(dbPlugin.getFilePath());
+        if (pluginFile.exists()) {
+            File parentFile = pluginFile.getParentFile();
+            File bakFileDir = new File(parentFile.getParentFile().getAbsolutePath(), "plugins-bak");
+            if (!bakFileDir.exists()) {
+                bakFileDir.mkdirs();
+            }
 
+            try {
                 String dateTimeStr = DateUtil.ldtToStr(LocalDateTime.now(), DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
                 File bakFile = new File(bakFileDir.getAbsolutePath(), FilenameUtils.getBaseName(pluginFile.getName()) + "-" + dateTimeStr + ".jar");
                 FileUtils.copyFile(pluginFile, bakFile);
+            } catch (IOException e) {
+                log.warn("=========== uninstallPlugin 备份失败 plugin-id: {} =================", pluginId);
             }
 
-            this.pluginManager.deletePlugin(pluginId);
-            super.removeModel(pluginId);
-        } catch (IOException | IllegalArgumentException e) {
-            e.printStackTrace();
+            if (this.pluginManager.checkPlugin(pluginId)) {
+                try {
+                    this.pluginManager.deletePlugin(pluginId);
+                    super.removeModel(id);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    this.deletePluginFileError(dbPlugin);
+                    ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_PLUGIN_CANNOT_DELETE);
+                }
+            } else {
+                boolean deleteQuietly = false;
+                int tryCount = 0;
+                while (!deleteQuietly && tryCount++ < 10) {
+                    System.gc();
+                    deleteQuietly = FileUtils.deleteQuietly(pluginFile);
+                }
+
+                if (!deleteQuietly) {
+                    this.deletePluginFileError(dbPlugin);
+                }
+                super.removeModel(id);
+            }
+
+            System.gc();
         }
+    }
+
+    private void deletePluginFileError(SysPlugin sysPlugin) {
+        sysPlugin.setState(false).setUpdateTime(LocalDateTime.now());
+        this.updateModel(sysPlugin);
+        ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_PLUGIN_CANNOT_DELETE);
     }
 
 }

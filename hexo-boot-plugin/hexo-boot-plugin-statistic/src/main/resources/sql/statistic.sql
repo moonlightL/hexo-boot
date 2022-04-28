@@ -23,7 +23,9 @@ CREATE TABLE IF NOT EXISTS `t_ext_visit_detail` (
 	`create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 	`update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间',
 	PRIMARY KEY (`id`),
-	INDEX `idx_create_time_ip` (`create_time`, `ip`)
+	INDEX `idx_create_time_ip` (`create_time`, `ip`),
+	INDEX `idx_url` (`url`),
+	INDEX `idx_city` (`city`)
 )
 COMMENT='访问记录详情-插件'
 COLLATE='utf8_general_ci'

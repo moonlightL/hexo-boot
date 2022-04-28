@@ -12,10 +12,15 @@ import org.pf4j.PluginWrapper;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.core.type.classreading.CachingMetadataReaderFactory;
+import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.core.type.classreading.MetadataReader;
+import org.springframework.core.type.classreading.MetadataReaderFactory;
+import org.springframework.core.type.classreading.SimpleMetadataReaderFactory;
 import org.springframework.util.ClassUtils;
+import org.springframework.util.CollectionUtils;
+
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @Author MoonlightL
@@ -31,6 +36,8 @@ public abstract class AbstractModuleRegistry implements ModuleRegistry {
 
     protected DefaultListableBeanFactory beanFactory;
 
+    private static final Map<String, List<Class<?>>> PLUGIN_CLASS_MAP = new ConcurrentHashMap<>();
+
     public AbstractModuleRegistry(HexoBootPluginManager pluginManager) {
         this.pluginManager = pluginManager;
         this.beanFactory = (DefaultListableBeanFactory) this.pluginManager.getApplicationContext().getAutowireCapableBeanFactory();
@@ -38,22 +45,38 @@ public abstract class AbstractModuleRegistry implements ModuleRegistry {
 
     @SneakyThrows
     protected List<Class<?>> getPluginClasses(String pluginId) {
-        PluginWrapper pluginWrapper = this.pluginManager.getPlugin(pluginId);
-        ClassLoader pluginClassLoader = pluginWrapper.getPluginClassLoader();
-        PathMatchingResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver(pluginClassLoader);
-        String pluginBasePath = ClassUtils.classPackageAsResourcePath(pluginWrapper.getPlugin().getClass());
-        Resource[] resources = resourcePatternResolver.getResources(PathMatchingResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX + pluginBasePath + "/**/*.class");
-        List<Class<?>> classList = new ArrayList<>();
-        for (Resource resource : resources) {
-            MetadataReader metadataReader = new CachingMetadataReaderFactory().getMetadataReader(resource);
-            Class clazz = pluginClassLoader.loadClass(metadataReader.getAnnotationMetadata().getClassName());
-            if(!BasePlugin.class.isAssignableFrom(clazz)
-                    && !Plugin.class.isAssignableFrom(clazz)
-                    && clazz.getAnnotation(Extension.class) == null) {
-                classList.add(clazz);
+        List<Class<?>> classList = PLUGIN_CLASS_MAP.get(pluginId);
+        if (CollectionUtils.isEmpty(classList)) {
+            classList = new ArrayList<>();
+            PluginWrapper pluginWrapper = this.pluginManager.getPlugin(pluginId);
+            ClassLoader pluginClassLoader = pluginWrapper.getPluginClassLoader();
+
+            ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver(pluginClassLoader);
+            String pluginBasePath = ClassUtils.classPackageAsResourcePath(pluginWrapper.getPlugin().getClass());
+            Resource[] resources = resourcePatternResolver.getResources(ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX + pluginBasePath + "/**/*.class");
+
+            MetadataReaderFactory metadataReaderFactory = new SimpleMetadataReaderFactory();
+            for (Resource resource : resources) {
+                MetadataReader metadataReader = metadataReaderFactory.getMetadataReader(resource);
+                String className = metadataReader.getAnnotationMetadata().getClassName();
+                Class clazz = pluginClassLoader.loadClass(className);
+                if(!BasePlugin.class.isAssignableFrom(clazz) &&
+                   !Plugin.class.isAssignableFrom(clazz) &&
+                   clazz.getAnnotation(Extension.class) == null) {
+                    classList.add(clazz);
+                }
             }
+
+            PLUGIN_CLASS_MAP.put(pluginId, classList);
         }
+
         return classList;
+    }
+
+    protected void clearPluginClass(String pluginId) {
+        if (PLUGIN_CLASS_MAP.containsKey(pluginId)) {
+            PLUGIN_CLASS_MAP.remove(pluginId);
+        }
     }
 
     protected Object registryBean(Class<?> clazz) {
@@ -68,8 +91,12 @@ public abstract class AbstractModuleRegistry implements ModuleRegistry {
     }
 
     protected void destroyBean(Class<?> clazz) {
-        this.beanFactory.destroySingleton(clazz.getName());
         HexoBootSpringExtensionFactory extensionFactory = (HexoBootSpringExtensionFactory) this.pluginManager.getExtensionFactory();
+        Object pluginBean = extensionFactory.getPluginBean(clazz);
+        if (pluginBean != null) {
+            this.beanFactory.destroyBean(pluginBean);
+        }
+        this.beanFactory.destroySingleton(clazz.getName());
         extensionFactory.destroy(clazz);
     }
 

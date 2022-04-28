@@ -2,6 +2,10 @@ package com.light.hexo.plugin.statistic.mapper;
 
 import com.light.hexo.mapper.base.BaseMapper;
 import com.light.hexo.plugin.statistic.model.VisitDetail;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Author MoonlightL
@@ -12,5 +16,17 @@ import com.light.hexo.plugin.statistic.model.VisitDetail;
  */
 public interface VisitDetailMapper extends BaseMapper<VisitDetail> {
 
+    /**
+     * 通过 url 统计
+     * @param pageSize
+     * @return
+     */
+    List<Map<String, Object>> countByUrl(@Param("pageSize") int pageSize);
 
+    /**
+     * 通过城市统计
+     * @param pageSize
+     * @return
+     */
+    List<Map<String, Object>> countByCity(@Param("pageSize") int pageSize);
 }

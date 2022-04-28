@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.light.hexo.plugin.statistic.mapper.VisitDetailMapper">
+
+    <select id="countByUrl" parameterType="java.lang.Integer" resultType="java.util.Map">
+        SELECT
+            d.url AS `name`,
+            count(d.url) AS `value`
+        FROM
+            t_ext_visit_detail d
+        GROUP BY
+            d.url
+        ORDER BY `value` DESC
+        LIMIT 10
+    </select>
+
+    <select id="countByCity" parameterType="java.lang.Integer" resultType="java.util.Map">
+        SELECT
+            d.city AS `name`,
+            count(d.city) AS `value`
+        FROM
+            t_ext_visit_detail d
+        GROUP BY
+            d.city
+        ORDER BY `value` DESC
+        LIMIT 10
+    </select>
+
+</mapper>

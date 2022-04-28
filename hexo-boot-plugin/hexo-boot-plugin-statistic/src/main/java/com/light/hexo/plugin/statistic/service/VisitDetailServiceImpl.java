@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Author MoonlightL
@@ -40,5 +42,15 @@ public class VisitDetailServiceImpl implements VisitDetailService {
                    .setProvince(IpUtil.getProvince(ip))
                    .setCity(IpUtil.getCity(ip));
         this.visitDetailMapper.insert(visitDetail);
+    }
+
+    @Override
+    public List<Map<String, Object>> getPageData(int pageSize) {
+        return this.visitDetailMapper.countByUrl(pageSize);
+    }
+
+    @Override
+    public List<Map<String, Object>> getCityData(int pageSize) {
+        return this.visitDetailMapper.countByCity(pageSize);
     }
 }

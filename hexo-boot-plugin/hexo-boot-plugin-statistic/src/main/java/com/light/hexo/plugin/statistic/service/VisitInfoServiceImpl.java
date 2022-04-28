@@ -17,6 +17,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 /**
  * @Author MoonlightL
@@ -44,16 +45,24 @@ public class VisitInfoServiceImpl implements VisitInfoService, EventService, Ini
 
     @Override
     public VisitInfo getVisitInfoByToday() {
-        String period = DateUtil.ldToStr(LocalDate.now(), DateTimeFormatter.ofPattern("yyyyMMdd"));
         Example example = new Example(VisitInfo.class);
-        example.createCriteria().andEqualTo("period", period);
-        VisitInfo visitInfo = this.visitInfoMapper.selectOneByExample(example);
-        return visitInfo;
+        example.createCriteria().andEqualTo("period",
+                DateUtil.ldToStr(LocalDate.now(), DateTimeFormatter.ofPattern("yyyyMMdd")));
+        return this.visitInfoMapper.selectOneByExample(example);
     }
 
     @Override
     public VisitInfo getVisitInfoTotal() {
         return this.visitInfoMapper.sumVisitInfo();
+    }
+
+    @Override
+    public List<VisitInfo> listVisitInfoByTimes(LocalDate startDate, LocalDate endDate) {
+        Example example = new Example(VisitInfo.class);
+        String startPeriod = DateUtil.ldToStr(startDate, DateTimeFormatter.ofPattern("yyyyMMdd"));
+        String endPeriod = DateUtil.ldToStr(endDate, DateTimeFormatter.ofPattern("yyyyMMdd"));
+        example.createCriteria().andBetween("period", startPeriod, endPeriod);
+        return this.visitInfoMapper.selectByExample(example);
     }
 
     @Override
@@ -102,4 +111,5 @@ public class VisitInfoServiceImpl implements VisitInfoService, EventService, Ini
     public void destroy() throws Exception {
         this.eventServiceFactory.removeEventService(this);
     }
+
 }

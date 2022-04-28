@@ -1,6 +1,8 @@
 package com.light.hexo.plugin.statistic.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Author MoonlightL
@@ -27,4 +29,16 @@ public interface VisitDetailService {
      * @param browser
      */
     void saveVisitDetail(String ip, String url, String browser);
+
+    /**
+     * 获取访问页面 top10 数据
+     * @return
+     */
+    List<Map<String, Object>> getPageData(int pageSize);
+
+    /**
+     * 获取访问城市 top10 数据
+     * @return
+     */
+    List<Map<String, Object>> getCityData(int pageSize);
 }

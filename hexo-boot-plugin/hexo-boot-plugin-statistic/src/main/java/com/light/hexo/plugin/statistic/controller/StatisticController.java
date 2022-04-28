@@ -1,6 +1,7 @@
 package com.light.hexo.plugin.statistic.controller;
 
 import com.light.hexo.common.base.BaseController;
+import com.light.hexo.common.util.DateUtil;
 import com.light.hexo.common.vo.Result;
 import com.light.hexo.plugin.statistic.model.VisitInfo;
 import com.light.hexo.plugin.statistic.service.VisitDetailService;
@@ -10,8 +11,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.HashMap;
-import java.util.Map;
+import javax.print.attribute.standard.Sides;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @Author MoonlightL
@@ -52,26 +56,76 @@ public class StatisticController extends BaseController {
     }
 
     /**
-     * 近七天访问数据-用户数统计图
+     * 近七天访问数据
      * @return
      */
     @RequestMapping("getLatestVisitInfo.json")
     @ResponseBody
     public Result getLatestVisitCount() {
 
+        Map<String, Object> result = new HashMap<>();
+        int day = 7;
+        List<LocalDate> dataList = new ArrayList<>(day);
+        LocalDate now = LocalDate.now();
+        while (day > 0) {
+            dataList.add(now.minusDays(day));
+            day--;
+        }
 
-        return Result.success();
+        result.put("dateList", dataList);
+
+        List<VisitInfo> visitInfoList = this.visitInfoService.listVisitInfoByTimes(dataList.get(0), dataList.get(dataList.size() - 1));
+        if (visitInfoList.size() < 7) {
+            List<Integer> existPeriodList = visitInfoList.stream().map(i -> i.getPeriod()).collect(Collectors.toList());
+            for (LocalDate date : dataList) {
+                Integer formatPeriod = Integer.valueOf(DateUtil.ldToStr(date, DateTimeFormatter.ofPattern("yyyyMMdd")));
+                if (!existPeriodList.contains(formatPeriod)) {
+                    VisitInfo visitInfo = new VisitInfo();
+                    visitInfo.setUv(0).setPv(0).setPeriod(formatPeriod);
+                    visitInfoList.add(visitInfo);
+                }
+            }
+            visitInfoList = visitInfoList.stream().sorted(Comparator.comparing(VisitInfo::getPeriod)).collect(Collectors.toList());
+        }
+
+        List<Integer> pvList = new ArrayList<>(day);
+        List<Integer> uvList = new ArrayList<>(day);
+
+        for (VisitInfo visitInfo : visitInfoList) {
+            pvList.add(visitInfo.getPv());
+            uvList.add(visitInfo.getUv());
+        }
+
+        result.put("pvList", pvList);
+        result.put("uvList", uvList);
+
+        return Result.success(result);
     }
 
     /**
-     * 近七天访问数据-城市分类统计图
+     * 访问页面次数top10
      * @return
      */
-    @RequestMapping("getLatestVisitByCity.json")
+    @RequestMapping("getPageDataByTop10.json")
     @ResponseBody
-    public Result getLatestVisitByCity() {
+    public Result getPageDataByTop10() {
+        List<Map<String, Object>> pageData = this.visitDetailService.getPageData(10);
+        Map<String, Object> result = new HashMap<>();
+        result.put("pageData", pageData);
+        return Result.success(result);
+    }
 
-        return Result.success();
+    /**
+     * 访问城市来源top10
+     * @return
+     */
+    @RequestMapping("getCityDataByTop10.json")
+    @ResponseBody
+    public Result getCityDataByTop10() {
+        List<Map<String, Object>> cityData = this.visitDetailService.getCityData(10);
+        Map<String, Object> result = new HashMap<>();
+        result.put("cityData", cityData);
+        return Result.success(result);
     }
 
     /**

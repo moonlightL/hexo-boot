@@ -15,7 +15,7 @@ import java.nio.file.Paths;
  * @Description: 插件管理器
  * @DateTime 2022/4/19, 0019 17:37
  */
-public class HexoBootPluginManager extends AbstractPluginManager implements InitializingBean {
+public class HexoBootPluginManager extends BasePluginManager implements InitializingBean {
 
     private ModuleRegistry moduleRegistry;
 
@@ -29,7 +29,6 @@ public class HexoBootPluginManager extends AbstractPluginManager implements Init
                 .add(new HexoBootPropertiesPluginDescriptorFinder())
                 .add(new ManifestPluginDescriptorFinder());
     }
-
 
     @SneakyThrows
     public PluginState startPlugin(String pluginId, String pluginPath) {
@@ -54,8 +53,19 @@ public class HexoBootPluginManager extends AbstractPluginManager implements Init
 
         PluginState pluginState = super.stopPlugin(pluginId);
         this.moduleRegistry.unRegister(pluginId);
+        System.gc();
 
         return pluginState;
+    }
+
+    public boolean checkPlugin(String pluginId) {
+        boolean result = true;
+        try {
+            super.checkPluginId(pluginId);
+        } catch (Exception e) {
+            result = false;
+        }
+        return result;
     }
 
     @Override
@@ -68,7 +78,4 @@ public class HexoBootPluginManager extends AbstractPluginManager implements Init
         this.moduleRegistry = new CompoundModuleRegistry(this);
     }
 
-    public ModuleRegistry getModuleRegistry() {
-        return this.moduleRegistry;
-    }
 }

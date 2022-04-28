@@ -38,6 +38,14 @@ public class HexoBootSpringExtensionFactory extends SpringExtensionFactory imple
     }
 
     @Override
+    public void destroy(Class<?> extensionClass) {
+        String beanName = extensionClass.getName();
+        if(this.cacheMap.containsKey(beanName)) {
+            this.cacheMap.remove(beanName);
+        }
+    }
+
+    @Override
     protected <T> T createWithSpring(Class<T> extensionClass, ApplicationContext applicationContext) {
         AutowireCapableBeanFactory beanFactory = applicationContext.getAutowireCapableBeanFactory();
         Object autowiredExtension = beanFactory.autowire(extensionClass, 3, false);
@@ -46,11 +54,7 @@ public class HexoBootSpringExtensionFactory extends SpringExtensionFactory imple
         return (T) autowiredExtension;
     }
 
-    @Override
-    public void destroy(Class<?> extensionClass) {
-        String beanName = extensionClass.getName();
-        if(this.cacheMap.containsKey(beanName)) {
-            this.cacheMap.remove(beanName);
-        }
+    public <T> T getPluginBean(Class<T> clazz) {
+        return (T) this.cacheMap.get(clazz.getName());
     }
 }

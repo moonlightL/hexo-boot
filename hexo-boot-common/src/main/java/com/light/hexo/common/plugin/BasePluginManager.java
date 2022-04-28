@@ -12,17 +12,17 @@ import java.nio.file.Path;
 
 /**
  * @Author MoonlightL
- * @ClassName: AbstractPluginManager
+ * @ClassName: BasePluginManager
  * @ProjectName hexo-boot
  * @Description: 抽象插件管理器
  * @DateTime 2022/4/20, 0020 14:37
  */
 @Slf4j
-public abstract class AbstractPluginManager extends DefaultPluginManager implements ApplicationContextAware {
+public abstract class BasePluginManager extends DefaultPluginManager implements ApplicationContextAware {
 
     private ApplicationContext applicationContext;
 
-    public AbstractPluginManager(Path... pluginsRoots) {
+    public BasePluginManager(Path... pluginsRoots) {
         super(pluginsRoots);
     }
 

@@ -1,6 +1,6 @@
 package com.light.hexo.plugin.statistic;
 
-import com.light.hexo.common.plugin.AbstractPluginManager;
+import com.light.hexo.common.plugin.BasePluginManager;
 import com.light.hexo.common.plugin.BasePlugin;
 import org.pf4j.PluginWrapper;
 
@@ -28,7 +28,7 @@ public class StatisticPlugin extends BasePlugin {
 
         PluginWrapper pluginWrapper = super.getWrapper();
         ClassLoader pluginClassLoader = pluginWrapper.getPluginClassLoader();
-        AbstractPluginManager pluginManager = (AbstractPluginManager) super.getWrapper().getPluginManager();
+        BasePluginManager pluginManager = (BasePluginManager) super.getWrapper().getPluginManager();
         pluginManager.runSqlFile(pluginClassLoader, "sql/statistic.sql");
     }
 }
