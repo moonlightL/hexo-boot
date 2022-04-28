@@ -62,7 +62,7 @@ public class TkMapperRegistry extends AbstractModuleRegistry {
         try {
 
             MapperHelper mapperHelper = new MapperHelper();
-            mapperHelper.setConfig(SpringBootBindUtil.bind(super.beanFactory.getBean(Environment.class), Config.class, Config.PREFIX));
+//            mapperHelper.setConfig(SpringBootBindUtil.bind(super.beanFactory.getBean(Environment.class), Config.class, Config.PREFIX));
 
             GenericWebApplicationContext applicationContext = (GenericWebApplicationContext) super.pluginManager.getApplicationContext();
 

@@ -30,7 +30,6 @@ public class HexoBootPluginManager extends BasePluginManager implements Initiali
                 .add(new ManifestPluginDescriptorFinder());
     }
 
-    @SneakyThrows
     public PluginState startPlugin(String pluginId, String pluginPath) {
         PluginWrapper plugin = super.getPlugin(pluginId);
         if (plugin == null) {
@@ -43,7 +42,6 @@ public class HexoBootPluginManager extends BasePluginManager implements Initiali
         return pluginState;
     }
 
-    @SneakyThrows
     @Override
     public PluginState stopPlugin(String pluginId) {
         PluginWrapper plugin = super.getPlugin(pluginId);
