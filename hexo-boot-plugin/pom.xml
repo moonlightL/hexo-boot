@@ -14,7 +14,6 @@
 
     <modules>
         <module>hexo-boot-plugin-server</module>
-        <module>hexo-boot-plugin-statistic</module>
     </modules>
 
 </project>
