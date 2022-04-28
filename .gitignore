@@ -37,4 +37,4 @@ build/
 
 ### VS Code ###
 .vscode/
-/hexo-boot-plugin/hexo-boot-plugin-statistic/
+!**/hexo-boot-plugin/hexo-boot-plugin-statistic/

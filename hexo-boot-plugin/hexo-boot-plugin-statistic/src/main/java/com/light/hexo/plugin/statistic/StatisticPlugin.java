@@ -25,7 +25,6 @@ public class StatisticPlugin extends BasePlugin {
     @Override
     public void start() {
         super.start();
-
         PluginWrapper pluginWrapper = super.getWrapper();
         ClassLoader pluginClassLoader = pluginWrapper.getPluginClassLoader();
         BasePluginManager pluginManager = (BasePluginManager) super.getWrapper().getPluginManager();
