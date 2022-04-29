@@ -116,6 +116,9 @@ public class IpUtil {
         if (result.contains("内网")) {
             return "神秘";
         }
+        if ("0".equals(result)) {
+            return "其他";
+        }
         return result;
     }
 
@@ -129,6 +132,9 @@ public class IpUtil {
         String result = !StringUtils.isBlank(info) ? info.split("\\|")[2] : "神秘";
         if (result.contains("内网")) {
             return "神秘";
+        }
+        if ("0".equals(result)) {
+            return "其他";
         }
         return result;
     }
@@ -152,6 +158,10 @@ public class IpUtil {
         String result = !StringUtils.isBlank(info) ? info.split("\\|")[3] : "神秘";
         if (result.contains("内网")) {
             return "神秘";
+        }
+
+        if ("0".equals(result)) {
+            return "其他";
         }
         return result;
     }
