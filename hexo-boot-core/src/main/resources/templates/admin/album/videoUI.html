@@ -281,7 +281,6 @@
                 };
             });
 
-
             $document.on("click", ".remove-btn", function () {
                 let $target = $(this);
                 AlbumManager.params = $.extend({}, AlbumManager.params, {"detailId": $target.data("id")});

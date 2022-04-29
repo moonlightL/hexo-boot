@@ -154,12 +154,21 @@ public class DateUtil {
     }
 
     /**
+     * 获取当月的最后一天日期
+     * @return
+     */
+    public static LocalDate getLastDayOfMonth() {
+        LocalDate now = LocalDate.now();
+        return now.with(TemporalAdjusters.lastDayOfMonth());
+    }
+
+    /**
      * 获取当前周的周一
      * @return
      */
     public static LocalDate getMonday() {
         LocalDate now = LocalDate.now();
-        return now.with(TemporalAdjusters.dayOfWeekInMonth(1, DayOfWeek.MONDAY));
+        return now.minusDays(now.getDayOfWeek().getValue() - 1);
     }
 
     /**

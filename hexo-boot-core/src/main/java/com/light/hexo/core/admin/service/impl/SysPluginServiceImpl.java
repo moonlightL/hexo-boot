@@ -127,7 +127,6 @@ public class SysPluginServiceImpl extends BaseServiceImpl<SysPlugin> implements 
             ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_PLUGIN_NOT_EXIST);
         }
 
-        // 修改状态与当前插件状态一致
         if (dbPlugin.getState().equals(plugin.getState())) {
             return;
         }
@@ -166,7 +165,7 @@ public class SysPluginServiceImpl extends BaseServiceImpl<SysPlugin> implements 
                 File bakFile = new File(bakFileDir.getAbsolutePath(), FilenameUtils.getBaseName(pluginFile.getName()) + "-" + dateTimeStr + ".jar");
                 FileUtils.copyFile(pluginFile, bakFile);
             } catch (IOException e) {
-                log.warn("=========== uninstallPlugin 备份失败 plugin-id: {} =================", pluginId);
+                log.error("=========== uninstallPlugin 备份失败 plugin-id: {} =================", pluginId);
             }
 
             if (this.pluginManager.checkPlugin(pluginId)) {
@@ -174,9 +173,8 @@ public class SysPluginServiceImpl extends BaseServiceImpl<SysPlugin> implements 
                     this.pluginManager.deletePlugin(pluginId);
                     super.removeModel(id);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    log.error("=========== uninstallPlugin 删除插件失败 plugin-id: {}, error: {}=================", pluginId, e);
                     this.deletePluginFileError(dbPlugin);
-                    ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_PLUGIN_CANNOT_DELETE);
                 }
             } else {
                 boolean deleteQuietly = false;

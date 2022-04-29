@@ -22,7 +22,7 @@ public class EventListener implements ApplicationListener<BaseEvent> {
     private static ExecutorService[] serviceArray;
 
     static {
-        int length = 5;
+        int length = Runtime.getRuntime().availableProcessors();
         serviceArray = new ExecutorService[length];
         for (int i = 0; i < length; i++) {
             serviceArray[i] = Executors.newSingleThreadExecutor();

@@ -26,6 +26,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.Base64;
 import java.util.HashMap;
@@ -74,12 +75,13 @@ public class DefaultFileService {
         THUMBNAIL_URL_MAP.put("txt", "/admin/assets/custom/images/txt.jpg");
         THUMBNAIL_URL_MAP.put("sql", "/admin/assets/custom/images/sql.jpg");
         THUMBNAIL_URL_MAP.put("md", "/admin/assets/custom/images/markdown.jpg");
+        THUMBNAIL_URL_MAP.put("zip", "/admin/assets/custom/images/zip.jpg");
     }
 
     @SneakyThrows
     public FileResponse upload(FileRequest fileRequest) {
 
-        FileService fileService = this.getFileService();
+        FileService fileService = this.getFileService(fileRequest.getManageMode());
 
         CompletableFuture<FileResponse> secondFuture = CompletableFuture.supplyAsync(() -> {
             long start = System.currentTimeMillis();
@@ -196,6 +198,13 @@ public class DefaultFileService {
     private FileService getFileService() {
         String configValue = this.getManageMode();
         return this.fileServiceFactory.getInstance(Integer.valueOf(configValue));
+    }
+
+    public FileService getFileService(Integer manageMode) {
+        if (manageMode == null) {
+            return this.getFileService();
+        }
+        return this.fileServiceFactory.getInstance(manageMode);
     }
 
     public String getManageMode() {

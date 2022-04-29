@@ -4,6 +4,7 @@ import com.github.pagehelper.PageInfo;
 import com.light.hexo.common.vo.Result;
 import com.light.hexo.core.admin.component.DefaultFileService;
 import com.light.hexo.core.admin.constant.HexoExceptionEnum;
+import com.light.hexo.core.admin.service.ConfigService;
 import com.light.hexo.mapper.model.Attachment;
 import com.light.hexo.core.admin.service.AttachmentService;
 import com.light.hexo.common.base.BaseController;
@@ -39,13 +40,16 @@ import java.util.*;
 public class AttachmentController extends BaseController {
 
     private static final String[] VALID_SUFFIX = {".jpg", ".jpeg", ".png", ".gif", ".webp",
-            ".sql", ".xls", "xlsx", ".doc", "docx", ".txt", ".md", ".pdf"};
+            ".sql", ".xls", "xlsx", ".doc", "docx", ".txt", ".md", ".pdf", ".zip"};
 
     @Autowired
     private AttachmentService attachmentService;
 
     @Autowired
     private DefaultFileService defaultFileService;
+
+    @Autowired
+    private ConfigService configService;
 
     /**
      * 新增页面
@@ -55,6 +59,8 @@ public class AttachmentController extends BaseController {
      */
     @GetMapping("/addUI.html")
     public String addUI(Map<String,Object> resultMap) throws GlobalException {
+        Map<String, String> configMap = this.configService.getConfigMap();
+        resultMap.put("configMap", configMap);
         return render("addUI", resultMap);
     }
 
@@ -108,7 +114,7 @@ public class AttachmentController extends BaseController {
     @PostMapping("/uploadBatch.json")
     @ResponseBody
     @OperateLog(value = "上传附件", actionType = ActionEnum.ADMIN_ADD)
-    public Result uploadBatch(@RequestParam(value = "file", required = false) MultipartFile[] files) throws GlobalException {
+    public Result uploadBatch(@RequestParam(value = "file", required = false) MultipartFile[] files, Integer manageMode) throws GlobalException {
 
         if (files == null || files.length == 0) {
             ExceptionUtil.throwEx(GlobalExceptionEnum.ERROR_PARAM);
@@ -125,6 +131,7 @@ public class AttachmentController extends BaseController {
             }
 
             FileRequest fileRequest = FileRequest.createRequest(file);
+            fileRequest.setManageMode(manageMode);
             FileResponse fileResponse = this.defaultFileService.upload(fileRequest);
             if (fileResponse.isSuccess()) {
                 urlList.add(fileResponse.getUrl());

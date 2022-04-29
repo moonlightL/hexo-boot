@@ -206,13 +206,13 @@ public class ServerInfo implements Serializable {
         long rest = 0;
 
         if (size < SIZE) {
-            return String.valueOf(size) + "B";
+            return size + "B";
         } else {
             size /= SIZE;
         }
 
         if (size < SIZE) {
-            return String.valueOf(size) + "KB";
+            return size + "KB";
         } else {
             rest = size % SIZE;
             size /= SIZE;
@@ -220,10 +220,10 @@ public class ServerInfo implements Serializable {
 
         if (size < SIZE) {
             size = size * 100;
-            return String.valueOf((size / 100)) + "." + String.valueOf((rest * 100 / SIZE % 100)) + "MB";
+            return size / 100 + "." + rest * 100 / SIZE % 100 + "MB";
         } else {
             size = size * 100 / SIZE;
-            return String.valueOf((size / 100)) + "." + String.valueOf((size % 100)) + "GB";
+            return size / 100 + "." + size % 100 + "GB";
         }
     }
 

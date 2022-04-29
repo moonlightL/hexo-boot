@@ -56,12 +56,14 @@ public enum HexoExceptionEnum implements GlobalExceptionMap {
     // 9xxx --> 附件
     ERROR_ATTACHMENT_NOT_EXIST(9001, "该附件不存在"),
     ERROR_ATTACHMENT_NOT_POSITION(9002, "当前文件管理方式与文件存储位置不相符"),
+    ERROR_ATTACHMENT_NOT_VALID(9003, "临时选定的图床信息未配置，上传失败"),
 
     // 10xxx --> 配置
-    ERROR_QN_CONFIG_IS_EMPTY(10001, "七牛云配置不完全，请在【个性配置】中填补再进行操作"),
-    ERROR_OSS_CONFIG_IS_EMPTY(10002, "OSS 配置不完全，请在【个性配置】中填补再进行操作"),
-    ERROR_FILE_UPLOAD(10003, "文件上传失败"),
-    ERROR_FILE_DOWNLOAD(10004, "文件下载失败"),
+    ERROR_QN_CONFIG_IS_EMPTY(10001, "七牛云配置不完整，请在【个性配置】中填补再进行操作"),
+    ERROR_OSS_CONFIG_IS_EMPTY(10002, "OSS(阿里云)配置不完整，请在【个性配置】中填补再进行操作"),
+    ERROR_COS_CONFIG_IS_EMPTY(10003, "COS(腾讯云)配置不完整，请在【个性配置】中填补再进行操作"),
+    ERROR_FILE_UPLOAD(10004, "文件上传失败"),
+    ERROR_FILE_DOWNLOAD(10005, "文件下载失败"),
 
     // 11xxx --> 主题
     ERROR_THEME_NOT_EXIST(11001, "该主题不存在"),
@@ -90,7 +92,7 @@ public enum HexoExceptionEnum implements GlobalExceptionMap {
     ERROR_PLUGIN_NOT_EXIST(16001, "该插件不存在"),
     ERROR_PLUGIN_INSTALLED(16002, "检测已安装同名插件,如要继续安装请先卸载原插件"),
     ERROR_PLUGIN_INVALID(16003, "插件格式非法，安装失败"),
-    ERROR_PLUGIN_START(16004, "插件已安装，出现异常，启动失败"),
+    ERROR_PLUGIN_START(16004, "系统异常，插件启动失败"),
     ERROR_PLUGIN_CANNOT_DELETE(16005, "资源未释放，删除失败，请稍后再试"),
 
     // 50xxx --> 前端

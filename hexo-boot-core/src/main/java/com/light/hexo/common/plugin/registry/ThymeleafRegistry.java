@@ -9,6 +9,7 @@ import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.view.ContentNegotiatingViewResolver;
+import org.thymeleaf.spring5.ISpringTemplateEngine;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
@@ -49,9 +50,29 @@ public class ThymeleafRegistry extends AbstractModuleRegistry {
 
     @Override
     public void unRegister(String pluginId) {
-        String resolverName = this.templateResolverName(pluginId);
-        if (this.pluginTemplateResolver.containsKey(resolverName)) {
-            this.pluginTemplateResolver.remove(resolverName);
+        String removeResolverName = this.templateResolverName(pluginId);
+        if (this.pluginTemplateResolver.containsKey(removeResolverName)) {
+            this.pluginTemplateResolver.remove(removeResolverName);
+            ContentNegotiatingViewResolver negotiatingViewResolver = this.beanFactory.getBean(ContentNegotiatingViewResolver.class);
+            List<ViewResolver> viewResolvers = negotiatingViewResolver.getViewResolvers();
+            for (ViewResolver viewResolver : viewResolvers) {
+                if (viewResolver instanceof ThymeleafViewResolver) {
+                    Set<ITemplateResolver> newTemplateResolverSet = new HashSet<>();
+                    ThymeleafViewResolver thymeleafViewResolver = (ThymeleafViewResolver) viewResolver;
+                    SpringTemplateEngine templateEngine = (SpringTemplateEngine) thymeleafViewResolver.getTemplateEngine();
+                    Set<ITemplateResolver> templateResolvers = templateEngine.getTemplateResolvers();
+                    for (ITemplateResolver templateResolver : templateResolvers) {
+                        if (!templateResolver.getName().equals(removeResolverName)) {
+                            newTemplateResolverSet.add(templateResolver);
+                        }
+                    }
+                    SpringTemplateEngine newSpringTemplateEngine = new SpringTemplateEngine();
+                    newSpringTemplateEngine.setEnableSpringELCompiler(true);
+                    newSpringTemplateEngine.setTemplateResolvers(newTemplateResolverSet);
+                    newSpringTemplateEngine.addDialect(this.beanFactory.getBean(LayoutDialect.class));
+                    thymeleafViewResolver.setTemplateEngine(newSpringTemplateEngine);
+                }
+            }
         }
     }
 
@@ -74,13 +95,13 @@ public class ThymeleafRegistry extends AbstractModuleRegistry {
         templateResolver.setCheckExistence(true);
         this.pluginTemplateResolver.put(templateResolver.getName(), templateResolver);
 
-        Set<ITemplateResolver> newTemplateResolvers = new HashSet<>();
-        newTemplateResolvers.addAll(oldTemplateResolver);
-        newTemplateResolvers.addAll(this.pluginTemplateResolver.values());
+        Set<ITemplateResolver> newTemplateResolverSet = new HashSet<>();
+        newTemplateResolverSet.addAll(oldTemplateResolver);
+        newTemplateResolverSet.addAll(this.pluginTemplateResolver.values());
 
         SpringTemplateEngine newSpringTemplateEngine = new SpringTemplateEngine();
         newSpringTemplateEngine.setEnableSpringELCompiler(true);
-        newSpringTemplateEngine.setTemplateResolvers(newTemplateResolvers);
+        newSpringTemplateEngine.setTemplateResolvers(newTemplateResolverSet);
         newSpringTemplateEngine.addDialect(this.beanFactory.getBean(LayoutDialect.class));
 
         return newSpringTemplateEngine;

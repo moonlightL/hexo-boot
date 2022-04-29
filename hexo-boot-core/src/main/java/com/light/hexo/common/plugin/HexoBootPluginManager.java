@@ -2,6 +2,8 @@ package com.light.hexo.common.plugin;
 
 import com.light.hexo.common.plugin.registry.CompoundModuleRegistry;
 import com.light.hexo.common.plugin.rewrite.HexoBootPropertiesPluginDescriptorFinder;
+import com.light.hexo.common.util.ExceptionUtil;
+import com.light.hexo.core.admin.constant.HexoExceptionEnum;
 import lombok.SneakyThrows;
 import org.pf4j.*;
 import org.springframework.beans.factory.InitializingBean;
@@ -37,7 +39,12 @@ public class HexoBootPluginManager extends BasePluginManager implements Initiali
         }
 
         PluginState pluginState = super.startPlugin(pluginId);
-        this.moduleRegistry.register(pluginId);
+        try {
+            this.moduleRegistry.register(pluginId);
+        } catch (Exception e) {
+            super.unloadPlugin(pluginId);
+            ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_PLUGIN_START);
+        }
 
         return pluginState;
     }
@@ -50,8 +57,11 @@ public class HexoBootPluginManager extends BasePluginManager implements Initiali
         }
 
         PluginState pluginState = super.stopPlugin(pluginId);
-        this.moduleRegistry.unRegister(pluginId);
-        System.gc();
+        try {
+            this.moduleRegistry.unRegister(pluginId);
+        } finally {
+            System.gc();
+        }
 
         return pluginState;
     }

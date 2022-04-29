@@ -42,7 +42,7 @@ public class EventServiceFactory implements ApplicationContextAware {
      * @param eventService
      */
     public void addEventService(EventService eventService) {
-        log.info("=============== EventServiceFactory.addEventService ==================");
+        log.info("=============== EventServiceFactory.addEventService {}==================", eventService);
         eventServiceMap.put(eventService.getEventType(), eventService);
     }
 
@@ -51,7 +51,7 @@ public class EventServiceFactory implements ApplicationContextAware {
      * @param eventService
      */
     public void removeEventService(EventService eventService) {
-        log.info("=============== EventServiceFactory.removeEventService ==================");
+        log.info("=============== EventServiceFactory.removeEventService {}==================", eventService);
         eventServiceMap.remove(eventService.getEventType());
     }
 }

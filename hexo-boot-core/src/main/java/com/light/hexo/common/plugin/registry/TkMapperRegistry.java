@@ -16,20 +16,17 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.core.NestedIOException;
-import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.web.context.support.GenericWebApplicationContext;
-import tk.mybatis.mapper.entity.Config;
 import tk.mybatis.mapper.entity.EntityTable;
 import tk.mybatis.mapper.mapperhelper.EntityHelper;
 import tk.mybatis.mapper.mapperhelper.MapperHelper;
 import tk.mybatis.mapper.util.MsUtil;
 import tk.mybatis.spring.mapper.MapperFactoryBean;
-import tk.mybatis.spring.mapper.SpringBootBindUtil;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -62,8 +59,6 @@ public class TkMapperRegistry extends AbstractModuleRegistry {
         try {
 
             MapperHelper mapperHelper = new MapperHelper();
-//            mapperHelper.setConfig(SpringBootBindUtil.bind(super.beanFactory.getBean(Environment.class), Config.class, Config.PREFIX));
-
             GenericWebApplicationContext applicationContext = (GenericWebApplicationContext) super.pluginManager.getApplicationContext();
 
             for (Class<?> mapperClass : this.getMapperClassList(pluginId)) {

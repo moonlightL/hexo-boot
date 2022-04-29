@@ -157,7 +157,7 @@ public class CosFileService implements FileService {
 
         String bucket = configMap.get(ConfigEnum.COS_DOMAIN.getName());
         if (StringUtils.isBlank(bucket)) {
-            ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_QN_CONFIG_IS_EMPTY);
+            ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_COS_CONFIG_IS_EMPTY);
         }
 
         return bucket;
@@ -168,14 +168,14 @@ public class CosFileService implements FileService {
 
         String bucket = configMap.get(ConfigEnum.COS_BUCKET.getName());
         if (StringUtils.isBlank(bucket)) {
-            ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_QN_CONFIG_IS_EMPTY);
+            ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_COS_CONFIG_IS_EMPTY);
         }
 
         return bucket;
     }
 
     private TransferManager createTransferManager() {
-        COSClient cosClient = createCOSClient();
+        COSClient cosClient = this.createCOSClient();
 
         ExecutorService threadPool = Executors.newFixedThreadPool(32);
         TransferManager transferManager = new TransferManager(cosClient, threadPool);
@@ -217,22 +217,22 @@ public class CosFileService implements FileService {
 
         Map<String, String> configMap = this.configService.getConfigMap();
 
-        // 设置用户身份信息。
+        // 用户身份信息。
         String secretId = configMap.get(ConfigEnum.COS_SECRET_ID.getName());
         String secretKey = configMap.get(ConfigEnum.COS_SECRET_KEY.getName());
+        // bucket 的地域
+        String regionKey = configMap.get(ConfigEnum.COS_REGION.getName());
+
+        if (StringUtils.isBlank(secretId) || StringUtils.isBlank(secretKey) || StringUtils.isBlank(regionKey)) {
+            ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_COS_CONFIG_IS_EMPTY);
+        }
 
         COSCredentials cred = new BasicCOSCredentials(secretId, secretKey);
-
         ClientConfig clientConfig = new ClientConfig();
-
-        // 设置 bucket 的地域
-        String regionKey = configMap.get(ConfigEnum.COS_REGION.getName());
-        // COS_REGION 请参照 https://cloud.tencent.com/document/product/436/6224
+        // 设置 bucket 的地域 COS_REGION 请参照 https://cloud.tencent.com/document/product/436/6224
         clientConfig.setRegion(new Region(REGION_MAP.get(regionKey)));
-
         // 设置请求协议, http 或者 https
         clientConfig.setHttpProtocol(HttpProtocol.https);
-
         // 生成 cos 客户端。
         return new COSClient(cred, clientConfig);
     }

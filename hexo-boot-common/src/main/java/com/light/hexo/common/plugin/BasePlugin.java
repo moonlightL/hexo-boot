@@ -22,12 +22,10 @@ public abstract class BasePlugin extends SpringPlugin {
     @Override
     public void start() {
         this.applicationContext = this.createApplicationContext();
-        PluginUtil.put(super.wrapper.getPluginId(), this.applicationContext);
     }
 
     @Override
     public void stop() {
-        PluginUtil.remove(super.wrapper.getPluginId());
     }
 
     @Override
@@ -37,5 +35,9 @@ public abstract class BasePlugin extends SpringPlugin {
         return applicationContext;
     }
 
+    /**
+     * 配置页面 url
+     * @return
+     */
     public abstract String getConfigUrl();
 }

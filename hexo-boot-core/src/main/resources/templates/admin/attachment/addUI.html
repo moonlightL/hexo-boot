@@ -19,10 +19,21 @@
                         <div class="col-lg-12">
                             <input type="hidden" id="imgUrl" name="imgUrl">
                         </div>
-                        <span class="dropzone" id="dropz" style="border: 1px solid #D4DAE3;margin-left: 5px;margin-right: 5px;width: 100%;border-radius: 5px;"></span>
+                        <form class="dropzone" action="/admin/attachment/uploadBatch.json" id="dropz" style="border: 1px solid #D4DAE3;margin-left: 5px;margin-right: 5px;width: 100%; height:220px;border-radius: 5px;">
+                            <input type="hidden" id="manageMode" name="manageMode" />
+                        </form>
                     </div>
                     <div class="form-group row">
-                        <div class="col-lg-8 text-center">
+                        <div class="col-md-5">
+                            临时选择图床：
+                            <select class="form-control" id="manage_mode" style="width: 120px;display: inline-block">
+                                <option th:text="本地" th:value="1" th:attr="selected=${'1' eq configMap['manage_mode']}"></option>
+                                <option th:text="七牛云" th:value="2" th:attr="selected=${'2' eq configMap['manage_mode']}"></option>
+                                <option th:text="OSS" th:value="3" th:attr="selected=${'3' eq configMap['manage_mode']}"></option>
+                                <option th:text="COS" th:value="4" th:attr="selected=${'4' eq configMap['manage_mode']}"></option>
+                            </select>
+                        </div>
+                        <div class="col-md-7">
                             <button type="button" class="btn btn-primary" id="uploadBtn">上传</button>
                         </div>
                     </div>
@@ -40,7 +51,6 @@
     $(function(){
         $("#dropz").dropzone({
             method: "POST",
-            url: "/admin/attachment/uploadBatch.json", //上传地址
             addRemoveLinks: true,
             maxFiles: 10,// 一次性上传的文件数量上限
             maxFilesize: 100, // 单个上传文件大小，单位：MB
@@ -48,13 +58,13 @@
             uploadMultiple: true, // 允许批量上传
             parallelUploads: 10, // 每次上传的文件数量，默认值 2
             autoProcessQueue: false, // 是否自动上传
-            acceptedFiles: ".jpg, .jpeg, .png, .gif, .webp, .txt, .md, .sql, .pdf, .doc, .docx, .xls, .xlsx, .ppt",
-            dictDefaultMessage: '+<br>(仅支持上传的文件类型*.jpg,*.jpeg,*.png, *.gif,*.webp, *.txt, *.md, *.sql, *.pdf, *.doc, *.docx, *.xls, *.xlsx, *.ppt，最大上传100MB)',
-            dictMaxFilesExceeded: "每次最多只能上传10个文件",
+            acceptedFiles: ".jpg, .jpeg, .png, .gif, .webp, .txt, .md, .sql, .pdf, .doc, .docx, .xls, .xlsx, .ppt, .zip",
+            dictDefaultMessage: '仅支持上传的文件类型 *.jpg,*.jpeg,*.png, *.gif,*.webp, *.txt, *.md, *.sql, *.pdf, *.doc, *.docx, *.xls, *.xlsx, *.ppt, *.zip 最大上传 100MB',
+            dictMaxFilesExceeded: "每次最多只能上传 10 个文件",
             dictResponseError: '文件上传失败',
-            dictInvalidFileType: "仅支持上传的文件类型*.jpg,*.jpeg,*.png, *.gif,*.webp, *.txt, *.md, *.sql, *.pdf, *.doc, *.docx, *.xls, *.xlsx, *.ppt",
+            dictInvalidFileType: "仅支持上传的文件类型 *.jpg,*.jpeg,*.png, *.gif,*.webp, *.txt, *.md, *.sql, *.pdf, *.doc, *.docx, *.xls, *.xlsx, *.ppt, *.zip",
             dictFallbackMessage: "浏览器不支持",
-            dictFileTooBig: "最大支持100MB文件上传",
+            dictFileTooBig: "最大支持 100MB 文件上传",
             dictRemoveFile: "删除",
             dictUploadCanceled: "取消",
             thumbnailWidth:"120",
@@ -106,6 +116,10 @@
                     window.parent.AttachmentManager.query();
                 });
             }
+        });
+
+        $("#manage_mode").off("change").on("change", function() {
+            $("#manageMode").val($(this).val());
         });
 
     });
