@@ -705,6 +705,10 @@
                     }
                 });
 
+                window.onresize = function() {
+                    myChart.resize();
+                };
+
             },
             queryPostList: function () {
                 $.getJSON("/admin/home/top5PostList.json", function (resp) {

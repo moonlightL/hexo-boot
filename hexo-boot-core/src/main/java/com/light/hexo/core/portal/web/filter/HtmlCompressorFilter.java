@@ -22,6 +22,9 @@ import java.io.IOException;
 )
 public class HtmlCompressorFilter implements Filter {
 
+    private static final String[] FILTER_START_URL = {"/admin", "/plugin", "/druid"};
+    private static final String[] FILTER_END_URL = {".json", ".css", ".js", ".map", ".ico", ".jpg", ".png"};
+
     private HtmlCompressor htmlCompressor;
 
     @Override
@@ -39,10 +42,19 @@ public class HtmlCompressorFilter implements Filter {
 
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         String requestURI = httpServletRequest.getRequestURI();
-        if (requestURI.startsWith("/admin") || requestURI.startsWith("/druid") || requestURI.contains(".json")
-                || requestURI.endsWith(".css") || requestURI.endsWith(".js") || requestURI.endsWith(".map")) {
-           chain.doFilter(request, response);
-           return;
+
+        for (String url : FILTER_START_URL) {
+            if (requestURI.startsWith(url)) {
+                chain.doFilter(request, response);
+                return;
+            }
+        }
+
+        for (String url : FILTER_END_URL) {
+            if (requestURI.endsWith(url)) {
+                chain.doFilter(request, response);
+                return;
+            }
         }
 
         HtmlResponseWrapper responseWrapper = new HtmlResponseWrapper((HttpServletResponse) response);
