@@ -4,8 +4,8 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.light.hexo.common.base.BaseServiceImpl;
 import com.light.hexo.core.admin.component.BaiDuPushService;
-import com.light.hexo.core.admin.constant.ConfigEnum;
-import com.light.hexo.core.admin.constant.HexoExceptionEnum;
+import com.light.hexo.common.constant.ConfigEnum;
+import com.light.hexo.common.constant.HexoExceptionEnum;
 import com.light.hexo.mapper.mapper.PostMapper;
 import com.light.hexo.mapper.base.BaseMapper;
 import com.light.hexo.mapper.model.*;
@@ -920,7 +920,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
     }
 
     @Override
-    public String getEventType() {
+    public String getCode() {
         return EventEnum.POST.getType();
     }
 

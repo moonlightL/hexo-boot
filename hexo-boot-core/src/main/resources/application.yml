@@ -33,26 +33,19 @@ spring:
       max-request-size:  100MB
       file-size-threshold: 20MB
   datasource:
-    type: com.alibaba.druid.pool.DruidDataSource
-    druid:
-      url: jdbc:mysql://127.0.0.1:3306/hexo-boot?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&rewriteBatchedStatements=true&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
-      username: root
-      password: tiger
-      initialSize: 10
-      minIdle: 5
-      maxActive: 20
-      maxWait: 60000
-      timeBetweenEvictionRunsMillis: 60000
-      minEvictableIdleTimeMillis: 300000
-      validationQuery: select 'x'
-      testWhileIdle: true
-      testOnBorrow: false
-      testOnReturn: false
-      poolPreparedStatements: true
-      maxOpenPreparedStatements: 20
-      useGlobalDataSourceStat: true
-      connectionProperties: druid.stat.slowSqlMillis=2000
-      driver-class-name: com.mysql.cj.jdbc.Driver
+      type: com.zaxxer.hikari.HikariDataSource
+      hikari:
+        jdbc-url: jdbc:mysql://127.0.0.1:3306/hexo-boot?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&rewriteBatchedStatements=true&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
+        username: root
+        password: tiger
+        minimum-idle: 5
+        maximum-pool-size: 20
+        max-lifetime: 1800000
+        pool-name: hexo-boot-datasource-pool
+        idle-timeout: 30000
+        connection-timeout: 30000
+        connection-test-query: SELECT 1
+        driver-class-name: com.mysql.cj.jdbc.Driver
   cache:
     type: ehcache
     ehcache:

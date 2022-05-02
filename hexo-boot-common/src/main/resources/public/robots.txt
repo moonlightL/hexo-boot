@@ -5,5 +5,7 @@ Allow: /categories/
 Allow: /tags/
 Allow: /friendLinks/
 Allow: /about/
+Allow: /dynamics/
+Allow: /albums/
 
 Disallow: /admin/

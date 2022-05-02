@@ -1,7 +1,7 @@
 package com.light.hexo.core.admin.service.impl;
 
 import com.light.hexo.common.base.BaseServiceImpl;
-import com.light.hexo.core.admin.constant.HexoExceptionEnum;
+import com.light.hexo.common.constant.HexoExceptionEnum;
 import com.light.hexo.mapper.mapper.ActionLogDetailMapper;
 import com.light.hexo.mapper.mapper.ActionLogMapper;
 import com.light.hexo.mapper.base.BaseMapper;
@@ -61,7 +61,7 @@ public class ActionLogServiceImpl extends BaseServiceImpl<ActionLog> implements 
     }
 
     @Override
-    public String getEventType() {
+    public String getCode() {
         return EventEnum.LOG.getType();
     }
 

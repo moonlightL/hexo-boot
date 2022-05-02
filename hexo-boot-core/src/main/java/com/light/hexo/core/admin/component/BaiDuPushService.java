@@ -1,6 +1,6 @@
 package com.light.hexo.core.admin.component;
 
-import com.light.hexo.core.admin.constant.ConfigEnum;
+import com.light.hexo.common.constant.ConfigEnum;
 import com.light.hexo.core.admin.service.ConfigService;
 import com.light.hexo.common.util.HttpClientUtil;
 import lombok.extern.slf4j.Slf4j;

@@ -1,14 +1,18 @@
 package com.light.hexo.core.portal.web.controller;
 
+import com.light.hexo.common.event.PostEvent;
+import com.light.hexo.common.util.RequestUtil;
 import com.light.hexo.common.vo.Result;
+import com.light.hexo.core.portal.common.CommonController;
 import com.light.hexo.mapper.model.Nav;
 import com.light.hexo.mapper.model.Post;
-import com.light.hexo.common.event.PostEvent;
-import com.light.hexo.core.portal.common.CommonController;
-import com.light.hexo.common.util.IpUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
@@ -104,7 +108,7 @@ public class IndexPostController extends CommonController {
     @PostMapping("praisePost/{postId}")
     @ResponseBody
     public Result prizePost(@PathVariable Integer postId, HttpServletRequest request) {
-        String ipAddr = IpUtil.getIpAddr(request);
+        String ipAddr = RequestUtil.getIpAddr(request);
         int prizeNum = this.postService.praisePost(ipAddr, postId);
         return Result.success(prizeNum);
     }

@@ -34,4 +34,11 @@ public interface SysPluginService extends BaseService<SysPlugin> {
      * @throws GlobalException
      */
     void uninstallPlugin(Integer id) throws GlobalException;
+
+    /**
+     *  检测指定插件（是否安装、开启状态）
+     * @param pluginId
+     * @return
+     */
+    boolean checkPlugin(String pluginId) throws GlobalException;
 }

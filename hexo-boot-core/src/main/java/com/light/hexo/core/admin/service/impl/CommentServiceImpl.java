@@ -5,8 +5,8 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.light.hexo.common.base.BaseServiceImpl;
 import com.light.hexo.core.admin.component.EmailService;
-import com.light.hexo.core.admin.constant.ConfigEnum;
-import com.light.hexo.core.admin.constant.HexoExceptionEnum;
+import com.light.hexo.common.constant.ConfigEnum;
+import com.light.hexo.common.constant.HexoExceptionEnum;
 import com.light.hexo.mapper.mapper.CommentMapper;
 import com.light.hexo.mapper.base.BaseMapper;
 import com.light.hexo.mapper.model.*;
@@ -251,7 +251,8 @@ public class CommentServiceImpl extends BaseServiceImpl<Comment> implements Comm
 
             for (Comment comment : commentList) {
                 // 判断是否为博主
-                comment.setIpInfo(IpUtil.getProvinceAndCity(comment.getIpAddress()));
+                IpUtil.IpInfo info = IpUtil.getInfo(comment.getIpAddress());
+                comment.setIpInfo(info.getProvince() + "-" + info.getCity());
                 comment.setIpAddress("");
                 // 父级评论
                 Comment parent = parentMap.get(comment.getPId());
@@ -282,13 +283,15 @@ public class CommentServiceImpl extends BaseServiceImpl<Comment> implements Comm
             Map<Integer, List<Comment>> replyMap = replyList.stream().collect(Collectors.groupingBy(Comment::getBannerId));
 
             for (Comment comment : commentList) {
-                comment.setIpInfo(IpUtil.getProvinceAndCity(comment.getIpAddress()));
+                IpUtil.IpInfo info = IpUtil.getInfo(comment.getIpAddress());
+                comment.setIpInfo(info.getProvince() + "-" + info.getCity());
                 comment.setIpAddress("");
                 // 子级评论
                 List<Comment> children = replyMap.get(comment.getId());
                 if (!CollectionUtils.isEmpty(children)) {
                     children.forEach(i -> {
-                        i.setIpInfo(IpUtil.getProvinceAndCity(i.getIpAddress()));
+                        IpUtil.IpInfo childInfo = IpUtil.getInfo(comment.getIpAddress());
+                        i.setIpInfo(childInfo.getProvince() + "-" + childInfo.getCity());
                         i.setIpAddress("");
                         i.setTimeDesc(DateUtil.timeDesc(i.getCreateTime()));
                     });

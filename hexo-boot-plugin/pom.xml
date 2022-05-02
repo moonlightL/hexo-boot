@@ -12,8 +12,5 @@
     <artifactId>hexo-boot-plugin</artifactId>
     <packaging>pom</packaging>
 
-    <modules>
-        <module>hexo-boot-plugin-server</module>
-    </modules>
 
 </project>

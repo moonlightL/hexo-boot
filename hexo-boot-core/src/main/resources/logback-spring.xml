@@ -11,10 +11,10 @@
 
     <!-- 按照每天生成日志文件 -->
     <appender name="FILE"  class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${user.home}/.hexo-boot/logs/log.log</file>
+        <file>${user.home}/.hexo-boot/logs/info.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <!--日志文件输出的文件名-->
-            <FileNamePattern>${user.home}/.hexo-boot/logs/log.%d{yyyy-MM-dd}.%i.log</FileNamePattern>
+            <FileNamePattern>${user.home}/.hexo-boot/logs/info.%d{yyyy-MM-dd}.%i.log</FileNamePattern>
             <!--日志文件保留天数-->
             <MaxHistory>7</MaxHistory>
             <!--日志文件最大的大小-->

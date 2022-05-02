@@ -2,8 +2,8 @@ package com.light.hexo.core.admin.web.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.light.hexo.common.vo.Result;
-import com.light.hexo.core.admin.constant.ConfigEnum;
-import com.light.hexo.core.admin.constant.HexoExceptionEnum;
+import com.light.hexo.common.constant.ConfigEnum;
+import com.light.hexo.common.constant.HexoExceptionEnum;
 import com.light.hexo.mapper.model.UserExtend;
 import com.light.hexo.core.admin.service.ConfigService;
 import com.light.hexo.core.admin.service.UserExtendService;

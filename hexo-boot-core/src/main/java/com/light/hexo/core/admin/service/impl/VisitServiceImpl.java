@@ -1,20 +1,20 @@
 package com.light.hexo.core.admin.service.impl;
 
-import com.aliyun.oss.ServiceException;
-import com.light.hexo.common.base.BaseServiceImpl;
-import com.light.hexo.mapper.mapper.VisitMapper;
-import com.light.hexo.mapper.base.BaseMapper;
-import com.light.hexo.mapper.model.Visit;
-import com.light.hexo.common.event.VisitEvent;
-import com.light.hexo.core.admin.service.VisitService;
 import com.light.hexo.common.base.BaseRequest;
+import com.light.hexo.common.base.BaseServiceImpl;
 import com.light.hexo.common.component.event.BaseEvent;
 import com.light.hexo.common.component.event.EventEnum;
+import com.light.hexo.common.event.VisitEvent;
 import com.light.hexo.common.exception.GlobalException;
+import com.light.hexo.core.admin.service.VisitService;
+import com.light.hexo.mapper.base.BaseMapper;
+import com.light.hexo.mapper.mapper.VisitMapper;
+import com.light.hexo.mapper.model.Visit;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -46,7 +46,7 @@ public class VisitServiceImpl extends BaseServiceImpl<Visit> implements VisitSer
     }
 
     @Override
-    public List<Map<String, Object>> listVisitByDates(LocalDate start, LocalDate end) throws ServiceException {
+    public List<Map<String, Object>> listVisitByDates(LocalDate start, LocalDate end) throws GlobalException {
         return this.visitMapper.selectVisitNumByDateList(start, end);
     }
 
@@ -59,7 +59,7 @@ public class VisitServiceImpl extends BaseServiceImpl<Visit> implements VisitSer
     }
 
     @Override
-    public String getEventType() {
+    public String getCode() {
         return EventEnum.VISIT.getType();
     }
 

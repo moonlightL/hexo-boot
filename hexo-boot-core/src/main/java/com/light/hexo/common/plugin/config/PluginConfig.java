@@ -1,7 +1,7 @@
 package com.light.hexo.common.plugin.config;
 
 import com.light.hexo.common.plugin.HexoBootPluginManager;
-import com.light.hexo.core.admin.config.BlogConfig;
+import com.light.hexo.common.config.BlogConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import java.io.File;

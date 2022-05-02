@@ -4,6 +4,7 @@ import com.light.hexo.common.plugin.HexoBootPluginManager;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,18 +39,22 @@ public class ComponentRegistry extends AbstractModuleRegistry {
 
     private List<Class<?>> listComponentClasses(String pluginId) throws Exception {
         List<Class<?>> classList = new ArrayList<>();
+        List<Class<?>> pluginClassList = super.getPluginClasses(pluginId);
 
-        for (Class<?> pluginClass : super.getPluginClasses(pluginId)) {
-            Component annotation = pluginClass.getAnnotation(Component.class);
-            if(annotation != null) {
-                classList.add(pluginClass);
-            }
-
+        for (Class<?> pluginClass : pluginClassList) {
             Service service = pluginClass.getAnnotation(Service.class);
             if(service != null) {
                 classList.add(pluginClass);
             }
         }
+
+        for (Class<?> pluginClass : pluginClassList) {
+            Component annotation = pluginClass.getAnnotation(Component.class);
+            if(annotation != null) {
+                classList.add(pluginClass);
+            }
+        }
+
         return classList;
     }
 }

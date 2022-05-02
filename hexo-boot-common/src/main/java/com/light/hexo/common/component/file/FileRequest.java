@@ -85,7 +85,7 @@ public class FileRequest {
     /**
      * 图床管理
      */
-    private Integer manageMode;
+    private String manageMode;
 
     public static FileRequest createRequest(MultipartFile file) {
         FileRequest fileRequest = null;

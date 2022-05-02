@@ -3,7 +3,7 @@ package com.light.hexo.core.admin.web.controller;
 import com.github.pagehelper.PageInfo;
 import com.light.hexo.common.vo.Result;
 import com.light.hexo.core.admin.component.DefaultFileService;
-import com.light.hexo.core.admin.constant.HexoExceptionEnum;
+import com.light.hexo.common.constant.HexoExceptionEnum;
 import com.light.hexo.core.admin.service.ConfigService;
 import com.light.hexo.mapper.model.Attachment;
 import com.light.hexo.core.admin.service.AttachmentService;
@@ -114,7 +114,7 @@ public class AttachmentController extends BaseController {
     @PostMapping("/uploadBatch.json")
     @ResponseBody
     @OperateLog(value = "上传附件", actionType = ActionEnum.ADMIN_ADD)
-    public Result uploadBatch(@RequestParam(value = "file", required = false) MultipartFile[] files, Integer manageMode) throws GlobalException {
+    public Result uploadBatch(@RequestParam(value = "file", required = false) MultipartFile[] files, String manageMode) throws GlobalException {
 
         if (files == null || files.length == 0) {
             ExceptionUtil.throwEx(GlobalExceptionEnum.ERROR_PARAM);

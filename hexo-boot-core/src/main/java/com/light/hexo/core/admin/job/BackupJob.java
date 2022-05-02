@@ -1,8 +1,8 @@
 package com.light.hexo.core.admin.job;
 
 import com.light.hexo.core.admin.component.DumpService;
-import com.light.hexo.core.admin.constant.ConfigEnum;
-import com.light.hexo.core.admin.constant.StateEnum;
+import com.light.hexo.common.constant.ConfigEnum;
+import com.light.hexo.common.constant.StateEnum;
 import com.light.hexo.mapper.model.Backup;
 import com.light.hexo.core.admin.service.BackupService;
 import com.light.hexo.core.admin.service.ConfigService;

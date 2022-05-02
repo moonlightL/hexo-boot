@@ -1,7 +1,7 @@
 package com.light.hexo.core.admin.service.impl;
 
 import com.light.hexo.common.base.BaseServiceImpl;
-import com.light.hexo.core.admin.constant.HexoExceptionEnum;
+import com.light.hexo.common.constant.HexoExceptionEnum;
 import com.light.hexo.mapper.mapper.NavMapper;
 import com.light.hexo.mapper.base.BaseMapper;
 import com.light.hexo.mapper.model.Nav;
@@ -116,8 +116,20 @@ public class NavServiceImpl extends BaseServiceImpl<Nav> implements NavService {
     @Override
     public void removeNavBatch(List<String> idStrList) throws GlobalException {
         List<Integer> idList = idStrList.stream().map(Integer::valueOf).collect(Collectors.toList());
+        Example example = new Example(Nav.class);
+        example.createCriteria().andIn("id", idList);
+        List<Nav> navList = this.getBaseMapper().selectByExample(example);
+        if (navList.isEmpty()) {
+            return;
+        }
 
-        this.removeBatch(idList);
+        for (Nav nav : navList) {
+            if (nav.getNavType().equals(1)) {
+                ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_NAV_CAN_NOT_DELETE);
+            }
+        }
+
+        super.removeBatch(idList);
         EhcacheUtil.clearByCacheName("navCache");
         CacheUtil.remove(CacheKey.NAV_LIST);
         this.eventPublisher.emit(new NavEvent(this, NavEvent.Type.LOAD));
@@ -205,7 +217,7 @@ public class NavServiceImpl extends BaseServiceImpl<Nav> implements NavService {
     }
 
     @Override
-    public String getEventType() {
+    public String getCode() {
         return EventEnum.NAV.getType();
     }
 

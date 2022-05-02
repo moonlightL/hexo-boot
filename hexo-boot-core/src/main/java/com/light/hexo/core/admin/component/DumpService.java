@@ -1,9 +1,13 @@
 package com.light.hexo.core.admin.component;
 
+import com.light.hexo.common.constant.HexoExceptionEnum;
+import com.light.hexo.common.exception.GlobalException;
+import com.light.hexo.common.util.ExceptionUtil;
+import com.light.hexo.mapper.config.HikariProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -21,16 +25,12 @@ import java.nio.charset.StandardCharsets;
 @Slf4j
 public class DumpService {
 
-    @Value("${spring.datasource.druid.url}")
-    private String url;
+    @Autowired
+    private HikariProperties hikariProperties;
 
-    @Value("${spring.datasource.druid.username}")
-    private String username;
+    public String getSqlData() throws GlobalException  {
 
-    @Value("${spring.datasource.druid.password}")
-    private String password;
-
-    public String getSqlData() {
+        String url = hikariProperties.getJdbcUrl();
 
         // 获取数据库名称
         String tmp = url.substring(0,url.indexOf("?"));
@@ -44,6 +44,9 @@ public class DumpService {
         } else {
             dumpCmd = "mysqldump";
         }
+
+        String username = hikariProperties.getUsername();
+        String password = hikariProperties.getPassword();
 
         // 执行命令获取 sql 内容
         String sqlStr;
@@ -61,7 +64,7 @@ public class DumpService {
         return sqlStr;
     }
 
-    private String execCommand(String command) {
+    private String execCommand(String command) throws GlobalException {
         InputStream in = null;
         Process process = null;
         String result = null;
@@ -70,7 +73,9 @@ public class DumpService {
             in = process.getInputStream();
             result = IOUtils.toString(in, StandardCharsets.UTF_8);
         } catch (IOException e) {
-            e.printStackTrace();
+            if (e.getMessage().contains("mysqldump")) {
+                ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_BACKUP_COMMAND_NOT_EXIST);
+            }
         } finally {
             if (process != null) {
                 process.destroy();

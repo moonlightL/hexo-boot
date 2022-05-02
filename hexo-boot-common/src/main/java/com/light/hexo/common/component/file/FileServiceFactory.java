@@ -1,8 +1,7 @@
 package com.light.hexo.common.component.file;
 
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
+import com.light.hexo.common.component.CommonServiceFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -16,23 +15,13 @@ import java.util.Map;
  * @DateTime 2020/9/10 16:31
  */
 @Component
-public class FileServiceFactory implements ApplicationContextAware {
+@Slf4j
+public class FileServiceFactory extends CommonServiceFactory<FileService> {
 
-    private static Map<Integer, FileService> fileServiceMap;
+    private static final Map<String, FileService> SERVICE_MAP = new HashMap<>();
 
     @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        Map<String, FileService> serviceMap = applicationContext.getBeansOfType(FileService.class);
-        fileServiceMap = new HashMap<>(serviceMap.size());
-        serviceMap.forEach((k, v) -> fileServiceMap.put(v.getCode(), v));
-    }
-
-    /**
-     * 获取实例
-     * @param code
-     * @return
-     */
-    public FileService getInstance(Integer code) {
-        return fileServiceMap.get(code);
+    protected Map<String, FileService> getServiceMap() {
+        return SERVICE_MAP;
     }
 }

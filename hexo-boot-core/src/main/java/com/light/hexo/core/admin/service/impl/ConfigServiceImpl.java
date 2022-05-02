@@ -1,11 +1,11 @@
 package com.light.hexo.core.admin.service.impl;
 
 import com.light.hexo.common.base.BaseServiceImpl;
-import com.light.hexo.core.admin.constant.ConfigEnum;
+import com.light.hexo.common.constant.ConfigEnum;
 import com.light.hexo.mapper.mapper.ConfigMapper;
 import com.light.hexo.mapper.base.BaseMapper;
 import com.light.hexo.mapper.model.Config;
-import com.light.hexo.common.event.ConfigEvent;
+import com.light.hexo.common.component.event.ConfigEvent;
 import com.light.hexo.core.admin.service.ConfigService;
 import com.light.hexo.common.base.BaseRequest;
 import com.light.hexo.common.component.event.BaseEvent;
@@ -73,10 +73,10 @@ public class ConfigServiceImpl extends BaseServiceImpl<Config> implements Config
             if (nameList.contains(key)) {
                 Config config = new Config();
                 config.setConfigKey(key)
-                        .setConfigValue(value.trim())
-                        .setRemark(ConfigEnum.valueOf(key.toUpperCase()).getRemark())
-                        .setCreateTime(LocalDateTime.now())
-                        .setUpdateTime(config.getCreateTime());
+                      .setConfigValue(value.trim())
+                      .setRemark(ConfigEnum.valueOf(key.toUpperCase()).getRemark())
+                      .setCreateTime(LocalDateTime.now())
+                      .setUpdateTime(config.getCreateTime());
                 configList.add(config);
             }
         });
@@ -126,7 +126,7 @@ public class ConfigServiceImpl extends BaseServiceImpl<Config> implements Config
     }
 
     @Override
-    public String getEventType() {
+    public String getCode() {
         return EventEnum.CONFIG.getType();
     }
 

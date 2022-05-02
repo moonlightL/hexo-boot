@@ -3,7 +3,7 @@ package com.light.hexo.core.admin.web.controller;
 import com.github.pagehelper.PageInfo;
 import com.light.hexo.common.vo.Result;
 import com.light.hexo.core.admin.component.DumpService;
-import com.light.hexo.core.admin.constant.HexoExceptionEnum;
+import com.light.hexo.common.constant.HexoExceptionEnum;
 import com.light.hexo.mapper.model.Backup;
 import com.light.hexo.core.admin.service.BackupService;
 import com.light.hexo.core.admin.service.ConfigService;
@@ -58,7 +58,7 @@ public class BackupController extends BaseController {
     /**
      * 立即备份
      */
-    @RequestMapping("/backupData.html")
+    @RequestMapping("/backupData.json")
     @ResponseBody
     @OperateLog(value = "立即备份", actionType = ActionEnum.ADMIN_ADD)
     public Result backupData() {
@@ -80,7 +80,7 @@ public class BackupController extends BaseController {
      */
     @RequestMapping("/download.html")
     @OperateLog(value = "下载备份文件", actionType = ActionEnum.ADMIN_DOWNLOAD)
-    public void downloadFile(Long id, HttpServletRequest request, HttpServletResponse response) throws GlobalException {
+    public void downloadFile(Long id, HttpServletRequest request, HttpServletResponse response) {
         Backup backup = this.backupService.findById(id);
         if (backup == null) {
             ExceptionUtil.throwExToPage(HexoExceptionEnum.ERROR_BACKUP_NOT_EXIST);
@@ -117,7 +117,7 @@ public class BackupController extends BaseController {
     @PostMapping("/remove.json")
     @ResponseBody
     @OperateLog(value = "删除备份", actionType = ActionEnum.ADMIN_REMOVE)
-    public Result remove(@RequestParam String idStr) throws GlobalException {
+    public Result remove(@RequestParam String idStr) {
         if (StringUtils.isBlank(idStr)) {
             ExceptionUtil.throwEx(GlobalExceptionEnum.ERROR_PARAM);
         }

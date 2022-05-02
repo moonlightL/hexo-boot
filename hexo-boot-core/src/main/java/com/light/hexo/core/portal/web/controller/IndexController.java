@@ -1,7 +1,7 @@
 package com.light.hexo.core.portal.web.controller;
 
 import com.light.hexo.common.vo.Result;
-import com.light.hexo.core.admin.constant.ConfigEnum;
+import com.light.hexo.common.constant.ConfigEnum;
 import com.light.hexo.mapper.model.*;
 import com.light.hexo.common.event.NavEvent;
 import com.light.hexo.core.portal.common.CommonController;

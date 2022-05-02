@@ -110,7 +110,7 @@ public class FriendLinkServiceImpl extends BaseServiceImpl<FriendLink> implement
     }
 
     @Override
-    public String getEventType() {
+    public String getCode() {
         return EventEnum.FRIEND_LINK.getType();
     }
 

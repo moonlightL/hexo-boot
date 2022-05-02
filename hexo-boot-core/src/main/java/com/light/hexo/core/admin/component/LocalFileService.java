@@ -1,14 +1,14 @@
 package com.light.hexo.core.admin.component;
 
-import com.light.hexo.core.admin.config.BlogConfig;
-import com.light.hexo.core.admin.constant.ConfigEnum;
-import com.light.hexo.core.admin.service.ConfigService;
 import com.light.hexo.common.component.file.FileManageEnum;
 import com.light.hexo.common.component.file.FileRequest;
 import com.light.hexo.common.component.file.FileResponse;
 import com.light.hexo.common.component.file.FileService;
+import com.light.hexo.common.config.BlogConfig;
+import com.light.hexo.common.constant.ConfigEnum;
 import com.light.hexo.common.exception.GlobalException;
-import com.light.hexo.common.util.IpUtil;
+import com.light.hexo.common.util.RequestUtil;
+import com.light.hexo.core.admin.service.ConfigService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -114,7 +114,7 @@ public class LocalFileService implements FileService {
     @Override
     public String getFileUrl(String filename) throws GlobalException {
         String blogPage = this.configService.getConfigValue(ConfigEnum.HOME_PAGE.getName());
-        return this.parseUrl((StringUtils.isNotBlank(blogPage) ? blogPage : IpUtil.getHostIp() + ":" + this.environment.getProperty("server.port")) + "/images/" + filename);
+        return this.parseUrl((StringUtils.isNotBlank(blogPage) ? blogPage : RequestUtil.getHostIp() + ":" + this.environment.getProperty("server.port")) + "/images/" + filename);
     }
 
     @Override
@@ -128,7 +128,7 @@ public class LocalFileService implements FileService {
     }
 
     @Override
-    public int getCode() {
+    public String getCode() {
         return FileManageEnum.LOCAL.getCode();
     }
 

@@ -1,6 +1,5 @@
 package com.light.hexo.core.admin.web.controller;
 
-import com.google.gson.Gson;
 import com.light.hexo.common.component.file.FileRequest;
 import com.light.hexo.common.component.file.FileResponse;
 import com.light.hexo.common.component.log.ActionEnum;
@@ -11,6 +10,7 @@ import com.light.hexo.common.request.FileResult;
 import com.light.hexo.common.request.bing.WebPic;
 import com.light.hexo.common.util.ExceptionUtil;
 import com.light.hexo.common.util.HttpClientUtil;
+import com.light.hexo.common.util.JsonUtil;
 import com.light.hexo.common.vo.Result;
 import com.light.hexo.core.admin.component.DefaultFileService;
 import org.apache.commons.lang3.StringUtils;
@@ -135,8 +135,7 @@ public class FileController {
     @ResponseBody
     public FileResult randomPic() throws GlobalException {
         String result = HttpClientUtil.sendPost("https://api.ixiaowai.cn/gqapi/gqapi.php?return=json", "");
-        Gson gson = new Gson();
-        WebPic webPic = gson.fromJson(result, WebPic.class);
+        WebPic webPic = JsonUtil.string2Obj(result, WebPic.class);
         if (webPic == null || !"200".equals(webPic.getCode())) {
             return FileResult.fail("获取失败，请重新拉取");
         }

@@ -1,12 +1,12 @@
 package com.light.hexo.core.admin.web.controller;
 
-import com.light.hexo.common.vo.Result;
 import com.light.hexo.common.base.BaseRequest;
 import com.light.hexo.common.component.log.ActionEnum;
 import com.light.hexo.common.component.log.OperateLog;
 import com.light.hexo.common.request.InstallRequest;
 import com.light.hexo.common.util.BrowserUtil;
-import com.light.hexo.common.util.IpUtil;
+import com.light.hexo.common.util.RequestUtil;
+import com.light.hexo.common.vo.Result;
 import com.light.hexo.core.admin.component.InstallService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -42,7 +42,7 @@ public class InstallController {
      */
     @RequestMapping("/install.html")
     public String install(Map<String, Object> resultMap) {
-        resultMap.put("webSite", "http://" + IpUtil.getHostIp() + ":" + this.environment.getProperty("server.port"));
+        resultMap.put("webSite", "http://" + RequestUtil.getHostIp() + ":" + this.environment.getProperty("server.port"));
         // 此处开头不能加 "/"，否则 jar 方式运行访问会报错
         return "admin/install";
     }
@@ -60,7 +60,7 @@ public class InstallController {
                 installRequest,
                 BrowserUtil.getOsName(httpServletRequest),
                 BrowserUtil.getBrowserName(httpServletRequest),
-                IpUtil.getIpAddr(httpServletRequest));
+                RequestUtil.getIpAddr(httpServletRequest));
         return Result.success("/admin/login.html");
     }
 }

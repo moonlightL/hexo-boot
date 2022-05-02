@@ -34,7 +34,7 @@ public class EventListener implements ApplicationListener<BaseEvent> {
         if (event != null) {
             int index = Math.abs(event.getEventType().hashCode()) % serviceArray.length;
             serviceArray[index].execute(() -> {
-                EventService eventService = this.eventServiceFactory.getInstance(event.getEventType());
+                EventService eventService = this.eventServiceFactory.getService(event.getEventType());
                 eventService.dealWithEvent(event);
             });
         }

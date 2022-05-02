@@ -1,6 +1,6 @@
 package com.light.hexo.core.admin.component;
 
-import com.light.hexo.core.admin.constant.ConfigEnum;
+import com.light.hexo.common.constant.ConfigEnum;
 import com.light.hexo.core.admin.service.ConfigService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -11,7 +11,6 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.ITemplateEngine;
-import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import javax.mail.internet.MimeMessage;
 import java.util.Properties;

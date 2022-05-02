@@ -1,6 +1,7 @@
 package com.light.hexo.core.portal.web.filter;
 
 import com.googlecode.htmlcompressor.compressor.HtmlCompressor;
+import com.light.hexo.common.constant.RequestFilterConstant;
 import lombok.extern.slf4j.Slf4j;
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -22,9 +23,6 @@ import java.io.IOException;
 )
 public class HtmlCompressorFilter implements Filter {
 
-    private static final String[] FILTER_START_URL = {"/admin", "/plugin", "/druid"};
-    private static final String[] FILTER_END_URL = {".json", ".css", ".js", ".map", ".ico", ".jpg", ".png"};
-
     private HtmlCompressor htmlCompressor;
 
     @Override
@@ -43,14 +41,14 @@ public class HtmlCompressorFilter implements Filter {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         String requestURI = httpServletRequest.getRequestURI();
 
-        for (String url : FILTER_START_URL) {
+        for (String url : RequestFilterConstant.FILTER_START_URL) {
             if (requestURI.startsWith(url)) {
                 chain.doFilter(request, response);
                 return;
             }
         }
 
-        for (String url : FILTER_END_URL) {
+        for (String url : RequestFilterConstant.FILTER_END_URL) {
             if (requestURI.endsWith(url)) {
                 chain.doFilter(request, response);
                 return;
@@ -73,6 +71,6 @@ public class HtmlCompressorFilter implements Filter {
 
     @Override
     public void destroy() {
-
+        // do nothing
     }
 }

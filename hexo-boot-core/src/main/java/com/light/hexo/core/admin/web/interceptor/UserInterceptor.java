@@ -2,9 +2,9 @@ package com.light.hexo.core.admin.web.interceptor;
 
 import com.light.hexo.common.constant.HexoConstant;
 import com.light.hexo.common.vo.Result;
-import com.light.hexo.core.admin.constant.HexoExceptionEnum;
+import com.light.hexo.common.constant.HexoExceptionEnum;
 import com.light.hexo.mapper.model.User;
-import com.light.hexo.common.util.HttpUtil;
+import com.light.hexo.common.util.RequestUtil;
 import com.light.hexo.common.util.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.Nullable;
@@ -31,7 +31,7 @@ public class UserInterceptor extends HandlerInterceptorAdapter {
 
         Object obj = request.getSession().getAttribute(HexoConstant.CURRENT_USER);
         if (obj == null) {
-            if (HttpUtil.isAjax(request)) {
+            if (RequestUtil.isAjax(request)) {
                 this.print(response, JsonUtil.obj2String(Result.fail(HexoExceptionEnum.ERROR_LOGIN_EXPIRE)));
             } else {
                 response.sendRedirect("/admin/login.html");
@@ -42,7 +42,7 @@ public class UserInterceptor extends HandlerInterceptorAdapter {
         User user = (User) obj;
         // 后台接口请求操作用户身份只能是管理员/博主
         if (!user.getRole().equals(1)) {
-            if (HttpUtil.isAjax(request)) {
+            if (RequestUtil.isAjax(request)) {
                 this.print(response, JsonUtil.obj2String(Result.fail(HexoExceptionEnum.ERROR_NOT_PERMISSION_OPERATE)));
             } else {
                 response.sendRedirect("/admin/login.html");

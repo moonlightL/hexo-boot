@@ -2,22 +2,22 @@ package com.light.hexo.core.admin.service.impl;
 
 import cn.hutool.core.util.RandomUtil;
 import com.github.pagehelper.PageHelper;
+import com.light.hexo.common.base.BaseRequest;
 import com.light.hexo.common.base.BaseServiceImpl;
-import com.light.hexo.core.admin.config.BlogConfig;
-import com.light.hexo.core.admin.constant.ConfigEnum;
-import com.light.hexo.core.admin.constant.HexoExceptionEnum;
-import com.light.hexo.mapper.mapper.AlbumDetailMapper;
-import com.light.hexo.mapper.base.BaseMapper;
-import com.light.hexo.mapper.model.Album;
-import com.light.hexo.mapper.model.AlbumDetail;
+import com.light.hexo.common.config.BlogConfig;
+import com.light.hexo.common.constant.ConfigEnum;
+import com.light.hexo.common.constant.HexoExceptionEnum;
+import com.light.hexo.common.exception.GlobalException;
+import com.light.hexo.common.util.ExceptionUtil;
+import com.light.hexo.common.util.RequestUtil;
 import com.light.hexo.core.admin.service.AlbumDetailService;
 import com.light.hexo.core.admin.service.AlbumService;
 import com.light.hexo.core.admin.service.ConfigService;
 import com.light.hexo.core.portal.model.HexoPageInfo;
-import com.light.hexo.common.base.BaseRequest;
-import com.light.hexo.common.exception.GlobalException;
-import com.light.hexo.common.util.ExceptionUtil;
-import com.light.hexo.common.util.IpUtil;
+import com.light.hexo.mapper.base.BaseMapper;
+import com.light.hexo.mapper.mapper.AlbumDetailMapper;
+import com.light.hexo.mapper.model.Album;
+import com.light.hexo.mapper.model.AlbumDetail;
 import lombok.SneakyThrows;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.time.LocalDateTime;
@@ -127,7 +128,7 @@ public class AlbumDetailServiceImpl extends BaseServiceImpl<AlbumDetail> impleme
                 IOUtils.write(data, new FileOutputStream(new File(parent.getAbsolutePath(), coverName)));
 
                 String blogPage = this.configService.getConfigValue(ConfigEnum.HOME_PAGE.getName());
-                coverUrl = (StringUtils.isNotBlank(blogPage) ? blogPage : "http://" + IpUtil.getHostIp() + ":" + this.environment.getProperty("server.port")) + "/cover/" + coverName;
+                coverUrl = (StringUtils.isNotBlank(blogPage) ? blogPage : "http://" + RequestUtil.getHostIp() + ":" + this.environment.getProperty("server.port")) + "/cover/" + coverName;
             }
         } else {
             // 图片封面地址为图片本身

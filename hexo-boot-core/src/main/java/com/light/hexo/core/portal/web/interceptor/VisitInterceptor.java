@@ -36,8 +36,8 @@ public class VisitInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
-        if (this.blacklistService.isBlacklist(IpUtil.getIpAddr(request))) {
-            if (HttpUtil.isAjax(request)) {
+        if (this.blacklistService.isBlacklist(RequestUtil.getIpAddr(request))) {
+            if (RequestUtil.isAjax(request)) {
                 this.print(response, JsonUtil.obj2String(Result.fail(GlobalExceptionEnum.ERROR_IN_BLACKLIST)));
             } else {
                 ExceptionUtil.throwExToPage(GlobalExceptionEnum.ERROR_IN_BLACKLIST);
@@ -45,7 +45,7 @@ public class VisitInterceptor extends HandlerInterceptorAdapter {
             return false;
         }
 
-        this.eventPublisher.emit(new VisitEvent(this, IpUtil.getIpAddr(request), BrowserUtil.getBrowserName(request)));
+        this.eventPublisher.emit(new VisitEvent(this, RequestUtil.getIpAddr(request), BrowserUtil.getBrowserName(request)));
 
         request.setAttribute("time", System.currentTimeMillis());
 

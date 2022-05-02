@@ -1,7 +1,7 @@
 package com.light.hexo.core.admin.service.impl;
 
 import com.light.hexo.common.base.BaseServiceImpl;
-import com.light.hexo.core.admin.constant.HexoExceptionEnum;
+import com.light.hexo.common.constant.HexoExceptionEnum;
 import com.light.hexo.mapper.mapper.AlbumMapper;
 import com.light.hexo.mapper.base.BaseMapper;
 import com.light.hexo.mapper.model.Album;
@@ -150,7 +150,7 @@ public class AlbumServiceImpl extends BaseServiceImpl<Album> implements AlbumSer
     }
 
     @Override
-    public String getEventType() {
+    public String getCode() {
         return EventEnum.ALBUM.getType();
     }
 

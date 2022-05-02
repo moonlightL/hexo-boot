@@ -1,15 +1,15 @@
 package com.light.hexo.core.portal.web.controller;
 
 import com.github.pagehelper.PageInfo;
-import com.light.hexo.common.vo.Result;
-import com.light.hexo.mapper.model.Comment;
-import com.light.hexo.mapper.model.Theme;
-import com.light.hexo.core.portal.common.CommonController;
-import com.light.hexo.core.portal.component.RequestLimit;
 import com.light.hexo.common.exception.GlobalException;
 import com.light.hexo.common.request.CommentRequest;
 import com.light.hexo.common.util.BrowserUtil;
-import com.light.hexo.common.util.IpUtil;
+import com.light.hexo.common.util.RequestUtil;
+import com.light.hexo.common.vo.Result;
+import com.light.hexo.core.portal.common.CommonController;
+import com.light.hexo.core.portal.component.RequestLimit;
+import com.light.hexo.mapper.model.Comment;
+import com.light.hexo.mapper.model.Theme;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -75,7 +75,7 @@ public class IndexCommentController extends CommonController {
     public Result sendComment(@Validated(CommentRequest.Send.class) CommentRequest request, HttpServletRequest httpServletRequest) throws GlobalException {
 
         Comment comment = request.toDoModel();
-        String ipAddr = IpUtil.getIpAddr(httpServletRequest);
+        String ipAddr = RequestUtil.getIpAddr(httpServletRequest);
         comment.setIpAddress(ipAddr);
         comment.setOsName(BrowserUtil.getOsName(httpServletRequest));
         comment.setBrowser(BrowserUtil.getBrowserName(httpServletRequest));

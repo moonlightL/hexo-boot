@@ -1,6 +1,6 @@
 package com.light.hexo.core.admin.web.interceptor;
 
-import com.light.hexo.core.admin.constant.ConfigEnum;
+import com.light.hexo.common.constant.ConfigEnum;
 import com.light.hexo.core.admin.service.ConfigService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

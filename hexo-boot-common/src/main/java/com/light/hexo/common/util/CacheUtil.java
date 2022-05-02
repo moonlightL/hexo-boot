@@ -89,7 +89,7 @@ public class CacheUtil {
     public static <T> boolean isExpire(String key) {
         Cache<T> cache = CACHE_MAP.get(key);
         if (cache == null) {
-            return false;
+            return true;
         }
 
         if (!cache.hasTime) {
@@ -121,7 +121,7 @@ public class CacheUtil {
         private long timeout;
 
         /**
-         * 是否有时间
+         * 是否有过期时间
          */
         private boolean hasTime;
 

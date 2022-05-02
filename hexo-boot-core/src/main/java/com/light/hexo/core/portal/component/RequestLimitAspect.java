@@ -1,8 +1,8 @@
 package com.light.hexo.core.portal.component;
 
 import com.light.hexo.common.util.CacheUtil;
-import com.light.hexo.common.util.IpUtil;
 import com.light.hexo.common.util.JsonUtil;
+import com.light.hexo.common.util.RequestUtil;
 import com.light.hexo.common.vo.Result;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -55,7 +55,7 @@ public class RequestLimitAspect {
             String cacheName = commentLimit.cacheName();
             int time = commentLimit.time();
             String msg = commentLimit.msg();
-            String ipAddr = IpUtil.getIpAddr(request);
+            String ipAddr = RequestUtil.getIpAddr(request);
             String cacheKey = cacheName + ":" + ipAddr;
             Object cacheObj = CacheUtil.get(cacheKey);
             if (cacheObj != null) {

@@ -1,4 +1,5 @@
 package com.light.hexo.common.component.file;
+import com.light.hexo.common.component.CommonService;
 import com.light.hexo.common.exception.GlobalException;
 import org.apache.commons.lang3.StringUtils;
 
@@ -9,7 +10,7 @@ import org.apache.commons.lang3.StringUtils;
  * @Description: 文件 Service
  * @DateTime 2020/9/10 16:26
  */
-public interface FileService {
+public interface FileService extends CommonService {
 
     /**
      * 协议
@@ -74,10 +75,4 @@ public interface FileService {
 
         return url;
     }
-
-    /**
-     * 文件管理方式，参考：FileManageEnum 枚举
-     * @return
-     */
-    int getCode();
 }

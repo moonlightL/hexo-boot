@@ -3,8 +3,8 @@ package com.light.hexo.common.component.log;
 import com.light.hexo.common.base.BaseRequest;
 import com.light.hexo.common.component.event.EventPublisher;
 import com.light.hexo.common.util.BrowserUtil;
-import com.light.hexo.common.util.IpUtil;
 import com.light.hexo.common.util.JsonUtil;
+import com.light.hexo.common.util.RequestUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -19,6 +19,7 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Field;
@@ -61,12 +62,12 @@ public class ActionLogAspect {
 
         try {
             RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
-            ServletRequestAttributes sra = (ServletRequestAttributes) requestAttributes;
-            if (sra == null) {
+            ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) requestAttributes;
+            if (servletRequestAttributes == null) {
                 return;
             }
 
-            HttpServletRequest request = sra.getRequest();
+            HttpServletRequest request = servletRequestAttributes.getRequest();
 
             MethodSignature signature = (MethodSignature) joinPoint.getSignature();
             // 执行方法
@@ -81,7 +82,7 @@ public class ActionLogAspect {
                 ActionLogEvent event = new ActionLogEvent(this);
                 event.setMethodName(method.getDeclaringClass().getName() + "." + method.getName())
                      .setMethodParam(this.getParameter(parameterNames, args))
-                     .setIpAddress(IpUtil.getIpAddr(request))
+                     .setIpAddress(RequestUtil.getIpAddr(request))
                      .setBrowser(BrowserUtil.getBrowserName(request))
                      .setRemark(operateLog.value())
                      .setActionType(operateLog.actionType().getCode())

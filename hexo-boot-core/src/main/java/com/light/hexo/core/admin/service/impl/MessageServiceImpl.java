@@ -63,7 +63,7 @@ public class MessageServiceImpl extends BaseServiceImpl<Message> implements Mess
     }
 
     @Override
-    public String getEventType() {
+    public String getCode() {
         return EventEnum.MESSAGE.getType();
     }
 

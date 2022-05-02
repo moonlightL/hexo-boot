@@ -1,8 +1,8 @@
 package com.light.hexo.core.admin.component;
 
-import com.light.hexo.core.admin.config.BlogConfig;
-import com.light.hexo.core.admin.constant.ConfigEnum;
-import com.light.hexo.core.admin.constant.HexoExceptionEnum;
+import com.light.hexo.common.config.BlogConfig;
+import com.light.hexo.common.constant.ConfigEnum;
+import com.light.hexo.common.constant.HexoExceptionEnum;
 import com.light.hexo.mapper.model.*;
 import com.light.hexo.core.admin.service.*;
 import com.light.hexo.common.constant.HexoConstant;

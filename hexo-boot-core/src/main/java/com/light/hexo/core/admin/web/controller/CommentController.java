@@ -1,10 +1,6 @@
 package com.light.hexo.core.admin.web.controller;
 
 import com.github.pagehelper.PageInfo;
-import com.light.hexo.common.vo.Result;
-import com.light.hexo.mapper.model.Comment;
-import com.light.hexo.mapper.model.User;
-import com.light.hexo.core.admin.service.CommentService;
 import com.light.hexo.common.base.BaseController;
 import com.light.hexo.common.component.log.ActionEnum;
 import com.light.hexo.common.component.log.OperateLog;
@@ -13,7 +9,11 @@ import com.light.hexo.common.exception.GlobalExceptionEnum;
 import com.light.hexo.common.request.CommentRequest;
 import com.light.hexo.common.util.BrowserUtil;
 import com.light.hexo.common.util.ExceptionUtil;
-import com.light.hexo.common.util.IpUtil;
+import com.light.hexo.common.util.RequestUtil;
+import com.light.hexo.common.vo.Result;
+import com.light.hexo.core.admin.service.CommentService;
+import com.light.hexo.mapper.model.Comment;
+import com.light.hexo.mapper.model.User;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,6 +21,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Arrays;
@@ -99,7 +100,7 @@ public class CommentController extends BaseController {
         comment.setEmail(user.getEmail());
         comment.setOsName(BrowserUtil.getOsName(httpServletRequest));
         comment.setBrowser(BrowserUtil.getBrowserName(httpServletRequest));
-        comment.setIpAddress(IpUtil.getIpAddr(httpServletRequest));
+        comment.setIpAddress(RequestUtil.getIpAddr(httpServletRequest));
         this.commentService.replyByAdmin(comment);
         return Result.success();
     }
@@ -113,7 +114,7 @@ public class CommentController extends BaseController {
     @ResponseBody
     @OperateLog(value = "评论-加入黑名单", actionType = ActionEnum.ADMIN_ADD)
     public Result addBlacklist(CommentRequest request, HttpServletRequest httpServletRequest) {
-        this.commentService.addBlacklist(request.toDoModel(), IpUtil.getIpAddr(httpServletRequest));
+        this.commentService.addBlacklist(request.toDoModel(), RequestUtil.getIpAddr(httpServletRequest));
         return Result.success();
     }
 }

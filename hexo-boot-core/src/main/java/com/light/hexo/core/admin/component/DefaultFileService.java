@@ -5,17 +5,17 @@ import com.light.hexo.common.component.file.FileRequest;
 import com.light.hexo.common.component.file.FileResponse;
 import com.light.hexo.common.component.file.FileService;
 import com.light.hexo.common.component.file.FileServiceFactory;
+import com.light.hexo.common.config.BlogConfig;
+import com.light.hexo.common.constant.ConfigEnum;
+import com.light.hexo.common.constant.FileTypeEnum;
 import com.light.hexo.common.constant.HexoConstant;
+import com.light.hexo.common.constant.HexoExceptionEnum;
 import com.light.hexo.common.exception.GlobalException;
 import com.light.hexo.common.util.ExceptionUtil;
-import com.light.hexo.common.util.IpUtil;
-import com.light.hexo.core.admin.config.BlogConfig;
-import com.light.hexo.core.admin.constant.ConfigEnum;
-import com.light.hexo.core.admin.constant.FileTypeEnum;
-import com.light.hexo.core.admin.constant.HexoExceptionEnum;
-import com.light.hexo.mapper.model.Attachment;
+import com.light.hexo.common.util.RequestUtil;
 import com.light.hexo.core.admin.service.AttachmentService;
 import com.light.hexo.core.admin.service.ConfigService;
+import com.light.hexo.mapper.model.Attachment;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
@@ -26,7 +26,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.Base64;
 import java.util.HashMap;
@@ -145,7 +144,7 @@ public class DefaultFileService {
                         IOUtils.write(data, new FileOutputStream(new File(parent.getAbsolutePath(), coverName)));
 
                         String blogPage = this.configService.getConfigValue(ConfigEnum.HOME_PAGE.getName());
-                        String coverUrl = (StringUtils.isNotBlank(blogPage) ? blogPage : "http://" + IpUtil.getHostIp() + ":" + this.environment.getProperty("server.port")) + "/cover/" + coverName;
+                        String coverUrl = (StringUtils.isNotBlank(blogPage) ? blogPage : "http://" + RequestUtil.getHostIp() + ":" + this.environment.getProperty("server.port")) + "/cover/" + coverName;
                         attachment.setThumbnailUrl(coverUrl);
                     } else {
                         attachment.setThumbnailUrl(HexoConstant.DEFAULT_VIDEO_COVER);
@@ -178,7 +177,7 @@ public class DefaultFileService {
             ExceptionUtil.throwExToPage(HexoExceptionEnum.ERROR_ATTACHMENT_NOT_POSITION);
         }
 
-        return this.getFileService().download(fileRequest);
+        return this.getFileService(null).download(fileRequest);
     }
 
 
@@ -187,7 +186,7 @@ public class DefaultFileService {
             ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_ATTACHMENT_NOT_POSITION);
         }
 
-        return this.getFileService().remove(fileRequest);
+        return this.getFileService(null).remove(fileRequest);
     }
 
 
@@ -195,16 +194,18 @@ public class DefaultFileService {
      * 获取 FileService 实现
      * @return
      */
-    private FileService getFileService() {
-        String configValue = this.getManageMode();
-        return this.fileServiceFactory.getInstance(Integer.valueOf(configValue));
-    }
-
-    public FileService getFileService(Integer manageMode) {
+    public FileService getFileService(String manageMode) {
+        FileService fileService;
         if (manageMode == null) {
-            return this.getFileService();
+            manageMode = this.getManageMode();
         }
-        return this.fileServiceFactory.getInstance(manageMode);
+
+        fileService = this.fileServiceFactory.getService(manageMode);
+        if (fileService == null) {
+            ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_FILE_SERVICE_NULL);
+        }
+
+        return fileService;
     }
 
     public String getManageMode() {

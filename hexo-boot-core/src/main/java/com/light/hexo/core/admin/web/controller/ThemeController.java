@@ -2,7 +2,7 @@ package com.light.hexo.core.admin.web.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.light.hexo.common.vo.Result;
-import com.light.hexo.core.admin.constant.HexoExceptionEnum;
+import com.light.hexo.common.constant.HexoExceptionEnum;
 import com.light.hexo.mapper.model.Theme;
 import com.light.hexo.mapper.model.ThemeExtend;
 import com.light.hexo.core.admin.service.ThemeExtendService;

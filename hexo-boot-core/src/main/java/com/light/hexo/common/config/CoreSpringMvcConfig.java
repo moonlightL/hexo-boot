@@ -1,7 +1,6 @@
 package com.light.hexo.common.config;
 
-import com.light.hexo.core.admin.config.BlogConfig;
-import com.light.hexo.core.admin.constant.ConfigEnum;
+import com.light.hexo.common.constant.ConfigEnum;
 import com.light.hexo.core.admin.service.ConfigService;
 import com.light.hexo.core.admin.web.interceptor.InstallInterceptor;
 import com.light.hexo.core.admin.web.interceptor.UserInterceptor;

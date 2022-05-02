@@ -2,7 +2,7 @@ package com.light.hexo.core.admin.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.light.hexo.common.base.BaseServiceImpl;
-import com.light.hexo.core.admin.constant.HexoExceptionEnum;
+import com.light.hexo.common.constant.HexoExceptionEnum;
 import com.light.hexo.mapper.mapper.DynamicMapper;
 import com.light.hexo.mapper.base.BaseMapper;
 import com.light.hexo.mapper.model.Dynamic;
@@ -157,7 +157,7 @@ public class DynamicServiceImpl extends BaseServiceImpl<Dynamic> implements Dyna
     }
 
     @Override
-    public String getEventType() {
+    public String getCode() {
         return EventEnum.DYNAMIC.getType();
     }
 

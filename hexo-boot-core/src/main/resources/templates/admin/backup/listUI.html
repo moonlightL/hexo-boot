@@ -77,7 +77,7 @@
 
         $("#backupBtn").off("click").on("click", function() {
             $.hexo.action.sendRequest({
-                url: BASE_URL + "/backupData.html",
+                url: BASE_URL + "/backupData.json",
                 callback: function () {
                     $.hexo.modal.tip("备份成功", "success", function () {
                         $.hexo.modal.close();

@@ -1,7 +1,7 @@
 package com.light.hexo.mapper.config;
 
 import org.flywaydb.core.Flyway;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 
@@ -18,19 +18,13 @@ import javax.annotation.PostConstruct;
 @DependsOn("dataSourceConfig")
 public class FlywayConfig {
 
-    @Value("${spring.datasource.druid.url}")
-    private String url;
-
-    @Value("${spring.datasource.druid.username}")
-    private String username;
-
-    @Value("${spring.datasource.druid.password}")
-    private String password;
+    @Autowired
+    private HikariProperties hikariProperties;
 
     @PostConstruct
     public void migrate() {
         Flyway flyway = Flyway.configure()
-                .dataSource(url, username, password)
+                .dataSource(hikariProperties.getJdbcUrl(), hikariProperties.getUsername(), hikariProperties.getPassword())
                 .cleanDisabled(true)
                 .baselineOnMigrate(true)
                 .baselineVersion("0")

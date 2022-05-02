@@ -134,7 +134,7 @@ public class TagServiceImpl extends BaseServiceImpl<Tag> implements TagService {
     }
 
     @Override
-    public String getEventType() {
+    public String getCode() {
         return EventEnum.TAG.getType();
     }
 

@@ -1,11 +1,9 @@
 package com.light.hexo.core.admin.service;
 
-import com.aliyun.oss.ServiceException;
 import com.light.hexo.common.base.BaseService;
-import com.light.hexo.mapper.model.Visit;
 import com.light.hexo.common.component.event.EventService;
 import com.light.hexo.common.exception.GlobalException;
-
+import com.light.hexo.mapper.model.Visit;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +22,7 @@ public interface VisitService extends BaseService<Visit>, EventService {
      * @param start
      * @param end
      * @return
-     * @throws ServiceException
+     * @throws GlobalException
      */
     List<Map<String, Object>> listVisitByDates(LocalDate start, LocalDate end) throws GlobalException;
 

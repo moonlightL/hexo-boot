@@ -9,12 +9,11 @@ import com.light.hexo.common.plugin.HexoBootPluginManager;
 import com.light.hexo.common.request.PluginRequest;
 import com.light.hexo.common.util.DateUtil;
 import com.light.hexo.common.util.ExceptionUtil;
-import com.light.hexo.core.admin.constant.HexoExceptionEnum;
+import com.light.hexo.common.constant.HexoExceptionEnum;
 import com.light.hexo.core.admin.service.SysPluginService;
 import com.light.hexo.mapper.base.BaseMapper;
 import com.light.hexo.mapper.mapper.SysPluginMapper;
 import com.light.hexo.mapper.model.SysPlugin;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -192,6 +191,14 @@ public class SysPluginServiceImpl extends BaseServiceImpl<SysPlugin> implements 
 
             System.gc();
         }
+    }
+
+    @Override
+    public boolean checkPlugin(String pluginId) throws GlobalException {
+        Example example = new Example(SysPlugin.class);
+        example.createCriteria().andEqualTo("pluginId", pluginId);
+        SysPlugin dbPlugin = this.pluginMapper.selectOneByExample(example);
+        return dbPlugin != null && dbPlugin.getState();
     }
 
     private void deletePluginFileError(SysPlugin sysPlugin) {

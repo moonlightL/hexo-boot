@@ -1,19 +1,32 @@
 package com.light.hexo.core.portal.common;
 
-import com.light.hexo.common.util.MarkdownUtil;
-import com.light.hexo.core.admin.config.BlogConfig;
-import com.light.hexo.mapper.model.Theme;
-import com.light.hexo.core.admin.service.*;
+import cn.hutool.core.util.RandomUtil;
 import com.light.hexo.common.component.event.EventPublisher;
 import com.light.hexo.common.constant.CacheKey;
+import com.light.hexo.common.constant.RequestFilterConstant;
 import com.light.hexo.common.util.CacheUtil;
+import com.light.hexo.common.util.MarkdownUtil;
+import com.light.hexo.common.util.SpringContextUtil;
+import com.light.hexo.core.admin.service.*;
+import com.light.hexo.mapper.model.Theme;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @Author MoonlightL
@@ -72,9 +85,6 @@ public class CommonController {
     @Autowired
     protected EventPublisher eventPublisher;
 
-    @Autowired
-    private BlogConfig blogConfig;
-
     protected String render(String pageName, boolean isDetail, Map<String, Object> resultMap) {
 
         // 主题
@@ -88,12 +98,11 @@ public class CommonController {
 
         this.settingBaseLink(activeTheme, resultMap);
 
-        String version = this.blogConfig.getVersion();
-        if (StringUtils.isBlank(version) || Double.valueOf(version) > 3.0) {
-            // 数量，兼容老版本主题
-            Map<String, Integer> countInfo = this.getCountInfo();
-            resultMap.put("countInfo", countInfo);
-        }
+        this.setVisitCookie();
+
+        // 数量，兼容老版本主题
+        Map<String, Integer> countInfo = this.getCountInfo();
+        resultMap.put("countInfo", countInfo);
 
         return String.format("theme/%s/%s", themeName, pageName);
     }
@@ -120,25 +129,55 @@ public class CommonController {
         }
     }
 
+    private void setVisitCookie() {
+        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = ((ServletRequestAttributes) requestAttributes).getRequest();
+        if (request != null) {
+            HttpServletResponse response = ((ServletRequestAttributes) requestAttributes).getResponse();
+            Cookie[] cookies = request.getCookies();
+            if (cookies == null || cookies.length == 0) {
+                // 客户端手动清除 cookie
+                this.writeCookie(request, response);
+            } else {
+                Optional<Cookie> first = Arrays.stream(cookies).filter(i -> i.getName().equalsIgnoreCase(RequestFilterConstant.VISIT_COOKIE_NAME)).findFirst();
+                if (!first.isPresent()) {
+                    // 当日首次访问
+                    this.writeCookie(request, response);
+                }
+            }
+        }
+    }
+
+    private void writeCookie(HttpServletRequest request, HttpServletResponse response) {
+        HttpSession session = request.getSession();
+        String sessionId = session.getId();
+        String uuid = sessionId + "-" + RandomUtil.randomNumbers(15);
+        Cookie cookie = new Cookie(RequestFilterConstant.VISIT_COOKIE_NAME, uuid);
+        cookie.setPath("/");
+        cookie.setMaxAge(24 * 3600);
+        response.addCookie(cookie);
+    }
+
     private Map<String, Integer> getCountInfo() {
 
         String key = CacheKey.INDEX_COUNT_INFO;
         Map<String, Integer> result = CacheUtil.get(key);
         if (result == null) {
             result = new HashMap<>(4);
+            WebApplicationContext webApplicationContext = (WebApplicationContext) SpringContextUtil.applicationContext;
+            ServletContext servletContext = webApplicationContext.getServletContext();
             // 文章数
-            result.put("postNum", this.postService.getPostNum());
+            result.put("postNum", (Integer) servletContext.getAttribute("postNum"));
             // 分类数
-            result.put("categoryNum", this.categoryService.getCategoryNum());
+            result.put("categoryNum", (Integer) servletContext.getAttribute("categoryNum"));
             // 标签数
-            result.put("tagNum", this.tagService.getTagNum());
+            result.put("tagNum", (Integer) servletContext.getAttribute("tagNum"));
             // 友链数
-            result.put("friendLinkNum", this.friendLinkService.getFriendLinkNum());
-            // 缓存一天
-            CacheUtil.put(key, result, 24 * 60 * 60 * 1000);
+            result.put("friendLinkNum", (Integer) servletContext.getAttribute("friendLinkNum"));
+            // 缓存1分钟
+            CacheUtil.put(key, result,  60 * 1000);
         }
 
         return result;
     }
-
 }

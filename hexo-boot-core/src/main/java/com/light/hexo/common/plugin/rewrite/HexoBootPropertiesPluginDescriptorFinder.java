@@ -16,6 +16,7 @@ import java.nio.file.Paths;
  */
 public class HexoBootPropertiesPluginDescriptorFinder extends PropertiesPluginDescriptorFinder {
 
+    @Override
     protected Path getPropertiesPath(Path pluginPath, String propertiesFileName) {
         if (Files.isDirectory(pluginPath)) {
             return pluginPath.resolve(Paths.get(propertiesFileName));

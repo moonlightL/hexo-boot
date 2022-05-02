@@ -1,20 +1,20 @@
 package com.light.hexo.core.admin.web.controller;
 
-import com.light.hexo.common.vo.Result;
-import com.light.hexo.core.admin.constant.HexoExceptionEnum;
-import com.light.hexo.core.admin.service.BlacklistService;
+import com.light.hexo.common.base.BaseController;
 import com.light.hexo.common.component.log.ActionEnum;
 import com.light.hexo.common.component.log.OperateLog;
 import com.light.hexo.common.constant.CacheKey;
 import com.light.hexo.common.constant.HexoConstant;
-import com.light.hexo.mapper.model.User;
-import com.light.hexo.core.admin.service.UserService;
-import com.light.hexo.common.base.BaseController;
+import com.light.hexo.common.constant.HexoExceptionEnum;
 import com.light.hexo.common.exception.GlobalExceptionEnum;
 import com.light.hexo.common.request.UserRequest;
 import com.light.hexo.common.util.CacheUtil;
 import com.light.hexo.common.util.ExceptionUtil;
-import com.light.hexo.common.util.IpUtil;
+import com.light.hexo.common.util.RequestUtil;
+import com.light.hexo.common.vo.Result;
+import com.light.hexo.core.admin.service.BlacklistService;
+import com.light.hexo.core.admin.service.UserService;
+import com.light.hexo.mapper.model.User;
 import com.wf.captcha.SpecCaptcha;
 import com.wf.captcha.base.Captcha;
 import com.wf.captcha.utils.CaptchaUtil;
@@ -24,6 +24,7 @@ import org.springframework.util.DigestUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -127,7 +128,7 @@ public class LoginController extends BaseController {
 
         session.setAttribute(HexoConstant.CURRENT_USER, user);
 
-        String ipAddr = IpUtil.getIpAddr(httpServletRequest);
+        String ipAddr = RequestUtil.getIpAddr(httpServletRequest);
         CacheUtil.remove(CacheKey.LOGIN_ERROR_NUM + ":" + ipAddr);
 
         return Result.success("/admin/home/index.html");
@@ -148,7 +149,7 @@ public class LoginController extends BaseController {
     }
 
     private Integer checkLoginError(HttpServletRequest httpServletRequest) {
-        String ipAddr = IpUtil.getIpAddr(httpServletRequest);
+        String ipAddr = RequestUtil.getIpAddr(httpServletRequest);
         Integer errorNum = CacheUtil.incr(CacheKey.LOGIN_ERROR_NUM + ":" + ipAddr);
         if (errorNum >= HexoConstant.CHANGE_NUM) {
             this.blacklistService.saveBlacklist(ipAddr, "频繁登录失败", 2);

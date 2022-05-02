@@ -3,8 +3,8 @@ package com.light.hexo.common.plugin;
 import com.light.hexo.common.plugin.registry.CompoundModuleRegistry;
 import com.light.hexo.common.plugin.rewrite.HexoBootPropertiesPluginDescriptorFinder;
 import com.light.hexo.common.util.ExceptionUtil;
-import com.light.hexo.core.admin.constant.HexoExceptionEnum;
-import lombok.SneakyThrows;
+import com.light.hexo.common.constant.HexoExceptionEnum;
+import lombok.extern.slf4j.Slf4j;
 import org.pf4j.*;
 import org.springframework.beans.factory.InitializingBean;
 import java.nio.file.Path;
@@ -17,6 +17,7 @@ import java.nio.file.Paths;
  * @Description: 插件管理器
  * @DateTime 2022/4/19, 0019 17:37
  */
+@Slf4j
 public class HexoBootPluginManager extends BasePluginManager implements InitializingBean {
 
     private ModuleRegistry moduleRegistry;
@@ -43,6 +44,7 @@ public class HexoBootPluginManager extends BasePluginManager implements Initiali
             this.moduleRegistry.register(pluginId);
         } catch (Exception e) {
             super.unloadPlugin(pluginId);
+            log.error("========== HexoBootPluginManager startPlugin {}===============", e);
             ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_PLUGIN_START);
         }
 
@@ -59,6 +61,8 @@ public class HexoBootPluginManager extends BasePluginManager implements Initiali
         PluginState pluginState = super.stopPlugin(pluginId);
         try {
             this.moduleRegistry.unRegister(pluginId);
+        } catch (Exception e) {
+            log.error("========== HexoBootPluginManager stopPlugin {}===============", e);
         } finally {
             System.gc();
         }

@@ -1,6 +1,6 @@
 package com.light.hexo.core.portal.web.controller;
 
-import com.light.hexo.core.admin.constant.ConfigEnum;
+import com.light.hexo.common.constant.ConfigEnum;
 import com.light.hexo.mapper.model.Post;
 import com.light.hexo.core.admin.service.ConfigService;
 import com.light.hexo.core.admin.service.PostService;
@@ -21,7 +21,7 @@ import java.util.List;
 @RestController
 public class SiteMapController {
 
-    private static String CHANGEFREQ_DAILY = "daily";
+    private static final String CHANGEFREQ_DAILY = "daily";
 
     @Autowired
     private ConfigService configService;

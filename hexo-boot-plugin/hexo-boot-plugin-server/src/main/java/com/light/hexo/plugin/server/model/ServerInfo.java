@@ -1,6 +1,6 @@
 package com.light.hexo.plugin.server.model;
 
-import com.light.hexo.common.util.IpUtil;
+import com.light.hexo.common.util.RequestUtil;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,6 +12,7 @@ import oshi.hardware.GlobalMemory;
 import oshi.software.os.FileSystem;
 import oshi.software.os.OSFileStore;
 import oshi.util.Util;
+
 import java.io.Serializable;
 import java.lang.management.ManagementFactory;
 import java.text.DecimalFormat;
@@ -94,7 +95,7 @@ public class ServerInfo implements Serializable {
         basicInfo.setSysName(props.getProperty("os.name"));
         basicInfo.setSysArch(props.getProperty("os.arch"));
         basicInfo.setSysVersion(props.getProperty("os.version"));
-        basicInfo.setSysIp(IpUtil.getHostIp());
+        basicInfo.setSysIp(RequestUtil.getHostIp());
         basicInfo.setUserDir(props.getProperty("user.dir"));
         basicInfo.setUserDir(props.getProperty("user.dir"));
 
