@@ -1,6 +1,5 @@
 package com.light.hexo.core.admin.component;
 
-import cn.hutool.core.util.RandomUtil;
 import com.light.hexo.common.component.file.FileRequest;
 import com.light.hexo.common.component.file.FileResponse;
 import com.light.hexo.common.component.file.FileService;
@@ -20,6 +19,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -135,7 +135,7 @@ public class DefaultFileService {
                         }
                         String filePath = this.configService.getConfigValue(ConfigEnum.LOCAL_FILE_PATH.getName());
                         String localFilePath = StringUtils.isNotBlank(filePath) ? filePath  + File.separator : this.blogConfig.getAttachmentDir();
-                        String coverName = FilenameUtils.getBaseName(fileRequest.getOriginalName()) + "_" + RandomUtil.randomNumbers(6) + ".jpg";
+                        String coverName = FilenameUtils.getBaseName(fileRequest.getOriginalName()) + "_" + RandomStringUtils.randomAlphanumeric(6) + ".jpg";
                         File parent = new File(localFilePath + "/cover/");
                         if (!parent.exists()) {
                             parent.mkdirs();

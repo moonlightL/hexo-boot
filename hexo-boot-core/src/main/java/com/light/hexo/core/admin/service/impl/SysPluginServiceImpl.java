@@ -3,13 +3,13 @@ package com.light.hexo.core.admin.service.impl;
 import cn.hutool.core.util.ZipUtil;
 import com.light.hexo.common.base.BaseRequest;
 import com.light.hexo.common.base.BaseServiceImpl;
+import com.light.hexo.common.constant.HexoExceptionEnum;
 import com.light.hexo.common.exception.GlobalException;
 import com.light.hexo.common.plugin.BasePlugin;
 import com.light.hexo.common.plugin.HexoBootPluginManager;
 import com.light.hexo.common.request.PluginRequest;
 import com.light.hexo.common.util.DateUtil;
 import com.light.hexo.common.util.ExceptionUtil;
-import com.light.hexo.common.constant.HexoExceptionEnum;
 import com.light.hexo.core.admin.service.SysPluginService;
 import com.light.hexo.mapper.base.BaseMapper;
 import com.light.hexo.mapper.mapper.SysPluginMapper;
@@ -18,10 +18,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.pf4j.*;
+import org.pf4j.PluginDescriptor;
+import org.pf4j.PluginState;
+import org.pf4j.PluginWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -98,23 +101,23 @@ public class SysPluginServiceImpl extends BaseServiceImpl<SysPlugin> implements 
         PluginWrapper pluginWrapper = this.pluginManager.getPlugin(pluginId);
         PluginDescriptor descriptor = pluginWrapper.getDescriptor();
 
-        PluginState pluginState = this.pluginManager.startPlugin(pluginId, filePath);
+        try {
+            PluginState pluginState = this.pluginManager.startPlugin(pluginId, filePath);
+            SysPlugin plugin = new SysPlugin();
+            plugin.setPluginId(pluginId)
+                  .setOriginName(originName)
+                  .setState(pluginState.toString().equals(PluginState.STARTED.toString()))
+                  .setRemark(descriptor.getPluginDescription())
+                  .setVersion(descriptor.getVersion())
+                  .setAuthor(descriptor.getProvider())
+                  .setFilePath(filePath)
+                  .setConfigUrl(((BasePlugin) pluginWrapper.getPlugin()).getConfigUrl())
+                  .setCreateTime(LocalDateTime.now())
+                  .setUpdateTime(plugin.getCreateTime());
+            this.pluginMapper.insert(plugin);
 
-        SysPlugin plugin = new SysPlugin();
-        plugin.setPluginId(pluginId)
-              .setOriginName(originName)
-              .setState(pluginState.toString().equals(PluginState.STARTED.toString()))
-              .setRemark(descriptor.getPluginDescription())
-              .setVersion(descriptor.getVersion())
-              .setAuthor(descriptor.getProvider())
-              .setFilePath(filePath)
-              .setConfigUrl(((BasePlugin) pluginWrapper.getPlugin()).getConfigUrl())
-              .setCreateTime(LocalDateTime.now())
-              .setUpdateTime(plugin.getCreateTime());
-        this.pluginMapper.insert(plugin);
-
-        if (!plugin.getState()) {
-            ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_PLUGIN_START);
+        } catch (Exception e) {
+            this.pluginManager.unloadPlugin(pluginId);
         }
     }
 

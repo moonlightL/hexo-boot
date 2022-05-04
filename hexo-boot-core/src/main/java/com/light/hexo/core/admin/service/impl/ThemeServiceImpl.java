@@ -52,6 +52,8 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeService {
 
+    private static final String THEME_DIR = "templates/theme";
+
     @Autowired
     private ThemeMapper themeMapper;
 
@@ -60,8 +62,6 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
 
     @Autowired
     private BlogConfig blogConfig;
-
-    private static final String THEME_DIR = "templates/theme";
 
     @Override
     public BaseMapper<Theme> getBaseMapper() {

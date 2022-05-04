@@ -24,6 +24,13 @@
             <version>1.0.0</version>
         </dependency>
 
+        <!-- lombok  -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -120,22 +127,16 @@
             </exclusions>
         </dependency>
 
-        <!-- 压缩页面 -->
-        <dependency>
-            <groupId>com.googlecode.htmlcompressor</groupId>
-            <artifactId>htmlcompressor</artifactId>
-        </dependency>
-
-        <!-- 压缩静态资源 -->
-        <dependency>
-            <groupId>com.yahoo.platform.yui</groupId>
-            <artifactId>yuicompressor</artifactId>
-        </dependency>
-
         <!-- 验证码 -->
         <dependency>
             <groupId>com.github.whvcse</groupId>
             <artifactId>EasyCaptcha</artifactId>
+        </dependency>
+
+        <!-- 压缩页面 -->
+        <dependency>
+            <groupId>com.googlecode.htmlcompressor</groupId>
+            <artifactId>htmlcompressor</artifactId>
         </dependency>
 
         <dependency>
@@ -158,6 +159,14 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
             </plugin>
         </plugins>
     </build>

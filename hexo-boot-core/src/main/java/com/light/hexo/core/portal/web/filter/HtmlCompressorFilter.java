@@ -3,6 +3,7 @@ package com.light.hexo.core.portal.web.filter;
 import com.googlecode.htmlcompressor.compressor.HtmlCompressor;
 import com.light.hexo.common.constant.RequestFilterConstant;
 import lombok.extern.slf4j.Slf4j;
+
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
@@ -27,12 +28,12 @@ public class HtmlCompressorFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        htmlCompressor = new HtmlCompressor();
-        htmlCompressor.setCompressCss(true);
-        htmlCompressor.setCompressJavaScript(true);
-        htmlCompressor.setRemoveComments(true);
-        htmlCompressor.setRemoveIntertagSpaces(true);
-        htmlCompressor.setRemoveMultiSpaces(true);
+        this.htmlCompressor = new HtmlCompressor();
+        this.htmlCompressor.setCompressCss(true);
+        this.htmlCompressor.setCompressJavaScript(true);
+        this.htmlCompressor.setRemoveComments(true);
+        this.htmlCompressor.setRemoveIntertagSpaces(true);
+        this.htmlCompressor.setRemoveMultiSpaces(true);
     }
 
     @Override

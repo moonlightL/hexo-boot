@@ -1,6 +1,5 @@
 package com.light.hexo.core.admin.service.impl;
 
-import cn.hutool.core.util.RandomUtil;
 import com.github.pagehelper.PageHelper;
 import com.light.hexo.common.base.BaseRequest;
 import com.light.hexo.common.base.BaseServiceImpl;
@@ -21,6 +20,7 @@ import com.light.hexo.mapper.model.AlbumDetail;
 import lombok.SneakyThrows;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -119,7 +119,7 @@ public class AlbumDetailServiceImpl extends BaseServiceImpl<AlbumDetail> impleme
 
                 String filePath = this.configService.getConfigValue(ConfigEnum.LOCAL_FILE_PATH.getName());
                 String localFilePath = StringUtils.isNotBlank(filePath) ? filePath  + File.separator : this.blogConfig.getAttachmentDir();
-                String coverName = baseName + "_" + RandomUtil.randomNumbers(6) + ".jpg";
+                String coverName = baseName + "_" + RandomStringUtils.randomNumeric(6) + ".jpg";
                 File parent = new File(localFilePath + "/cover/");
                 if (!parent.exists()) {
                     parent.mkdirs();

@@ -19,16 +19,16 @@ public class HtmlResponseWrapper extends HttpServletResponseWrapper {
 
     public HtmlResponseWrapper(HttpServletResponse response) {
         super(response);
-        output = new CharArrayWriter();
+        this.output = new CharArrayWriter();
     }
 
     @Override
     public PrintWriter getWriter() throws IOException {
-        return new PrintWriter(output);
+        return new PrintWriter(this.output);
     }
 
     @Override
     public String toString() {
-        return output.toString();
+        return this.output.toString();
     }
 }

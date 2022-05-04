@@ -3,7 +3,6 @@ package com.light.hexo.common.util;
 import eu.bitwalker.useragentutils.Browser;
 import eu.bitwalker.useragentutils.UserAgent;
 import eu.bitwalker.useragentutils.Version;
-
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -60,5 +59,4 @@ public class BrowserUtil {
     private static Browser getBrowser(HttpServletRequest request) {
         return UserAgent.parseUserAgentString(request.getHeader("User-Agent")).getBrowser();
     }
-
 }

@@ -1,6 +1,5 @@
 package com.light.hexo.core.portal.common;
 
-import cn.hutool.core.util.RandomUtil;
 import com.light.hexo.common.component.event.EventPublisher;
 import com.light.hexo.common.constant.CacheKey;
 import com.light.hexo.common.constant.RequestFilterConstant;
@@ -10,6 +9,7 @@ import com.light.hexo.common.util.SpringContextUtil;
 import com.light.hexo.core.admin.service.*;
 import com.light.hexo.mapper.model.Theme;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -151,7 +151,7 @@ public class CommonController {
     private void writeCookie(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
         String sessionId = session.getId();
-        String uuid = sessionId + "-" + RandomUtil.randomNumbers(15);
+        String uuid = sessionId + "-" + RandomStringUtils.randomAlphanumeric(15);
         Cookie cookie = new Cookie(RequestFilterConstant.VISIT_COOKIE_NAME, uuid);
         cookie.setPath("/");
         cookie.setMaxAge(24 * 3600);

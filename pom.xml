@@ -320,7 +320,7 @@
             <!-- hutool -->
             <dependency>
                 <groupId>cn.hutool</groupId>
-                <artifactId>hutool-all</artifactId>
+                <artifactId>hutool-core</artifactId>
                 <version>5.7.2</version>
             </dependency>
 

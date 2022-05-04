@@ -1,7 +1,7 @@
 package com.light.hexo.common.plugin.registry;
 
 import com.light.hexo.common.plugin.HexoBootPluginManager;
-import com.light.hexo.common.plugin.annotation.InterceptPathPattern;
+import com.light.hexo.common.plugin.annotation.HexoBootIntercept;
 import lombok.SneakyThrows;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -40,7 +40,7 @@ public class InterceptorRegistry extends AbstractModuleRegistry {
     @Override
     public void register(String pluginId) {
         for (Class<?> clazz : super.getPluginClasses(pluginId)) {
-            InterceptPathPattern interceptPaths = clazz.getAnnotation(InterceptPathPattern.class);
+            HexoBootIntercept interceptPaths = clazz.getAnnotation(HexoBootIntercept.class);
             if(interceptPaths != null && interceptPaths.value() != null) {
                 HandlerInterceptor handlerInterceptor = (HandlerInterceptor) super.registryBean(clazz);
                 MappedInterceptor mappedInterceptor = new MappedInterceptor(interceptPaths.value(), handlerInterceptor);
@@ -53,7 +53,7 @@ public class InterceptorRegistry extends AbstractModuleRegistry {
     @Override
     public void unRegister(String pluginId) {
         for (Class<?> clazz : super.getPluginClasses(pluginId)) {
-            InterceptPathPattern interceptPaths = clazz.getAnnotation(InterceptPathPattern.class);
+            HexoBootIntercept interceptPaths = clazz.getAnnotation(HexoBootIntercept.class);
             if(interceptPaths != null && interceptPaths.value() != null) {
                 for (HandlerInterceptor handlerInterceptor : this.handlerInterceptorList) {
                     if(handlerInterceptor instanceof MappedInterceptor) {
