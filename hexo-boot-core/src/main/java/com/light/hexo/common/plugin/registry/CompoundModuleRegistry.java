@@ -26,20 +26,32 @@ public class CompoundModuleRegistry extends AbstractModuleRegistry implements Mo
         this.moduleRegistryList.add(new HandlerRegistry(pluginManager));
         this.moduleRegistryList.add(new InterceptorRegistry(pluginManager));
         this.moduleRegistryList.add(new ThymeleafRegistry(pluginManager));
+        this.moduleRegistryList.add(new ScheduleRegistry(pluginManager));
     }
 
     @Override
     public void register(String pluginId) {
-        for (ModuleRegistry moduleRegistry : this.moduleRegistryList) {
-            moduleRegistry.register(pluginId);
+        try {
+            for (ModuleRegistry moduleRegistry : this.moduleRegistryList) {
+                moduleRegistry.register(pluginId);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            super.clearPluginClass(pluginId);
         }
     }
 
     @Override
     public void unRegister(String pluginId) {
-        for (ModuleRegistry moduleRegistry : this.moduleRegistryList) {
-            moduleRegistry.unRegister(pluginId);
+        try {
+            for (ModuleRegistry moduleRegistry : this.moduleRegistryList) {
+                moduleRegistry.unRegister(pluginId);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            super.clearPluginClass(pluginId);
         }
-        super.clearPluginClass(pluginId);
     }
 }

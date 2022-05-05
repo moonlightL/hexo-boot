@@ -26,12 +26,12 @@ public abstract class CommonServiceFactory<T extends CommonService> implements A
     private Class<T> serviceClass;
 
     public CommonServiceFactory() {
-        serviceClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+        this.serviceClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
     }
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        Map<String, T> beansOfType = applicationContext.getBeansOfType(serviceClass);
+        Map<String, T> beansOfType = applicationContext.getBeansOfType(this.serviceClass);
         beansOfType.forEach((k, v) -> getServiceMap().put(v.getCode(), v));
     }
 

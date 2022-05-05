@@ -1,8 +1,12 @@
 package com.light.hexo.common.util;
 
 import org.springframework.util.StringUtils;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -117,6 +121,24 @@ public class RequestUtil {
         }
 
         return IP_V4;
+    }
+
+    /**
+     * 获取 HttpServletRequest
+     * @return
+     */
+    public static HttpServletRequest getHttpServletRequest() {
+        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+        return ((ServletRequestAttributes) requestAttributes).getRequest();
+    }
+
+    /**
+     * 获取 HttpServletResponse
+     * @return
+     */
+    public static HttpServletResponse getHttpServletResponse() {
+        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+        return ((ServletRequestAttributes) requestAttributes).getResponse();
     }
 
     public static boolean isIpAddress(String ip) {

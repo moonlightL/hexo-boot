@@ -12,7 +12,7 @@ public final class RequestFilterConstant {
     /**
      * 过滤指定开头 URL
      */
-    public static final String[] FILTER_START_URL = {"/admin", "/plugin", "/druid"};
+    public static final String[] FILTER_START_URL = {"/admin", "/plugin"};
 
     /**
      * 过滤执行结尾 URL
@@ -27,6 +27,6 @@ public final class RequestFilterConstant {
     /**
      * 访问用户 id
      */
-    public static final String VISIT_COOKIE_NAME = "v_unique_id";
+    public static final String VISIT_COOKIE_NAME = "V_UNIQUE_ID";
 
 }

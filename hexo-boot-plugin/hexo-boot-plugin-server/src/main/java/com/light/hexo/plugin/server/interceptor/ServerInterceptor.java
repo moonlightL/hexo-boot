@@ -20,7 +20,6 @@ public class ServerInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-
         Object obj = request.getSession().getAttribute(HexoConstant.CURRENT_USER);
         if (obj == null) {
             log.info("==================非法请求 server-plugin=====================");

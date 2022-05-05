@@ -7,6 +7,7 @@ import com.light.hexo.common.constant.HexoExceptionEnum;
 import com.light.hexo.common.exception.GlobalException;
 import com.light.hexo.common.plugin.BasePlugin;
 import com.light.hexo.common.plugin.HexoBootPluginManager;
+import com.light.hexo.common.plugin.registry.AbstractModuleRegistry;
 import com.light.hexo.common.request.PluginRequest;
 import com.light.hexo.common.util.DateUtil;
 import com.light.hexo.common.util.ExceptionUtil;
@@ -81,9 +82,7 @@ public class SysPluginServiceImpl extends BaseServiceImpl<SysPlugin> implements 
     public void installPlugin(String originalFilename, InputStream inputStream) throws GlobalException {
 
         String originName = FilenameUtils.getBaseName(originalFilename);
-        Example example = new Example(SysPlugin.class);
-        example.createCriteria().andEqualTo("originName", originName);
-        SysPlugin dbPlugin = this.pluginMapper.selectOneByExample(example);
+        SysPlugin dbPlugin = this.getPluginByName(originName);
         if (dbPlugin != null) {
             ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_PLUGIN_INSTALLED);
         }
@@ -204,10 +203,41 @@ public class SysPluginServiceImpl extends BaseServiceImpl<SysPlugin> implements 
         return dbPlugin != null && dbPlugin.getState();
     }
 
+    @Override
+    public void clearCache() throws GlobalException {
+        Path pluginsRoot = this.pluginManager.getPluginsRoot();
+        String pluginDirPath = pluginsRoot.toString();
+        File pluginDir = new File(pluginDirPath);
+        if (!pluginDir.exists()) {
+            return;
+        }
+
+        File[] files = pluginDir.listFiles();
+        if (files == null || files.length == 0) {
+            return;
+        }
+
+        for (File file : files) {
+            String filename = file.getName();
+            String originName = FilenameUtils.getBaseName(filename);
+            SysPlugin dbPlugin = this.getPluginByName(originName);
+            if (dbPlugin == null) {
+                // 删除
+                AbstractModuleRegistry.PLUGIN_CLASS_MAP.clear();
+                FileUtils.deleteQuietly(file);
+            }
+        }
+    }
+
     private void deletePluginFileError(SysPlugin sysPlugin) {
         sysPlugin.setState(false).setUpdateTime(LocalDateTime.now());
         this.updateModel(sysPlugin);
         ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_PLUGIN_CANNOT_DELETE);
     }
 
+    private SysPlugin getPluginByName(String name) {
+        Example example = new Example(SysPlugin.class);
+        example.createCriteria().andEqualTo("originName", name);
+        return this.pluginMapper.selectOneByExample(example);
+    }
 }

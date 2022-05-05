@@ -5,6 +5,7 @@ import com.light.hexo.common.constant.CacheKey;
 import com.light.hexo.common.constant.RequestFilterConstant;
 import com.light.hexo.common.util.CacheUtil;
 import com.light.hexo.common.util.MarkdownUtil;
+import com.light.hexo.common.util.RequestUtil;
 import com.light.hexo.common.util.SpringContextUtil;
 import com.light.hexo.core.admin.service.*;
 import com.light.hexo.mapper.model.Theme;
@@ -130,10 +131,9 @@ public class CommonController {
     }
 
     private void setVisitCookie() {
-        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
-        HttpServletRequest request = ((ServletRequestAttributes) requestAttributes).getRequest();
+        HttpServletRequest request = RequestUtil.getHttpServletRequest();
         if (request != null) {
-            HttpServletResponse response = ((ServletRequestAttributes) requestAttributes).getResponse();
+            HttpServletResponse response = RequestUtil.getHttpServletResponse();
             Cookie[] cookies = request.getCookies();
             if (cookies == null || cookies.length == 0) {
                 // 客户端手动清除 cookie
@@ -154,7 +154,7 @@ public class CommonController {
         String uuid = sessionId + "-" + RandomStringUtils.randomAlphanumeric(15);
         Cookie cookie = new Cookie(RequestFilterConstant.VISIT_COOKIE_NAME, uuid);
         cookie.setPath("/");
-        cookie.setMaxAge(24 * 3600);
+        cookie.setMaxAge(90 * 24 * 3600);
         response.addCookie(cookie);
     }
 

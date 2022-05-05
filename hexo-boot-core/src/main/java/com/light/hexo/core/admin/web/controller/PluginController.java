@@ -119,6 +119,17 @@ public class PluginController extends BaseController {
     }
 
     /**
+     * 清除缓存
+     * @return
+     */
+    @RequestMapping("clearCache.json")
+    @ResponseBody
+    public Result clearCache() {
+        this.pluginService.clearCache();
+        return Result.success();
+    }
+
+    /**
      * 用于测试
      * @param map
      * @return

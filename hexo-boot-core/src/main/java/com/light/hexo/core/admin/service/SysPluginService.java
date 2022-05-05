@@ -41,4 +41,9 @@ public interface SysPluginService extends BaseService<SysPlugin> {
      * @return
      */
     boolean checkPlugin(String pluginId) throws GlobalException;
+
+    /**
+     * 清除缓存
+     */
+    void clearCache() throws GlobalException;
 }

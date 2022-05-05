@@ -36,7 +36,7 @@ public abstract class AbstractModuleRegistry implements ModuleRegistry {
 
     protected DefaultListableBeanFactory beanFactory;
 
-    private static final Map<String, List<Class<?>>> PLUGIN_CLASS_MAP = new ConcurrentHashMap<>();
+    public static final Map<String, List<Class<?>>> PLUGIN_CLASS_MAP = new ConcurrentHashMap<>();
 
     public AbstractModuleRegistry(HexoBootPluginManager pluginManager) {
         this.pluginManager = pluginManager;

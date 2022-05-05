@@ -62,14 +62,14 @@ public class CoreSpringMvcConfig extends SpringMvcConfig {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
 
-        registry.addInterceptor(installInterceptor)
+        registry.addInterceptor(this.installInterceptor)
                 .addPathPatterns("/")
                 .addPathPatterns("/admin")
                 .addPathPatterns("/admin/login.html")
                 .addPathPatterns("/admin/login.json")
                 .excludePathPatterns("/error");
 
-        registry.addInterceptor(visitInterceptor)
+        registry.addInterceptor(this.visitInterceptor)
                 .addPathPatterns("/**")
                 .excludePathPatterns(
                         "/**/*.ico",
@@ -81,7 +81,7 @@ public class CoreSpringMvcConfig extends SpringMvcConfig {
                 .excludePathPatterns("/images/**")
                 .excludePathPatterns("/error");
 
-        registry.addInterceptor(userInterceptor)
+        registry.addInterceptor(this.userInterceptor)
                 .addPathPatterns("/admin/**")
                 .excludePathPatterns(
                         "/admin/assets/**",
