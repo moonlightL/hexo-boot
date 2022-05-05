@@ -25,6 +25,11 @@ public final class RequestFilterConstant {
     public static final String ROBOT_SOURCE = "Robot/Spider";
 
     /**
+     * 未知来源
+     */
+    public static final String UNKNOWN_SOURCE = "Unknown";
+
+    /**
      * 访问用户 id
      */
     public static final String VISIT_COOKIE_NAME = "V_UNIQUE_ID";

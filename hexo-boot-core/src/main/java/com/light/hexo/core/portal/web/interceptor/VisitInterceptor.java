@@ -1,5 +1,6 @@
 package com.light.hexo.core.portal.web.interceptor;
 
+import com.light.hexo.common.constant.RequestFilterConstant;
 import com.light.hexo.common.vo.Result;
 import com.light.hexo.common.event.VisitEvent;
 import com.light.hexo.core.admin.service.BlacklistService;
@@ -47,7 +48,14 @@ public class VisitInterceptor extends HandlerInterceptorAdapter {
             return false;
         }
 
-        this.eventPublisher.emit(new VisitEvent(this, ipAddr, BrowserUtil.getBrowserName(request)));
+        String browserName = BrowserUtil.getBrowserName(request);
+        if (RequestFilterConstant.ROBOT_SOURCE.equals(browserName) ||
+            RequestFilterConstant.UNKNOWN_SOURCE.equals(browserName)) {
+            log.info("==============VisitInterceptor 爬虫/未知来源, url: {}, ip: {}=====================", URLDecoder.decode(request.getRequestURI(), "UTF-8"), ipAddr);
+            return true;
+        }
+
+        this.eventPublisher.emit(new VisitEvent(this, ipAddr, browserName));
 
         request.setAttribute("time", System.currentTimeMillis());
 
