@@ -36,16 +36,18 @@ public class VisitInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
-        if (this.blacklistService.isBlacklist(RequestUtil.getIpAddr(request))) {
+        String ipAddr = RequestUtil.getIpAddr(request);
+        if (this.blacklistService.isBlacklist(ipAddr)) {
             if (RequestUtil.isAjax(request)) {
                 this.print(response, JsonUtil.obj2String(Result.fail(GlobalExceptionEnum.ERROR_IN_BLACKLIST)));
             } else {
                 ExceptionUtil.throwExToPage(GlobalExceptionEnum.ERROR_IN_BLACKLIST);
             }
+            log.info("==============VisitInterceptor 黑名单用户访问: {}=====================", ipAddr);
             return false;
         }
 
-        this.eventPublisher.emit(new VisitEvent(this, RequestUtil.getIpAddr(request), BrowserUtil.getBrowserName(request)));
+        this.eventPublisher.emit(new VisitEvent(this, ipAddr, BrowserUtil.getBrowserName(request)));
 
         request.setAttribute("time", System.currentTimeMillis());
 
@@ -56,7 +58,7 @@ public class VisitInterceptor extends HandlerInterceptorAdapter {
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
         super.afterCompletion(request, response, handler, ex);
         long start = (long) request.getAttribute("time");
-        log.info("=========visit afterCompletion 请求 {}, 耗时 {} ms========", URLDecoder.decode(request.getRequestURI(), "UTF-8"), (System.currentTimeMillis() - start));
+        log.info("=========VisitInterceptor afterCompletion 请求 {}, 耗时 {} ms========", URLDecoder.decode(request.getRequestURI(), "UTF-8"), (System.currentTimeMillis() - start));
     }
 
     private void print(HttpServletResponse response, String result) throws IOException {

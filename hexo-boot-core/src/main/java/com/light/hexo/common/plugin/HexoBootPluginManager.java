@@ -44,6 +44,7 @@ public class HexoBootPluginManager extends BasePluginManager implements Initiali
             this.moduleRegistry.register(pluginId);
         } catch (Exception e) {
             log.error("========== HexoBootPluginManager startPlugin {}===============", e);
+            super.unloadPlugin(pluginId);
             ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_PLUGIN_START);
         }
 

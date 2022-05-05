@@ -100,24 +100,19 @@ public class SysPluginServiceImpl extends BaseServiceImpl<SysPlugin> implements 
         PluginWrapper pluginWrapper = this.pluginManager.getPlugin(pluginId);
         PluginDescriptor descriptor = pluginWrapper.getDescriptor();
 
-        try {
-            PluginState pluginState = this.pluginManager.startPlugin(pluginId, filePath);
-            SysPlugin plugin = new SysPlugin();
-            plugin.setPluginId(pluginId)
-                  .setOriginName(originName)
-                  .setState(pluginState.toString().equals(PluginState.STARTED.toString()))
-                  .setRemark(descriptor.getPluginDescription())
-                  .setVersion(descriptor.getVersion())
-                  .setAuthor(descriptor.getProvider())
-                  .setFilePath(filePath)
-                  .setConfigUrl(((BasePlugin) pluginWrapper.getPlugin()).getConfigUrl())
-                  .setCreateTime(LocalDateTime.now())
-                  .setUpdateTime(plugin.getCreateTime());
-            this.pluginMapper.insert(plugin);
-
-        } catch (Exception e) {
-            this.pluginManager.unloadPlugin(pluginId);
-        }
+        PluginState pluginState = this.pluginManager.startPlugin(pluginId, filePath);
+        SysPlugin plugin = new SysPlugin();
+        plugin.setPluginId(pluginId)
+              .setOriginName(originName)
+              .setState(pluginState.toString().equals(PluginState.STARTED.toString()))
+              .setRemark(descriptor.getPluginDescription())
+              .setVersion(descriptor.getVersion())
+              .setAuthor(descriptor.getProvider())
+              .setFilePath(filePath)
+              .setConfigUrl(((BasePlugin) pluginWrapper.getPlugin()).getConfigUrl())
+              .setCreateTime(LocalDateTime.now())
+              .setUpdateTime(plugin.getCreateTime());
+        this.pluginMapper.insert(plugin);
     }
 
     @Override
@@ -169,29 +164,28 @@ public class SysPluginServiceImpl extends BaseServiceImpl<SysPlugin> implements 
                 log.error("=========== uninstallPlugin 备份失败 plugin-id: {} =================", pluginId);
             }
 
-            if (this.pluginManager.checkPlugin(pluginId)) {
-                try {
+            try {
+                if (this.pluginManager.checkPlugin(pluginId)) {
                     this.pluginManager.deletePlugin(pluginId);
-                    super.removeModel(id);
-                } catch (Exception e) {
-                    log.error("=========== uninstallPlugin 删除插件失败 plugin-id: {}, error: {}=================", pluginId, e);
-                    this.deletePluginFileError(dbPlugin);
-                }
-            } else {
-                boolean deleteQuietly = false;
-                int tryCount = 0;
-                while (!deleteQuietly && tryCount++ < 10) {
-                    System.gc();
-                    deleteQuietly = FileUtils.deleteQuietly(pluginFile);
-                }
+                } else {
+                    boolean deleteQuietly = false;
+                    int tryCount = 0;
+                    while (!deleteQuietly && tryCount++ < 10) {
+                        System.gc();
+                        deleteQuietly = FileUtils.deleteQuietly(pluginFile);
+                    }
 
-                if (!deleteQuietly) {
-                    this.deletePluginFileError(dbPlugin);
+                    if (!deleteQuietly) {
+                        this.deletePluginFileError(dbPlugin);
+                    }
                 }
                 super.removeModel(id);
+            } catch (Exception e) {
+                log.error("=========== uninstallPlugin 删除插件失败 plugin-id: {}, error: {}=================", pluginId, e);
+                this.deletePluginFileError(dbPlugin);
+            } finally {
+                System.gc();
             }
-
-            System.gc();
         }
     }
 
