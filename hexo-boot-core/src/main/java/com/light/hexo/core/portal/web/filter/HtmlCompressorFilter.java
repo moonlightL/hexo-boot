@@ -69,9 +69,4 @@ public class HtmlCompressorFilter implements Filter {
             }
         }
     }
-
-    @Override
-    public void destroy() {
-        // do nothing
-    }
 }
