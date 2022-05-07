@@ -226,10 +226,10 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
 
         if (post.getPublish() != null && post.getPublish()) {
             post.setPublishDate(now.toLocalDate().toString())
-                    .setYear(now.getYear() + "")
-                    .setMonth(DateUtil.fillTime(now.getMonth().getValue()))
-                    .setDay(DateUtil.fillTime(now.getDayOfMonth()))
-                    .setLink(post.getYear() + "/" + post.getMonth() + "/" + post.getDay() + "/" + StringUtils.replace(post.getTitle(), " ", "-") + "/");
+                .setYear(now.getYear() + "")
+                .setMonth(DateUtil.fillTime(now.getMonth().getValue()))
+                .setDay(DateUtil.fillTime(now.getDayOfMonth()))
+                .setLink(post.getYear() + "/" + post.getMonth() + "/" + post.getDay() + "/" + StringUtils.replace(post.getTitle(), " ", "-") + "/");
 
             String customLink = post.getCustomLink();
             if (StringUtils.isNotBlank(customLink)) {
