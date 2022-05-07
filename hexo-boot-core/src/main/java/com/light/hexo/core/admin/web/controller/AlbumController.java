@@ -42,7 +42,7 @@ public class AlbumController extends BaseController {
 
     private static final String[] PHOTO_VALID_SUFFIX = {".jpg", ".jpeg", ".png", ".gif", ".webp"};
 
-    private static final String[] VIDEO_VALID_SUFFIX = {".mp4", ".avi", ".rmvb", ".rm", ".wmv", ".mov"};
+    private static final String[] VIDEO_VALID_SUFFIX = {".mp4", ".avi", ".wmv", ".mov"};
 
     @Autowired
     private AlbumService albumService;

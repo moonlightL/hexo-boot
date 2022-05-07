@@ -82,7 +82,7 @@ public class DefaultFileService {
 
         FileService fileService = this.getFileService(fileRequest.getManageMode());
 
-        CompletableFuture<FileResponse> secondFuture = CompletableFuture.supplyAsync(() -> {
+        CompletableFuture<FileResponse> uploadFuture = CompletableFuture.supplyAsync(() -> {
             long start = System.currentTimeMillis();
             FileResponse fileResponse = fileService.upload(fileRequest);
             log.info("========== DefaultFileService 上传至远程图床耗时: {} ms============", (System.currentTimeMillis() - start));
@@ -92,14 +92,14 @@ public class DefaultFileService {
         FileResponse fileResponse;
 
         try {
-            fileResponse = secondFuture.get(10, TimeUnit.SECONDS);
+            fileResponse = uploadFuture.get(10, TimeUnit.SECONDS);
         } catch (Exception e) {
             fileResponse = new FileResponse();
             if (e instanceof TimeoutException) {
                 fileResponse.setSuccess(true);
                 fileResponse.setErrorMsg("上传等待超时，请稍等30秒后刷新页面再查看上传文件");
             }
-            e.printStackTrace();
+            log.error("=========== 文件上传异常 e:{} =============", e);
         }
 
         fileResponse.setOriginalName(fileRequest.getOriginalName());
@@ -196,7 +196,7 @@ public class DefaultFileService {
      */
     public FileService getFileService(String manageMode) {
         FileService fileService;
-        if (manageMode == null) {
+        if (StringUtils.isBlank(manageMode)) {
             manageMode = this.getManageMode();
         }
 

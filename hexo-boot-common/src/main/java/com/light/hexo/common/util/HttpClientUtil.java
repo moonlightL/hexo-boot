@@ -127,11 +127,11 @@ public class HttpClientUtil { private HttpClientUtil() { }
 
         // 设置参数
         if (paramMap != null && !paramMap.isEmpty()) {
-            List<NameValuePair> formparams = new ArrayList<>();
+            List<NameValuePair> formParams = new ArrayList<>();
             for (Map.Entry<String, Object> entry : paramMap.entrySet()) {
-                formparams.add(new BasicNameValuePair(entry.getKey(), entry.getValue().toString()));
+                formParams.add(new BasicNameValuePair(entry.getKey(), entry.getValue().toString()));
             }
-            UrlEncodedFormEntity entity = new UrlEncodedFormEntity(formparams, Consts.UTF_8);
+            UrlEncodedFormEntity entity = new UrlEncodedFormEntity(formParams, Consts.UTF_8);
             httpPost.setEntity(entity);
         }
 

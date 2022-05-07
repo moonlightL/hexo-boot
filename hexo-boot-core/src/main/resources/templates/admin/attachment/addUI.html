@@ -93,7 +93,7 @@
                 });
 
                 this.on("success", function (data, resp) {
-                    console.log(resp);
+
                     if (!resp.success) {
                         $.hexo.modal.tip("上传失败: " + resp.message, "error");
                         return;
