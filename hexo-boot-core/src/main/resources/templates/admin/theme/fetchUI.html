@@ -27,10 +27,10 @@
                 <div class="form-group row">
                     <label class="col-lg-4 col-md-2 col-form-label" for="themeUrl">主题地址 <span style="position: absolute; left: 75px;" title="主题地址必须是hexo-boot-theme系列"><i class="fa fa-info-circle"></i></span></label>
                     <div class="col-lg-8 col-md-8">
-                        <input type="text" class="form-control" id="themeUrl" name="themeUrl" placeholder="粘贴主题地址到输入框，点击“拉取”即可" >
+                        <input type="text" class="form-control" id="themeUrl" name="themeUrl" placeholder="粘贴主题地址到输入框，点击“安装”即可" >
                     </div>
                     <div class="col-lg-4 col-md-2">
-                        <button type="button" class="btn btn-primary" id="submitBtn">拉取</button>
+                        <button type="button" class="btn btn-primary" id="submitBtn">安装</button>
                     </div>
                 </div>
                 <div class="form-group row">
@@ -38,10 +38,10 @@
                         <textarea id="resultContainer" class="form-control" cols="30" rows="4" style="resize: none;overflow: auto;" disabled></textarea>
                     </div>
                 </div>
-                <div class="form-group row">
+                <div class="row" style="visibility: hidden" id="progressContainer">
                     <div class="col-lg-12 col-md-12">
                         <div class="progress push">
-                            <div id="progressbar" class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" style="width: 0%;" aria-valuenow="1" aria-valuemin="0" aria-valuemax="100">
+                            <div id="progressbar" class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" aria-valuenow="1" aria-valuemin="0" aria-valuemax="100">
                                 <span id="progressText" class="progress-bar-label" style="max-width: unset">0%</span>
                             </div>
                         </div>
@@ -80,23 +80,22 @@
             let themeName = tmp.split(".")[0];
 
             $(that).prop("disabled", true);
-            let progressbar = document.getElementById("progressbar");
-            let progressText = document.getElementById("progressText");
+            document.getElementById("progressContainer").style.visibility = "visible";
+            let $progressbar = $("#progressbar");
+            let $progressText = $("#progressText");
             let $resultContainer = $("#resultContainer");
+
             let progress = Math.floor(Math.random() * 8) + 1;
-            progressbar.style.width = progress + "%";
-            progressText.innerHTML = progress + "%";
-            $resultContainer.val("***********************************************【开始】***********************************************")
-                            .val($resultContainer.val() + "\n开始拉取【" + themeName + "】主题......"+progress+"%");
+            $progressbar.width(progress + "%");
+            $progressText.text(progress + "%");
+            $resultContainer.val("开始安装【" + themeName + "】主题......" + progress + "%");
             let processInterval = setInterval(function() {
-                progress += Math.floor(Math.random() * 16) + 1;
-                progressbar.style.width = progress + "%";
-                progressText.innerHTML = progress + "%";
-                $resultContainer.val($resultContainer.val() + "\n正在拉取【" + themeName + "】主题......"+progress+"%");
-                if (progress >= 80) {
+                progress += 1;
+                runProcess(progress, $progressbar, $progressText, $resultContainer, themeName);
+                if (progress >= 90) {
                     clearInterval(processInterval);
                 }
-            }, 1000);
+            }, 200);
 
             $.ajax({
                 type: "POST",
@@ -104,14 +103,10 @@
                 data: {"themeUrl": themeUrl},
                 dataType: "JSON",
                 success: function (resp) {
-                    $(that).prop("disabled", false);
                     clearInterval(processInterval);
-                    progress += Math.floor(Math.random() * 8) + 1;
-                    progressbar.style.width = progress + "%";
-                    progressText.innerHTML = progress + "%";
+
                     if (resp.success) {
                         let num = 0;
-                        $resultContainer.val($resultContainer.val() + "\n【" + themeName + "】主题拉取成功,正在进行安装......"+progress+"%");
                         let timer = setInterval(function() {
                             $.ajax({
                                 type: "POST",
@@ -121,19 +116,31 @@
                                 success: function (resp) {
                                     num++;
                                     if (resp.data === true) {
-                                        progressbar.style.width = "100%";
-                                        progressText.innerHTML = "100%";
-                                        $resultContainer.val($resultContainer.val() + "\n【" + themeName + "】主题安装成功......100%")
-                                                        .val($resultContainer.val() + "\n***********************************************【结束】***********************************************");
-                                        window.parent.ThemeManager.query();
                                         clearInterval(timer);
+
+                                        processInterval = setInterval(function() {
+                                            progress += 1;
+                                            if (progress == 100) {
+                                                clearInterval(processInterval);
+                                                $progressbar.width("100%").removeClass("progress-bar-striped progress-bar-animated");
+                                                $progressText.text("100%");
+                                                $resultContainer.val($resultContainer.val() + "\n【" + themeName + "】主题安装成功......100%");
+                                                $resultContainer.scrollTop($resultContainer.prop("scrollHeight"));
+                                                $.hexo.modal.tip("操作成功", "success", function () {
+                                                    window.parent.ThemeManager.query();
+                                                });
+                                                return;
+                                            }
+                                            runProcess(progress, $progressbar, $progressText, $resultContainer, themeName);
+                                        }, 50);
                                     }
 
                                     // 10 秒内不能成功保存主题配置，视为失败
                                     if (num >= 10) {
                                         clearInterval(timer);
-                                        $resultContainer.val($resultContainer.val() + "\n【" + themeName + "】主题配置保存失败!")
-                                            .val($resultContainer.val() + "\n***********************************************【结束】***********************************************");
+                                        $progressbar.removeClass("progress-bar-animated").addClass("bg-danger");
+                                        $resultContainer.val($resultContainer.val() + "\n【" + themeName + "】主题配置保存失败!");
+                                        $resultContainer.scrollTop($resultContainer.prop("scrollHeight"));
                                     }
                                 }
                             });
@@ -142,11 +149,18 @@
                 },
                 error: function () {
                     $(that).prop("disabled", false);
-                    $resultContainer.val($resultContainer.val() + "\n[失败] " + themeName + "主题拉取失败!")
-                                    .val($resultContainer.val() + "\n***********************************************【结束】***********************************************");
+                    $progressbar.removeClass("progress-bar-animated").addClass("bg-danger");
+                    $resultContainer.val($resultContainer.val() + "\n[失败] " + themeName + "主题拉取失败!");
                 }
             });
         });
+
+        function runProcess(progress, $progressbar, $progressText, $resultContainer, themeName) {
+            $progressbar.width(progress + "%");
+            $progressText.text(progress + "%");
+            $resultContainer.val($resultContainer.val() + "\n正在安装【" + themeName + "】主题......" + progress + "%");
+            $resultContainer.scrollTop($resultContainer.prop("scrollHeight"));
+        }
     });
 </script>
 </body>

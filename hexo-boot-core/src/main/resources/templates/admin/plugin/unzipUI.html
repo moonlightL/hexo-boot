@@ -12,23 +12,37 @@
 
 <div class="content">
     <div class="block block-fx-shadow">
-
         <div class="block-content">
-            <div class="row justify-content-center py-20">
-                <div class="col-xl-6">
-                    <div class="form-group row">
-                        <span class="dropzone" id="dropz" style="border: 1px solid #D4DAE3;margin-left: 5px;margin-right: 5px;width: 100%;border-radius: 5px;"></span>
+            <div class="justify-content-center py-20">
+                <div class="form-group row">
+                    <label class="col-lg-4 col-md-2 col-form-label">插件文件 <span style="position: absolute; left: 75px;" title="插件文件必须是hexo-boot-theme系列"><i class="fa fa-info-circle"></i></span></label>
+                    <div class="col-lg-8 col-md-8">
+                        <form action="" method="post" enctype="multipart/form-data">
+                            <input type="text" class="form-control" id="selectFile" readonly="readonly" style="height: 2.8rem; background: #fff; cursor: pointer" placeholder="请选择插件文件(.zip)">
+                        </form>
                     </div>
-                    <div class="form-group row">
-                        <div class="col-lg-8 text-center">
-                            <button type="button" class="btn btn-primary" id="uploadBtn">解压安装</button>
+                    <div class="col-lg-4 col-md-2">
+                        <button type="button" class="btn btn-primary" id="uploadBtn">上传</button>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-lg-12 col-md-12">
+                        <textarea id="resultContainer" class="form-control" cols="30" rows="4" style="resize: none;overflow: auto;" disabled></textarea>
+                    </div>
+                </div>
+                <div class="row" style="visibility: hidden" id="progressContainer">
+                    <div class="col-lg-12 col-md-12">
+                        <div class="progress push">
+                            <div id="progressbar" class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" aria-valuenow="1" aria-valuemin="0" aria-valuemax="100">
+                                <span id="progressText" class="progress-bar-label" style="max-width: unset">0%</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="form-group row">
-                        <div class="col-lg-12 col-md-12">
-                            <div>
-                                <b>获取插件: </b><a href="https://extlight.com/repository/" target="_blank">资源仓库</a>&nbsp;&nbsp;
-                            </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-lg-12 col-md-12">
+                        <div>
+                            <b>获取插件: </b><a href="https://extlight.com/repository/" target="_blank">资源仓库</a>&nbsp;&nbsp;
                         </div>
                     </div>
                 </div>
@@ -40,69 +54,123 @@
 <script th:src="@{'/admin/assets/js/plugins/dropzonejs/dist/min/dropzone.min.js'}"></script>
 <script type="text/javascript" th:inline="javascript">
 
-    Dropzone.autoDiscover = false;
-    $(function(){
-        $("#dropz").dropzone({
-            method: "POST",
-            url: "/admin/plugin/installPlugin.json", //上传地址
-            addRemoveLinks: true,
-            maxFiles: 1,// 一次性上传的文件数量上限
-            maxFilesize: 100, // 单个上传文件大小，单位：MB
-            previewsContainer: null,
-            uploadMultiple: false, // 允许批量上传
-            parallelUploads: 1, // 每次上传的文件数量，默认值 2
-            autoProcessQueue: false, // 是否自动上传
-            acceptedFiles: ".zip",
-            dictDefaultMessage: '+<br>(上传插件文件.zip，每次仅上传1个插件)',
-            dictMaxFilesExceeded: "每次最多只能上传1个文件",
-            dictResponseError: '文件上传失败',
-            dictInvalidFileType: "支持上传主题源码 .zip 文件",
-            dictFallbackMessage: "浏览器不支持",
-            dictFileTooBig: "最大支持100MB文件上传",
-            dictRemoveFile: "删除",
-            dictUploadCanceled: "取消",
-            thumbnailWidth:"120",
-            thumbnailHeight:"120",
-            init: function () {
-                let myDropZone = this;
-                $("#uploadBtn").on("click", function(e) {
-                    e.preventDefault();
-                    // 手动上传
-                    myDropZone.processQueue();
-                });
+    let pluginManager = {
+        init: function() {
+            pluginManager.initUploadEvent();
+        },
+        initUploadEvent: function() {
+            Dropzone.autoDiscover = false;
+            $("#selectFile").dropzone({
+                method: "POST",
+                url: "/admin/plugin/installPlugin.json", //上传地址
+                maxFiles: 2,// 一次性上传的文件数量上限
+                maxFilesize: 100, // 单个上传文件大小，单位：MB
+                previewsContainer: false,
+                uploadMultiple: false, // 允许批量上传
+                autoProcessQueue: false, // 是否自动上传
+                acceptedFiles: ".zip",
+                dictMaxFilesExceeded: "每次最多只能上传1个文件",
+                dictResponseError: '文件上传失败',
+                dictInvalidFileType: "支持上传主题源码 .zip 文件",
+                dictFileTooBig: "最大支持100MB文件上传",
+                init: function () {
+                    let $progressbar = $("#progressbar");
+                    let $progressText = $("#progressText");
+                    let $resultContainer = $("#resultContainer");
+                    let progress = 1;
+                    let processInterval;
+                    let myDropZone = this;
+                    $("#uploadBtn").on("click", function(e) {
+                        let that = this;
+                        e.preventDefault();
+                        let selectFileVal = $("#selectFile").val();
+                        if (selectFileVal == "") {
+                            $.hexo.modal.tip("请选择插件文件再上传", "info");
+                            return;
+                        }
 
-                //当添加图片后的事件，上传按钮恢复可用
-                this.on("addedfile", function () {
-                    $("#uploadBtn").removeAttr("disabled");
-                });
+                        $(that).prop("disabled", true);
+                        document.getElementById("progressContainer").style.visibility = "visible";
+                        $progressbar.width(progress + "%");
+                        $progressText.text(progress + "%");
+                        $resultContainer.val($resultContainer.val() + "\n开始安装【" + selectFileVal + "】插件......" + progress + "%");
+                        processInterval = setInterval(function() {
+                            progress += 1;
+                            runProcess(progress, $progressbar, $progressText, $resultContainer, selectFileVal);
+                            if (progress >= 90) {
+                                clearInterval(processInterval);
+                            }
+                        }, 200);
 
-                this.on("error", function (data, message) {
-                    console.error(message);
-                    if (typeof message == "string") {
-                        $.hexo.modal.tip("上传失败: " + message, "error");
-                    } else{
-                        $.hexo.modal.tip("上传失败: " + message.error, "error");
-                    }
-                });
-
-                this.on("success", function (data, resp) {
-
-                    if (!resp.success) {
-                        $.hexo.modal.tip(resp.message, "error");
-                        window.parent.$.hexo.table.refreshData();
-                        return;
-                    }
-
-                    $.hexo.modal.tip("操作成功", "success", function () {
-                        window.parent.$.hexo.modal.close();
-                        window.parent.$.hexo.table.refreshData();
+                        // 手动上传
+                        myDropZone.processQueue();
                     });
 
-                });
-            }
-        });
+                    this.on("addedfile", function (data) {
 
-    });
+                        let acceptedFiles = this.getAcceptedFiles();
+                        if (acceptedFiles.length > 0) {
+                            this.removeFile(acceptedFiles[0]);
+                        }
+
+                        let selectFilename = data.name;
+                        $("#selectFile").val(selectFilename);
+                        $resultContainer.val("选择 " + selectFilename + " 插件文件");
+
+                    });
+
+                    this.on("error", function (data, message) {
+                        if (typeof message == "string") {
+                            $.hexo.modal.tip("上传失败: " + message, "error");
+                        } else{
+                            $.hexo.modal.tip("上传失败: " + message.error, "error");
+                            clearInterval(processInterval);
+                            $progressbar.removeClass("progress-bar-animated").addClass("bg-danger");
+                        }
+                    });
+
+                    this.on("success", function (data, resp) {
+                        clearInterval(processInterval);
+
+                        if (!resp.success) {
+                            $.hexo.modal.tip(resp.message, "error");
+                            window.parent.$.hexo.table.refreshData();
+                            clearInterval(processInterval);
+                            $progressbar.removeClass("progress-bar-animated").addClass("bg-danger");
+                            return;
+                        }
+
+                        let selectFileVal = $("#selectFile").val();
+                        processInterval = setInterval(function() {
+                            progress += 1;
+                            if (progress == 100) {
+                                clearInterval(processInterval);
+                                $progressbar.width("100%").removeClass("progress-bar-striped progress-bar-animated");
+                                $progressText.text("100%");
+                                $resultContainer.val($resultContainer.val() + "\n【" + selectFileVal + "】插件安装成功......100%");
+                                $resultContainer.scrollTop($resultContainer.prop("scrollHeight"));
+                                $.hexo.modal.tip("操作成功", "success", function () {
+                                    window.parent.$.hexo.table.refreshData();
+                                });
+                                return;
+                            }
+                            runProcess(progress, $progressbar, $progressText, $resultContainer, selectFileVal);
+                        }, 50);
+                    });
+                }
+            });
+        }
+    };
+
+    function runProcess(progress, $progressbar, $progressText, $resultContainer, pluginName) {
+        $progressbar.width(progress + "%");
+        $progressText.text(progress + "%");
+        $resultContainer.val($resultContainer.val() + "\n正在安装【" + pluginName + "】插件......" + progress + "%");
+        $resultContainer.scrollTop($resultContainer.prop("scrollHeight"));
+    }
+
+    pluginManager.init();
+
 </script>
 </body>
 </html>
