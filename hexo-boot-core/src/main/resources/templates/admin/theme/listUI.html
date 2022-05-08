@@ -50,9 +50,9 @@
             $("#toolbar").find("button").on("click", function(e) {
                 let $target = $(this);
                 if ($target.hasClass("hexo-fetch")) {
-                    $.hexo.modal._window("拉取主题", BASE_URL + "/fetchUI.html", 800, 310, false);
+                    $.hexo.modal._window("拉取安装", BASE_URL + "/fetchUI.html", 800, 310, false);
                 } else if ($target.hasClass("hexo-unzip")) {
-                    $.hexo.modal._window("解压主题", BASE_URL + "/unzipUI.html", 800, 356, false);
+                    $.hexo.modal._window("解压安装", BASE_URL + "/unzipUI.html", 800, 356, false);
                 } else if ($target.hasClass("hexo-refresh")) {
                     ThemeManager.query();
                 } else if ($target.hasClass("hexo-query")) {

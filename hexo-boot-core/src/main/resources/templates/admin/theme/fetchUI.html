@@ -85,7 +85,7 @@
             let $progressText = $("#progressText");
             let $resultContainer = $("#resultContainer");
 
-            let progress = Math.floor(Math.random() * 8) + 1;
+            let progress = 1;
             $progressbar.width(progress + "%");
             $progressText.text(progress + "%");
             $resultContainer.val("开始安装【" + themeName + "】主题......" + progress + "%");
@@ -95,7 +95,7 @@
                 if (progress >= 90) {
                     clearInterval(processInterval);
                 }
-            }, 200);
+            }, 50);
 
             $.ajax({
                 type: "POST",

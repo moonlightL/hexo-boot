@@ -451,6 +451,7 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
         File file = this.getThemeCatalog(false);
         File dir = new File(file.getAbsolutePath(), theme.getName());
         if (dir.exists() && dir.isDirectory()) {
+            this.deleteThemeBatch(Collections.singletonList(id));
             FileUtils.deleteQuietly(dir);
         }
 
