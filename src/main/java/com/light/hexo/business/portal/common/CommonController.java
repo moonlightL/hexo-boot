@@ -1,6 +1,5 @@
 package com.light.hexo.business.portal.common;
 
-import com.light.hexo.business.admin.config.BlogProperty;
 import com.light.hexo.business.admin.model.Theme;
 import com.light.hexo.business.admin.service.*;
 import com.light.hexo.common.component.event.EventPublisher;
@@ -10,9 +9,7 @@ import com.light.hexo.common.util.MarkdownUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -73,9 +70,6 @@ public class CommonController {
     @Autowired
     protected EventPublisher eventPublisher;
 
-    @Autowired
-    private BlogProperty blogProperty;
-
     protected String render(String pageName, boolean isDetail, Map<String, Object> resultMap) {
 
         // 主题
@@ -89,12 +83,9 @@ public class CommonController {
 
         this.settingBaseLink(activeTheme, resultMap);
 
-        String version = this.blogProperty.getVersion();
-        if (StringUtils.isBlank(version) || Double.valueOf(version) > 3.0) {
-            // 数量，兼容老版本主题
-            Map<String, Integer> countInfo = this.getCountInfo();
-            resultMap.put("countInfo", countInfo);
-        }
+        // 数量，兼容老版本主题
+        Map<String, Integer> countInfo = this.getCountInfo();
+        resultMap.put("countInfo", countInfo);
 
         return String.format("theme/%s/%s", themeName, pageName);
     }
