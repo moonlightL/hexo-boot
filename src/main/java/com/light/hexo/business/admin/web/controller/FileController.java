@@ -13,6 +13,9 @@ import com.light.hexo.common.model.Result;
 import com.light.hexo.common.model.bing.WebPic;
 import com.light.hexo.common.util.ExceptionUtil;
 import com.light.hexo.common.util.HttpClientUtil;
+import com.light.hexo.common.util.JsonUtil;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.input.BOMInputStream;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,6 +25,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -134,10 +140,13 @@ public class FileController {
 
     @RequestMapping(value = "/randomPic.json", method = RequestMethod.POST)
     @ResponseBody
-    public FileResult randomPic() throws GlobalException {
+    public FileResult randomPic() throws GlobalException, IOException {
         String result = HttpClientUtil.sendPost("https://api.ixiaowai.cn/gqapi/gqapi.php?return=json", "");
-        Gson gson = new Gson();
-        WebPic webPic = gson.fromJson(result, WebPic.class);
+        // 处理 json 串包含 UTF-8 的 bom 不可见字符
+        InputStream bis = new BOMInputStream(new ByteArrayInputStream(result.getBytes()));
+        String finalResult = IOUtils.toString(bis, "UTF-8");
+
+        WebPic webPic = JsonUtil.string2Obj(finalResult, WebPic.class);
         if (webPic == null || !"200".equals(webPic.getCode())) {
             return FileResult.fail("获取失败，请重新拉取");
         }
