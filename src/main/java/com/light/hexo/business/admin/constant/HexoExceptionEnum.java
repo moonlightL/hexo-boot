@@ -73,6 +73,7 @@ public enum HexoExceptionEnum implements GlobalExceptionMap {
     // 12xxx --> 导航
     ERROR_NAV_NOT_EXIST(12001, "访问路径不存在"),
     ERROR_NAV_PAGE_NOT_EXIST(12002, "访问页面不存在"),
+    ERROR_NAV_CAN_NOT_DELETE(12003, "默认导航不能删除"),
 
     // 13xxx --> 动态
     ERROR_DYNAMIC_NOT_EXIST(13001, "动态不存在"),

@@ -116,6 +116,18 @@ public class NavServiceImpl extends BaseServiceImpl<Nav> implements NavService {
     @Override
     public void removeNavBatch(List<String> idStrList) throws GlobalException {
         List<Integer> idList = idStrList.stream().map(Integer::valueOf).collect(Collectors.toList());
+        Example example = new Example(Nav.class);
+        example.createCriteria().andIn("id", idList);
+        List<Nav> navList = this.getBaseMapper().selectByExample(example);
+        if (navList.isEmpty()) {
+            return;
+        }
+
+        for (Nav nav : navList) {
+            if (nav.getNavType().equals(1)) {
+                ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_NAV_CAN_NOT_DELETE);
+            }
+        }
 
         this.removeBatch(idList);
         EhcacheUtil.clearByCacheName("navCache");
