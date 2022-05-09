@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, initial-scale=1, shrink-to-fit=no">
+    <div th:replace="~{admin/common :: common-link}"></div>
+</head>
+<body>
+<div class="content animated fadeIn">
+    <h2 class="content-heading"><i class="fa fa-cog"></i> 基础配置</h2>
+    <div class="block block-fx-shadow">
+        <ul class="nav nav-tabs nav-tabs-block" data-toggle="tabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" href="#siteArea">网站配置</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#bloggerArea">博主信息</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#postArea">文章配置</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#emailArea">邮件配置</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#otherArea">其他配置</a>
+            </li>
+        </ul>
+        <div class="block-content tab-content overflow-hidden">
+            <div class="tab-pane fade fade-left show active" id="siteArea" role="tabpanel">
+                <div class="content content-full">
+                    <div class="row justify-content-center py-30">
+                        <div class="col-lg-8 col-xl-6">
+                            <form class="js-validation-be-contact" id="siteForm" method="post">
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <label for="blog_name">博客名称</label>
+                                        <input class="form-control form-control-lg" id="blog_name" name="blog_name" type="text"  th:value="${configMap['blog_name']}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <label for="home_page">博客首页</label>
+                                        <input class="form-control form-control-lg" id="home_page" name="home_page" type="text" th:value="${configMap['home_page']}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <label for="description">博客描述</label>
+                                        <input class="form-control form-control-lg" id="description" name="description" type="text" th:value="${configMap['description']}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <label for="keywords">博客关键字</label>
+                                        <input class="form-control form-control-lg" id="keywords" name="keywords" type="text"  th:value="${configMap['keywords']}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <label for="logo_url">Logo 地址</label>
+                                        <input class="form-control form-control-lg" id="logo_url" name="logo_url" type="text"  th:value="${configMap['logo_url']}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <label for="favicon_url">Favicon 地址</label>
+                                        <input class="form-control form-control-lg" id="favicon_url" name="favicon_url" type="text"  th:value="${configMap['favicon_url']}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <label for="power_by">版权信息</label>
+                                        <input class="form-control form-control-lg" id="power_by" name="power_by" type="text"  th:value="${configMap['power_by']}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <label for="gongan_record">公安联网备案号</label>
+                                        <input class="form-control form-control-lg" id="gongan_record" name="gongan_record" type="text" th:value="${configMap['gongan_record']}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <label for="icp_record">ICP备案号</label>
+                                        <input class="form-control form-control-lg" id="icp_record" name="icp_record" type="text" th:value="${configMap['icp_record']}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12 text-center">
+                                        <button type="button" class="btn btn-hero btn-alt-primary min-width-175 submit-btn">
+                                            <i class="fa fa-send mr-5"></i> 修改
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade fade-left" id="bloggerArea" role="tabpanel">
+                <div class="content content-full">
+                    <div class="row justify-content-center py-30">
+                        <div class="col-lg-8 col-xl-6">
+                            <form class="js-validation-be-contact" id="bloggerForm" method="post">
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <label for="blog_author" title="如若修改，请在个人详情页操作"><i class="fa fa-info-circle"></i> 博主名称</label>
+                                        <input class="form-control form-control-lg" id="blog_author" name="blog_author" type="text" th:value="${configMap['blog_author']}" disabled>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <label for="email" title="如若修改，请在个人详情页操作"><i class="fa fa-info-circle"></i> 邮箱地址</label>
+                                        <input class="form-control form-control-lg" id="email" name="email" type="text" th:value="${configMap['email']}" disabled>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <label for="git_hub_account">GitHub 地址</label>
+                                        <input class="form-control form-control-lg" id="git_hub_account" name="git_hub_account" type="text" th:value="${configMap['git_hub_account']}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <label for="wx_account">微信号</label>
+                                        <input class="form-control form-control-lg" id="wx_account" name="wx_account" type="text" th:value="${configMap['wx_account']}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <label for="qq_account">QQ 号</label>
+                                        <input class="form-control form-control-lg" id="qq_account" name="qq_account" type="text" th:value="${configMap['qq_account']}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <label for="wei_bo_account">微博号</label>
+                                        <input class="form-control form-control-lg" id="wei_bo_account" name="wei_bo_account" type="text" th:value="${configMap['wei_bo_account']}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12 text-center">
+                                        <button type="button" class="btn btn-hero btn-alt-primary min-width-175 submit-btn">
+                                            <i class="fa fa-send mr-5"></i> 修改
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade fade-left" id="postArea" role="tabpanel">
+                <div class="content content-full">
+                    <div class="row justify-content-center py-30">
+                        <div class="col-lg-8 col-xl-6">
+                            <form class="js-validation-be-contact" id="postForm" method="post">
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <label for="license">文章版权协议</label>
+                                        <input class="form-control form-control-lg" id="license" name="license" type="text" th:value="${configMap['license']}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <label for="license_url">文章版权说明地址</label>
+                                        <input class="form-control form-control-lg" id="license_url" name="license_url" type="text" th:value="${configMap['license_url']}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <label for="reward_comment">微信公众号图片地址</label>
+                                        <input class="form-control form-control-lg" id="we_chat_gzh" name="we_chat_gzh" type="text" th:value="${configMap['we_chat_gzh']}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <label for="reward_comment">关注微信公众号话语</label>
+                                        <input class="form-control form-control-lg" id="we_chat_gzh_comment" name="we_chat_gzh_comment" type="text" th:value="${configMap['we_chat_gzh_comment']}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <label for="reward_comment">打赏话语</label>
+                                        <input class="form-control form-control-lg" id="reward_comment" name="reward_comment" type="text" th:value="${configMap['reward_comment']}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <label for="reward_by_ali_pay">支付宝收款码图片地址</label>
+                                        <input class="form-control form-control-lg" id="reward_by_ali_pay" name="reward_by_ali_pay" type="text" th:value="${configMap['reward_by_ali_pay']}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <label for="reward_by_we_chat_pay">微信收款码图片地址</label>
+                                        <input class="form-control form-control-lg" id="reward_by_we_chat_pay" name="reward_by_we_chat_pay" type="text" th:value="${configMap['reward_by_we_chat_pay']}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <label for="meta_code">meta 代码</label>
+                                        <textarea class="form-control form-control-lg" id="meta_code" name="meta_code" th:text="${configMap['meta_code']}" rows="4" style="resize: none"></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <label for="script_code">script 代码</label>
+                                        <textarea class="form-control form-control-lg" id="script_code" name="script_code" th:text="${configMap['script_code']}" rows="8" style="resize: none"></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12 text-center">
+                                        <button type="button" class="btn btn-hero btn-alt-primary min-width-175 submit-btn">
+                                            <i class="fa fa-send mr-5"></i> 修改
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade fade-left" id="emailArea" role="tabpanel">
+                <div class="content content-full">
+                    <div class="row justify-content-center py-30">
+                        <div class="col-lg-8 col-xl-6">
+                            <form class="js-validation-be-contact" id="emailForm" method="post">
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <label for="email_host" title="如：smtp.163.com, smtp.qq.com"><i class="fa fa-info-circle"></i> 邮件服务器</label>
+                                        <input class="form-control form-control-lg" id="email_host" name="email_host" type="text" th:value="${configMap['email_host']}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <label for="email_username" title="邮箱登录账号"><i class="fa fa-info-circle"></i> 发送邮件账号</label>
+                                        <input class="form-control form-control-lg" id="email_username" name="email_username" type="text" th:value="${configMap['email_username']}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <label for="email_password" title="非登录密码，需开启邮箱中的pop3/stmp服务"><i class="fa fa-info-circle"></i> 发送邮件授权码</label>
+                                        <input class="form-control form-control-lg" id="email_password" name="email_password" type="text" th:value="${configMap['email_password']}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12 text-center">
+                                        <button type="button" class="btn btn-hero btn-alt-primary min-width-175 submit-btn">
+                                            <i class="fa fa-send mr-5"></i> 修改
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade fade-left" id="otherArea" role="tabpanel">
+                <div class="content content-full">
+                    <div class="row justify-content-center py-30">
+                        <div class="col-lg-8 col-xl-6">
+                            <form class="js-validation-be-contact" id="otherForm" method="post">
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <label for="post_page_size">主页文章列表数量（最终设置以主题中的配置为准）</label>
+                                        <input class="form-control form-control-lg" id="post_page_size" name="post_page_size" type="number" th:value="${configMap['post_page_size']}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <label for="editor_type">文章编辑器</label>
+                                        <select class="form-control form-control-lg" id="editor_type" name="editor_type">
+                                            <option th:text="editor.md + '（' + markdown + ' 编辑器）'" th:value="markdown" th:attr="selected=${'markdown' eq configMap['editor_type']}"></option>
+                                            <option th:text="summernote + '（' + html + ' 富文本编辑器）'" th:value="html" th:attr="selected=${'html' eq configMap['editor_type']}"></option>
+                                        </select>
+                                        <div style="margin: 1rem 0">
+                                            <b>注意：针对同一篇文章，editor.md 与 summernote 不要混合切换使用，否则文章显示样式会失效</b>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-12 text-center">
+                                        <button type="button" class="btn btn-hero btn-alt-primary min-width-175 submit-btn">
+                                            <i class="fa fa-send mr-5"></i> 修改
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="~{admin/common :: common-script}"></div>
+<script th:inline="javascript">
+    $(function () {
+        $(".submit-btn").on("click", function() {
+            $.hexo.action.sendRequest({
+                url: BASE_URL + "/save.json",
+                params: $(this).parents("form").serialize(),
+                callback: function () {
+                    $.hexo.modal.tip("修改成功", "success");
+                }
+            });
+        });
+    });
+</script>
+</body>

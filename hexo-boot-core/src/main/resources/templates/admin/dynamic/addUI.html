@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, initial-scale=1, shrink-to-fit=no">
+    <div th:replace="~{admin/common :: common-link}"></div>
+    <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/bootstrap/css/bootstrap.min.css'}">
+    <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/summernote/summernote.min.css'}">
+    <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/summernote/tam-emoji/css/emoji.css'}">
+    <style>
+        .content {
+            margin: 22px auto;
+        }
+
+        .color-turquoise {
+            background-color: #1ABC9C;
+            color: #fff;
+        }
+
+        .color-emerald {
+            background-color: #2ECC71;
+            color: #fff;
+        }
+
+        .color-peter-river {
+            background-color: #3498DB;
+            color: #fff;
+        }
+
+        .color-amethyst {
+            background-color: #9B59B6;
+            color: #fff;
+        }
+
+        .color-wet-asphalt {
+            background-color: #34495E;
+            color: #fff;
+        }
+
+        .color-sun-flower {
+            background-color: #F1C40F;
+            color: #fff;
+        }
+
+        .color-carrot {
+            background-color: #E67E22;
+            color: #fff;
+        }
+
+        .color-alizarin {
+            background-color: #E74C3C;
+            color: #fff;
+        }
+
+        .color-clouds {
+            background-color: #ECF0F1;
+            color: #bdc3c7;
+        }
+
+        .color-concrete {
+            background-color: #95A5A6;
+            color: #fff;
+        }
+
+        .colors {
+            line-height: 34px;
+            margin-left: 6px;
+        }
+
+        .bg-color-items {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            cursor: pointer;
+        }
+
+        .bg-color-items li {
+            float: left;
+            padding: 0 10px;
+        }
+
+        .bg-color {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+        }
+
+        .note-group-select-from-files {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="content">
+    <div class="block block-fx-shadow">
+        <div class="block-content">
+            <form id="saveForm" class="js-validation-bootstrap" th:action="@{${baseUrl} + '/add.json'}" method="post">
+                <input id="content" type="hidden" name="content" />
+                <div class="form-group row">
+                    <label class="col-lg-12 col-form-label" for="content">动态内容（限1000字符） <span class="text-danger">*</span> </label>
+                    <div class="col-lg-12">
+                        <div id="dynamicEditor"></div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <input type="hidden" name="color" id="color">
+                    <div class="colors">
+                        <ul class="bg-color-items">
+                            <li data-color="#1ABC9C"><span class="bg-color color-turquoise"></span></li>
+                            <li data-color="#2ECC71"><span class="bg-color color-emerald"></span></li>
+                            <li data-color="#3498DB"><span class="bg-color color-peter-river"></span></li>
+                            <li data-color="#9B59B6"><span class="bg-color color-amethyst"></span></li>
+                            <li data-color="#34495E"><span class="bg-color color-wet-asphalt"></span></li>
+                            <li data-color="#F1C40F"><span class="bg-color color-sun-flower"></span></li>
+                            <li data-color="#E67E22"><span class="bg-color color-carrot"></span></li>
+                            <li data-color="#E74C3C"><span class="bg-color color-alizarin"></span></li>
+                            <li data-color="#95A5A6"><span class="bg-color color-concrete"></span></li>
+                        </ul>
+                    </div>
+                    <button type="submit" class="btn btn-alt-primary" style="position: absolute;right: 44px" data-dismiss="modal" id="submitBtn">
+                        <i class="fa fa-send mr-5"></i> 发送
+                    </button>
+                </div>
+                <div class="form-group row">
+                    <div class="col-lg-12 col-md-12">
+                        <div>
+                            <b>注意: 上传图片、视频宽高最好限制在 720 x 368 范围</b>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div th:replace="~{admin/common :: common-script}"></div>
+<script th:src="@{'/admin/assets/js/plugins/bootstrap/js/bootstrap.min.js'}"></script>
+<script th:src="@{'/admin/assets/js/plugins/summernote/summernote.min.js'}"></script>
+<script th:src="@{'/admin/assets/js/plugins/summernote/lang/summernote-zh-CN.min.js'}"></script>
+<script th:src="@{'/admin/assets/js/plugins/summernote/tam-emoji/js/config.js'}"></script>
+<script th:src="@{'/admin/assets/js/plugins/summernote/tam-emoji/js/tam-emoji.min.js'}"></script>
+<script type="text/javascript" th:inline="javascript">
+
+    let MyEditor;
+
+    $(function() {
+
+        $("#submitBtn").on("click", function () {
+            $("#content").val(MyEditor.summernote('code'));
+            $.hexo.action.save("saveForm", null, function (resp) {
+                $.hexo.modal.tip("发布成功", "success", function () {
+                    window.parent.$.hexo.modal.close();
+                    window.parent.DynamicManager.query();
+                });
+            });
+        });
+
+        $(".bg-color-items").find("li").on("click", function () {
+            $(".bg-color").css("border", "none");
+            $("#color").val($(this).data("color"));
+            $(this).children().css("border", "2px solid #000")
+        });
+
+        let EmptyButton = function (context) {
+            let ui = $.summernote.ui;
+            let button = ui.button({
+                contents: '<i class="fa fa-trash"/>',
+                tooltip: '清除全部内容',
+                click: function () {
+                    MyEditor.summernote('code', '');
+                }
+            });
+            return button.render();
+        };
+
+        document.emojiSource = '/admin/assets/js/plugins/summernote/tam-emoji/img';
+        MyEditor = $('#dynamicEditor').summernote({
+            lang: "zh-CN",
+            placeholder: "写点内容吧~~",
+            tabsize: 4,
+            height: $(window.parent).height() - 400,
+            minHeight: $(window.parent).height() - 400,
+            maxHeight: $(window.parent).height() - 300,
+            toolbar: [
+                ['insert', ['link', 'picture', 'video', 'emoji']],
+                ['view', ['codeview', 'help']],
+                ['empty', ['empty']],
+                ['clearStyle', ['clearStyle']],
+            ],
+            buttons: {empty: EmptyButton},
+            callbacks: {
+                onPaste: function (ne) {
+                    let bufferText = ((ne.originalEvent || ne).clipboardData || window.clipboardData).getData('Text/plain');
+                    ne.preventDefault ? ne.preventDefault() : (ne.returnValue = false);
+                    // Firefox fix
+                    setTimeout(function () {
+                        document.execCommand("insertText", false, bufferText);
+                    }, 10);
+                }
+            }
+        });
+    });
+</script>
+</body>
+</html>

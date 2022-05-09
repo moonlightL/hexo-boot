@@ -1,3 +1,6 @@
+<h2>注意： Hexo Boot 4.0 版本项目代码结构大调整</h2>
+<h3>调整内容看下文第七点</h3>
+
 ## 一、Hexo Boot
 
 Hexo Boot 是基于 Spring Boot + MySQL 开发的一套开源的博客系统。前身是 [ml-blog](https://github.com/moonlightL/ml-blog) 博客系统，在此基础上演变和扩展而来。
@@ -73,6 +76,12 @@ Hexo Boot 是基于 Spring Boot + MySQL 开发的一套开源的博客系统。�
 ```
 
 更多详情请访问下边提供的网址进行浏览。
+
+### 2.10 插件管理
+
+```
+支持模块化功能开发，模块热插拔，实现功能定制化（4.0版本新增）
+```
 
 ## 三、预览效果
 
@@ -307,3 +316,13 @@ curl -L -o ~/.hexo-boot/application.yml --create-dirs https://gitee.com/moonligh
 2020-10-30 扩展主题配置，在线编辑主题文件，调整评论区插件的展示列表
 
 2020-10-22 上传开源
+
+## 七、Hexo-Boot 4.0 版本调整
+
+* 代码结构分层
+* 新增插件功能
+* 将 Druid 数据源替换为 HikariCP
+* 抽离系统信息代码，以插件形式封装
+* 抽离第三方对象存储代码，以插件形式封装
+* 新增随机拉取二次元图片功能
+* 修改部分页面 UI 交互

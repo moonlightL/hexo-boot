@@ -1,9 +1,0 @@
-User-agent: *
-Allow: /
-Allow: /archives/
-Allow: /categories/
-Allow: /tags/
-Allow: /friendLinks/
-Allow: /about/
-
-Disallow: /admin/

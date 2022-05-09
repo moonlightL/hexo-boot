@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh" mode="light" xmlns:th="http://www.thymeleaf.org">
+
+<div th:fragment="meta">
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="author" th:content="${#servletContext.getAttribute('configMap')['blog_author']}">
+    <meta name="referrer" content="no-referrer" />
+    [(${#servletContext.getAttribute('configMap')['meta_code']})]
+    <meta name="keywords" th:content="${#servletContext.getAttribute('configMap')['keywords']}" />
+    <meta name="description" th:content="${#servletContext.getAttribute('configMap')['description']}" />
+    <meta property="og:description" th:content="${#servletContext.getAttribute('configMap')['description']}" />
+</div>
+
+<div th:fragment="link">
+    <link rel="dns-prefetch" th:href="@{'//cdn.jsdelivr.net'}">
+    <link rel="shortcut icon" th:href="@{${#servletContext.getAttribute('configMap')['favicon_url']}}"/>
+    <link rel="stylesheet" th:href="@{${baseLink} + '/source/css/bootstrap/css/bootstrap.min.css'}">
+    <link rel="stylesheet" th:href="@{${baseLink} + '/source/fonts/font-awesome/css/font-awesome.min.css'}" />
+    <link rel="stylesheet" th:href="@{${baseLink} + '/source/js/iziModal/css/iziModal.min.css'}">
+    <link rel="stylesheet" th:href="@{${baseLink} + '/source/css/animate.css'}"/>
+    <link rel="stylesheet" th:href="@{${baseLink} + '/source/js/highlightjs/styles/'+ ${activeTheme.configMap['highlight']} +'.min.css'}"/>
+    <link rel="stylesheet" th:href="@{${baseLink} + '/source/js/fancybox/jquery.fancybox.min.css'}"/>
+    <link rel="stylesheet" th:href="@{${baseLink} + '/source/js/nprogress/nprogress.min.css'}">
+    <link rel="stylesheet" th:href="@{${baseLink} + '/source/js/overshare/css/share.min.css'}"/>
+    <link rel="stylesheet" th:href="@{${prefix} + '/source/css/app.css?v=' + ${activeTheme.configMap['version']}}"/>
+    <style th:if="${activeTheme.configMap['mourn'] == 'true'}">
+        #animate,.footer-copyright,.content,.options,#nprogress .bar, #nprogress .spinner-icon{
+            filter: grayscale(1);
+        }
+        .navbar ul.menu > li.active,.navbar-default .navbar-nav>.active>a,.navbar ul > li:hover,.navbar ul.menu > li a:hover {
+            background-color: #aaa !important;
+        }
+    </style>
+</div>
+
+<div th:fragment="nav">
+    <header>
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">
+                        <img alt="Brand" th:src="@{${#strings.isEmpty(#servletContext.getAttribute('configMap')['logo_url']) != true ? #servletContext.getAttribute('configMap')['logo_url'] : prefix + '/source/images/logo.png'}}">
+                    </a>
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">[[${#servletContext.getAttribute('configMap')['blog_name']}]]</a>
+                </div>
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="nav menu navbar-nav navbar-right">
+                        <li th:each="nav : ${#servletContext.getAttribute('firstNav')}" th:class="${currentNav.code eq nav.code ? 'item active' : 'item'}">
+                            <a data-pjax th:href="@{${#lists.isEmpty(nav.children) ? nav.link : 'javascript:void(0)'}}" th:data-link="${nav.link}">
+                                <i th:class="${nav.icon}"></i> [[${nav.name}]]
+                                <span th:if="${#lists.isEmpty(nav.children) == false}">
+                                    <i class="fa fa-caret-down"></i>
+                                </span>
+                            </a>
+                            <ul class="second-menu" th:if="${#lists.isEmpty(nav.children) == false}">
+                                <li class="item" th:each="child : ${nav.children}">
+                                    <a data-pjax th:href="@{${child.link}}"><i th:class="${child.icon}"></i> [[${child.name}]]</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+</div>
+
+<div th:fragment="footer">
+    <footer class="footer-copyright" id="footer-copyright">
+        <div class="hidden-xs">
+            <span th:text="${#servletContext.getAttribute('configMap')['power_by']}"></span>
+        </div>
+        <div>
+            <ul class="contract-info">
+                <li class="wechat" th:if="${#strings.isEmpty(#servletContext.getAttribute('configMap')['wx_account']) != true}">
+                    <a th:title="${#servletContext.getAttribute('configMap')['wx_account']}" class="socialicon" href="javascript:void(0)" target="_blank"><i class="fa fa-weixin fa-lg" aria-hidden="true"></i></a>
+                </li>
+                <li th:if="${#strings.isEmpty(#servletContext.getAttribute('configMap')['qq_account']) != true}">
+                    <a th:title="${#servletContext.getAttribute('configMap')['qq_account']}" class="socialicon" href="javascript:void(0)" target="_blank"><i class="fa fa-qq fa-lg" aria-hidden="true"></i></a>
+                </li>
+                <li th:if="${#strings.isEmpty(#servletContext.getAttribute('configMap')['git_hub_account']) != true}">
+                    <a title="github" class="socialicon" th:href="@{${#servletContext.getAttribute('configMap')['git_hub_account']}}" target="_blank"><i class="fa fa-github-alt fa-lg" aria-hidden="true"></i></a>
+                </li>
+            </ul>
+        </div>
+        <div class="hidden-xs">
+            <div th:if="${#strings.isEmpty(#servletContext.getAttribute('configMap')['gongan_record']) != true}">
+                <img th:src="@{${baseLink} + '/source/images/beian.png'}" alt="">&nbsp;<a th:href="@{'http://www.beian.gov.cn/portal/registerSystemInfo?'}" target="_blank" th:text="${#servletContext.getAttribute('configMap')['gongan_record']}"></a>
+            </div>
+            <div th:if="${#strings.isEmpty(#servletContext.getAttribute('configMap')['icp_record']) != true}" style="padding-left: 24px">
+                <a href="http://beian.miit.gov.cn/" target="_blank" th:text="${#servletContext.getAttribute('configMap')['icp_record']}"></a>
+            </div>
+        </div>
+    </footer>
+    <div id="aplayer" class="visible"></div>
+</div>
+
+<div th:fragment="comment(canComment)">
+    <div class="hb-comment"></div>
+    <script type='text/javascript' th:src="@{${baseLink} + '/source/js/hb-comment/hb-comment.js'}"></script>
+    <script th:inline="javascript">
+        HbComment.init({
+            el: ".hb-comment",
+            baseUrl: [[${baseLink}]] + "/source/js",
+            wrapClass: "ml-content",
+            canComment: [[${canComment}]]
+        });
+    </script>
+</div>
+
+<div th:fragment="script">
+    <script th:inline="javascript">
+        let themeName = [[${activeTheme.name}]];
+        let version = [[${activeTheme.configMap['version']}]];
+        let baseLink = [[${baseLink}]];
+        let openPjax = [[${activeTheme.configMap['PJAX']}]];
+    </script>
+    <script type='text/javascript' th:src="@{${baseLink} + '/source/js/plugins.js'}"></script>
+    <script type='text/javascript' th:src="@{${baseLink} + '/source/css/bootstrap/js/bootstrap.min.js'}"></script>
+    <script type='text/javascript' th:src="@{${baseLink} + '/source/js/fancybox/jquery.fancybox.min.js'}"></script>
+    <script type='text/javascript' th:src="@{${baseLink} + '/source/js/layer/layer.js'}"></script>
+    <script type='text/javascript' th:src="@{${prefix} + '/source/js/app.js?v=' + ${activeTheme.configMap['version']}}"></script>
+    [(${#servletContext.getAttribute('configMap')['script_code']})]
+</div>

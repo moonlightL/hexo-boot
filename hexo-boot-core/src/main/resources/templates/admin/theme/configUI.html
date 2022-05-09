@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, initial-scale=1, shrink-to-fit=no">
+    <div th:replace="~{admin/common :: common-link}"></div>
+    <style>
+        span {
+            display: inline-block;
+            overflow: hidden;
+            text-overflow:ellipsis;
+            white-space: nowrap;
+            max-width: 500px;
+        }
+        img {
+            box-shadow: 0 1px 20px 8px #EEE;
+        }
+        p {
+            padding-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="content">
+    <div class="block block-fx-shadow">
+        <div class="block-content">
+            <form id="saveForm" method="post" th:object="${vo}">
+                <div class="row justify-content-center py-20">
+                    <div class="col-md-4">
+                        <div class="form-group row">
+                            <div class="col-md-12">
+                                <p>预览图:</p>
+                                <img th:src="@{*{coverUrl}}" width="400" height="350" alt="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-7 offset-1">
+                        <p><b>主题参数</b></p>
+                        <div class="form-group row">
+                            <div class="col-md-3">主题名</div>
+                            <div class="col-md-9">
+                                <span id="filename" th:text="*{name}"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">备注</div>
+                            <div class="col-md-9">
+                                <span id="filePath" th:text="*{remark}"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row" th:each="config : ${extendList}">
+                            <div class="col-md-3" th:text="${config.configLabel}"></div>
+                            <div class="col-md-9">
+                                <span th:if="${config.configType eq 'input'}">
+                                    <input type="text" name="configValue" class="form-control theme-config" style="width: 300px;" th:value="${config.configValue}" th:data-id="${config.id}">
+                                </span>
+                                <span th:if="${config.configType eq 'select'}">
+                                    <span th:if="${#strings.isEmpty(config.configOption) == false}">
+                                        <select name="configValue" class="form-control theme-config" style="width: 300px;" th:data-id="${config.id}">
+                                            <option th:each="op : ${#strings.arraySplit(config.configOption, ',')}" th:text="${op}" th:value="${op}" th:attr="selected=${op eq config.configValue}"></option>
+                                        </select>
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <b>友情提示：</b>
+                            <b>
+                                ① 配置中无 CDN 选项，则该主题不支持 CDN<br>
+                                ② 开启 CDN，但不填写 CDN 地址，则系统使用默认的 CDN 地址<br>
+                                ③ 可浏览 <a href="https://www.extlight.com/2021/01/20/%E8%BD%BB%E6%9D%BE%E6%90%AD%E5%BB%BA%E4%B8%93%E5%B1%9E-CDN/" target="_blank">《轻松搭建专属 CDN》</a> 自行搭建 CDN <br>
+                                ④ 如要自行搭建 CDN ，目录结构可参照 <a href="https://github.com/moonlightL/vCard" target="_blank">vCard 仓库</a>，其 CDN 访问地址为 https://cdn.jsdelivr.net/gh/moonlightL/vCard@2.0
+                            </b>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <button type="button" class="btn btn-alt-primary pull-right" id="submitBtn" >
+                                <i class="fa fa-send mr-5"></i> 保存
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div th:replace="~{admin/common :: common-script}"></div>
+<script th:src="@{'/admin/assets/js/plugins/clipboard/clipboard.min.js'}"></script>
+<script type="text/javascript" th:inline="javascript">
+    $(function () {
+        $("#submitBtn").on("click", function () {
+
+            let length = $(".theme-config").length;
+            if (length === 0) {
+                window.parent.$.hexo.modal.close();
+            }
+
+            let parameter = [];
+            $(".theme-config").each(function (index, domEle) {
+                let $target = $(domEle);
+                let id = $target.data("id");
+                let val = $target.val();
+                parameter.push({"id": id, "configValue": val});
+            });
+
+            $.ajax({
+                type: "POST",
+                url: BASE_URL + "/saveConfig.json",
+                data: JSON.stringify(parameter),
+                dataType: "JSON",
+                contentType: 'application/json;charset=UTF-8',
+                success: function (resp) {
+                    $.hexo.modal.tip("保存成功", "success", function () {
+                        window.parent.$.hexo.modal.close();
+                    });
+                }
+            })
+        });
+    });
+</script>
+</body>
+</html>

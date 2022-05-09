@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, initial-scale=1, shrink-to-fit=no">
+    <div th:replace="~{admin/common :: common-link}"></div>
+    <style>
+        span {
+            display: inline-block;
+            overflow: hidden;
+            text-overflow:ellipsis;
+            white-space: nowrap;
+            max-width: 500px;
+        }
+        img {
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+
+<div class="content">
+    <div class="block block-fx-shadow">
+        <div class="block-content">
+            <form id="saveForm" method="post" >
+                <div class="form-group row">
+                    <label class="col-lg-4 col-md-2 col-form-label" for="themeUrl">主题地址 <span style="position: absolute; left: 75px;" title="主题地址必须是hexo-boot-theme系列"><i class="fa fa-info-circle"></i></span></label>
+                    <div class="col-lg-8 col-md-8">
+                        <input type="text" class="form-control" id="themeUrl" name="themeUrl" placeholder="粘贴主题地址到输入框，点击“安装”即可" >
+                    </div>
+                    <div class="col-lg-4 col-md-2">
+                        <button type="button" class="btn btn-primary" id="submitBtn">安装</button>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-lg-12 col-md-12">
+                        <textarea id="resultContainer" class="form-control" cols="30" rows="4" style="resize: none;overflow: auto;" disabled></textarea>
+                    </div>
+                </div>
+                <div class="row" style="visibility: hidden" id="progressContainer">
+                    <div class="col-lg-12 col-md-12">
+                        <div class="progress push">
+                            <div id="progressbar" class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" aria-valuenow="1" aria-valuemin="0" aria-valuemax="100">
+                                <span id="progressText" class="progress-bar-label" style="max-width: unset">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-lg-12 col-md-12">
+                        <div>
+                            <b>获取主题: </b><a href="https://extlight.com/repository/" target="_blank">资源仓库</a>&nbsp;&nbsp;
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div th:replace="~{admin/common :: common-script}"></div>
+<script type="text/javascript" th:inline="javascript">
+    $(function () {
+        $("#submitBtn").on("click", function () {
+            let that = this;
+            let themeUrl = $("#themeUrl").val();
+            if (!themeUrl) {
+                $.hexo.modal.tip("主题地址不能为空", "error");
+                return;
+            }
+
+            let index = themeUrl.indexOf("hexo-boot-theme");
+            if (index < 0) {
+                $.hexo.modal.tip("主题地址格式不正确", "error");
+                return;
+            }
+
+            let splits = themeUrl.split("-");
+            let tmp = splits[splits.length - 1];
+            let themeName = tmp.split(".")[0];
+
+            $(that).prop("disabled", true);
+            document.getElementById("progressContainer").style.visibility = "visible";
+            let $progressbar = $("#progressbar");
+            let $progressText = $("#progressText");
+            let $resultContainer = $("#resultContainer");
+
+            let progress = 1;
+            $progressbar.width(progress + "%");
+            $progressText.text(progress + "%");
+            $resultContainer.val("正在拉取【" + themeName + "】主题代码......" + progress + "%");
+            let processInterval = setInterval(function() {
+                progress += 1;
+                runProcess(progress, $progressbar, $progressText, $resultContainer, "正在拉取【" + themeName + "】主题代码");
+                if (progress >= 90) {
+                    clearInterval(processInterval);
+                }
+            }, 50);
+
+            $.ajax({
+                type: "POST",
+                url: BASE_URL + "/fetchTheme.json",
+                data: {"themeUrl": themeUrl},
+                dataType: "JSON",
+                success: function (resp) {
+                    clearInterval(processInterval);
+
+                    if (resp.success) {
+                        let num = 0;
+                        let timer = setInterval(function() {
+                            $.ajax({
+                                type: "POST",
+                                url: BASE_URL + "/checkThemeName.json",
+                                data: {"themeName": themeName},
+                                dataType: "JSON",
+                                success: function (resp) {
+                                    num++;
+                                    if (resp.data === true) {
+                                        clearInterval(timer);
+
+                                        processInterval = setInterval(function() {
+                                            progress += 1;
+                                            if (progress == 100) {
+                                                clearInterval(processInterval);
+                                                $progressbar.width("100%").removeClass("progress-bar-striped progress-bar-animated");
+                                                $progressText.text("100%");
+                                                $resultContainer.val($resultContainer.val() + "\n【" + themeName + "】主题安装成功......100%");
+                                                $resultContainer.scrollTop($resultContainer.prop("scrollHeight"));
+                                                $.hexo.modal.tip("操作成功", "success", function () {
+                                                    window.parent.ThemeManager.query();
+                                                });
+                                                return;
+                                            }
+                                            runProcess(progress, $progressbar, $progressText, $resultContainer, "正在解析、安装【" + themeName + "】主题");
+                                        }, 50);
+                                    }
+
+                                    // 10 秒内不能成功保存主题配置，视为失败
+                                    if (num >= 10) {
+                                        clearInterval(timer);
+                                        $progressbar.removeClass("progress-bar-animated").addClass("bg-danger");
+                                        $resultContainer.val($resultContainer.val() + "\n【" + themeName + "】主题配置保存失败!");
+                                        $resultContainer.scrollTop($resultContainer.prop("scrollHeight"));
+                                    }
+                                }
+                            });
+                        }, 1000);
+                    } else {
+                        $.hexo.modal.tip("安装失败: " + resp.message, "error");
+                        window.parent.ThemeManager.query();
+                        $resultContainer.val($resultContainer.val() + "\n" + resp.message + "! 安装失败!");
+                        $progressbar.removeClass("progress-bar-animated").addClass("bg-danger");
+                        $resultContainer.scrollTop($resultContainer.prop("scrollHeight"));
+                    }
+                },
+                error: function () {
+                    $progressbar.removeClass("progress-bar-animated").addClass("bg-danger");
+                    $resultContainer.val($resultContainer.val() + "\n[失败] " + themeName + "主题拉取失败!");
+                }
+            });
+        });
+
+        function runProcess(progress, $progressbar, $progressText, $resultContainer, text) {
+            $progressbar.width(progress + "%");
+            $progressText.text(progress + "%");
+            $resultContainer.val($resultContainer.val() + "\n" + text + "......" + progress + "%");
+            $resultContainer.scrollTop($resultContainer.prop("scrollHeight"));
+        }
+    });
+</script>
+</body>
+</html>

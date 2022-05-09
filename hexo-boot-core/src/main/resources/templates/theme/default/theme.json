@@ -1,0 +1,83 @@
+{
+  "name": "default",
+  "remark": "默认主题",
+  "extension": [
+    {
+      "key": "version",
+      "value": "3.4",
+      "type": "input",
+      "label": "版本号",
+      "update": true
+    },
+    {
+      "key": "pageSize",
+      "value": "9",
+      "type": "input",
+      "label": "页面大小",
+      "update": false
+    },
+    {
+      "key": "useCDN",
+      "value": "false",
+      "type": "select",
+      "option": "true,false",
+      "label": "启用CDN",
+      "update": false
+    },
+    {
+      "key": "CDNAddress",
+      "value": "https://cdn.jsdelivr.net/gh/moonlightL/default@3.4",
+      "type": "input",
+      "label": "CDN地址",
+      "update": true
+    },
+    {
+      "key": "PJAX",
+      "value": "true",
+      "type": "select",
+      "option": "true,false",
+      "label": "启用PJAX",
+      "update": false
+    },
+    {
+      "key": "animated",
+      "value": "false",
+      "type": "select",
+      "option": "true,false",
+      "label": "背景动画",
+      "update": false
+    },
+    {
+      "key": "mourn",
+      "value": "false",
+      "type": "select",
+      "option": "true,false",
+      "label": "开启哀悼",
+      "update": false
+    },
+    {
+      "key": "highlight",
+      "value": "atom-one-light",
+      "type": "select",
+      "option": "atom-one-light,atom-one-dark,github-gist",
+      "label": "代码高亮主题",
+      "update": true
+    },
+    {
+      "key": "commentShowType",
+      "value": "singleRow",
+      "type": "select",
+      "option": "singleRow,multiRow",
+      "label": "评论列表展示",
+      "update": false
+    },
+    {
+      "key": "layout",
+      "value": "grid",
+      "type": "select",
+      "option": "grid,full",
+      "label": "文章布局",
+      "update": false
+    }
+  ]
+}

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, initial-scale=1, shrink-to-fit=no">
+    <div th:replace="~{admin/common :: common-link}"></div>
+</head>
+<body>
+<div class="content animated fadeIn">
+    <h2 class="content-heading" id="toolbar">
+        <button type="button" class="btn btn-sm btn-secondary float-right hexo-query" data-query-area="queryArea"><i class="fa fa-search text-success mr-5"></i> 查询</button>
+        <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-refresh"><i class="fa fa-refresh mr-5"></i> 刷新</button>
+        <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-clear"><i class="fa fa-remove mr-5"></i> 清除缓存</button>
+        <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-unzip" title="安装插件" data-width="550" data-height="356"><i class="fa fa-plus-square text-primary mr-5"></i> 安装</button>
+        <i class="fa fa-plug"></i> 插件列表
+    </h2>
+    <div class="block block-fx-shadow hide" id="queryArea">
+        <div class="block-content block-content-full">
+            <form class="form-inline" method="post" id="queryForm">
+                <label class="sr-only" for="pluginId">插件唯一标识</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <button type="button" class="btn btn-secondary">插件唯一标识</button>
+                    </div>
+                    <input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="pluginId" name="pluginId">
+                </div>
+                <label class="sr-only" for="state">状态</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <button type="button" class="btn btn-secondary">状态</button>
+                    </div>
+                    <select class="form-control mb-2 mr-sm-2 mb-sm-0" id="state" name="state">
+                        <option value="">全部</option>
+                        <option value="true">开启</option>
+                        <option value="false">关闭</option>
+                    </select>
+                </div>
+                <button type="button" class="btn btn-alt-primary mr-5 hexo-query-submit">提交</button>
+                <button type="reset" class="btn btn-alt-warning">重置</button>
+            </form>
+        </div>
+    </div>
+    <div class="block block-fx-shadow">
+        <div class="block-content">
+            <div class="table-responsive">
+                <table id="listTable" class="table table-striped table-vcenter">
+                    <thead>
+                    <tr>
+                        <th class='text-center' width="5%" data-checkbox="true">
+                            <label class="css-control css-control-primary css-checkbox" for="check-all" >
+                                <input type="checkbox" class="css-control-input" id="check-all">
+                                <span class="css-control-indicator"></span>
+                            </label>
+                        </th>
+                        <th data-field="pluginId">唯一标识</th>
+                        <th data-field="originName">原始名称</th>
+                        <th width="5%" data-field="version">版本</th>
+                        <th width="32%" data-field="remark">描述</th>
+                        <th width="8%" data-field="author">作者</th>
+                        <th width="10%" data-field="updateTime">安装时间</th>
+                        <th width="5%" align="center" data-field="state" data-formatter="stateFormatter">状态</th>
+                        <th width="10%" align="center" data-formatter="actionFormatter">操作</th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="~{admin/common :: common-script}"></div>
+<script th:inline="javascript">
+
+    function switchChange($obj) {
+        let id = $obj.data("id");
+        let state = $obj.prop("checked");
+
+        $.hexo.modal.confirm("确定要修改插件状态吗？", function() {
+            $.hexo.action.sendRequest({
+                url: BASE_URL + "/updateState.json",
+                params: {"id": id, "state": state},
+                callback: function (resp) {
+                    if (resp.success) {
+                        let msg = state ? "插件开启" : "插件关闭";
+                        $.hexo.modal.tip(msg + "成功", "success", function () {
+                            $.hexo.modal.close();
+                            $.hexo.table.refreshData();
+                        });
+                    }
+                }
+            });
+        }, function() {
+            $.hexo.table.refreshData();
+        });
+    }
+
+    function stateFormatter(val, row) {
+        let checked = val ? 'checked' : '';
+        let arr = [];
+        arr.push('<label class="css-control css-control-sm css-control-success css-switch">');
+        arr.push('<input type="checkbox" class="css-control-input" ' + checked + ' data-id="'+row.id+'" onclick="window.switchChange($(this))">');
+        arr.push('<span class="css-control-indicator"></span>');
+        arr.push('</label>');
+        return arr.join("");
+    }
+
+    function actionFormatter(val, row) {
+        let btnArr = [];
+        btnArr.push('<div class="btn-group">');
+        btnArr.push('<button type="button" class="btn btn-sm btn-secondary hexo-config" data-toggle="tooltip" title="查看" data-state="'+row.state+'" data-url="'+row.configUrl+'" onclick="window.configUI(this)"><i class="fa fa-search"></i></button>');
+        btnArr.push('<button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="卸载并备份" onclick="$.hexo.action.remove(\'' + row.id + '\')"><i class="fa fa-trash"></i></button>');
+        btnArr.push("</div>");
+        return btnArr.join("");
+    }
+
+    function configUI(obj) {
+        let $target = $(obj);
+        let url = $target.data("url");
+        if (url == "") {
+            $.hexo.modal.tip("插件无信息页面", "info");
+            return;
+        }
+
+        let state = $target.data("state");
+        if (!state) {
+            $.hexo.modal.tip("插件未开启", "info");
+            return;
+        }
+
+        let targetUrl = window.location.origin + url;
+        // let targetUrl = BASE_URL + "/testUI.html";
+        $.hexo.modal._window("插件信息", targetUrl , 780, 540, true);
+    }
+
+    $(function() {
+        $.hexo.table.init({
+            baseUrl: BASE_URL
+        });
+
+        $(".hexo-clear").off("click").on("click", function() {
+            $.hexo.action.sendRequest({
+                url: BASE_URL + "/clearCache.json",
+                callback: function (resp) {
+                    $.hexo.modal.tip("清除成功", "success");
+                }
+            })
+        });
+
+        $(".hexo-unzip").off("click").on("click", function() {
+            $.hexo.modal._window("上传插件", BASE_URL + "/unzipUI.html", 780, 390, false);
+        });
+
+    });
+</script>
+</body>
+</html>

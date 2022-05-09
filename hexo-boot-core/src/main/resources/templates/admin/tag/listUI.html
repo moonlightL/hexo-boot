@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, initial-scale=1, shrink-to-fit=no">
+    <div th:replace="~{admin/common :: common-link}"></div>
+    <style>
+        .table {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+<div class="content animated fadeIn">
+    <h2 class="content-heading" id="toolbar">
+        <button type="button" class="btn btn-sm btn-secondary float-right hexo-query" data-query-area="queryArea"><i class="fa fa-search text-success mr-5"></i> 查询</button>
+        <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-refresh"><i class="fa fa-refresh mr-5"></i> 刷新</button>
+        <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-remove"><i class="fa fa-trash text-danger mr-5"></i> 删除</button>
+        <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-edit" title="编辑标签" data-width="550" data-height="340"><i class="fa fa-edit text-warning mr-5"></i> 编辑</button>
+        <i class="fa fa-tags"></i> 标签列表
+    </h2>
+    <div class="block block-fx-shadow hide" id="queryArea">
+        <div class="block-content block-content-full">
+            <form class="form-inline" method="post" id="queryForm">
+                <label class="sr-only" for="name">标签名称</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <button type="button" class="btn btn-secondary">标签名称</button>
+                    </div>
+                    <input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="name" name="name">
+                </div>
+                <button type="button" class="btn btn-alt-primary mr-5 hexo-query-submit">提交</button>
+                <button type="reset" class="btn btn-alt-warning">重置</button>
+            </form>
+        </div>
+    </div>
+    <div class="block block-fx-shadow">
+        <div class="block-content">
+            <div class="table-responsive">
+                <table id="listTable" class="table table-striped table-vcenter">
+                    <thead>
+                    <tr>
+                        <th class='text-center' width="5%" data-checkbox="true">
+                            <label class="css-control css-control-primary css-checkbox" for="check-all" >
+                                <input type="checkbox" class="css-control-input" id="check-all">
+                                <span class="css-control-indicator"></span>
+                            </label>
+                        </th>
+                        <th data-field="name">名称</th>
+                        <th width="10%" align="center" data-formatter="actionFormatter">操作</th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="~{admin/common :: common-script}"></div>
+<script th:inline="javascript">
+
+    function actionFormatter(val, row) {
+        let btnArr = [];
+        btnArr.push('<div class="btn-group">');
+        btnArr.push('<button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="编辑标签" data-width="550" data-height="340" onclick="$.hexo.action.showEditUI(\'' + row.id + '\', $(this))"><i class="fa fa-pencil"></i></button>');
+        btnArr.push('<button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="删除" onclick="$.hexo.action.remove(\'' + row.id + '\')"><i class="fa fa-times"></i></button>');
+        btnArr.push("</div>");
+        return btnArr.join("");
+    }
+
+    $(function() {
+        $.hexo.table.init({
+            baseUrl: BASE_URL
+        });
+    });
+</script>
+</body>
+</html>

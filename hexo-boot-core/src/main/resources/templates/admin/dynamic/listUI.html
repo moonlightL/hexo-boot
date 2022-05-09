@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, initial-scale=1, shrink-to-fit=no">
+    <div th:replace="~{admin/common :: common-link}"></div>
+    <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/fancybox/jquery.fancybox.min.css'}"/>
+    <style>
+        .block-content .row {
+            background: #FFF;
+            margin-bottom: 20px;
+            box-shadow: 0 0 36px #d8dde5;
+        }
+
+        .block-content .row p img.custom-img,
+        .block-content .row p video,
+        .block-content .row p iframe {
+            float: none !important;
+            max-width: 720px !important;
+            max-height: 368px !important;
+        }
+
+        h3 {
+            display: block;
+            width: 100%;
+            height: 42px;
+            line-height: 42px;
+            padding-left: 1rem;
+            border-bottom: 1px solid #e4e7ed;
+            font-size: 18px;
+        }
+
+    </style>
+</head>
+<body>
+<!-- Page Content -->
+<div class="content animated fadeIn">
+    <h2 class="content-heading" id="toolbar">
+        <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-refresh"><i class="fa fa-refresh mr-5"></i> 刷新</button>
+        <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-add" title="发布动态" data-width="1024" data-height="560"><i class="fa fa-plus-square text-primary mr-5"></i> 发表</button>
+        <i class="fa fa fa-heart-o"></i> 动态列表 <span id="totalNum"></span>
+    </h2>
+
+    <div class="block-content" id="dynamicBody"></div>
+
+    <div class="block block-fx-shadow">
+        <div class="block-content">
+            <nav aria-label="Page navigation" id="pageBar"></nav>
+        </div>
+    </div>
+</div>
+<!-- END Page Content -->
+<div th:replace="~{admin/common :: common-script}"></div>
+<script th:src="@{'/admin/assets/js/plugins/fancybox/jquery.fancybox.min.js'}"></script>
+<script th:inline="javascript">
+
+    window.DynamicManager = {
+        params: {},
+        init: function() {
+
+            $("#toolbar").find("button").on("click", function(e) {
+                let $target = $(this);
+                if ($target.hasClass("hexo-add")) {
+                    $.hexo.modal.window($target[0].title, BASE_URL + "/addUI.html", $target);
+                } else if ($target.hasClass("hexo-refresh")) {
+                    DynamicManager.query();
+                }
+            });
+
+            // 绑定编辑/删除事件
+            $(document).on("click", ".g-btn", function () {
+                let $target = $(this);
+                if ($target.hasClass("remove-btn")) {
+                    $.hexo.action.remove($target.data("id"), function () {
+                        $.hexo.modal.tip("刪除成功", "success", function() {
+                            DynamicManager.query();
+                        });
+                    });
+                } else if ($target.hasClass("edit-btn")) {
+                    $.hexo.modal.window("编辑动态", BASE_URL + "/editUI/" + $target.data("id") + ".html", $target);
+                }
+            });
+
+            DynamicManager.query();
+        },
+        query: function () {
+            $.hexo.action.sendRequest({
+                url: BASE_URL + "/list.json",
+                params: DynamicManager.params || {},
+                callback: function (resp) {
+                    DynamicManager.renderTable(resp.data);
+                    $("#totalNum").html("(" + resp.data.total + ")");
+                }
+            });
+        },
+        renderTable: function(data) {
+            DynamicManager.renderBody(data);
+            DynamicManager.renderPageBar(data);
+        },
+        renderBody: function (data) {
+            let dynamicList = data.list;
+            let contentArr = [];
+            if (dynamicList && dynamicList.length > 0) {
+                for (let i = 0; i < dynamicList.length; i++) {
+                    let obj = dynamicList[i];
+                    contentArr.push('<div class="row align-items-center">');
+                    contentArr.push('<h3><span style="display: inline-block;width: 16px; height: 16px; border-radius: 50%;background: '+ obj.color + '"></span> 打卡</h3>');
+                    contentArr.push('<div class="col-sm-10 py-10">');
+                    contentArr.push('<p class="font-size-sm mb-10">');
+                    contentArr.push(obj.content);
+                    contentArr.push('</p>');
+                    contentArr.push('<p class="font-size-sm text-muted mb-0"><i class="fa fa-clock-o"></i> ' + obj.createTime + '</p>');
+                    contentArr.push('</div>');
+                    contentArr.push('<div class="col-sm-2 py-10 text-md-right">');
+                    contentArr.push('<a class="btn btn-sm btn-outline-secondary btn-rounded mr-5 my-5 g-btn edit-btn" href="javascript:void(0)" data-id="' + obj.id + '" data-width="1024" data-height="560"><i class="fa fa-wrench mr-1"></i>编辑 </a>');
+                    contentArr.push('<a class="btn btn-sm btn-outline-danger btn-rounded mr-5 my-5 g-btn remove-btn" href="javascript:void(0)" data-id="' + obj.id + '"><i class="fa fa-times mr-1"></i>删除 </a>');
+                    contentArr.push('</div>');
+                    contentArr.push('</div>');
+                }
+            } else {
+                contentArr.push('<div class="row align-items-center">');
+                contentArr.push('<div class="col-sm-6 py-10">');
+                contentArr.push('<h3 class="h5 font-w700 mb-10"><i class="fa fa-circle text-success mr-5"></i> 无题</h3>');
+                contentArr.push('<p class="font-size-sm mb-10">');
+                contentArr.push("暂无内容");
+                contentArr.push('</p>');
+                contentArr.push('<p class="font-size-sm text-muted mb-0"></p>');
+                contentArr.push('</div>');
+                contentArr.push('</div>');
+            }
+            $("#dynamicBody").html(contentArr.join(""));
+        },
+        renderPageBar: function (data) {
+            let $pageBar = $("#pageBar");
+            if (!data.list || data.list.length === 0) {
+                $pageBar.html("");
+                return;
+            }
+            let pageArr = [];
+            pageArr.push('<ul class="pagination justify-content-end mr-20">');
+            pageArr.push('<li class="page-item">');
+            pageArr.push('<a class="page-link" href="javascript:void(0)" aria-label="Previous" data-num="'+ data.prePage +'">');
+            pageArr.push('<span aria-hidden="true">');
+            pageArr.push('<i class="fa fa-angle-left"></i>');
+            pageArr.push('</span>');
+            pageArr.push('<span class="sr-only">Previous</span>');
+            pageArr.push('</a>');
+            pageArr.push('</li>');
+            let currentNum = data.pageNum;
+            let pageNumArr = data.navigatepageNums;
+            for (let i = 0; i < pageNumArr.length; i ++) {
+                let pageNum = pageNumArr[i];
+                let activeClass = (currentNum === pageNum ? 'active' : '');
+                pageArr.push('<li class="page-item ' + activeClass + '">');
+                pageArr.push('<a class="page-link" href="javascript:void(0)" data-num="' + pageNum + '">' + pageNum + '</a>');
+                pageArr.push('</li>');
+            }
+            pageArr.push('<li class="page-item">');
+            pageArr.push('<a class="page-link" href="javascript:void(0)" aria-label="Next" data-num="'+ data.nextPage +'">');
+            pageArr.push('<span aria-hidden="true">');
+            pageArr.push('<i class="fa fa-angle-right"></i>');
+            pageArr.push('</span>');
+            pageArr.push('<span class="sr-only">Next</span>');
+            pageArr.push('</a>');
+            pageArr.push('</li>');
+            pageArr.push('</ul>');
+
+            $pageBar.html(pageArr.join("")).find("a").off("click").on("click", function (e) {
+                let num = $(e.target).data("num");
+                if (!num || num < 1 ) {
+                    console.warn("=====当前列表不能翻页====");
+                    return;
+                }
+
+                DynamicManager.params = $.extend({}, DynamicManager.params, {"pageNum": num});
+                DynamicManager.query();
+            });
+        }
+    };
+
+    DynamicManager.init();
+
+</script>
+</body>
+</html>
