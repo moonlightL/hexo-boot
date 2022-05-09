@@ -307,8 +307,8 @@ curl -L -o ~/.hexo-boot/application.yml --create-dirs https://gitee.com/moonligh
 
 * 代码结构分层
 * 新增插件功能
-* 将 druid 数据源替换为 HikariCP
+* 将 Druid 数据源替换为 HikariCP
 * 抽离系统信息代码，以插件形式封装
 * 抽离第三方对象存储代码，以插件形式封装
-* 新增二次元随机图片功能
+* 新增随机拉取二次元图片功能
 * 修改部分页面 UI 交互
