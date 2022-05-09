@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.aspectj.util.FileUtil;
 import org.pf4j.PluginDescriptor;
 import org.pf4j.PluginState;
 import org.pf4j.PluginWrapper;
@@ -79,7 +80,7 @@ public class SysPluginServiceImpl extends BaseServiceImpl<SysPlugin> implements 
     }
 
     @Override
-    public void installPlugin(String originalFilename, InputStream inputStream) throws GlobalException {
+    public String installPlugin(String originalFilename, InputStream inputStream) throws GlobalException {
 
         String originName = FilenameUtils.getBaseName(originalFilename);
         SysPlugin dbPlugin = this.getPluginByName(originName);
@@ -87,15 +88,30 @@ public class SysPluginServiceImpl extends BaseServiceImpl<SysPlugin> implements 
             ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_PLUGIN_INSTALLED);
         }
 
-        Path pluginsRoot = this.pluginManager.getPluginsRoot();
-        String parentDirPath = pluginsRoot.toString();
-        File unzipPluginCog = ZipUtil.unzip(inputStream, new File(parentDirPath), Charset.defaultCharset());
+        String tmpPath = System.getProperty("java.io.tmpdir");
+        File tmpDir = new File(tmpPath, "pluginDir");
+        if (tmpDir.exists()) {
+            FileUtils.deleteQuietly(tmpDir);
+        }
+
+        File unzipPluginCog = ZipUtil.unzip(inputStream, tmpDir, Charset.defaultCharset());
         File jarFile = new File(unzipPluginCog.getAbsolutePath(), originName + ".jar");
         if (!jarFile.exists()) {
+            FileUtils.deleteQuietly(tmpDir);
             ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_PLUGIN_INVALID);
         }
 
-        String filePath = jarFile.getAbsolutePath();
+        Path pluginsRoot = this.pluginManager.getPluginsRoot();
+        String parentDirPath = pluginsRoot.toString();
+        File newPluginFile = new File(parentDirPath, jarFile.getName());
+
+        try {
+            FileUtil.copyFile(jarFile, newPluginFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        String filePath = newPluginFile.getAbsolutePath();
         String pluginId = this.pluginManager.loadPlugin(Paths.get(filePath));
         PluginWrapper pluginWrapper = this.pluginManager.getPlugin(pluginId);
         PluginDescriptor descriptor = pluginWrapper.getDescriptor();
@@ -113,6 +129,8 @@ public class SysPluginServiceImpl extends BaseServiceImpl<SysPlugin> implements 
               .setCreateTime(LocalDateTime.now())
               .setUpdateTime(plugin.getCreateTime());
         this.pluginMapper.insert(plugin);
+
+        return pluginId;
     }
 
     @Override

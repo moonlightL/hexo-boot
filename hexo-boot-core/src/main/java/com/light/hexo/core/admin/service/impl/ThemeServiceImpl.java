@@ -267,14 +267,21 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
             e.printStackTrace();
         }
 
+        File newThemeDir = new File(file.getAbsolutePath(), themeName);
+
         try(
             Git git = Git.cloneRepository()
                          .setURI(themeUrl)
-                         .setDirectory(new File(file.getAbsolutePath(), themeName))
+                         .setDirectory(newThemeDir)
                          .call()
             ) {
 
-            log.info("Cloning from " + themeUrl + " to " + git.getRepository());
+            // 读取 theme.json 文件
+            File[] jsonFiles = newThemeDir.listFiles((i, name) -> name.equals("theme.json"));
+            if (jsonFiles == null || jsonFiles.length == 0) {
+                FileUtils.deleteQuietly(newThemeDir);
+                ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_THEME_COG_WRONG);
+            }
 
             return true;
         } catch (GitAPIException e) {
@@ -300,6 +307,7 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
         // 获取刚解压的主题文件夹
         File[] childrenFile = unzipThemeCog.listFiles();
         if (childrenFile == null || childrenFile.length == 0) {
+            FileUtils.deleteQuietly(unzipThemeCog);
             ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_THEME_UNZIP_WRONG);
         }
 
@@ -309,6 +317,7 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
         // 读取 theme.json 文件
         File[] jsonFiles = newThemeDir.listFiles((dir, name) -> name.equals("theme.json"));
         if (jsonFiles == null || jsonFiles.length == 0) {
+            FileUtils.deleteQuietly(unzipThemeCog);
             ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_THEME_COG_WRONG);
         }
 

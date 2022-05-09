@@ -90,18 +90,14 @@
                             return;
                         }
 
-                        let splits = selectFileVal.split("-");
-                        let tmp = splits[splits.length - 1];
-                        let themeName = tmp.split(".")[0];
-
                         $(that).prop("disabled", true);
                         document.getElementById("progressContainer").style.visibility = "visible";
                         $progressbar.width(progress + "%");
                         $progressText.text(progress + "%");
-                        $resultContainer.val($resultContainer.val() + "\n开始安装【" + themeName + "】主题......" + progress + "%");
+                        $resultContainer.val($resultContainer.val() + "\n正在上传【" + selectFileVal + "】主题压缩包......" + progress + "%");
                         processInterval = setInterval(function() {
                             progress += 1;
-                            runProcess(progress, $progressbar, $progressText, $resultContainer, themeName);
+                            runProcess(progress, $progressbar, $progressText, $resultContainer, "正在上传【" + selectFileVal + "】主题压缩包");
                             if (progress >= 90) {
                                 clearInterval(processInterval);
                             }
@@ -130,6 +126,7 @@
                             $.hexo.modal.tip("上传失败: " + message.error, "error");
                             window.parent.ThemeManager.query();
                             clearInterval(processInterval);
+                            $resultContainer.val($resultContainer.val() + "\n" + message.error + "! 安装失败!");
                             $progressbar.removeClass("progress-bar-animated").addClass("bg-danger");
                         }
                     });
@@ -137,18 +134,17 @@
                     this.on("success", function (data, resp) {
                         clearInterval(processInterval);
 
+                        let themeName = resp.data;
+
                         if (!resp.success) {
-                            $.hexo.modal.tip(resp.message, "error");
+                            $.hexo.modal.tip("安装失败: " + resp.message, "error");
                             window.parent.ThemeManager.query();
                             clearInterval(processInterval);
+                            $resultContainer.val($resultContainer.val() + "\n" + resp.message + "! 安装失败!");
                             $progressbar.removeClass("progress-bar-animated").addClass("bg-danger");
+                            $resultContainer.scrollTop($resultContainer.prop("scrollHeight"));
                             return;
                         }
-
-                        let selectFileVal = $("#selectFile").val();
-                        let splits = selectFileVal.split("-");
-                        let tmp = splits[splits.length - 1];
-                        let themeName = tmp.split(".")[0];
 
                         let num = 0;
                         let timer = setInterval(function() {
@@ -159,6 +155,7 @@
                                 dataType: "JSON",
                                 success: function (resp) {
                                     num++;
+                                    console.log(resp);
                                     if (resp.data === true) {
                                         clearInterval(timer);
 
@@ -175,7 +172,7 @@
                                                 });
                                                 return;
                                             }
-                                            runProcess(progress, $progressbar, $progressText, $resultContainer, themeName);
+                                            runProcess(progress, $progressbar, $progressText, $resultContainer, "正在解压、安装【" + themeName + "】主题");
                                         }, 50);
                                     }
 
@@ -192,10 +189,10 @@
         }
     };
 
-    function runProcess(progress, $progressbar, $progressText, $resultContainer, themeName) {
+    function runProcess(progress, $progressbar, $progressText, $resultContainer, text) {
         $progressbar.width(progress + "%");
         $progressText.text(progress + "%");
-        $resultContainer.val($resultContainer.val() + "\n正在安装【" + themeName + "】主题......" + progress + "%");
+        $resultContainer.val($resultContainer.val() + "\n" + text + "......" + progress + "%");
         $resultContainer.scrollTop($resultContainer.prop("scrollHeight"));
     }
 

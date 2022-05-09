@@ -93,10 +93,10 @@
                         document.getElementById("progressContainer").style.visibility = "visible";
                         $progressbar.width(progress + "%");
                         $progressText.text(progress + "%");
-                        $resultContainer.val($resultContainer.val() + "\n开始安装【" + selectFileVal + "】插件......" + progress + "%");
+                        $resultContainer.val($resultContainer.val() + "\n正在上传【" + selectFileVal + "】插件压缩包......" + progress + "%");
                         processInterval = setInterval(function() {
                             progress += 1;
-                            runProcess(progress, $progressbar, $progressText, $resultContainer, selectFileVal);
+                            runProcess(progress, $progressbar, $progressText, $resultContainer, "正在上传【" + selectFileVal + "】插件压缩包");
                             if (progress >= 90) {
                                 clearInterval(processInterval);
                             }
@@ -136,25 +136,28 @@
                             $.hexo.modal.tip(resp.message, "error");
                             window.parent.$.hexo.table.refreshData();
                             clearInterval(processInterval);
+                            $resultContainer.val($resultContainer.val() + "\n" + resp.message + "! 安装失败!");
                             $progressbar.removeClass("progress-bar-animated").addClass("bg-danger");
+                            $resultContainer.scrollTop($resultContainer.prop("scrollHeight"));
                             return;
                         }
 
-                        let selectFileVal = $("#selectFile").val();
+                        let pluginName = resp.data;
+
                         processInterval = setInterval(function() {
                             progress += 1;
                             if (progress == 100) {
                                 clearInterval(processInterval);
                                 $progressbar.width("100%").removeClass("progress-bar-striped progress-bar-animated");
                                 $progressText.text("100%");
-                                $resultContainer.val($resultContainer.val() + "\n【" + selectFileVal + "】插件安装成功......100%");
+                                $resultContainer.val($resultContainer.val() + "\n【" + pluginName + "】插件安装成功......100%");
                                 $resultContainer.scrollTop($resultContainer.prop("scrollHeight"));
                                 $.hexo.modal.tip("操作成功", "success", function () {
                                     window.parent.$.hexo.table.refreshData();
                                 });
                                 return;
                             }
-                            runProcess(progress, $progressbar, $progressText, $resultContainer, selectFileVal);
+                            runProcess(progress, $progressbar, $progressText, $resultContainer, "正在解压、安装【" + pluginName + "】插件");
                         }, 50);
                     });
                 }
@@ -162,10 +165,10 @@
         }
     };
 
-    function runProcess(progress, $progressbar, $progressText, $resultContainer, pluginName) {
+    function runProcess(progress, $progressbar, $progressText, $resultContainer, text) {
         $progressbar.width(progress + "%");
         $progressText.text(progress + "%");
-        $resultContainer.val($resultContainer.val() + "\n正在安装【" + pluginName + "】插件......" + progress + "%");
+        $resultContainer.val($resultContainer.val() + "\n" + text + "......" + progress + "%");
         $resultContainer.scrollTop($resultContainer.prop("scrollHeight"));
     }
 

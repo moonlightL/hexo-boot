@@ -73,7 +73,7 @@ public enum HexoExceptionEnum implements GlobalExceptionMap {
     ERROR_THEME_URL_WRONG(11002, "主题地址格式不正确"),
     ERROR_ACTIVE_THEME_CANNOT_REMOVE(11003, "使用中的主题不能被删除"),
     ERROR_THEME_UNZIP_WRONG(11004, "主题解压失败"),
-    ERROR_THEME_COG_WRONG(11005, "主题目录结构不正确"),
+    ERROR_THEME_COG_WRONG(11005, "检查该主题为非官方主题"),
 
     // 12xxx --> 导航
     ERROR_NAV_NOT_EXIST(12001, "访问路径不存在"),
@@ -95,7 +95,7 @@ public enum HexoExceptionEnum implements GlobalExceptionMap {
     // 16xxx --> 插件
     ERROR_PLUGIN_NOT_EXIST(16001, "该插件不存在"),
     ERROR_PLUGIN_INSTALLED(16002, "检测已安装同名插件,如要继续安装请先卸载原插件"),
-    ERROR_PLUGIN_INVALID(16003, "插件格式非法，安装失败"),
+    ERROR_PLUGIN_INVALID(16003, "插件格式非法"),
     ERROR_PLUGIN_START(16004, "系统异常，插件启动失败"),
     ERROR_PLUGIN_CANNOT_DELETE(16005, "资源未释放，删除失败，请稍后再试"),
 

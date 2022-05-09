@@ -88,10 +88,10 @@
             let progress = 1;
             $progressbar.width(progress + "%");
             $progressText.text(progress + "%");
-            $resultContainer.val("开始安装【" + themeName + "】主题......" + progress + "%");
+            $resultContainer.val("正在拉取【" + themeName + "】主题代码......" + progress + "%");
             let processInterval = setInterval(function() {
                 progress += 1;
-                runProcess(progress, $progressbar, $progressText, $resultContainer, themeName);
+                runProcess(progress, $progressbar, $progressText, $resultContainer, "正在拉取【" + themeName + "】主题代码");
                 if (progress >= 90) {
                     clearInterval(processInterval);
                 }
@@ -131,7 +131,7 @@
                                                 });
                                                 return;
                                             }
-                                            runProcess(progress, $progressbar, $progressText, $resultContainer, themeName);
+                                            runProcess(progress, $progressbar, $progressText, $resultContainer, "正在解析、安装【" + themeName + "】主题");
                                         }, 50);
                                     }
 
@@ -145,20 +145,25 @@
                                 }
                             });
                         }, 1000);
+                    } else {
+                        $.hexo.modal.tip("安装失败: " + resp.message, "error");
+                        window.parent.ThemeManager.query();
+                        $resultContainer.val($resultContainer.val() + "\n" + resp.message + "! 安装失败!");
+                        $progressbar.removeClass("progress-bar-animated").addClass("bg-danger");
+                        $resultContainer.scrollTop($resultContainer.prop("scrollHeight"));
                     }
                 },
                 error: function () {
-                    $(that).prop("disabled", false);
                     $progressbar.removeClass("progress-bar-animated").addClass("bg-danger");
                     $resultContainer.val($resultContainer.val() + "\n[失败] " + themeName + "主题拉取失败!");
                 }
             });
         });
 
-        function runProcess(progress, $progressbar, $progressText, $resultContainer, themeName) {
+        function runProcess(progress, $progressbar, $progressText, $resultContainer, text) {
             $progressbar.width(progress + "%");
             $progressText.text(progress + "%");
-            $resultContainer.val($resultContainer.val() + "\n正在安装【" + themeName + "】主题......" + progress + "%");
+            $resultContainer.val($resultContainer.val() + "\n" + text + "......" + progress + "%");
             $resultContainer.scrollTop($resultContainer.prop("scrollHeight"));
         }
     });

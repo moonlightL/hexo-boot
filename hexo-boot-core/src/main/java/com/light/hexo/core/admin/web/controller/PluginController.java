@@ -75,16 +75,16 @@ public class PluginController extends BaseController {
             ExceptionUtil.throwEx(GlobalExceptionEnum.ERROR_PARAM);
         }
 
+        String pluginId = "";
         try {
             String originalFilename = file.getOriginalFilename();
             InputStream inputStream = file.getInputStream();
-            this.pluginService.installPlugin(originalFilename, inputStream);
+            pluginId = this.pluginService.installPlugin(originalFilename, inputStream);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-
-        return Result.success();
+        return Result.success(pluginId);
     }
 
     /**

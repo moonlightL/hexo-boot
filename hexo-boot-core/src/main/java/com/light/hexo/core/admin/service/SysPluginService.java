@@ -19,8 +19,10 @@ public interface SysPluginService extends BaseService<SysPlugin> {
      * 安装插件
      * @param originalFilename
      * @param inputStream
+     * @return 插件 id
+     * @throws GlobalException
      */
-    void installPlugin(String originalFilename, InputStream inputStream) throws GlobalException;
+    String installPlugin(String originalFilename, InputStream inputStream) throws GlobalException;
 
     /**
      * 修改插件
