@@ -1,5 +1,6 @@
 package com.light.hexo.core.portal.component;
 
+import cn.hutool.core.net.URLDecoder;
 import com.light.hexo.common.util.CacheUtil;
 import com.light.hexo.common.util.JsonUtil;
 import com.light.hexo.common.util.RequestUtil;
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -48,25 +50,25 @@ public class RequestLimitAspect {
 
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
 
-        // 执行方法
+        Object proceed = joinPoint.proceed();
+
         Method method = signature.getMethod();
         RequestLimit commentLimit = method.getAnnotation(RequestLimit.class);
         if (commentLimit != null) {
             String cacheName = commentLimit.cacheName();
             int time = commentLimit.time();
             String msg = commentLimit.msg();
-            String ipAddr = RequestUtil.getIpAddr(request);
-            String cacheKey = cacheName + ":" + ipAddr;
+            String nickname = URLDecoder.decode(request.getParameter("nickname"), Charset.defaultCharset());
+            String cacheKey = cacheName + ":" + nickname;
             Object cacheObj = CacheUtil.get(cacheKey);
             if (cacheObj != null) {
                 this.print(response, JsonUtil.obj2String(Result.fail(401, msg)));
                 return null;
             }
-
-            CacheUtil.put(cacheKey, ipAddr, time * 1000);
+            CacheUtil.put(cacheKey, nickname, time * 1000);
         }
 
-        return joinPoint.proceed();
+        return proceed;
     }
 
     private void print(HttpServletResponse response, String result) throws IOException {

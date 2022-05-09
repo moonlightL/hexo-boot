@@ -2,6 +2,8 @@ package com.light.hexo.core.admin.service.impl;
 
 import com.light.hexo.common.base.BaseServiceImpl;
 import com.light.hexo.common.constant.ConfigEnum;
+import com.light.hexo.common.constant.HexoExceptionEnum;
+import com.light.hexo.common.util.ExceptionUtil;
 import com.light.hexo.mapper.mapper.BackupMapper;
 import com.light.hexo.mapper.base.BaseMapper;
 import com.light.hexo.mapper.model.Backup;
@@ -63,13 +65,14 @@ public class BackupServiceImpl extends BaseServiceImpl<Backup> implements Backup
     @Override
     public Backup saveBackup(String sqlData) throws GlobalException {
 
-        Map<String, String> configMap = this.configService.getConfigMap();
-        String dirPath = configMap.get(ConfigEnum.BACKUP_DIR.getName());
-        if (StringUtils.isNotBlank(dirPath)) {
-            File dir = new File(dirPath);
-            if (!dir.exists()) {
-                dir.mkdirs();
-            }
+        String dirPath = this.configService.getConfigValue(ConfigEnum.BACKUP_DIR.getName());
+        if (StringUtils.isBlank(dirPath)) {
+            ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_BACKUP_DIR_NOT_EXIST);
+        }
+
+        File dir = new File(dirPath);
+        if (!dir.exists()) {
+            dir.mkdirs();
         }
 
         String filename = String.format("backup_%d.sql", System.currentTimeMillis());

@@ -41,9 +41,8 @@ public class BackupJob {
     public void backupData() {
 
         // 备份开关
-        Map<String, String> configMap = this.configService.getConfigMap();
-        String auto = configMap.get(ConfigEnum.BACKUP_AUTO.getName());
-        if (!StateEnum.ON.getCode().equals(Integer.valueOf(auto))) {
+        String auto = this.configService.getConfigValue(ConfigEnum.BACKUP_AUTO.getName());
+        if (StringUtils.isBlank(auto) || !StateEnum.ON.getCode().equals(Integer.valueOf(auto))) {
             log.info("=======自动备份未开启=========");
             return;
         }

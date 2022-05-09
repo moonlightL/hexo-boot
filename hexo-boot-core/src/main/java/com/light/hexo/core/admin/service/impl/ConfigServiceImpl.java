@@ -112,7 +112,7 @@ public class ConfigServiceImpl extends BaseServiceImpl<Config> implements Config
 
         Map<String, String> configMap = this.getConfigMap();
         if (CollectionUtils.isEmpty(configMap)) {
-            return "";
+            return null;
         }
 
         return configMap.get(configKey);

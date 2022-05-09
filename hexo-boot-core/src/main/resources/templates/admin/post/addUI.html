@@ -276,7 +276,7 @@
 
         let FileManager = {
             initUploadEvent: function () {
-                $("#btnArr").html('<a id="uploadBtn" href="javascript:void(0)">选择文件</a>&nbsp;&nbsp;<a id="randomBtn" href="javascript:void(0)">随机获取</a> <i class="fa fa-info-circle" title="如不设置封面,则保存文章后系统随机生成"></i><p></p>');
+                $("#btnArr").html('<a id="uploadBtn" href="javascript:void(0)">选择文件</a>&nbsp;&nbsp;<a class="randomBtn" href="javascript:void(0)" data-type="0">随机风景</a>&nbsp;&nbsp;<a class="randomBtn" href="javascript:void(0)" data-type="1">随机二次元</a> <i class="fa fa-info-circle" title="如不设置封面,则保存文章后系统随机生成"></i><p></p>');
                 $("#uploadBtn").dropzone({
                     method: "POST",
                     url: "/admin/file/upload.json", //上传地址
@@ -316,10 +316,11 @@
                     }
                 });
 
-                $("#randomBtn").off("click").on("click", function () {
+                $(".randomBtn").off("click").on("click", function () {
+                    let type = $(this).data("type");
                     $.ajax({
                         type: "POST",
-                        url: "/admin/file/randomPic.json",
+                        url: "/admin/file/randomPic.json?type=" + type,
                         dataType: "JSON",
                         success: function(resp) {
                             if (resp.success == 1) {

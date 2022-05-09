@@ -49,6 +49,7 @@ public enum HexoExceptionEnum implements GlobalExceptionMap {
     // 7xxx --> 备份
     ERROR_BACKUP_NOT_EXIST(7001, "该备份不存在"),
     ERROR_BACKUP_COMMAND_NOT_EXIST(7002, "mysqldump 命令不存在，请检测环境变量"),
+    ERROR_BACKUP_DIR_NOT_EXIST(7003, "备份目录为空，请检查配置再操作"),
 
     // 8xxx --> 黑名单
     ERROR_BLACKLIST_NOT_EXIST(8001, "该黑名单不存在"),

@@ -24,6 +24,7 @@ import com.light.hexo.mapper.model.Blacklist;
 import com.light.hexo.mapper.model.Comment;
 import com.light.hexo.mapper.model.Nav;
 import com.light.hexo.mapper.model.Post;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,6 +48,7 @@ import java.util.stream.Collectors;
  * @DateTime 2022/1/27, 0027 13:43
  */
 @Service
+@Slf4j
 public class CommentServiceImpl extends BaseServiceImpl<Comment> implements CommentService {
 
     @Autowired
@@ -236,7 +238,7 @@ public class CommentServiceImpl extends BaseServiceImpl<Comment> implements Comm
         if (isSingleRow) {
             Example example = new Example(Comment.class);
             example.createCriteria().andEqualTo("page", decodePage)
-                    .andEqualTo("delete", 0);
+                   .andEqualTo("delete", false);
             example.orderBy("createTime").desc();
 
             PageHelper.startPage(pageNum, pageSize);
@@ -268,7 +270,7 @@ public class CommentServiceImpl extends BaseServiceImpl<Comment> implements Comm
         } else {
             Example example = new Example(Comment.class);
             example.createCriteria().andEqualTo("page", decodePage)
-                    .andEqualTo("delete", 0)
+                    .andEqualTo("delete", false)
                     .andEqualTo("bannerId", 0);
             example.orderBy("createTime").desc();
 

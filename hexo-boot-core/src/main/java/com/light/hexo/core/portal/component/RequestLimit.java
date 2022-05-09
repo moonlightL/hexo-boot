@@ -26,11 +26,11 @@ public @interface RequestLimit {
      * 限制时间
      * @return
      */
-    int time();
+    int time() default 30;
 
     /**
      * 提示
      * @return
      */
-    String msg();
+    String msg() default "评论过于频繁，请等待30秒后再评论";
 }
