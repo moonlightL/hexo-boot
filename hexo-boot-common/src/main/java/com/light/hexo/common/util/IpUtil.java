@@ -36,8 +36,7 @@ public class IpUtil {
                 dbFile.delete();
             }
             FileUtils.copyInputStreamToFile(inputStream, dbFile);
-            String ipDbPath = System.getProperties().getProperty("java.io.tmpdir") + "/ip.db";
-            searcher = new DbSearcher(new DbConfig(), ipDbPath);
+            searcher = new DbSearcher(new DbConfig(), dbFile.getAbsolutePath());
             // btreeSearch  binarySearch  memorySearch
             method = searcher.getClass().getMethod("memorySearch", String.class);
         } catch (Exception e) {
