@@ -2,7 +2,7 @@ package com.light.hexo.core.admin.web.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.light.hexo.common.vo.Result;
-import com.light.hexo.core.admin.component.DefaultFileService;
+import com.light.hexo.core.admin.component.CommonFileService;
 import com.light.hexo.common.constant.HexoExceptionEnum;
 import com.light.hexo.core.admin.service.ConfigService;
 import com.light.hexo.mapper.model.Attachment;
@@ -46,7 +46,7 @@ public class AttachmentController extends BaseController {
     private AttachmentService attachmentService;
 
     @Autowired
-    private DefaultFileService defaultFileService;
+    private CommonFileService defaultFileService;
 
     @Autowired
     private ConfigService configService;

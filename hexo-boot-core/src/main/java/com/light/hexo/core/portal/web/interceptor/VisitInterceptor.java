@@ -51,8 +51,13 @@ public class VisitInterceptor extends HandlerInterceptorAdapter {
         String browserName = BrowserUtil.getBrowserName(request);
         if (RequestFilterConstant.ROBOT_SOURCE.equals(browserName) ||
             RequestFilterConstant.UNKNOWN_SOURCE.equals(browserName)) {
+            if (RequestUtil.isAjax(request)) {
+                this.print(response, JsonUtil.obj2String(Result.fail(GlobalExceptionEnum.ERROR_INVALID_VISIT)));
+            } else {
+                ExceptionUtil.throwExToPage(GlobalExceptionEnum.ERROR_INVALID_VISIT);
+            }
             log.info("==============VisitInterceptor 爬虫/未知来源, url: {}, ip: {}=====================", URLDecoder.decode(request.getRequestURI(), "UTF-8"), ipAddr);
-            return true;
+            return false;
         }
 
         this.eventPublisher.emit(new VisitEvent(this, ipAddr, browserName));

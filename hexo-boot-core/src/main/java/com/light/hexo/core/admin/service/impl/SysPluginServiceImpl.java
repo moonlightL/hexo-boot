@@ -117,6 +117,7 @@ public class SysPluginServiceImpl extends BaseServiceImpl<SysPlugin> implements 
         PluginDescriptor descriptor = pluginWrapper.getDescriptor();
 
         PluginState pluginState = this.pluginManager.startPlugin(pluginId, filePath);
+        String configUrl = ((BasePlugin) pluginWrapper.getPlugin()).getConfigUrl();
         SysPlugin plugin = new SysPlugin();
         plugin.setPluginId(pluginId)
               .setOriginName(originName)
@@ -125,7 +126,7 @@ public class SysPluginServiceImpl extends BaseServiceImpl<SysPlugin> implements 
               .setVersion(descriptor.getVersion())
               .setAuthor(descriptor.getProvider())
               .setFilePath(filePath)
-              .setConfigUrl(((BasePlugin) pluginWrapper.getPlugin()).getConfigUrl())
+              .setConfigUrl(StringUtils.isBlank(configUrl) ? "" : configUrl)
               .setCreateTime(LocalDateTime.now())
               .setUpdateTime(plugin.getCreateTime());
         this.pluginMapper.insert(plugin);

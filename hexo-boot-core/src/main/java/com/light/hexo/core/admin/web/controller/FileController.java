@@ -12,8 +12,7 @@ import com.light.hexo.common.util.ExceptionUtil;
 import com.light.hexo.common.util.HttpClientUtil;
 import com.light.hexo.common.util.JsonUtil;
 import com.light.hexo.common.vo.Result;
-import com.light.hexo.core.admin.component.DefaultFileService;
-import org.apache.commons.io.FileUtils;
+import com.light.hexo.core.admin.component.CommonFileService;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.BOMInputStream;
 import org.apache.commons.lang3.StringUtils;
@@ -49,7 +48,7 @@ public class FileController {
             ".sql", ".xls", "xlsx", ".doc", "docx", ".txt", ".md", ".pdf"};
 
     @Autowired
-    private DefaultFileService defaultFileService;
+    private CommonFileService defaultFileService;
 
     /**
      * 文件上传（分类、文章页）

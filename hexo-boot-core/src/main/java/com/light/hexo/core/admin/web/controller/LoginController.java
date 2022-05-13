@@ -55,19 +55,14 @@ public class LoginController extends BaseController {
      */
     @RequestMapping(value = "/captcha.jpg")
     public void getCaptchaImage(HttpServletResponse response, HttpSession session) throws Exception {
-
         // 设置请求头为输出图片类型
         CaptchaUtil.setHeader(response);
-
         // 三个参数分别为宽、高、位数
         SpecCaptcha specCaptcha = new SpecCaptcha(130, 32, 4);
-
         // 设置类型，纯数字、纯字母、字母数字混合
         specCaptcha.setCharType(Captcha.TYPE_NUM_AND_UPPER);
-
-        // 验证码存入session
+        // 验证码存入 session
         session.setAttribute(HexoConstant.CAPTCHA, specCaptcha.text().toLowerCase());
-
         // 输出图片流
         specCaptcha.out(response.getOutputStream());
     }
@@ -141,7 +136,6 @@ public class LoginController extends BaseController {
      */
     @RequestMapping("/logout.json")
     @ResponseBody
-    @OperateLog(value = "系统登录", actionType = ActionEnum.LOGIN)
     public Result logout(HttpSession session) {
         session.removeAttribute(HexoConstant.CURRENT_USER);
         session.invalidate();

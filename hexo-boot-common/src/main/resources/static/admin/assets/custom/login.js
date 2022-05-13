@@ -56,6 +56,7 @@
             $.ajax({
                 type: "POST",
                 url: "/admin/login.json",
+                headers: {'x-requested-with': 'XMLHttpRequest'},
                 data: {username: username, password: password, verifyCode: verifyCode},
                 success: function (resp) {
                     if (resp.success) {

@@ -306,14 +306,14 @@
                         <a href="javascript:;" data-url="/admin/dynamic/listUI.html" data-name="动态列表"><i class="fa fa-heart-o"></i><span class="sidebar-mini-hide">动态列表</span></a>
                     </li>
                     <li>
-                        <a href="javascript:;" data-url="/admin/album/listUI.html" data-name="专辑列表"><i class="fa fa-sun-o"></i><span class="sidebar-mini-hide">专辑列表</span></a>
+                        <a href="javascript:;" data-url="/admin/album/listUI.html" data-name="专辑列表"><i class="fa fa-youtube-play"></i><span class="sidebar-mini-hide">专辑列表</span></a>
                     </li>
                     <li class="nav-main-heading"><span class="sidebar-mini-visible">BD</span><span class="sidebar-mini-hidden">网站管理</span></li>
                     <li>
                         <a href="javascript:;" data-url="/admin/nav/listUI.html" data-name="导航管理"><i class="fa fa-compass"></i><span class="sidebar-mini-hide">导航管理</span></a>
                     </li>
                     <li>
-                        <a class="nav-submenu" data-toggle="nav-submenu" href="#"><i class="si si-vector"></i><span class="sidebar-mini-hide">系统配置</span></a>
+                        <a class="nav-submenu" data-toggle="nav-submenu" href="#"><i class="fa fa-server"></i><span class="sidebar-mini-hide">系统配置</span></a>
                         <ul>
                             <li>
                                 <a href="javascript:;" data-url="/admin/siteConfig/basicUI.html" data-name="基础配置">基础配置</a>
@@ -464,9 +464,9 @@
                                     <a class="block block-link-shadow text-right" href="javascript:void(0)" data-url="/admin/post/listUI.html" data-name="博客列表">
                                         <div class="block-content block-content-full clearfix">
                                             <div class="float-left mt-10 d-none d-sm-block">
-                                                <i class="fa fa-edit fa-3x text-body-bg-dark"></i>
+                                                <i class="fa fa-edit fa-3x text-primary-light"></i>
                                             </div>
-                                            <div class="font-size-h3 font-w600" data-toggle="countTo" data-speed="1000" th:data-to="${postNum}">0</div>
+                                            <div class="font-size-h3 font-w600 text-primary" data-toggle="countTo" data-speed="1000" th:data-to="${postNum}">0</div>
                                             <div class="font-size-sm font-w600 text-uppercase text-muted">文章数</div>
                                         </div>
                                     </a>
@@ -475,9 +475,9 @@
                                     <a class="block block-link-shadow text-right" href="javascript:void(0)" data-url="/admin/category/listUI.html" data-name="分类列表">
                                         <div class="block-content block-content-full clearfix">
                                             <div class="float-left mt-10 d-none d-sm-block">
-                                                <i class="fa fa-bars fa-3x text-body-bg-dark"></i>
+                                                <i class="fa fa-bars fa-3x text-earth-light"></i>
                                             </div>
-                                            <div class="font-size-h3 font-w600" data-toggle="countTo" data-speed="1000" th:data-to="${categoryNum}">0</div>
+                                            <div class="font-size-h3 font-w600 text-earth" data-toggle="countTo" data-speed="1000" th:data-to="${categoryNum}">0</div>
                                             <div class="font-size-sm font-w600 text-uppercase text-muted">分类数</div>
                                         </div>
                                     </a>
@@ -486,9 +486,9 @@
                                     <a class="block block-link-shadow text-right" href="javascript:void(0)" data-url="/admin/comment/listUI.html" data-name="评论列表">
                                         <div class="block-content block-content-full clearfix">
                                             <div class="float-left mt-10 d-none d-sm-block">
-                                                <i class="fa fa-comments-o fa-3x text-body-bg-dark"></i>
+                                                <i class="fa fa-comments-o fa-3x text-elegance-light"></i>
                                             </div>
-                                            <div class="font-size-h3 font-w600" data-toggle="countTo" data-speed="1000" th:data-to="${postCommentNum}">0</div>
+                                            <div class="font-size-h3 font-w600 text-elegance" data-toggle="countTo" data-speed="1000" th:data-to="${postCommentNum}">0</div>
                                             <div class="font-size-sm font-w600 text-uppercase text-muted">评论数</div>
                                         </div>
                                     </a>
@@ -554,7 +554,7 @@
                                             <p class="mt-5">
                                                 <i class="fa fa-coffee fa-3x"></i>
                                             </p>
-                                            <p class="font-w600">更换主题</p>
+                                            <p class="font-w600">查看主题</p>
                                         </div>
                                     </a>
                                 </div>
@@ -572,7 +572,7 @@
                                     <a class="block block-link-shadow text-center" href="javascript:void(0)" data-url="/admin/friendLink/listUI.html" data-name="友链列表">
                                         <div class="block-content">
                                             <p class="mt-5">
-                                                <i class="fa fa-link fa-3x"></i>
+                                                <i class="fa fa-group fa-3x"></i>
                                             </p>
                                             <p class="font-w600">友链列表</p>
                                         </div>
@@ -654,6 +654,7 @@
                 DashboardManager.getMetaData();
                 DashboardManager.checkRunDay();
                 DashboardManager.connectServer();
+                DashboardManager.showLastLoginTime();
             },
             createVisitLine: function () {
                 let myChart = echarts.init(document.getElementById("visitLine"), "macarons");
@@ -850,19 +851,22 @@
                     let date2 = new Date();
                     let date3 = date2.getTime() - new Date(date1).getTime();
                     //计算出相差天数
-                    let days = Math.floor(date3/(24*3600*1000));
+                    let days = Math.floor(date3 / (24 * 3600 * 1000));
 
                     //计算出小时数
-                    let leave1 = date3%(24*3600*1000);
-                    let hours = Math.floor(leave1/(3600*1000));
+                    let leave1 = date3 % (24 * 3600 * 1000);
+                    let hours = Math.floor(leave1 /(3600 * 1000));
                     //计算相差分钟数
-                    let leave2 = leave1%(3600*1000) ;
-                    let minutes = Math.floor(leave2/(60*1000));
+                    let leave2 = leave1 % (3600 * 1000) ;
+                    let minutes = Math.floor(leave2 / (60 * 1000));
                     //计算相差秒数
-                    let leave3 = leave2%(60*1000);
-                    let seconds = Math.round(leave3/1000);
+                    let leave3 = leave2 % (60 * 1000);
+                    let seconds = Math.round(leave3 / 1000);
                     $runDay.html(days + " 天 " + hours + " 小时 " + minutes + " 分钟 " + seconds + " 秒");
                 }, 1000);
+            },
+            showLastLoginTime: function() {
+                // todo
             }
         };
 

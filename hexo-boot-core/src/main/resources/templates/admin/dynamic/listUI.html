@@ -7,13 +7,15 @@
     <div th:replace="~{admin/common :: common-link}"></div>
     <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/fancybox/jquery.fancybox.min.css'}"/>
     <style>
-        .block-content .row {
+        .block-content {
             background: #FFF;
-            margin-bottom: 20px;
-            box-shadow: 0 0 36px #d8dde5;
         }
 
-        .block-content .row p img.custom-img,
+        .block-content .row p img.custom-img {
+            float: none !important;
+            max-width: 272px !important;
+        }
+
         .block-content .row p video,
         .block-content .row p iframe {
             float: none !important;
@@ -24,8 +26,7 @@
         h3 {
             display: block;
             width: 100%;
-            height: 42px;
-            line-height: 42px;
+            line-height: 26px;
             padding-left: 1rem;
             border-bottom: 1px solid #e4e7ed;
             font-size: 18px;
@@ -38,17 +39,15 @@
 <div class="content animated fadeIn">
     <h2 class="content-heading" id="toolbar">
         <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-refresh"><i class="fa fa-refresh mr-5"></i> 刷新</button>
-        <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-add" title="发布动态" data-width="1024" data-height="560"><i class="fa fa-plus-square text-primary mr-5"></i> 发表</button>
+        <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-add" title="发布动态" data-width="1024" data-height="560" data-full="true"><i class="fa fa-plus-square text-primary mr-5"></i> 发表</button>
         <i class="fa fa fa-heart-o"></i> 动态列表 <span id="totalNum"></span>
     </h2>
 
     <div class="block-content" id="dynamicBody"></div>
 
-    <div class="block block-fx-shadow">
-        <div class="block-content">
-            <nav aria-label="Page navigation" id="pageBar"></nav>
-        </div>
-    </div>
+    <p>
+        <nav aria-label="Page navigation" id="pageBar"></nav>
+    </p>
 </div>
 <!-- END Page Content -->
 <div th:replace="~{admin/common :: common-script}"></div>
@@ -105,15 +104,14 @@
                 for (let i = 0; i < dynamicList.length; i++) {
                     let obj = dynamicList[i];
                     contentArr.push('<div class="row align-items-center">');
-                    contentArr.push('<h3><span style="display: inline-block;width: 16px; height: 16px; border-radius: 50%;background: '+ obj.color + '"></span> 打卡</h3>');
+                    contentArr.push('<h3 style="background-color: #f6f7f9;padding: 10px 20px;"><span style="display: inline-block;width: 16px; height: 16px; border-radius: 50%;background: '+ obj.color + '"></span> 打卡 <span class="pull-right" style="margin-right: 1rem; font-size: 12px;color: #999"><i class="fa fa-clock-o"></i> ' + obj.createTime + '</span></h3>');
                     contentArr.push('<div class="col-sm-10 py-10">');
                     contentArr.push('<p class="font-size-sm mb-10">');
                     contentArr.push(obj.content);
                     contentArr.push('</p>');
-                    contentArr.push('<p class="font-size-sm text-muted mb-0"><i class="fa fa-clock-o"></i> ' + obj.createTime + '</p>');
                     contentArr.push('</div>');
                     contentArr.push('<div class="col-sm-2 py-10 text-md-right">');
-                    contentArr.push('<a class="btn btn-sm btn-outline-secondary btn-rounded mr-5 my-5 g-btn edit-btn" href="javascript:void(0)" data-id="' + obj.id + '" data-width="1024" data-height="560"><i class="fa fa-wrench mr-1"></i>编辑 </a>');
+                    contentArr.push('<a class="btn btn-sm btn-outline-secondary btn-rounded mr-5 my-5 g-btn edit-btn" href="javascript:void(0)" data-id="' + obj.id + '" data-width="1024" data-height="560" data-full="true"><i class="fa fa-wrench mr-1"></i>编辑 </a>');
                     contentArr.push('<a class="btn btn-sm btn-outline-danger btn-rounded mr-5 my-5 g-btn remove-btn" href="javascript:void(0)" data-id="' + obj.id + '"><i class="fa fa-times mr-1"></i>删除 </a>');
                     contentArr.push('</div>');
                     contentArr.push('</div>');

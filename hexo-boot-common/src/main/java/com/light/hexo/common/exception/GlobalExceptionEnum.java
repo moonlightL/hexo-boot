@@ -22,7 +22,8 @@ public enum GlobalExceptionEnum implements GlobalExceptionMap {
     ERROR_NOT_LOGIN_TO_COMMENT(601, "请先登录再进行评论"),
     ERROR_USER_STATE_NOT_VALID(602, "账户异常，请联系博主"),
     ERROR_CAN_NOT_DELETE_RESOURCE(900, "默认资源无法删除"),
-    ERROR_IN_BLACKLIST(901, "检测到你进行非法操作，已被列入黑名单!");
+    ERROR_IN_BLACKLIST(901, "检测到你进行非法操作，已被列入黑名单!"),
+    ERROR_INVALID_VISIT(902, "非正常请求!");
 
     private int code;
 

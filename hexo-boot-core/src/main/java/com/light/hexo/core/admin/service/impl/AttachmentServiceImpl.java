@@ -1,7 +1,11 @@
 package com.light.hexo.core.admin.service.impl;
 
 import com.light.hexo.common.base.BaseServiceImpl;
-import com.light.hexo.core.admin.component.DefaultFileService;
+import com.light.hexo.common.component.event.BaseEvent;
+import com.light.hexo.common.component.event.EventEnum;
+import com.light.hexo.common.event.AttachmentEvent;
+import com.light.hexo.common.util.JsonUtil;
+import com.light.hexo.core.admin.component.CommonFileService;
 import com.light.hexo.mapper.mapper.AttachmentMapper;
 import com.light.hexo.mapper.base.BaseMapper;
 import com.light.hexo.mapper.model.Attachment;
@@ -15,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import tk.mybatis.mapper.entity.Example;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,7 +36,7 @@ public class AttachmentServiceImpl extends BaseServiceImpl<Attachment> implement
     private AttachmentMapper attachmentMapper;
 
     @Autowired
-    private DefaultFileService defaultFileService;
+    private CommonFileService defaultFileService;
 
     @Override
     public BaseMapper<Attachment> getBaseMapper() {
@@ -79,8 +82,8 @@ public class AttachmentServiceImpl extends BaseServiceImpl<Attachment> implement
             if (attachment != null) {
                 FileRequest fileRequest = new FileRequest();
                 fileRequest.setFilename(attachment.getFilename())
-                        .setFilePath(attachment.getFilePath())
-                        .setFileUrl(attachment.getFileUrl());
+                           .setFilePath(attachment.getFilePath())
+                           .setFileUrl(attachment.getFileUrl());
                 this.defaultFileService.remove(fileRequest, attachment.getPosition());
             }
         }
@@ -88,4 +91,19 @@ public class AttachmentServiceImpl extends BaseServiceImpl<Attachment> implement
         super.removeBatch(idList);
     }
 
+    @Override
+    public void dealWithEvent(BaseEvent event) {
+        AttachmentEvent attachmentEvent = (AttachmentEvent) event;
+
+        if (AttachmentEvent.Type.ADD.getCode().equals(attachmentEvent.getType().getCode())) {
+            String attachmentJson = attachmentEvent.getAttachmentJson();
+            Attachment attachment = JsonUtil.string2Obj(attachmentJson, Attachment.class);
+            this.saveModel(attachment);
+        }
+    }
+
+    @Override
+    public String getCode() {
+        return EventEnum.ATTACHMENT.getType();
+    }
 }

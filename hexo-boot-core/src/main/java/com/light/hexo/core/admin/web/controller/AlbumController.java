@@ -2,7 +2,7 @@ package com.light.hexo.core.admin.web.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.light.hexo.common.vo.Result;
-import com.light.hexo.core.admin.component.DefaultFileService;
+import com.light.hexo.core.admin.component.CommonFileService;
 import com.light.hexo.common.constant.HexoExceptionEnum;
 import com.light.hexo.mapper.model.Album;
 import com.light.hexo.core.admin.service.AlbumDetailService;
@@ -51,7 +51,7 @@ public class AlbumController extends BaseController {
     private AlbumDetailService albumDetailService;
 
     @Autowired
-    private DefaultFileService defaultFileService;
+    private CommonFileService defaultFileService;
 
     /**
      * 新增页面

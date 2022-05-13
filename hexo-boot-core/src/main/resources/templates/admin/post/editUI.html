@@ -35,6 +35,9 @@
         .input-group-text {
             font-weight: bold;
         }
+        .custom-select {
+            height: 40px;
+        }
         input[disabled] {
             background: #edf0f3 !important;
         }
@@ -96,7 +99,7 @@
                             <div class="form-group row">
                                 <label class="col-md-4 col-form-label" for="title">文章标签</label>
                                 <div class="col-md-8">
-                                    <input type="text" id="tags" name="tags" class="js-tags-input form-control" placeholder="标签" data-height="32px" th:field="*{tags}">
+                                    <input type="text" id="tags" name="tags" class="js-tags-input form-control" placeholder="标签" data-height="40px" th:field="*{tags}">
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -106,9 +109,10 @@
                                         <option value="" disabled selected>是否转载</option>
                                         <option value="0">否</option>
                                         <option value="1">是</option>
-                                    </select> <br><br>
+                                    </select>
                                 </div>
                                 <div class="col-md-12" id="anchorInfo" th:attr="style='display:' + ${vo.reprint ? 'block' : 'none'}">
+                                    <br>
                                     <div class="form-group row">
                                         <label class="col-md-4 col-form-label" for="title">作者</label>
                                         <div class="col-md-8">

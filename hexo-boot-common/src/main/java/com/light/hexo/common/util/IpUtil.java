@@ -2,6 +2,7 @@ package com.light.hexo.common.util;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
@@ -10,7 +11,6 @@ import org.lionsoul.ip2region.DbConfig;
 import org.lionsoul.ip2region.DbSearcher;
 import org.lionsoul.ip2region.Util;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 
@@ -24,11 +24,23 @@ import java.lang.reflect.Method;
 @Slf4j
 public class IpUtil {
 
+    private static DbSearcher searcher;
+
+    private static Method method;
+
     static {
         try (InputStream inputStream = IpUtil.class.getClassLoader().getResourceAsStream("ip2region.db")) {
             // 打包后无法读取 db 文件， 因此使用临时文件方式解决
-            FileUtils.copyInputStreamToFile(inputStream, new File(System.getProperties().getProperty("java.io.tmpdir") , "ip.db"));
-        } catch (IOException e) {
+            File dbFile = new File(System.getProperties().getProperty("java.io.tmpdir"), "ip.db");
+            if (dbFile.exists()) {
+                dbFile.delete();
+            }
+            FileUtils.copyInputStreamToFile(inputStream, dbFile);
+            String ipDbPath = System.getProperties().getProperty("java.io.tmpdir") + "/ip.db";
+            searcher = new DbSearcher(new DbConfig(), ipDbPath);
+            // btreeSearch  binarySearch  memorySearch
+            method = searcher.getClass().getMethod("memorySearch", String.class);
+        } catch (Exception e) {
             log.error("=============== IpUtil 加载 ip2region.db 文件失败==================");
             e.printStackTrace();
         }
@@ -50,32 +62,13 @@ public class IpUtil {
             return ipInfo;
         }
 
-        int algorithm = DbSearcher.MEMORY_ALGORITYM;
-        DbSearcher searcher = null;
         try {
-            String ipDbPath = System.getProperties().getProperty("java.io.tmpdir") + "/ip.db";
-            searcher = new DbSearcher(new DbConfig(), ipDbPath);
-            Method method = null;
-            switch (algorithm) {
-                case DbSearcher.BTREE_ALGORITHM:
-                    method = searcher.getClass().getMethod("btreeSearch", String.class);
-                    break;
-                case DbSearcher.BINARY_ALGORITHM:
-                    method = searcher.getClass().getMethod("binarySearch", String.class);
-                    break;
-                case DbSearcher.MEMORY_ALGORITYM:
-                    method = searcher.getClass().getMethod("memorySearch", String.class);
-                    break;
-            }
-
             DataBlock dataBlock = (DataBlock) method.invoke(searcher, ip);
             String region = dataBlock.getRegion();
             String[] array = region.split("\\|");
             ipInfo.setCountry(array[0]).setProvince(array[2]).setCity(array[3]);
-
         } catch (Exception e) {
             e.printStackTrace();
-            log.error("======== ip 查询异常========");
         }
 
         return ipInfo;
@@ -84,6 +77,7 @@ public class IpUtil {
     @Setter
     @Getter
     @Accessors(chain = true)
+    @ToString
     public static class IpInfo {
 
         private String country = "未知";

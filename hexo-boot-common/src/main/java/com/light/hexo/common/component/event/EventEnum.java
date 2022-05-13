@@ -23,6 +23,7 @@ public enum EventEnum {
     FRIEND_LINK("9", "友链事件"),
     TAG("10", "标签"),
     ALBUM("11", "专辑"),
+    ATTACHMENT("12", "附件")
     ;
 
     EventEnum(String type, String message) {

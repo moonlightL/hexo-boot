@@ -1,5 +1,6 @@
 package com.light.hexo.core.admin.component;
 
+import com.light.hexo.common.component.event.EventPublisher;
 import com.light.hexo.common.component.file.FileRequest;
 import com.light.hexo.common.component.file.FileResponse;
 import com.light.hexo.common.component.file.FileService;
@@ -9,12 +10,11 @@ import com.light.hexo.common.constant.ConfigEnum;
 import com.light.hexo.common.constant.FileTypeEnum;
 import com.light.hexo.common.constant.HexoConstant;
 import com.light.hexo.common.constant.HexoExceptionEnum;
+import com.light.hexo.common.event.AttachmentEvent;
 import com.light.hexo.common.exception.GlobalException;
 import com.light.hexo.common.util.ExceptionUtil;
 import com.light.hexo.common.util.RequestUtil;
-import com.light.hexo.core.admin.service.AttachmentService;
 import com.light.hexo.core.admin.service.ConfigService;
-import com.light.hexo.mapper.model.Attachment;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
@@ -22,9 +22,9 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Base64;
@@ -36,14 +36,14 @@ import java.util.concurrent.TimeoutException;
 
 /**
  * @Author MoonlightL
- * @ClassName: DefaultFileService
+ * @ClassName: CommonFileService
  * @ProjectName hexo-boot
  * @Description: 默认文件 Servcie
  * @DateTime 2020/9/11 9:36
  */
 @Component
 @Slf4j
-public class DefaultFileService {
+public class CommonFileService {
 
     @Autowired
     private FileServiceFactory fileServiceFactory;
@@ -58,7 +58,8 @@ public class DefaultFileService {
     private Environment environment;
 
     @Autowired
-    private AttachmentService attachmentService;
+    @Lazy
+    private EventPublisher eventPublisher;
 
     private static final Map<String, String> THUMBNAIL_URL_MAP;
 
@@ -108,20 +109,20 @@ public class DefaultFileService {
         fileResponse.setPath(fileService.getLocalPath(fileRequest.getFilename()));
 
         if (fileResponse.isSuccess()) {
-            Attachment attachment = new Attachment();
-            attachment.setFilename(fileRequest.getFilename())
-                      .setOriginalName(fileRequest.getOriginalName())
-                      .setContentType(fileRequest.getContentType())
-                      .setFileType(this.checkFileType(attachment.getContentType()).getType())
-                      .setFileUrl(fileResponse.getUrl())
-                      .setFilePath(fileResponse.getPath())
-                      .setFileSize(fileRequest.getFileSize())
-                      .setPosition(Integer.valueOf(this.configService.getConfigValue(ConfigEnum.MANAGE_MODE.getName())));
+            Map<String, Object> attachmentMap = new HashMap<>();
+            attachmentMap.put("filename", fileRequest.getFilename());
+            attachmentMap.put("originalName", fileRequest.getOriginalName());
+            attachmentMap.put("contentType", fileRequest.getContentType());
+            attachmentMap.put("fileType", this.checkFileType(fileRequest.getContentType()).getType());
+            attachmentMap.put("fileUrl", fileResponse.getUrl());
+            attachmentMap.put("filePath", fileResponse.getPath());
+            attachmentMap.put("fileSize", fileRequest.getFileSize());
+            attachmentMap.put("position", Integer.valueOf(this.configService.getConfigValue(ConfigEnum.MANAGE_MODE.getName())));
 
             if (THUMBNAIL_URL_MAP.containsKey(fileRequest.getExtension())) {
-                attachment.setThumbnailUrl(THUMBNAIL_URL_MAP.get(fileRequest.getExtension()));
+                attachmentMap.put("thumbnailUrl", THUMBNAIL_URL_MAP.get(fileRequest.getExtension()));
             } else {
-                if (attachment.getContentType().startsWith(FileTypeEnum.VIDEO.getCode())) {
+                if (fileRequest.getContentType().startsWith(FileTypeEnum.VIDEO.getCode())) {
 
                     String coverBase64 = fileRequest.getCoverBase64();
                     if (StringUtils.isNotBlank(coverBase64)) {
@@ -145,19 +146,19 @@ public class DefaultFileService {
 
                         String blogPage = this.configService.getConfigValue(ConfigEnum.HOME_PAGE.getName());
                         String coverUrl = (StringUtils.isNotBlank(blogPage) ? blogPage : "http://" + RequestUtil.getHostIp() + ":" + this.environment.getProperty("server.port")) + "/cover/" + coverName;
-                        attachment.setThumbnailUrl(coverUrl);
+                        attachmentMap.put("thumbnailUrl", coverUrl);
                     } else {
-                        attachment.setThumbnailUrl(HexoConstant.DEFAULT_VIDEO_COVER);
+                        attachmentMap.put("thumbnailUrl", HexoConstant.DEFAULT_VIDEO_COVER);
                     }
 
                 } else {
-                    attachment.setThumbnailUrl(attachment.getFileUrl());
+                    attachmentMap.put("thumbnailUrl", fileResponse.getUrl());
                 }
             }
 
-            this.attachmentService.saveModel(attachment);
+            this.eventPublisher.emit(new AttachmentEvent(this, AttachmentEvent.Type.ADD, attachmentMap));
 
-            fileResponse.setCoverUrl(attachment.getThumbnailUrl());
+            fileResponse.setCoverUrl(attachmentMap.get("thumbnailUrl").toString());
         }
 
         return fileResponse;

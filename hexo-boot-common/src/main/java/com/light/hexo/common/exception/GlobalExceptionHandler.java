@@ -41,7 +41,7 @@ public class GlobalExceptionHandler {
         Map<String, Object> resultMap = Result.fail(e.getCode(), e.getMessage()).toMap();
 
         if (e.getJson()) {
-            mv = new ModelAndView("jsonView", resultMap);
+            mv = new ModelAndView("mappingJackson2JsonView", resultMap);
         } else {
             resultMap.put("contextPath", contextPath);
             mv = new ModelAndView("error", resultMap);

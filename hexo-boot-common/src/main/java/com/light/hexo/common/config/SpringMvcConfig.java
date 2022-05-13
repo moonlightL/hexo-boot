@@ -32,6 +32,8 @@ public class SpringMvcConfig implements WebMvcConfigurer {
 
     @Bean
     public MappingJackson2JsonView mappingJackson2JsonView(){
-        return new MappingJackson2JsonView();
+        MappingJackson2JsonView jsonView = new MappingJackson2JsonView();
+        jsonView.setBeanName("mappingJackson2JsonView");
+        return jsonView;
     }
 }

@@ -92,10 +92,11 @@
             let processInterval = setInterval(function() {
                 progress += 1;
                 runProcess(progress, $progressbar, $progressText, $resultContainer, "正在拉取【" + themeName + "】主题代码");
-                if (progress >= 90) {
+                if (progress >= 80) {
+                    $resultContainer.val($resultContainer.val() + "\n努力拉取中......");
                     clearInterval(processInterval);
                 }
-            }, 50);
+            }, 80);
 
             $.ajax({
                 type: "POST",

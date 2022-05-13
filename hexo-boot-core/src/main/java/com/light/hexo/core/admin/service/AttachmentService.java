@@ -1,6 +1,7 @@
 package com.light.hexo.core.admin.service;
 
 import com.light.hexo.common.base.BaseService;
+import com.light.hexo.common.component.event.EventService;
 import com.light.hexo.mapper.model.Attachment;
 import com.light.hexo.common.exception.GlobalException;
 
@@ -13,7 +14,7 @@ import java.util.List;
  * @Description: 附件 Service
  * @DateTime 2020/9/10 16:07
  */
-public interface AttachmentService extends BaseService<Attachment> {
+public interface AttachmentService extends BaseService<Attachment>, EventService {
 
     /**
      * 批量删除附件
