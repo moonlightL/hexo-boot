@@ -241,7 +241,8 @@
                     },
                     'confirmPassword': {
                         required: true,
-                        minlength: 6
+                        minlength: 6,
+                        equalTo: "#newPassword"
                     }
                 },
                 messages: {
@@ -254,7 +255,8 @@
                     },
                     'confirmPassword': {
                         required: '请输入确认密码',
-                        minlength: '确认密码长度至少6位数'
+                        minlength: '确认密码长度至少6位数',
+                        equalTo: "两次密码不一致"
                     }
                 },
                 submitHandler: function (form) {

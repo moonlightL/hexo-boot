@@ -1,16 +1,16 @@
 package com.light.hexo.core.admin.web.controller;
 
 import com.light.hexo.common.base.BaseController;
+import com.light.hexo.common.component.event.EventPublisher;
 import com.light.hexo.common.component.log.ActionEnum;
+import com.light.hexo.common.component.log.ActionLogEvent;
 import com.light.hexo.common.component.log.OperateLog;
 import com.light.hexo.common.constant.CacheKey;
 import com.light.hexo.common.constant.HexoConstant;
 import com.light.hexo.common.constant.HexoExceptionEnum;
 import com.light.hexo.common.exception.GlobalExceptionEnum;
 import com.light.hexo.common.request.UserRequest;
-import com.light.hexo.common.util.CacheUtil;
-import com.light.hexo.common.util.ExceptionUtil;
-import com.light.hexo.common.util.RequestUtil;
+import com.light.hexo.common.util.*;
 import com.light.hexo.common.vo.Result;
 import com.light.hexo.core.admin.service.BlacklistService;
 import com.light.hexo.core.admin.service.UserService;
@@ -19,6 +19,7 @@ import com.wf.captcha.SpecCaptcha;
 import com.wf.captcha.base.Captcha;
 import com.wf.captcha.utils.CaptchaUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.DigestUtils;
 import org.springframework.validation.annotation.Validated;
@@ -28,6 +29,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -46,6 +49,10 @@ public class LoginController extends BaseController {
 
     @Autowired
     private BlacklistService blacklistService;
+
+    @Autowired
+    @Lazy
+    private EventPublisher eventPublisher;
 
     /**
      * 获取验证码
@@ -85,7 +92,6 @@ public class LoginController extends BaseController {
      */
     @RequestMapping("/login.json")
     @ResponseBody
-    @OperateLog(value = "系统登录", actionType = ActionEnum.LOGIN)
     public Result login(@Validated(UserRequest.Login.class) UserRequest request, HttpServletRequest httpServletRequest) {
 
         HttpSession session = httpServletRequest.getSession();
@@ -105,7 +111,8 @@ public class LoginController extends BaseController {
                     HexoExceptionEnum.ERROR_USER_NOT_EXIST.getMessage() + ", 剩余 " + remainNum + " 次尝试机会");
         }
 
-        if (!user.getPassword().equals(DigestUtils.md5DigestAsHex(request.getPassword().trim().getBytes()))) {
+        String md5Pwd = DigestUtils.md5DigestAsHex(request.getPassword().trim().getBytes());
+        if (!user.getPassword().equals(md5Pwd)) {
             int remainNum = this.checkLoginError(httpServletRequest);
             ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_USER_PASSWORD_WRONG.getCode(),
                     HexoExceptionEnum.ERROR_USER_PASSWORD_WRONG.getMessage() + ", 剩余 " + remainNum + " 次尝试机会");
@@ -126,7 +133,26 @@ public class LoginController extends BaseController {
         String ipAddr = RequestUtil.getIpAddr(httpServletRequest);
         CacheUtil.remove(CacheKey.LOGIN_ERROR_NUM + ":" + ipAddr);
 
+        // 此处同步保存， 用于正确查询上次登录时间
+        this.saveLoginLog(request.getUsername(), md5Pwd, capText, httpServletRequest);
+
         return Result.success("/admin/home/index.html");
+    }
+
+    private void saveLoginLog(String username, String md5Pwd, String verifyCode, HttpServletRequest request) {
+        ActionLogEvent event = new ActionLogEvent(this);
+        Map<String, String> paramMap = new HashMap<>();
+        paramMap.put("username", username);
+        paramMap.put("password", md5Pwd);
+        paramMap.put("verifyCode", verifyCode);
+        event.setMethodName(this.getClass().getName() + ".login")
+             .setMethodParam(JsonUtil.obj2String(paramMap))
+             .setIpAddress(RequestUtil.getIpAddr(request))
+             .setBrowser(BrowserUtil.getBrowserName(request))
+             .setRemark("系统登录")
+             .setActionType(ActionEnum.LOGIN.getCode())
+             .setCreateTime(LocalDateTime.now());
+        this.eventPublisher.emit(event);
     }
 
     /**

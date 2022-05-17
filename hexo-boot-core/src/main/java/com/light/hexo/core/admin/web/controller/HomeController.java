@@ -1,8 +1,10 @@
 package com.light.hexo.core.admin.web.controller;
 
+import com.light.hexo.common.util.IpUtil;
 import com.light.hexo.common.vo.BlogMetaData;
 import com.light.hexo.common.vo.Result;
 import com.light.hexo.common.config.BlogConfig;
+import com.light.hexo.mapper.model.ActionLog;
 import com.light.hexo.mapper.model.Post;
 import com.light.hexo.core.admin.service.*;
 import com.light.hexo.common.base.BaseController;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -37,6 +40,9 @@ public class HomeController extends BaseController {
 
     @Autowired
     private VisitService visitService;
+
+    @Autowired
+    private ActionLogService actionLogService;
 
     @Autowired
     private BlogConfig blogConfig;
@@ -142,5 +148,23 @@ public class HomeController extends BaseController {
         metaData.setPluginDir(this.blogConfig.getPluginDir());
         metaData.setVersion(this.blogConfig.getVersion());
         return Result.success(metaData);
+    }
+
+    /**
+     * 获取上次登录信息
+     * @return
+     */
+    @RequestMapping("/lastLoginInfo.json")
+    @ResponseBody
+    public Result lastLoginInfo() {
+        ActionLog actionLog = this.actionLogService.getLastLoginInfo();
+        Map<String, Object> map = new HashMap<>();
+        map.put("first", actionLog == null);
+        if (actionLog != null) {
+            map.put("ipInfo", IpUtil.getInfo(actionLog.getIpAddress()));
+            map.put("lastLoginTime", actionLog.getCreateTime());
+        }
+        map.put("currentTime", LocalDateTime.now());
+        return Result.success(map);
     }
 }

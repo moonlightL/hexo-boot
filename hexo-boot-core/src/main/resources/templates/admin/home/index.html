@@ -400,7 +400,7 @@
                 <!-- Notifications -->
                 <div class="btn-group" role="group">
                     <button type="button" class="btn btn-rounded btn-dual-secondary message-container" id="messageBtn" title="消息">
-                        <i class="fa fa-flag"></i>
+                        <i class="fa fa-comments-o"></i>
                         <span class="badge badge-primary badge-pill" id="messageNum"></span>
                     </button>
                     <div class="dropdown-menu dropdown-menu-right min-width-300 animated fadeIn message-content" id="messageContent">
@@ -510,11 +510,16 @@
                                 <!-- Row #2 -->
                                 <div class="col-md-6">
                                     <div class="block">
-                                        <div class="block-header">
+                                        <div class="block-header block-header-default border-b">
                                             <h3 class="block-title">
                                                 访问人数 <small>（近7日）</small>
                                             </h3>
-                                            <span style="position: absolute; right: 20px;padding-right: 10px;">当日访问数：<strong id="todayVisitNum"></strong></span>
+                                            <span style="position: absolute; right: 80px;padding-right: 10px;">当日访问数：<strong id="todayVisitNum"></strong></span>
+                                            <div class="block-options">
+                                                <button type="button" class="btn-block-option" onclick="DashboardManager.createVisitLine()">
+                                                    <i class="si si-refresh"></i>
+                                                </button>
+                                            </div>
                                         </div>
                                         <div class="block-content block-content-full">
                                             <div class="pull-all">
@@ -525,10 +530,13 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="block">
-                                        <div class="block-header">
-                                            <h3 class="block-title">
-                                                热门文章 <small>（Top 5）</small>
-                                            </h3>
+                                        <div class="block-header block-header-default border-b">
+                                            <h3 class="block-title">热门文章</h3>
+                                            <div class="block-options">
+                                                <button type="button" class="btn-block-option" onclick="DashboardManager.queryPostList()">
+                                                    <i class="si si-refresh"></i>
+                                                </button>
+                                            </div>
                                         </div>
                                         <div class="block-content block-content-full" style="height: 355px">
                                             <table class="table table-hover table-vcenter" id="postTable">
@@ -615,6 +623,21 @@
                 </div>
             </div>
         </div>
+
+        <div style="position: fixed; bottom: 3rem; right: 3rem; z-index: 9999999;">
+            <div id="toast-panel" class="toast fade hide" data-delay="10000" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header">
+                    <i class="fa fa-user text-primary mr-2"></i>
+                    <strong class="mr-auto">登录信息</strong>
+                    <small class="text-muted"></small>
+                    <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="toast-body" id="toast-body"></div>
+            </div>
+        </div>
+
     </main>
     <!-- END Main Container -->
 
@@ -643,17 +666,17 @@
 <script th:src="@{'/admin/assets/js/plugins/echarts/dist/echarts.min.js'}"></script>
 <script th:src="@{'/admin/assets/js/plugins/echarts/dist/macarons.js'}"></script>
 <script th:inline="javascript">
+
     let installTime = [[${#servletContext.getAttribute('configMap')['install_time']}]];
     $(function() {
 
-        let DashboardManager = {
+        window.DashboardManager = {
             init: function () {
                 DashboardManager.bindEvent();
                 DashboardManager.createVisitLine();
                 DashboardManager.queryPostList();
                 DashboardManager.getMetaData();
                 DashboardManager.checkRunDay();
-                DashboardManager.connectServer();
                 DashboardManager.showLastLoginTime();
             },
             createVisitLine: function () {
@@ -785,65 +808,6 @@
                 });
 
             },
-            connectServer: function () {
-                let webSocket;
-                let host = window.location.host;
-                let protocol = (window.location.protocol === "http:" ? "ws:" : "wss:");
-                if ('WebSocket' in window) {
-                    webSocket = new WebSocket(protocol + "//" + host + "/messageServer");
-                } else if ('MozWebSocket' in window) {
-                    webSocket = new MozWebSocket(protocol + "//" + host + "/messageServer");
-                }
-
-                webSocket.onopen = function(event) {
-                    console.log(event.data)
-                };
-
-                webSocket.onmessage = function(event) {
-                    if (event.data) {
-                        let messageList = JSON.parse(event.data);
-                        let length = messageList.length;
-                        let $messageNum = $("#messageNum");
-                        $messageNum.html(parseInt($messageNum.html() === "" ? "0" : $messageNum.html()) + length);
-                        if (length > 0) {
-                            let arr = [];
-                            length = (length > 5 ? 5 : length);
-                            for (let i = 0; i < length; i++) {
-                                let message = messageList[i];
-                                arr.push('<li>');
-                                arr.push('<a class="text-body-color-dark media mb-15" href="javascript:void(0)">');
-                                arr.push('<div class="row">');
-                                arr.push('<div class="col-md-2">');
-                                if (message.msgType === 1) {
-                                    arr.push('<i class="fa fa-fw fa-comments-o text-success"></i>');
-                                } else {
-                                    arr.push('<i class="fa fa-fw fa-comment text-primary"></i>');
-                                }
-                                arr.push('</div>');
-                                arr.push('<div class="col-md-10">');
-                                arr.push('<p class="mb-0">' + message.content + '</p>');
-                                arr.push('<div class="text-muted font-size-sm font-italic">' + message.messageTime + '</div>');
-                                arr.push('</div>');
-                                arr.push('</div>');
-                                arr.push('</a>');
-                                arr.push('</li>');
-                            }
-                            $("#messageList").prepend(arr.join(""));
-                        } else {
-                            $("#messageList").html("<p class='text-center'></p>");
-                            $messageNum.html("");
-                        }
-                    }
-                };
-
-                webSocket.onerror = function(event) {
-                    console.log(event.data);
-                };
-
-                webSocket.onclose = function(event) {
-                    console.log(event.data);
-                }
-            },
             checkRunDay: function () {
                 let $runDay = $("#runDay");
                 setInterval(function () {
@@ -866,7 +830,31 @@
                 }, 1000);
             },
             showLastLoginTime: function() {
-                // todo
+                let nickname = [[${#httpSession.getAttribute('currentUser')['nickname']}]];
+                $.ajax({
+                    type: "POST",
+                    url: "/admin/home/lastLoginInfo.json",
+                    dataType: "JSON",
+                    success: function(resp) {
+                        if (resp.success) {
+                            let data = resp.data;
+                            let htmlArr = [];
+                            if (data.first) {
+                                htmlArr.push('欢迎【'+ nickname +'】首次登录，本地登录时间： ' + data.currentTime);
+                            } else {
+                                htmlArr.push('亲爱的【'+ nickname +'】，欢迎回来！');
+                                htmlArr.push('<br>');
+                                htmlArr.push('本地登录时间：' + data.currentTime);
+                                htmlArr.push('<br>');
+                                htmlArr.push('上次登录地点：' + data.ipInfo.country + '-' + data.ipInfo.province + '-' + data.ipInfo.city);
+                                htmlArr.push('<br>');
+                                htmlArr.push('上次登录时间：' + data.lastLoginTime);
+                            }
+                            $("#toast-body").html(htmlArr.join(""));
+                            $('#toast-panel').toast('show');
+                        }
+                    }
+                })
             }
         };
 

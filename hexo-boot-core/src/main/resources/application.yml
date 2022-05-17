@@ -52,7 +52,6 @@ spring:
       config: classpath:ehcache.xml
   main:
     allow-bean-definition-overriding: true
-    allow-circular-references: true
 
 # mybatis 配置
 mybatis:

@@ -1,6 +1,7 @@
 package com.light.hexo.core.admin.service.impl;
 
 import com.light.hexo.common.base.BaseServiceImpl;
+import com.light.hexo.common.component.log.ActionEnum;
 import com.light.hexo.common.constant.HexoExceptionEnum;
 import com.light.hexo.mapper.mapper.ActionLogDetailMapper;
 import com.light.hexo.mapper.mapper.ActionLogMapper;
@@ -20,6 +21,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
+
+import java.util.List;
 
 /**
  * @Author MoonlightL
@@ -96,5 +99,13 @@ public class ActionLogServiceImpl extends BaseServiceImpl<ActionLog> implements 
         actionLog.setActionLogDetail(logDetail);
 
         return actionLog;
+    }
+
+    @Override
+    public ActionLog getLastLoginInfo() throws GlobalException {
+        Example example = new Example(ActionLog.class);
+        example.createCriteria().andEqualTo("actionType", ActionEnum.LOGIN.getCode());
+        example.setOrderByClause("id desc limit 1 offset 1");
+        return this.actionLogMapper.selectOneByExample(example);
     }
 }

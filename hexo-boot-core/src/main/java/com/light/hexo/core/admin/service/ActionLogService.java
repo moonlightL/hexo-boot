@@ -21,4 +21,10 @@ public interface ActionLogService extends BaseService<ActionLog>, EventService {
      * @throws GlobalException
      */
     ActionLog getActionLogInfo(Integer id) throws GlobalException;
+
+    /**
+     * 获取上次登录信息
+     * @return
+     */
+    ActionLog getLastLoginInfo() throws GlobalException;
 }

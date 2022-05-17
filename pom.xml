@@ -5,16 +5,16 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>hexo-boot-mapper</module>
         <module>hexo-boot-common</module>
         <module>hexo-boot-core</module>
         <module>hexo-boot-plugin</module>
-        <module>hexo-boot-mapper</module>
     </modules>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.6.7</version>
+        <version>2.3.4.RELEASE</version>
         <relativePath/>
     </parent>
 
@@ -26,7 +26,7 @@
 
     <properties>
         <java.version>1.8</java.version>
-        <spring.boot.version>2.6.7</spring.boot.version>
+        <spring.boot.version>2.3.4.RELEASE</spring.boot.version>
     </properties>
 
     <developers>

@@ -68,7 +68,7 @@
     function actionFormatter(val, row) {
         let btnArr = [];
         btnArr.push('<div class="btn-group">');
-        btnArr.push('<button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="详情" onclick="window.showDetailUI(\'' + row.id + '\', $(this))"><i class="fa fa-search"></i></button>');
+        btnArr.push('<button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="详情" data-full="true" onclick="window.showDetailUI(\'' + row.id + '\', $(this))"><i class="fa fa-search"></i></button>');
         btnArr.push("</div>");
         return btnArr.join("");
     }
