@@ -17,18 +17,18 @@ import java.util.List;
 
 /**
  * @Author MoonlightL
- * @ClassName: HandlerRegistry
+ * @ClassName: RequestHandlerRegistry
  * @ProjectName hexo-boot
- * @Description: 处理器注册器
+ * @Description: 请求处理器注册器
  * @DateTime 2022/4/19, 0019 20:37
  */
-public class HandlerRegistry extends AbstractModuleRegistry {
+public class RequestHandlerRegistry extends AbstractModuleRegistry {
 
     private RequestMappingHandlerMapping requestMappingHandlerMapping;
 
     private Method getMappingForMethod;
 
-    public HandlerRegistry(HexoBootPluginManager pluginManager) {
+    public RequestHandlerRegistry(HexoBootPluginManager pluginManager) {
         super(pluginManager);
         this.requestMappingHandlerMapping = super.pluginManager.getApplicationContext().getBean(RequestMappingHandlerMapping.class);
         this.getMappingForMethod = ReflectionUtils.findMethod(RequestMappingHandlerMapping.class, "getMappingForMethod", Method.class, Class.class);

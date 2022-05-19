@@ -23,7 +23,7 @@ public class CompoundModuleRegistry extends AbstractModuleRegistry implements Mo
         this.moduleRegistryList.add(new TkMapperRegistry(pluginManager));
         this.moduleRegistryList.add(new ComponentRegistry(pluginManager));
         this.moduleRegistryList.add(new ExtensionRegistry(pluginManager));
-        this.moduleRegistryList.add(new HandlerRegistry(pluginManager));
+        this.moduleRegistryList.add(new RequestHandlerRegistry(pluginManager));
         this.moduleRegistryList.add(new InterceptorRegistry(pluginManager));
         this.moduleRegistryList.add(new ThymeleafRegistry(pluginManager));
         this.moduleRegistryList.add(new WebSocketRegistry(pluginManager));
