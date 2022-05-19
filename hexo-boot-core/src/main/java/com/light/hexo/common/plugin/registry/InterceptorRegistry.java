@@ -30,8 +30,8 @@ public class InterceptorRegistry extends AbstractModuleRegistry {
         Field adaptedInterceptorsField = ReflectionUtils.findField(this.handlerMapping.getClass(), "adaptedInterceptors", List.class);
         adaptedInterceptorsField.setAccessible(true);
         try {
-            this.handlerInterceptorList = (List<HandlerInterceptor>) adaptedInterceptorsField.get(handlerMapping);
-        } catch (IllegalAccessException e) {
+            this.handlerInterceptorList = (List<HandlerInterceptor>) adaptedInterceptorsField.get(this.handlerMapping);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -40,10 +40,10 @@ public class InterceptorRegistry extends AbstractModuleRegistry {
     @Override
     public void register(String pluginId) {
         for (Class<?> clazz : super.getPluginClasses(pluginId)) {
-            HexoBootIntercept interceptPaths = clazz.getAnnotation(HexoBootIntercept.class);
-            if(interceptPaths != null && interceptPaths.value() != null) {
+            HexoBootIntercept intercept = clazz.getAnnotation(HexoBootIntercept.class);
+            if(intercept != null && intercept.value() != null) {
                 HandlerInterceptor handlerInterceptor = (HandlerInterceptor) super.registryBean(clazz);
-                MappedInterceptor mappedInterceptor = new MappedInterceptor(interceptPaths.value(), handlerInterceptor);
+                MappedInterceptor mappedInterceptor = new MappedInterceptor(intercept.value(), handlerInterceptor);
                 this.handlerInterceptorList.add(mappedInterceptor);
             }
         }
@@ -53,8 +53,8 @@ public class InterceptorRegistry extends AbstractModuleRegistry {
     @Override
     public void unRegister(String pluginId) {
         for (Class<?> clazz : super.getPluginClasses(pluginId)) {
-            HexoBootIntercept interceptPaths = clazz.getAnnotation(HexoBootIntercept.class);
-            if(interceptPaths != null && interceptPaths.value() != null) {
+            HexoBootIntercept intercept = clazz.getAnnotation(HexoBootIntercept.class);
+            if(intercept != null && intercept.value() != null) {
                 for (HandlerInterceptor handlerInterceptor : this.handlerInterceptorList) {
                     if(handlerInterceptor instanceof MappedInterceptor) {
                         MappedInterceptor mappedInterceptor = (MappedInterceptor) handlerInterceptor;

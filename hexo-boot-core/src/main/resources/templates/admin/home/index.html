@@ -677,6 +677,7 @@
                 DashboardManager.queryPostList();
                 DashboardManager.getMetaData();
                 DashboardManager.checkRunDay();
+                DashboardManager.connectServer();
                 DashboardManager.showLastLoginTime();
             },
             createVisitLine: function () {
@@ -807,6 +808,65 @@
                     $("#adminItem").hide();
                 });
 
+            },
+            connectServer: function () {
+                let webSocket;
+                let host = window.location.host;
+                let protocol = (window.location.protocol === "http:" ? "ws:" : "wss:");
+                if ('WebSocket' in window) {
+                    webSocket = new WebSocket(protocol + "//" + host + "/messageServer");
+                } else if ('MozWebSocket' in window) {
+                    webSocket = new MozWebSocket(protocol + "//" + host + "/messageServer");
+                }
+
+                webSocket.onopen = function(event) {
+                    console.log("连接成功");
+                };
+
+                webSocket.onmessage = function(event) {
+                    if (event.data) {
+                        let messageList = JSON.parse(event.data);
+                        let length = messageList.length;
+                        let $messageNum = $("#messageNum");
+                        $messageNum.html(parseInt($messageNum.html() === "" ? "0" : $messageNum.html()) + length);
+                        if (length > 0) {
+                            let arr = [];
+                            length = (length > 5 ? 5 : length);
+                            for (let i = 0; i < length; i++) {
+                                let message = messageList[i];
+                                arr.push('<li>');
+                                arr.push('<a class="text-body-color-dark media mb-15" href="javascript:void(0)">');
+                                arr.push('<div class="row">');
+                                arr.push('<div class="col-md-2">');
+                                if (message.msgType === 1) {
+                                    arr.push('<i class="fa fa-fw fa-comments-o text-success"></i>');
+                                } else {
+                                    arr.push('<i class="fa fa-fw fa-comment text-primary"></i>');
+                                }
+                                arr.push('</div>');
+                                arr.push('<div class="col-md-10">');
+                                arr.push('<p class="mb-0">' + message.content + '</p>');
+                                arr.push('<div class="text-muted font-size-sm font-italic">' + message.messageTime + '</div>');
+                                arr.push('</div>');
+                                arr.push('</div>');
+                                arr.push('</a>');
+                                arr.push('</li>');
+                            }
+                            $("#messageList").prepend(arr.join(""));
+                        } else {
+                            $("#messageList").html("<p class='text-center'></p>");
+                            $messageNum.html("");
+                        }
+                    }
+                };
+
+                webSocket.onerror = function(event) {
+                    console.log(event.data);
+                };
+
+                webSocket.onclose = function(event) {
+                    console.log(event.data);
+                }
             },
             checkRunDay: function () {
                 let $runDay = $("#runDay");

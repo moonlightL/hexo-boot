@@ -56,6 +56,12 @@ public class CoreSpringMvcConfig extends SpringMvcConfig {
                         "file:" + this.blogConfig.getThemeDir(),
                         "classpath:/templates/theme/"
                 );
+
+        registry.addResourceHandler("/ext/**")
+                .addResourceLocations(
+                        "classpath:/static/ext/",
+                        "classpath:/static/ext/terminal"
+                );
     }
 
     @Override

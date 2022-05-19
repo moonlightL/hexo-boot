@@ -14,12 +14,12 @@ import java.util.List;
 
 /**
  * @Author MoonlightL
- * @ClassName: MessageServer
+ * @ClassName: MessageWebSocketHandler
  * @ProjectName hexo-boot
  * @Description: 消息 websocket
  * @DateTime 2020/9/18 15:47
  */
-public class MessageServer extends TextWebSocketHandler {
+public class MessageWebSocketHandler extends TextWebSocketHandler {
 
     private WebSocketSession webSocketSession;
 

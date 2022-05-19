@@ -1,6 +1,6 @@
 package com.light.hexo.core.admin.component;
 
-import com.light.hexo.core.admin.component.websocket.MessageServer;
+import com.light.hexo.core.admin.component.websocket.MessageWebSocketHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
@@ -13,13 +13,13 @@ import org.springframework.stereotype.Component;
  * @DateTime 2020/9/23 15:11
  */
 @Component
-@DependsOn("messageServer")
+@DependsOn("messageWebSocketHandler")
 public class MessagePushService {
 
     @Autowired
-    private MessageServer messageServer;
+    private MessageWebSocketHandler messageWebSocketHandler;
 
     public void pushMessage() {
-        this.messageServer.broadcast();
+        this.messageWebSocketHandler.broadcast();
     }
 }
