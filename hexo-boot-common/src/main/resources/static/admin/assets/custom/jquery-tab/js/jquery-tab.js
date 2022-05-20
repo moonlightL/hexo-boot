@@ -30,10 +30,10 @@
         let arr = [];
         arr.push("<div class='tab-container-menu'>");
         arr.push("<div class='tab-left'>");
-        arr.push("<a href='javascript:;'><i class='fa fa-arrow-left'></i></a>");
+        arr.push("<a id='tabLeft' href='javascript:;'><i class='fa fa-arrow-left'></i></a>");
         arr.push("</div>");
         arr.push("<div class='tab-right'>");
-        arr.push("<a href='javascript:;'><i class='fa fa-arrow-right'></i></a>");
+        arr.push("<a id='tabRight' href='javascript:;'><i class='fa fa-arrow-right'></i></a>");
         arr.push("</div>");
         arr.push("<ul id='jquery-tabs' class='tabs'>");
         arr.push("<li class='tabs-item active' id='tab_" + index + "' data-close='false' data-index='"+ index +"' data-url='" + defaultSetting.homeUrl + "'><a href='javascript:;'>" + defaultSetting.homeName + "</a></li>");
@@ -45,6 +45,20 @@
         arr.push("</div>");
 
         $(obj).append(arr.join(""));
+
+        $("#tabLeft").off("click").on("click", function() {
+            let $tabContainer = $('#jquery-tabs');
+            $tabContainer.animate({scrollLeft: $tabContainer.scrollLeft() - 300}, 200, function () {
+                initScrollState($tabContainer);
+            });
+        });
+
+        $("#tabRight").off("click").on("click", function() {
+            let $tabContainer = $('#jquery-tabs');
+            $tabContainer.animate({scrollLeft: $tabContainer.scrollLeft() + 300}, 200, function () {
+                initScrollState($tabContainer);
+            });
+        });
     }
 
     function bindEvent() {
@@ -77,16 +91,17 @@
         // });
     }
 
+
+
     // 控制选项卡滚动位置
-    $(document).on('click', '.tab-left a', function () {
+    $("#tabLeft").off("click").on("click", function() {
         let $tabContainer = $('#jquery-tabs');
         $tabContainer.animate({scrollLeft: $tabContainer.scrollLeft() - 300}, 200, function () {
             initScrollState($tabContainer);
         });
     });
 
-    // 向右箭头
-    $(document).on('click', '.tab-right a', function () {
+    $("#tabRight").off("click").on("click", function() {
         let $tabContainer = $('#jquery-tabs');
         $tabContainer.animate({scrollLeft: $tabContainer.scrollLeft() + 300}, 200, function () {
             initScrollState($tabContainer);
@@ -151,12 +166,13 @@
             if ($("#tab_" + index).length > 0) {
                 $("#tab_" + index).trigger("click");
             } else {
+                let scrollVal = $(obj).data("scroll") || "no";
                 // 创建 tab
                 let tab = "<li class='tabs-item active' id='tab_"+index+"' data-close='true' data-index='"+ index +"' data-url='"+ url +"'><a href='javascript:;'>"+tabName+"</a></li>";
                 $("#jquery-tabs").append(tab);
 
                 // 创建 iframe
-                let iframe = "<div id='iframe_tab_"+index+"' class='iframe active'><iframe class='tab-iframe' src='"+url+"' frameborder='0' width='100%' onload='changeFrameHeight(this)'></iframe></div>";
+                let iframe = "<div id='iframe_tab_"+index+"' class='iframe active'><iframe class='tab-iframe' src='"+url+"' frameborder='0' width='100%' onload='changeFrameHeight(this)' scrolling='"+scrollVal+"'></iframe></div>";
                 $("#tab-container-content").append(iframe);
 
                 // 检测是否需要滑动

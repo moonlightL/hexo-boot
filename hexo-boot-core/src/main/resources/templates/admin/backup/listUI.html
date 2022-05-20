@@ -72,7 +72,8 @@
 
     $(function() {
         $.hexo.table.init({
-            baseUrl: BASE_URL
+            baseUrl: BASE_URL,
+            height: $(window.parent).height() - 283
         });
 
         $("#backupBtn").off("click").on("click", function() {

@@ -20,7 +20,7 @@ public class AesUtil {
 
 	public static final String AES_SECRET_KEY = "bWFsbHB3ZA==WNST";
 
-	private static final String ALGORITHMSTR = "AES/ECB/PKCS5Padding";
+	private static final String ALGORITHM_STR = "AES/ECB/PKCS5Padding";
 
 	private AesUtil() {}
 
@@ -82,7 +82,7 @@ public class AesUtil {
 	private static byte[] aesEncryptToBytes(String content, String encryptKey) throws Exception {
 		KeyGenerator kgen = KeyGenerator.getInstance("AES");
 		kgen.init(128);
-		Cipher cipher = Cipher.getInstance(ALGORITHMSTR);
+		Cipher cipher = Cipher.getInstance(ALGORITHM_STR);
 		cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(encryptKey.getBytes(), "AES"));
 
 		return cipher.doFinal(content.getBytes(CHARSET));
@@ -99,7 +99,7 @@ public class AesUtil {
 		KeyGenerator kgen = KeyGenerator.getInstance("AES");
 		kgen.init(128);
 
-		Cipher cipher = Cipher.getInstance(ALGORITHMSTR);
+		Cipher cipher = Cipher.getInstance(ALGORITHM_STR);
 		cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(decryptKey.getBytes(), "AES"));
 		byte[] decryptBytes = cipher.doFinal(encryptBytes);
 		return new String(decryptBytes);
