@@ -13,14 +13,6 @@
 </head>
 <body>
 <div class="content animated fadeIn">
-    <h2 class="content-heading" id="toolbar">
-        <button type="button" class="btn btn-sm btn-secondary float-right hexo-query" data-query-area="queryArea"><i class="fa fa-search text-success mr-5"></i> 查询</button>
-        <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-refresh"><i class="fa fa-refresh mr-5"></i> 刷新</button>
-        <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-remove"><i class="fa fa-trash text-danger mr-5"></i> 删除</button>
-        <button type="button" class="btn btn-sm btn-secondary float-right mr-5" id="backupBtn" title="备份"><i class="fa fa-edit text-warning mr-5"></i> 备份</button>
-        <button type="button" class="btn btn-sm btn-secondary float-right mr-5" id="configBtn" title="配置"><i class="fa fa-plus-square text-primary mr-5"></i> 配置</button>
-        <span title="备份博客系统SQL数据"><i class="fa fa-database"></i> 数据备份</span>
-    </h2>
     <div class="block block-fx-shadow hide" id="queryArea">
         <div class="block-content block-content-full">
             <form class="form-inline" method="post" id="queryForm">
@@ -36,7 +28,19 @@
             </form>
         </div>
     </div>
-    <div class="block block-fx-shadow">
+    <div class="block">
+        <div class="block-header block-header-default">
+            <h3 class="block-title"><span title="备份博客系统SQL数据"><i class="fa fa-database"></i> 数据备份</span></h3>
+            <div class="block-options">
+                <div class="block-options-item" id="toolbar">
+                    <button type="button" class="btn btn-sm btn-secondary float-right hexo-query" data-query-area="queryArea"><i class="fa fa-search text-success mr-5"></i> 查询</button>
+                    <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-refresh"><i class="fa fa-refresh mr-5"></i> 刷新</button>
+                    <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-remove"><i class="fa fa-trash text-danger mr-5"></i> 删除</button>
+                    <button type="button" class="btn btn-sm btn-secondary float-right mr-5" id="backupBtn" title="备份"><i class="fa fa-edit text-warning mr-5"></i> 备份</button>
+                    <button type="button" class="btn btn-sm btn-secondary float-right mr-5" id="configBtn" title="配置"><i class="fa fa-plus-square text-primary mr-5"></i> 配置</button>
+                </div>
+            </div>
+        </div>
         <div class="block-content">
             <div class="table-responsive">
                 <table id="listTable" class="table table-striped table-vcenter">

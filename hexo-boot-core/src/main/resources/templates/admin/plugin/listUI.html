@@ -8,13 +8,6 @@
 </head>
 <body>
 <div class="content animated fadeIn">
-    <h2 class="content-heading" id="toolbar">
-        <button type="button" class="btn btn-sm btn-secondary float-right hexo-query" data-query-area="queryArea"><i class="fa fa-search text-success mr-5"></i> 查询</button>
-        <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-refresh"><i class="fa fa-refresh mr-5"></i> 刷新</button>
-        <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-clear"><i class="fa fa-remove mr-5"></i> 清除缓存</button>
-        <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-unzip" title="安装插件" data-width="550" data-height="356"><i class="fa fa-plus-square text-primary mr-5"></i> 安装</button>
-        <i class="fa fa-plug"></i> 插件列表
-    </h2>
     <div class="block block-fx-shadow hide" id="queryArea">
         <div class="block-content block-content-full">
             <form class="form-inline" method="post" id="queryForm">
@@ -41,7 +34,18 @@
             </form>
         </div>
     </div>
-    <div class="block block-fx-shadow">
+    <div class="block">
+        <div class="block-header block-header-default">
+            <h3 class="block-title"><i class="fa fa-plug"></i> 插件列表</h3>
+            <div class="block-options">
+                <div class="block-options-item" id="toolbar">
+                    <button type="button" class="btn btn-sm btn-secondary float-right hexo-query" data-query-area="queryArea"><i class="fa fa-search text-success mr-5"></i> 查询</button>
+                    <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-refresh"><i class="fa fa-refresh mr-5"></i> 刷新</button>
+                    <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-clear"><i class="fa fa-remove mr-5"></i> 清除缓存</button>
+                    <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-unzip" title="安装插件" data-width="550" data-height="356"><i class="fa fa-plus-square text-primary mr-5"></i> 安装</button>
+                </div>
+            </div>
+        </div>
         <div class="block-content">
             <div class="table-responsive">
                 <table id="listTable" class="table table-striped table-vcenter">
