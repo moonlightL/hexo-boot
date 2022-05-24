@@ -30,14 +30,14 @@
     HexoTable.prototype.initContainer = function() {
         let self = this;
         if (self.options.height) {
-            self.$container.css("height", self.options.height - 26);
+            self.$container.css("height", self.options.height);
         }
     };
 
     // 初始化 body
     HexoTable.prototype.initBody = function() {
         let self = this;
-        let $div = $('<div class="hexo-table-container" style="overflow: auto;height: '+ (self.options.height - 160) +'px"></div>');
+        let $div = $('<div class="hexo-table-container" style="overflow: auto;height: '+ (self.options.height - 130) +'px"></div>');
         let $table = $('<table class="table table-striped table-vcenter hexo-table-content"></table>');
         self.$body = $('<tbody class="hexo-table-tbody"></tbody>');
         $table.append(self.$body);

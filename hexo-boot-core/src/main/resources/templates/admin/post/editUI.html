@@ -19,14 +19,11 @@
         }
         .editorArea {
             display: inline-block;
-            width: calc(100% - 350px);
+            width: 100%;
             height: 100%;
         }
-        .optionArea {
-            float: right;
-            display: inline-block;
-            width: 315px;
-            height: 100%;
+        .form-control {
+            border-radius: 0;
         }
         .input-group-prepend {
             margin-right: 0;
@@ -36,158 +33,162 @@
             font-weight: bold;
         }
         .custom-select {
-            height: 40px;
+            height: 32px;
+        }
+        div.tagsinput span.tag {
+            padding: 2px 5px 0 5px;
+            font-size: 12px;
+            height: 23px;
         }
         input[disabled] {
             background: #edf0f3 !important;
         }
-        .btn-primary {
-            color: #fff;
-            background-color: #3f9ce8;
-            border-color: #197ed1;
+        .btn.focus, .btn:focus {
+            outline: none;
         }
-        .btn:focus {
-            outline: 0!important;
+        .panel {
+            display: none;
+            width: 400px;
+            padding: 20px;
+            color: #000;
+            background-color: #fff;
+            box-shadow: rgb(216 221 229) 0px 10px 14px;
+            overflow: auto;
         }
     </style>
 </head>
 <body>
 <div class="content">
-    <div class="block block-fx-shadow">
-        <div class="block-content">
-            <div class="row justify-content-center py-20">
-                <div class="col-xl-12">
-                    <form id="saveForm" th:action="@{${baseUrl} + '/edit.json'}" th:object="${vo}">
-                        <input type="hidden" name="id" th:field="*{id}" />
-                        <input id="content" type="hidden" name="content"/>
-                        <input id="coverUrl" type="hidden" name="coverUrl" th:field="*{coverUrl}"/>
-                        <div class="editorArea">
-                            <div class="form-group row">
-                                <label class="col-md-1 col-form-label" for="title">标题名</label>
-                                <div class="col-md-5">
-                                    <input type="text" id="title" class="form-control" placeholder="标题名 *" name="title" data-bv-notempty="true" data-bv-notempty-message="标题不能为空" th:field="*{title}">
-                                </div>
-                                <label class="col-md-1 col-form-label" for="customLink">链接</label>
-                                <div class="col-md-4">
-                                    <div class="input-group">
-                                        <input type="text" id="customLink" class="form-control" placeholder="自定义链接" name="customLink" th:field="*{customLink}">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">.html</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div id="postEditor"></div>
+    <form id="saveForm" th:action="@{${baseUrl} + '/edit.json'}" th:object="${vo}">
+        <div class="block block-fx-shadow">
+            <div class="block-content">
+                <input type="hidden" name="id" th:field="*{id}" />
+                <input id="content" type="hidden" name="content"/>
+                <div class="editorArea">
+                    <div class="form-group row">&nbsp;&nbsp;
+                        <label class="col-form-label" for="title">标题名</label>
+                        <div class="col-md-3">
+                            <input type="text" id="title" class="form-control" placeholder="标题名 *" name="title" data-bv-notempty="true" data-bv-notempty-message="标题不能为空" th:field="*{title}">
                         </div>
-                        <div class="optionArea">
-                            <div class="row">
-                                <img id="postCover" th:src="@{*{coverUrl}}" alt="文章封面" width="300" height="150" style="border: 1px solid #D4DAE3;margin: 0 15px 15px 15px;border-radius: 5px;">
-                                <div id="btnArr" style="margin: 0 15px 15px 15px"></div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-md-4 col-form-label" for="title">封面布局 <i class="fa fa-info-circle" title="仅针对 Pure 主题生效"></i></label>
-                                <div class="col-md-8">
-                                    <select class="custom-select" id="coverType" name="coverType">
-                                        <option th:text="顶部封面" th:value="4" th:attr="selected=${4 eq vo.coverType}"></option>
-                                        <option th:text="全封面" th:value="1" th:attr="selected=${1 eq vo.coverType}"></option>
-                                        <option th:text="无封面" th:value="2" th:attr="selected=${2 eq vo.coverType}"></option>
-                                        <option th:text="左侧封面" th:value="3" th:attr="selected=${3 eq vo.coverType}"></option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-md-4 col-form-label" for="title">文章分类</label>
-                                <div class="col-md-8">
-                                    <select class="custom-select" id="categoryId" name="categoryId" data-bv-notempty="true" data-bv-notempty-message="分类不能为空" th:field="*{categoryId}">
-                                        <option value="" disabled selected>分类 *</option>
-                                        <option th:each="category:${categoryList}" th:value="${category.id}" th:text="${category.name}"></option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-md-4 col-form-label" for="title">文章标签</label>
-                                <div class="col-md-8">
-                                    <input type="text" id="tags" name="tags" class="js-tags-input form-control" placeholder="标签" data-height="40px" th:field="*{tags}">
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-md-4 col-form-label" for="title">是否转载</label>
-                                <div class="col-md-8">
-                                    <select class="custom-select" id="reprint" name="reprint" th:field="*{reprint}" style="height:34px">
-                                        <option value="" disabled selected>是否转载</option>
-                                        <option value="0">否</option>
-                                        <option value="1">是</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-12" id="anchorInfo" th:attr="style='display:' + ${vo.reprint ? 'block' : 'none'}">
-                                    <br>
-                                    <div class="form-group row">
-                                        <label class="col-md-4 col-form-label" for="title">作者</label>
-                                        <div class="col-md-8">
-                                            <input type="text" class="form-control" placeholder="原作者" name="author" th:field="*{author}">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-md-4 col-form-label" for="title">链接</label>
-                                        <div class="col-md-8">
-                                            <input type="text" class="form-control" placeholder="原文章地址" name="reprintLink" th:field="*{reprintLink}">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-md-4 col-form-label" for="jobTime">定时发布</label>
-                                <div class="col-md-8">
-                                    <input type="text" class="js-flatpickr form-control bg-white" id="jobTime" name="jobTime" placeholder="发布时间"
-                                           data-enable-time="true" th:value="${jobTime}" th:disabled="*{publish}" data-date-format="Y-m-d H:i:ss" data-time_24hr="true">
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-md-4 col-form-label" for="authCode">访问密码 <i class="fa fa-info-circle" title="选填,长度不得超过20"></i></label>
-                                <div class="col-md-8">
-                                    <input type="text" id="authCode" name="authCode" class="form-control" placeholder="访问密码" th:field="*{authCode}">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <button type="submit" class="btn btn-primary" id="submitBtn" style="width:100%">保存</button>
-                                    </div>
+                        <label class="col-form-label" for="customLink">链接</label>
+                        <div class="col-md-3">
+                            <div class="input-group">
+                                <input type="text" id="customLink" class="form-control" placeholder="自定义链接" name="customLink" th:field="*{customLink}">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">.html</span>
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-lg-4 col-md-4 col-sm-4">
-                                <div class="form-group">
-                                    <label class="css-control css-control-success css-switch css-control-sm css-switch-square">
-                                        <input type="checkbox" class="css-control-input" name="publish" th:attr="checked=${vo.publish}" th:disabled="${vo.publish}">
-                                        <span class="css-control-indicator"></span> 是否发表 <i class="fa fa-info-circle" title="已发表无法修改"></i>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-4 col-sm-4">
-                                <div class="form-group">
-                                    <label class="css-control css-control-success css-switch css-control-sm css-switch-square">
-                                        <input type="checkbox" class="css-control-input" name="comment" th:attr="checked=${vo.comment}">
-                                        <span class="css-control-indicator"></span> 是否允许评论
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-4 col-sm-4">
-                                <div class="form-group">
-                                    <label class="css-control css-control-success css-switch css-control-sm css-switch-square">
-                                        <input type="checkbox" class="css-control-input" name="top" th:attr="checked=${vo.top}">
-                                        <span class="css-control-indicator"></span> 是否置顶
-                                    </label>
-                                </div>
-                            </div>
+                        <label class="col-form-label" for="title" style="margin-left: 5rem">文章分类</label>
+                        <div class="col-md-2">
+                            <select class="custom-select" id="categoryId" name="categoryId" data-bv-notempty="true" data-bv-notempty-message="分类不能为空" th:field="*{categoryId}">
+                                <option value="" disabled selected>分类 *</option>
+                                <option th:each="category:${categoryList}" th:value="${category.id}" th:text="${category.name}"></option>
+                            </select>
                         </div>
-                    </form>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-success" id="submitBtn"><i class="fa fa-send-o"></i><span class="hidden-sm"> 保存</span></button>
+                            <button id="moreBtn" type="button" class="btn btn-default" title="更多设置"><i class="fa fa-bars"></i></button>
+                        </div>
+                    </div>
+                    <div id="postEditor"></div>
                 </div>
             </div>
-
         </div>
-    </div>
+        <div id="rightPanel" class="optionArea panel">
+            <div class="row">
+                <img id="postCover" th:src="@{*{coverUrl}}" alt="文章封面" width="360" height="200" style="border: 1px solid #D4DAE3;margin: 0 15px 15px 15px;border-radius: 5px;">
+                <div id="btnArr" style="margin: 0 15px 15px 15px"></div>
+            </div>
+            <div class="form-group row">
+                <label class="col-md-4 col-form-label" for="title">封面地址 <i class="fa fa-info-circle" title="如不设置封面,则保存文章后系统随机生成"></i></label>
+                <div class="col-md-8">
+                    <input id="coverUrl" type="text" class="form-control" name="coverUrl" th:field="*{coverUrl}"/>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-md-4 col-form-label" for="title">封面布局 <i class="fa fa-info-circle" title="仅针对 Pure 主题生效"></i></label>
+                <div class="col-md-8">
+                    <select class="custom-select" id="coverType" name="coverType">
+                        <option th:text="顶部封面" th:value="4" th:attr="selected=${4 eq vo.coverType}"></option>
+                        <option th:text="全封面" th:value="1" th:attr="selected=${1 eq vo.coverType}"></option>
+                        <option th:text="无封面" th:value="2" th:attr="selected=${2 eq vo.coverType}"></option>
+                        <option th:text="左侧封面" th:value="3" th:attr="selected=${3 eq vo.coverType}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-md-4 col-form-label" for="title">文章标签</label>
+                <div class="col-md-8">
+                    <input type="text" id="tags" name="tags" class="js-tags-input form-control" placeholder="标签" data-height="40px" th:field="*{tags}">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-md-4 col-form-label" for="title">是否转载</label>
+                <div class="col-md-8">
+                    <select class="custom-select" id="reprint" name="reprint" th:field="*{reprint}" style="height:34px">
+                        <option value="" disabled selected>是否转载</option>
+                        <option value="0">否</option>
+                        <option value="1">是</option>
+                    </select>
+                </div>
+                <div class="col-md-12" id="anchorInfo" th:attr="style='display:' + ${vo.reprint ? 'block' : 'none'}">
+                    <br>
+                    <div class="form-group row">
+                        <label class="col-md-4 col-form-label" for="title">作者</label>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" placeholder="原作者" name="author" th:field="*{author}">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-4 col-form-label" for="title">链接</label>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" placeholder="原文章地址" name="reprintLink" th:field="*{reprintLink}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-md-4 col-form-label" for="jobTime">定时发布</label>
+                <div class="col-md-8">
+                    <input type="text" class="js-flatpickr form-control bg-white" id="jobTime" name="jobTime" placeholder="发布时间"
+                           data-enable-time="true" th:value="${jobTime}" th:disabled="*{publish}" data-date-format="Y-m-d H:i:ss" data-time_24hr="true">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-md-4 col-form-label" for="authCode">访问密码 <i class="fa fa-info-circle" title="选填,长度不得超过20"></i></label>
+                <div class="col-md-8">
+                    <input type="text" id="authCode" name="authCode" class="form-control" placeholder="访问密码" th:field="*{authCode}">
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                    <div class="form-group">
+                        <label class="css-control css-control-success css-switch css-control-sm">
+                            <input type="checkbox" class="css-control-input" name="publish" th:attr="checked=${vo.publish}" th:disabled="${vo.publish}">
+                            <span class="css-control-indicator"></span> 是否发表
+                        </label>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                    <div class="form-group">
+                        <label class="css-control css-control-success css-switch css-control-sm">
+                            <input type="checkbox" class="css-control-input" name="comment" th:attr="checked=${vo.comment}">
+                            <span class="css-control-indicator"></span> 可否评论
+                        </label>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                    <div class="form-group">
+                        <label class="css-control css-control-success css-switch css-control-sm">
+                            <input type="checkbox" class="css-control-input" name="top" th:attr="checked=${vo.top}">
+                            <span class="css-control-indicator"></span> 是否置顶
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
 </div>
 <div th:replace="~{admin/common :: common-script}"></div>
 <script th:src="@{'/admin/assets/js/plugins/bootstrap/js/bootstrap.min.js'}"></script>
@@ -198,12 +199,22 @@
 <script th:src="@{'/admin/assets/js/plugins/summernote/summernote.min.js'}"></script>
 <script th:src="@{'/admin/assets/js/plugins/summernote/lang/summernote-zh-CN.min.js'}"></script>
 <script th:src="@{'/admin/assets/js/plugins/jquery-tags-input/jquery.tagsinput.min.js'}"></script>
+<script th:src="@{'/admin/assets/js/plugins/jquery-panelslider/jquery.panelslider.min.js'}"></script>
 <script type="text/javascript" th:inline="javascript">
     let vo = [[${vo}]];
     let editorType = [[${#servletContext.getAttribute('configMap')['editor_type']}]];
     let MyEditor;
     Dropzone.autoDiscover = false;
     $(function(){
+
+        $("#moreBtn").on("click", function() {
+            $.panelslider($('#rightPanel'), {side: 'right', clickClose: false});
+        });
+
+        $("#coverUrl").on("blur", function() {
+            let resourceUrl = $(this).val();
+            $("#postCover").attr("src", resourceUrl);
+        });
 
         $("#reprint").on("change", function () {
             let val = $(this).val();
@@ -240,7 +251,7 @@
                 imageFormats : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
                 imageUploadURL : "/admin/file/upload.json",
                 onload: function () {
-                    $("#postEditor").height($(window.parent).height() - 240);
+                    $("#postEditor").height($(window.parent).height() - 200);
                     MyEditor.setMarkdown(vo.content);
                 }
             });
@@ -261,9 +272,9 @@
                 lang: "zh-CN",
                 placeholder: "写点内容吧~~",
                 tabsize: 4,
-                height: $(window.parent).height() - 270,
-                minHeight: $(window.parent).height() - 270,
-                maxHeight: $(window.parent).height() - 270,
+                height: $(window.parent).height() - 200,
+                minHeight: $(window.parent).height() - 200,
+                maxHeight: $(window.parent).height() - 200,
                 toolbar: [
                     ['style', ['style']],
                     ['font', ['bold', 'underline', 'clear']],
@@ -291,7 +302,7 @@
 
         let FileManager = {
             initUploadEvent: function () {
-                $("#btnArr").html('<div class="btn-group mr-5" role="group" aria-label="First group"> <button id="uploadBtn" type="button" class="btn btn-success mr-5 mb-5"><i class="fa fa-folder"></i> 选择文件</button> <button type="button" class="btn btn-primary mr-5 mb-5 randomBtn" data-type="0"><i class="fa fa-refresh"></i> 随机风景</button> <button type="button" class="btn btn-warning mr-5 mb-5 randomBtn" data-type="1"><i class="fa fa-refresh"></i> 随机动漫</button> </div>');
+                $("#btnArr").html('<div class="btn-group-md" role="group" aria-label="btnGroup"> <button id="uploadBtn" type="button" class="btn btn-warning"><i class="fa fa-folder-o"></i> 选择图片</button> <button type="button" class="btn btn-secondary randomBtn" data-type="0"><i class="fa fa-tree"></i> 随机风景</button> <button type="button" class="btn btn-secondary randomBtn" data-type="1"><i class="fa fa-user-o"></i> 随机动漫</button> </div>');
                 $("#uploadBtn").dropzone({
                     method: "POST",
                     url: "/admin/file/upload.json", //上传地址

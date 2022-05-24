@@ -52,6 +52,22 @@
         .content-side .nav-users {
             margin-bottom: 0;
         }
+
+        @media (min-width: 992px) {
+            #page-container.page-header-modern #page-header>.content-header {
+                 padding-top: 0;
+                 padding-bottom: 0;
+            }
+        }
+        #page-header > .content-header {
+            height: 52px;
+        }
+
+        @media (min-width: 768px) {
+            #main-container > .content {
+                padding: 0px 10px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -298,12 +314,12 @@
                                 <a href="javascript:;" data-url="/admin/tag/listUI.html" data-name="标签列表"><!--<i class="fa fa-tags"></i>--><span class="sidebar-mini-hide">标签列表</span></a>
                             </li>
                             <li>
-                                <a href="javascript:;" data-url="/admin/comment/listUI.html" data-name="评论列表"><!--<i class="fa fa-comments-o"></i>--><span class="sidebar-mini-hide">评论列表</span></a>
+                                <a href="javascript:;" data-url="/admin/comment/listUI.html" data-name="评论列表" data-scroll="yes"><!--<i class="fa fa-comments-o"></i>--><span class="sidebar-mini-hide">评论列表</span></a>
                             </li>
                         </ul>
                     </li>
                     <li>
-                        <a href="javascript:;" data-url="/admin/dynamic/listUI.html" data-name="动态列表"><i class="fa fa-heart-o"></i><span class="sidebar-mini-hide">动态列表</span></a>
+                        <a href="javascript:;" data-url="/admin/dynamic/listUI.html" data-name="动态列表" data-scroll="yes"><i class="fa fa-heart-o"></i><span class="sidebar-mini-hide">动态列表</span></a>
                     </li>
                     <li>
                         <a href="javascript:;" data-url="/admin/album/listUI.html" data-name="专辑列表"><i class="fa fa-youtube-play"></i><span class="sidebar-mini-hide">专辑列表</span></a>
@@ -316,10 +332,10 @@
                         <a class="nav-submenu" data-toggle="nav-submenu" href="#"><i class="fa fa-server"></i><span class="sidebar-mini-hide">系统配置</span></a>
                         <ul>
                             <li>
-                                <a href="javascript:;" data-url="/admin/siteConfig/basicUI.html" data-name="基础配置">基础配置</a>
+                                <a href="javascript:;" data-url="/admin/siteConfig/basicUI.html" data-name="基础配置" data-scroll="yes">基础配置</a>
                             </li>
                             <li>
-                                <a href="javascript:;" data-url="/admin/siteConfig/specialUI.html" data-name="个性配置">个性配置</a>
+                                <a href="javascript:;" data-url="/admin/siteConfig/specialUI.html" data-name="个性配置" data-scroll="yes">个性配置</a>
                             </li>
                             <li>
                                 <a href="javascript:;" data-url="/admin/music/listUI.html" data-name="音乐配置">音乐配置</a>
@@ -333,7 +349,7 @@
                                 <a href="javascript:;" data-url="/admin/user/aboutUI.html" data-name="个人介绍">个人介绍</a>
                             </li>
                             <li>
-                                <a href="javascript:;" data-url="/admin/user/profileUI.html" data-name="个人详情">个人详情</a>
+                                <a href="javascript:;" data-url="/admin/user/profileUI.html" data-name="个人详情" data-scroll="yes">个人详情</a>
                             </li>
 <!--                            <li>-->
 <!--                                <a href="javascript:;" data-url="/admin/user/listUI.html" data-name="用户列表">用户列表</a>-->
@@ -417,7 +433,7 @@
                 <!-- END Notifications -->
                 <div class="btn-group" role="group">
                     <a href="/" target="_blank" class="btn btn-circle btn-dual-secondary" title="跳至主页">
-                        <i class="fa fa-plane"></i>
+                        <i class="fa fa-home"></i>
                     </a>
                 </div>
                 <button type="button" class="btn btn-circle btn-dual-secondary" data-toggle="layout" data-action="side_overlay_toggle"  title="博客信息">
@@ -446,10 +462,10 @@
             <div id="tab-container">
                 <div class='tab-container-menu'>
                     <div class='tab-left'>
-                        <a href='javascript:;'><i class='fa fa-arrow-left'></i></a>
+                        <a id="tabLeft" href='javascript:;'><i class='fa fa-arrow-left'></i></a>
                     </div>
                     <div class='tab-right'>
-                        <a href='javascript:;'><i class='fa fa-arrow-right'></i></a>
+                        <a id="tabRight" href='javascript:;'><i class='fa fa-arrow-right'></i></a>
                     </div>
                     <ul id='jquery-tabs' class='tabs'>
                         <li class='tabs-item active' id='tab__admin_home_dashboard_html' data-close='false' data-index='0' ><a href='javascript:;' data-url="/admin/home/dashboard.html" data-name="仪表盘">仪表盘</a></li>
@@ -765,7 +781,7 @@
             },
             bindEvent: function () {
                 $("#tab-container").tab({
-                    bottom: 205, // 距离底部高度
+                    bottom: 168, // 距离底部高度
                     tabCallback: function(url, tab) { // 点击 tab 后的回调函数
 
                     }
