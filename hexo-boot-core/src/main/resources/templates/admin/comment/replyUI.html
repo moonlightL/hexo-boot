@@ -20,24 +20,27 @@
             <form id="saveForm" class="my-10" th:action="@{${baseUrl} + '/reply.json'}" method="post">
                 <input type="hidden" id="pId" name="pId" th:value="${pId}" />
                 <div class="form-group row">
-                    <label class="col-lg-4 col-form-label" for="content">原文内容 </label>
-                    <div class="col-lg-8">
+                    <label class="col-lg-2 col-form-label" for="content">原文内容 </label>
+                    <div class="col-lg-10">
                         <p id="originalContent"></p>
                     </div>
                 </div>
 
                 <div class="form-group row">
-                    <label class="col-lg-4 col-form-label" for="content">回复内容 <span class="text-danger">*</span> </label>
-                    <div class="col-lg-8">
+                    <label class="col-lg-2 col-form-label" for="content">回复内容 <span class="text-danger">*</span> </label>
+                    <div class="col-lg-10">
                         <textarea id="content" name="content" class="form-control" aria-label="With textarea" rows="4" style="resize: none" placeholder="回复内容" data-bv-notempty="true" data-bv-notempty-message="内容不能为空"></textarea>
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <span title="表情" id="emoji_btn" style="cursor: pointer">☺</span>
-                    <button type="submit" class="btn btn-alt-primary" style="float:right;" id="submitBtn">
-                        <i class="fa fa-send mr-5"></i> 发送
-                    </button>
+                <div class="form-group row">
+                    <div class="col-lg-2"></div>
+                    <div class="col-lg-10">
+                        <label class="col-form-label"><span title="表情" id="emoji_btn" style="cursor: pointer">☺</span></label>
+                        <button type="submit" class="btn btn-alt-primary pull-right" id="submitBtn">
+                            <i class="fa fa-send mr-5"></i> 发送
+                        </button>
+                    </div>
                 </div>
             </form>
         </div>

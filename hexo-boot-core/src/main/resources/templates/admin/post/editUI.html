@@ -33,7 +33,8 @@
             font-weight: bold;
         }
         .custom-select {
-            height: 32px;
+            height: 40px;
+            border: 1px solid #ccc;
         }
         div.tagsinput span.tag {
             padding: 2px 5px 0 5px;
@@ -64,7 +65,7 @@
             <div class="block-content">
                 <input type="hidden" name="id" th:field="*{id}" />
                 <input id="content" type="hidden" name="content"/>
-                <div class="editorArea">
+                <div class="editorArea" id="editorArea">
                     <div class="form-group row">&nbsp;&nbsp;
                         <label class="col-form-label" for="title">标题名</label>
                         <div class="col-md-3">
@@ -81,7 +82,7 @@
                         </div>
                         <label class="col-form-label" for="title" style="margin-left: 5rem">文章分类</label>
                         <div class="col-md-2">
-                            <select class="custom-select" id="categoryId" name="categoryId" data-bv-notempty="true" data-bv-notempty-message="分类不能为空" th:field="*{categoryId}">
+                            <select class="custom-select" id="categoryId" name="categoryId" style="height: 36px;border: 1px solid #ccc" data-bv-notempty="true" data-bv-notempty-message="分类不能为空" th:field="*{categoryId}">
                                 <option value="" disabled selected>分类 *</option>
                                 <option th:each="category:${categoryList}" th:value="${category.id}" th:text="${category.name}"></option>
                             </select>
@@ -101,13 +102,13 @@
                 <div id="btnArr" style="margin: 0 15px 15px 15px"></div>
             </div>
             <div class="form-group row">
-                <label class="col-md-4 col-form-label" for="title">封面地址 <i class="fa fa-info-circle" title="如不设置封面,则保存文章后系统随机生成"></i></label>
+                <label class="col-md-4 col-form-label" for="coverUrl">封面地址 <i class="fa fa-info-circle" title="如不设置封面,则保存文章后系统随机生成"></i></label>
                 <div class="col-md-8">
                     <input id="coverUrl" type="text" class="form-control" name="coverUrl" th:field="*{coverUrl}"/>
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-md-4 col-form-label" for="title">封面布局 <i class="fa fa-info-circle" title="仅针对 Pure 主题生效"></i></label>
+                <label class="col-md-4 col-form-label" for="coverType">封面布局 <i class="fa fa-info-circle" title="仅针对 Pure 主题生效"></i></label>
                 <div class="col-md-8">
                     <select class="custom-select" id="coverType" name="coverType">
                         <option th:text="顶部封面" th:value="4" th:attr="selected=${4 eq vo.coverType}"></option>
@@ -118,13 +119,13 @@
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-md-4 col-form-label" for="title">文章标签</label>
+                <label class="col-md-4 col-form-label" for="tags">文章标签</label>
                 <div class="col-md-8">
                     <input type="text" id="tags" name="tags" class="js-tags-input form-control" placeholder="标签" data-height="40px" th:field="*{tags}">
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-md-4 col-form-label" for="title">是否转载</label>
+                <label class="col-md-4 col-form-label" for="reprint">是否转载</label>
                 <div class="col-md-8">
                     <select class="custom-select" id="reprint" name="reprint" th:field="*{reprint}" style="height:34px">
                         <option value="" disabled selected>是否转载</option>
@@ -135,15 +136,15 @@
                 <div class="col-md-12" id="anchorInfo" th:attr="style='display:' + ${vo.reprint ? 'block' : 'none'}">
                     <br>
                     <div class="form-group row">
-                        <label class="col-md-4 col-form-label" for="title">作者</label>
+                        <label class="col-md-4 col-form-label" for="author">作者</label>
                         <div class="col-md-8">
-                            <input type="text" class="form-control" placeholder="原作者" name="author" th:field="*{author}">
+                            <input type="text" id="author" class="form-control" placeholder="原作者" name="author" th:field="*{author}">
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label class="col-md-4 col-form-label" for="title">链接</label>
+                        <label class="col-md-4 col-form-label" for="reprintLink">链接</label>
                         <div class="col-md-8">
-                            <input type="text" class="form-control" placeholder="原文章地址" name="reprintLink" th:field="*{reprintLink}">
+                            <input type="text" id="reprintLink" class="form-control" placeholder="原文章地址" name="reprintLink" th:field="*{reprintLink}">
                         </div>
                     </div>
                 </div>
@@ -211,8 +212,12 @@
             $.panelslider($('#rightPanel'), {side: 'right', clickClose: false});
         });
 
+        $("#editorArea").on("click", function() {
+            $.panelslider.close();
+        });
+
         $("#coverUrl").on("blur", function() {
-            let resourceUrl = $(this).val();
+            let resourceUrl = $(this).val() || "/admin/assets/custom/images/post/default_post.jpg";
             $("#postCover").attr("src", resourceUrl);
         });
 

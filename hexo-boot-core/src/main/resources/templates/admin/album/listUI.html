@@ -34,7 +34,7 @@
     <h2 class="content-heading" id="toolbar">
         <button type="button" class="btn btn-sm btn-secondary float-right hexo-query" data-query-area="queryArea"><i class="fa fa-search text-success mr-5"></i> 查询</button>
         <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-refresh"><i class="fa fa-refresh mr-5"></i> 刷新</button>
-        <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-add" title="创建专辑" data-width="640" data-height="520"><i class="fa fa-plus-square text-primary mr-5"></i> 创建</button>
+        <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-add" title="创建专辑" data-width="640" data-height="520" data-full="true"><i class="fa fa-plus-square text-primary mr-5"></i> 创建</button>
         <i class="fa fa-youtube-play"></i> 专辑列表 <span id="totalNum"></span>
     </h2>
     <div class="block block-fx-shadow hide" id="queryArea">
@@ -92,7 +92,7 @@
                 if ($target.hasClass("open-btn")) {
                     $.hexo.modal._window("专辑详情页", BASE_URL + "/detailUI.html?id=" + $target.data("id"), 800, 540, true);
                 } else if ($target.hasClass("edit-btn")) {
-                    $.hexo.modal._window("专辑页面", BASE_URL + "/editUI/" + $target.data("id") +".html", 640, 520, false);
+                    $.hexo.modal._window("专辑页面", BASE_URL + "/editUI/" + $target.data("id") +".html", 640, 520, true);
                 } else if ($target.hasClass("remove-btn")) {
                     $.hexo.action.remove($target.data("id"), function (resp) {
                         $.hexo.modal.tip(resp.message, resp.success ? "success" : "error", function() {

@@ -480,9 +480,9 @@
                                     <a class="block block-link-shadow text-right" href="javascript:void(0)" data-url="/admin/post/listUI.html" data-name="博客列表">
                                         <div class="block-content block-content-full clearfix">
                                             <div class="float-left mt-10 d-none d-sm-block">
-                                                <i class="fa fa-edit fa-3x text-primary-light"></i>
+                                                <i class="fa fa-edit fa-3x text-muted"></i>
                                             </div>
-                                            <div class="font-size-h3 font-w600 text-primary" data-toggle="countTo" data-speed="1000" th:data-to="${postNum}">0</div>
+                                            <div class="font-size-h3 font-w600" data-toggle="countTo" data-speed="1000" th:data-to="${postNum}">0</div>
                                             <div class="font-size-sm font-w600 text-uppercase text-muted">文章数</div>
                                         </div>
                                     </a>
@@ -491,9 +491,9 @@
                                     <a class="block block-link-shadow text-right" href="javascript:void(0)" data-url="/admin/category/listUI.html" data-name="分类列表">
                                         <div class="block-content block-content-full clearfix">
                                             <div class="float-left mt-10 d-none d-sm-block">
-                                                <i class="fa fa-bars fa-3x text-earth-light"></i>
+                                                <i class="fa fa-bars fa-3x text-muted"></i>
                                             </div>
-                                            <div class="font-size-h3 font-w600 text-earth" data-toggle="countTo" data-speed="1000" th:data-to="${categoryNum}">0</div>
+                                            <div class="font-size-h3 font-w600" data-toggle="countTo" data-speed="1000" th:data-to="${categoryNum}">0</div>
                                             <div class="font-size-sm font-w600 text-uppercase text-muted">分类数</div>
                                         </div>
                                     </a>
@@ -502,9 +502,9 @@
                                     <a class="block block-link-shadow text-right" href="javascript:void(0)" data-url="/admin/comment/listUI.html" data-name="评论列表">
                                         <div class="block-content block-content-full clearfix">
                                             <div class="float-left mt-10 d-none d-sm-block">
-                                                <i class="fa fa-comments-o fa-3x text-elegance-light"></i>
+                                                <i class="fa fa-comments-o fa-3x text-muted"></i>
                                             </div>
-                                            <div class="font-size-h3 font-w600 text-elegance" data-toggle="countTo" data-speed="1000" th:data-to="${postCommentNum}">0</div>
+                                            <div class="font-size-h3 font-w600" data-toggle="countTo" data-speed="1000" th:data-to="${postCommentNum}">0</div>
                                             <div class="font-size-sm font-w600 text-uppercase text-muted">评论数</div>
                                         </div>
                                     </a>
@@ -513,7 +513,7 @@
                                     <a class="block block-link-shadow text-right" href="javascript:void(0)" data-url="/admin/comment/listUI.html" data-name="留言列表">
                                         <div class="block-content block-content-full clearfix">
                                             <div class="float-left mt-10 d-none d-sm-block">
-                                                <i class="fa fa-comment-o fa-3x text-body-bg-dark"></i>
+                                                <i class="fa fa-comment-o fa-3x text-muted"></i>
                                             </div>
                                             <div class="font-size-h3 font-w600" data-toggle="countTo" data-speed="1000" th:data-to="${guestBookNum}">0</div>
                                             <div class="font-size-sm font-w600 text-uppercase text-muted">留言数</div>
@@ -680,7 +680,6 @@
 <script th:src="@{'/admin/assets/custom/jquery-tab/js/jquery-tab.js'}"></script>
 <!-- Page JS Plugins -->
 <script th:src="@{'/admin/assets/js/plugins/echarts/dist/echarts.min.js'}"></script>
-<script th:src="@{'/admin/assets/js/plugins/echarts/dist/macarons.js'}"></script>
 <script th:inline="javascript">
 
     let installTime = [[${#servletContext.getAttribute('configMap')['install_time']}]];
@@ -697,7 +696,7 @@
                 DashboardManager.showLastLoginTime();
             },
             createVisitLine: function () {
-                let myChart = echarts.init(document.getElementById("visitLine"), "macarons");
+                let myChart = echarts.init(document.getElementById("visitLine"));
                 myChart.setOption({
                     title: {
                         text: '近七天访问人数',
@@ -781,7 +780,7 @@
             },
             bindEvent: function () {
                 $("#tab-container").tab({
-                    bottom: 168, // 距离底部高度
+                    bottom: 166, // 距离底部高度
                     tabCallback: function(url, tab) { // 点击 tab 后的回调函数
 
                     }
