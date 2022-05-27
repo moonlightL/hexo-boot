@@ -67,9 +67,9 @@
                 <input id="content" type="hidden" name="content"/>
                 <div class="editorArea" id="editorArea">
                     <div class="form-group row">&nbsp;&nbsp;
-                        <label class="col-form-label" for="title">标题名</label>
+                        <label class="col-form-label" for="title">标题</label>
                         <div class="col-md-3">
-                            <input type="text" id="title" class="form-control" placeholder="标题名 *" name="title" data-bv-notempty="true" data-bv-notempty-message="标题不能为空" th:field="*{title}">
+                            <input type="text" id="title" class="form-control" placeholder="标题 *" name="title" data-bv-notempty="true" data-bv-notempty-message="标题不能为空" th:field="*{title}">
                         </div>
                         <label class="col-form-label" for="customLink">链接</label>
                         <div class="col-md-3">
@@ -125,6 +125,19 @@
                 </div>
             </div>
             <div class="form-group row">
+                <label class="col-md-4 col-form-label" for="jobTime">定时发布</label>
+                <div class="col-md-8">
+                    <input type="text" class="js-flatpickr form-control bg-white" id="jobTime" name="jobTime" placeholder="发布时间"
+                           data-enable-time="true" th:value="${jobTime}" th:disabled="*{publish}" data-date-format="Y-m-d H:i:ss" data-time_24hr="true">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-md-4 col-form-label" for="authCode">访问密码 <i class="fa fa-info-circle" title="选填,长度不得超过20"></i></label>
+                <div class="col-md-8">
+                    <input type="text" id="authCode" name="authCode" class="form-control" placeholder="访问密码" th:field="*{authCode}">
+                </div>
+            </div>
+            <div class="form-group row">
                 <label class="col-md-4 col-form-label" for="reprint">是否转载</label>
                 <div class="col-md-8">
                     <select class="custom-select" id="reprint" name="reprint" th:field="*{reprint}" style="height:34px">
@@ -136,30 +149,17 @@
                 <div class="col-md-12" id="anchorInfo" th:attr="style='display:' + ${vo.reprint ? 'block' : 'none'}">
                     <br>
                     <div class="form-group row">
-                        <label class="col-md-4 col-form-label" for="author">作者</label>
+                        <label class="col-md-4 col-form-label" for="author">原文作者</label>
                         <div class="col-md-8">
-                            <input type="text" id="author" class="form-control" placeholder="原作者" name="author" th:field="*{author}">
+                            <input type="text" id="author" class="form-control" placeholder="原文作者" name="author" th:field="*{author}">
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label class="col-md-4 col-form-label" for="reprintLink">链接</label>
+                        <label class="col-md-4 col-form-label" for="reprintLink">原文链接</label>
                         <div class="col-md-8">
-                            <input type="text" id="reprintLink" class="form-control" placeholder="原文章地址" name="reprintLink" th:field="*{reprintLink}">
+                            <input type="text" id="reprintLink" class="form-control" placeholder="原文地址" name="reprintLink" th:field="*{reprintLink}">
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="form-group row">
-                <label class="col-md-4 col-form-label" for="jobTime">定时发布</label>
-                <div class="col-md-8">
-                    <input type="text" class="js-flatpickr form-control bg-white" id="jobTime" name="jobTime" placeholder="发布时间"
-                           data-enable-time="true" th:value="${jobTime}" th:disabled="*{publish}" data-date-format="Y-m-d H:i:ss" data-time_24hr="true">
-                </div>
-            </div>
-            <div class="form-group row">
-                <label class="col-md-4 col-form-label" for="authCode">访问密码 <i class="fa fa-info-circle" title="选填,长度不得超过20"></i></label>
-                <div class="col-md-8">
-                    <input type="text" id="authCode" name="authCode" class="form-control" placeholder="访问密码" th:field="*{authCode}">
                 </div>
             </div>
             <div class="form-group row">

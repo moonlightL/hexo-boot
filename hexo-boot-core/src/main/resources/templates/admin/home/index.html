@@ -528,7 +528,7 @@
                                     <div class="block">
                                         <div class="block-header block-header-default border-b">
                                             <h3 class="block-title">
-                                                访问人数 <small>（近7日）</small>
+                                                访问人数  <i class="fa fa-info-circle" title="通过访问ip统计"></i> <small>（近7日）</small>
                                             </h3>
                                             <span style="position: absolute; right: 80px;padding-right: 10px;">当日访问数：<strong id="todayVisitNum"></strong></span>
                                             <div class="block-options">
@@ -547,7 +547,7 @@
                                 <div class="col-md-6">
                                     <div class="block">
                                         <div class="block-header block-header-default border-b">
-                                            <h3 class="block-title">热门文章</h3>
+                                            <h3 class="block-title">热门文章 <i class="fa fa-info-circle" title="通过文章浏览量统计"></i></h3>
                                             <div class="block-options">
                                                 <button type="button" class="btn-block-option" onclick="DashboardManager.queryPostList()">
                                                     <i class="si si-refresh"></i>
@@ -571,68 +571,79 @@
                                 <!-- END Row #2 -->
                             </div>
                             <div class="row invisible" data-toggle="appear">
-                                <!-- Row #5 -->
-                                <div class="col-6 col-md-4 col-xl-2">
-                                    <a class="block block-link-shadow text-center" href="javascript:void(0)" data-url="/admin/theme/listUI.html" data-name="更换主题">
-                                        <div class="block-content">
-                                            <p class="mt-5">
-                                                <i class="fa fa-coffee fa-3x"></i>
-                                            </p>
-                                            <p class="font-w600">查看主题</p>
+                                <div class="col-md-12">
+                                    <div class="block">
+                                        <div class="block-header block-header-default border-b">
+                                            <h3 class="block-title">快捷菜单</h3>
                                         </div>
-                                    </a>
-                                </div>
-                                <div class="col-6 col-md-4 col-xl-2">
-                                    <a class="block block-link-shadow text-center" href="javascript:void(0)" data-url="/admin/user/profileUI.html" data-name="个人详情">
-                                        <div class="block-content">
-                                            <p class="mt-5">
-                                                <i class="fa fa-user-o fa-3x"></i>
-                                            </p>
-                                            <p class="font-w600">个人详情</p>
+                                        <div class="block-content-full">
+                                            <div class="row">
+                                                <!-- Row #5 -->
+                                                <div class="col-6 col-md-4 col-xl-2">
+                                                    <a class="block text-center" href="javascript:void(0)" data-url="/admin/theme/listUI.html" data-name="更换主题">
+                                                        <div class="block-content">
+                                                            <p class="mt-5">
+                                                                <i class="fa fa-coffee fa-3x"></i>
+                                                            </p>
+                                                            <p class="font-w600">查看主题</p>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                                <div class="col-6 col-md-4 col-xl-2">
+                                                    <a class="block text-center" href="javascript:void(0)" data-url="/admin/user/profileUI.html" data-name="个人详情">
+                                                        <div class="block-content">
+                                                            <p class="mt-5">
+                                                                <i class="fa fa-user-o fa-3x"></i>
+                                                            </p>
+                                                            <p class="font-w600">个人详情</p>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                                <div class="col-6 col-md-4 col-xl-2">
+                                                    <a class="block text-center" href="javascript:void(0)" data-url="/admin/friendLink/listUI.html" data-name="友链列表">
+                                                        <div class="block-content">
+                                                            <p class="mt-5">
+                                                                <i class="fa fa-group fa-3x"></i>
+                                                            </p>
+                                                            <p class="font-w600">友链列表</p>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                                <div class="col-6 col-md-4 col-xl-2">
+                                                    <a class="block text-center" href="javascript:void(0)" data-url="/admin/blacklist/listUI.html" data-name="黑名单列表">
+                                                        <div class="block-content">
+                                                            <p class="mt-5">
+                                                                <i class="fa fa-lock fa-3x"></i>
+                                                            </p>
+                                                            <p class="font-w600">查看黑名单</p>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                                <div class="col-6 col-md-4 col-xl-2">
+                                                    <a class="block text-center" href="javascript:void(0)" data-url="/admin/attachment/listUI.html" data-name="附件列表">
+                                                        <div class="block-content">
+                                                            <p class="mt-5">
+                                                                <i class="fa fa-folder-o fa-3x"></i>
+                                                            </p>
+                                                            <p class="font-w600">查看附件</p>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                                <div class="col-6 col-md-4 col-xl-2">
+                                                    <a class="block text-center" href="javascript:void(0)" data-url="/admin/backup/listUI.html" data-name="备份列表">
+                                                        <div class="block-content">
+                                                            <p class="mt-5">
+                                                                <i class="fa fa-database fa-3x"></i>
+                                                            </p>
+                                                            <p class="font-w600">备份列表</p>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                                <!-- END Row #5 -->
+                                            </div>
                                         </div>
-                                    </a>
+                                    </div>
                                 </div>
-                                <div class="col-6 col-md-4 col-xl-2">
-                                    <a class="block block-link-shadow text-center" href="javascript:void(0)" data-url="/admin/friendLink/listUI.html" data-name="友链列表">
-                                        <div class="block-content">
-                                            <p class="mt-5">
-                                                <i class="fa fa-group fa-3x"></i>
-                                            </p>
-                                            <p class="font-w600">友链列表</p>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="col-6 col-md-4 col-xl-2">
-                                    <a class="block block-link-shadow text-center" href="javascript:void(0)" data-url="/admin/blacklist/listUI.html" data-name="黑名单列表">
-                                        <div class="block-content">
-                                            <p class="mt-5">
-                                                <i class="fa fa-lock fa-3x"></i>
-                                            </p>
-                                            <p class="font-w600">查看黑名单</p>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="col-6 col-md-4 col-xl-2">
-                                    <a class="block block-link-shadow text-center" href="javascript:void(0)" data-url="/admin/attachment/listUI.html" data-name="附件列表">
-                                        <div class="block-content">
-                                            <p class="mt-5">
-                                                <i class="fa fa-folder-o fa-3x"></i>
-                                            </p>
-                                            <p class="font-w600">查看附件</p>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="col-6 col-md-4 col-xl-2">
-                                    <a class="block block-link-shadow text-center" href="javascript:void(0)" data-url="/admin/backup/listUI.html" data-name="备份列表">
-                                        <div class="block-content">
-                                            <p class="mt-5">
-                                                <i class="fa fa-database fa-3x"></i>
-                                            </p>
-                                            <p class="font-w600">备份列表</p>
-                                        </div>
-                                    </a>
-                                </div>
-                                <!-- END Row #5 -->
                             </div>
                         </div>
                     </div>
@@ -702,6 +713,7 @@
                         text: '近七天访问人数',
                         show: false
                     },
+                    color: ['#91cc75'],
                     tooltip: {},
                     legend: {
                         data: ['人数']
@@ -919,11 +931,11 @@
                             } else {
                                 htmlArr.push('亲爱的【'+ nickname +'】，欢迎回来！');
                                 htmlArr.push('<br>');
-                                htmlArr.push('本地登录时间：' + data.currentTime);
+                                htmlArr.push('本次登录时间：' + data.currentTime);
                                 htmlArr.push('<br>');
-                                htmlArr.push('上次登录地点：' + data.ipInfo.country + '-' + data.ipInfo.province + '-' + data.ipInfo.city);
+                                htmlArr.push('最近登录地点：' + data.ipInfo.country + '-' + data.ipInfo.province + '-' + data.ipInfo.city);
                                 htmlArr.push('<br>');
-                                htmlArr.push('上次登录时间：' + data.lastLoginTime);
+                                htmlArr.push('最近登录时间：' + data.lastLoginTime);
                             }
                             $("#toast-body").html(htmlArr.join(""));
                             $('#toast-panel').toast('show');
