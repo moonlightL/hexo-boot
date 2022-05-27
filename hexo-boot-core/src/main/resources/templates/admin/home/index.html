@@ -927,7 +927,7 @@
                             let data = resp.data;
                             let htmlArr = [];
                             if (data.first) {
-                                htmlArr.push('欢迎【'+ nickname +'】首次登录，本地登录时间： ' + data.currentTime);
+                                htmlArr.push('欢迎【'+ nickname +'】首次登录!<br>本次登录时间： ' + data.currentTime);
                             } else {
                                 htmlArr.push('亲爱的【'+ nickname +'】，欢迎回来！');
                                 htmlArr.push('<br>');
