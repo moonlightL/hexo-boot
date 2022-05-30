@@ -68,22 +68,13 @@
                 <div class="editorArea" id="editorArea">
                     <div class="form-group row">&nbsp;&nbsp;
                         <label class="col-form-label" for="title">标题</label>
-                        <div class="col-md-3">
+                        <div class="col-md-5">
                             <input type="text" id="title" class="form-control" placeholder="标题 *" name="title" data-bv-notempty="true" data-bv-notempty-message="标题不能为空" th:field="*{title}">
                         </div>
-                        <label class="col-form-label" for="customLink">链接</label>
+                        <label class="col-form-label" for="title">分类</label>
                         <div class="col-md-3">
-                            <div class="input-group">
-                                <input type="text" id="customLink" class="form-control" placeholder="自定义链接" name="customLink" th:field="*{customLink}">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">.html</span>
-                                </div>
-                            </div>
-                        </div>
-                        <label class="col-form-label" for="title" style="margin-left: 5rem">文章分类</label>
-                        <div class="col-md-2">
                             <select class="custom-select" id="categoryId" name="categoryId" style="height: 36px;border: 1px solid #ccc" data-bv-notempty="true" data-bv-notempty-message="分类不能为空" th:field="*{categoryId}">
-                                <option value="" disabled selected>分类 *</option>
+                                <option value="" disabled selected>文章分类 *</option>
                                 <option th:each="category:${categoryList}" th:value="${category.id}" th:text="${category.name}"></option>
                             </select>
                         </div>
@@ -122,6 +113,17 @@
                 <label class="col-md-4 col-form-label" for="tags">文章标签</label>
                 <div class="col-md-8">
                     <input type="text" id="tags" name="tags" class="js-tags-input form-control" placeholder="标签" data-height="40px" th:field="*{tags}">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-md-4 col-form-label" for="customLink">文章链接</label>
+                <div class="col-md-8">
+                    <div class="input-group">
+                        <input type="text" id="customLink" class="form-control" placeholder="自定义链接" name="customLink" th:field="*{customLink}" style="width: 177px">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">.html</span>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="form-group row">

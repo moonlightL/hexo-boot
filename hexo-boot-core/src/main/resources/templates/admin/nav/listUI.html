@@ -119,6 +119,7 @@
         if (row.navType === 2) {
             btnArr.push('<button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="删除" onclick="$.hexo.action.remove(\'' + row.id + '\')"><i class="fa fa-times"></i></button>');
         }
+        btnArr.push('<a href="'+row.link+'" class="btn btn-sm btn-secondary" target="_blank" title="浏览"><i class="fa fa-plane"></i></a>');
         btnArr.push("</div>");
         return btnArr.join("");
     }

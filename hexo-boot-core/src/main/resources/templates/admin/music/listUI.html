@@ -5,6 +5,32 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, initial-scale=1, shrink-to-fit=no">
     <div th:replace="~{admin/common :: common-link}"></div>
+    <style>
+        .animate  {
+            animation-name: rotate;
+            animation-timing-function: linear;
+            animation-delay: 0s;
+            animation-iteration-count: infinite;
+            animation-duration: 3s;
+        }
+        @keyframes rotate {
+            0%{
+                transform: rotate(0);
+            }
+            25%{
+                transform: rotate(90deg);
+            }
+            50%{
+                transform: rotate(180deg);
+            }
+            75%{
+                transform: rotate(270deg);
+            }
+            100%{
+                transform: rotate(360deg);
+            }
+        }
+    </style>
 </head>
 <body>
 <div class="content animated fadeIn">
@@ -67,7 +93,7 @@
                             </th>
                             <th width="8%" data-field="cover" data-formatter="urlFormatter">封面</th>
                             <th data-field="name">名称</th>
-                            <th data-field="artist">作者</th>
+                            <th data-field="artist" width="15%">作者</th>
                             <th width="5%" align="center" data-field="state" data-formatter="stateFormatter">状态</th>
                             <th width="5%" align="center" data-field="sort">排序</th>
                             <th width="10%" align="center" data-formatter="actionFormatter">操作</th>
@@ -82,14 +108,14 @@
 <script th:inline="javascript">
 
     function urlFormatter(val, row) {
-        return "<img src='" + val + "' width='32' height='32' alt='' />";
+        return "<img id='cover_"+row.id+"' src='" + val + "' width='48' height='48' alt='' style='border-radius: 50%' />";
     }
 
     function switchChange($obj) {
         let id = $obj.data("id");
         let state = $obj.prop("checked");
 
-        $.hexo.modal.confirm("确定要修改开关吗？", function() {
+        $.hexo.modal.confirm("确定要修改状态吗？", function() {
             $.hexo.action.sendRequest({
                 url: BASE_URL + "/updateState.json",
                 params: {"id": id, "state": state},
@@ -120,10 +146,49 @@
     function actionFormatter(val, row) {
         let btnArr = [];
         btnArr.push('<div class="btn-group">');
+        btnArr.push('<button id="play_'+row.id+'" type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="播放音乐" data-id="'+row.id+'" data-url="'+row.url+'" onclick="window.playMusic($(this))"><i class="fa fa-play"></i></button>');
         btnArr.push('<button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="编辑音乐" data-width="550" data-height="580" data-full="true" onclick="$.hexo.action.showEditUI(\'' + row.id + '\', $(this))"><i class="fa fa-pencil"></i></button>');
         btnArr.push('<button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="删除" onclick="$.hexo.action.remove(\'' + row.id + '\')"><i class="fa fa-times"></i></button>');
         btnArr.push("</div>");
         return btnArr.join("");
+    }
+
+    window.musicObj = null;
+
+    function playMusic($obj) {
+        let id = $obj.data("id");
+        let url = $obj.data("url");
+        if (window.musicObj == null) {
+            let audio = document.createElement('audio');
+            audio.setAttribute('id', id);
+            audio.setAttribute('src', url);
+            audio.setAttribute('autoplay', 'autoplay');
+            audio.style.visibility = "hidden";
+            document.body.appendChild(audio);
+            window.musicObj = audio;
+            $obj.html('<i class="fa fa-pause"></i>');
+            $("#cover_" + id).addClass("animate");
+        } else {
+            let oldId = window.musicObj.getAttribute("id");
+            if (oldId == id) {
+                if (window.musicObj.paused) {
+                    window.musicObj.play();
+                    $obj.html('<i class="fa fa-pause"></i>');
+                    $("#cover_" + id).addClass("animate");
+                } else {
+                    window.musicObj.pause();
+                    $obj.html('<i class="fa fa-play"></i>');
+                    $("#cover_" + id).removeClass("animate");
+                }
+            } else {
+                $("#play_" + oldId).html('<i class="fa fa-play"></i>');
+                $("#cover_" + oldId).removeClass("animate");
+                window.musicObj.setAttribute('id', id);
+                window.musicObj.setAttribute('src', url);
+                $obj.html('<i class="fa fa-pause"></i>');
+                $("#cover_" + id).addClass("animate");
+            }
+        }
     }
 
     $(function() {
