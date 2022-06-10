@@ -14,7 +14,10 @@
                     queryFormId: "queryForm", // 搜索框表单 id
                     toolbar: "#toolbar",
                     height: $(window.parent).height() - 330,
-                    parentId: ""
+                    parentId: "",
+                    onFinish: function () {
+                        console.log("default finish")
+                    }
                 },
                 init: function(options) {
                     $.extend($.hexo.table.options, options || {});
@@ -28,6 +31,9 @@
                     // 绑定工具栏按钮事件
                     $.hexo.event.bind();
 
+                    if (typeof options.onFinish == "function") {
+                        options.onFinish();
+                    }
                 },
                 getListUrl: function() {
                     return $.hexo.table.formatUrl($.hexo.table.options.listUrl);
@@ -52,6 +58,9 @@
                 },
                 refreshData: function() {
                     $("#" + $.hexo.table.options.id).HexoTable("refresh");
+                    if (typeof $.hexo.table.options.onFinish == "function") {
+                        $.hexo.table.options.onFinish();
+                    }
                 },
                 refreshOption: function(options) {
                     $("#" + $.hexo.table.options.id).HexoTable("refreshOptions", options);

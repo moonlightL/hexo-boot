@@ -85,26 +85,26 @@
                 <div class="col-xl-6">
                     <form id="saveForm" th:action="@{${baseUrl} + '/add.json'}" class="js-validation-bootstrap" method="post">
                         <div class="form-group row">
-                            <label class="col-lg-4 col-form-label" for="title">标题 <span class="text-danger">*</span></label>
-                            <div class="col-lg-8">
-                                <input type="text" class="form-control" id="title" name="title" placeholder="标题" data-bv-notempty="true" data-bv-notempty-message="标题不能为空">
+                            <label class="col-lg-2 col-form-label" for="title">网站名称 <span class="text-danger">*</span></label>
+                            <div class="col-lg-10">
+                                <input type="text" class="form-control" id="title" name="title" placeholder="网站名称" data-bv-notempty="true" data-bv-notempty-message="网站名称不能为空">
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-lg-4 col-form-label" for="logo">Logo</label>
-                            <div class="col-lg-8">
-                                <input type="text" class="form-control" id="logo" name="logo" placeholder="logo">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-lg-4 col-form-label" for="homeUrl">主页地址 <span class="text-danger">*</span></label>
-                            <div class="col-lg-8">
+                            <label class="col-lg-2 col-form-label" for="homeUrl">主页地址 <span class="text-danger">*</span></label>
+                            <div class="col-lg-10">
                                 <input type="text" class="form-control" id="homeUrl" name="homeUrl" placeholder="主页地址" data-bv-notempty="true" data-bv-notempty-message="主页地址不能为空">
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-lg-4 col-form-label" for="linkType">链接类型 </label>
-                            <div class="col-lg-8">
+                            <label class="col-lg-2 col-form-label" for="logo">头像/Logo</label>
+                            <div class="col-lg-10">
+                                <input type="text" class="form-control" id="logo" name="logo" placeholder="logo">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-2 col-form-label" for="linkType">链接类型 </label>
+                            <div class="col-lg-10">
                                 <select class="custom-select" id="linkType" name="linkType">
                                     <option value="1">博客网址</option>
                                     <option value="2">工具网址</option>
@@ -112,8 +112,20 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-lg-4 col-form-label" for="backgroundColor">背景颜色 </label>
-                            <div class="col-lg-8">
+                            <label class="col-lg-2 col-form-label" for="sort">排序 </label>
+                            <div class="col-lg-10">
+                                <input type="number" class="form-control" id="sort" name="sort" placeholder="排序">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-2 col-form-label" for="remark">备注 </label>
+                            <div class="col-lg-10">
+                                <textarea id="remark" name="remark" class="form-control" aria-label="With textarea" style="resize: none" placeholder="备注"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-2 col-form-label" for="backgroundColor">背景颜色 </label>
+                            <div class="col-lg-10">
                                 <ul class="bg-color-items">
                                     <li data-color="#1ABC9C"><span class="bg-color color-turquoise"></span></li>
                                     <li data-color="#2ECC71"><span class="bg-color color-emerald"></span></li>
@@ -130,19 +142,7 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-lg-4 col-form-label" for="sort">排序 </label>
-                            <div class="col-lg-8">
-                                <input type="text" class="form-control" id="sort" name="sort" placeholder="排序">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-lg-4 col-form-label" for="remark">备注 </label>
-                            <div class="col-lg-8">
-                                <textarea id="remark" name="remark" class="form-control" aria-label="With textarea" style="resize: none" placeholder="备注"></textarea>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <div class="col-lg-8 text-center">
+                            <div class="col-lg-12 text-center">
                                 <button type="reset" class="btn btn-secondary">重置</button>
                                 <button type="submit" class="btn btn-primary" id="submitBtn">提交</button>
                             </div>

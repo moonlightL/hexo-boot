@@ -44,11 +44,11 @@
     animation-name: fadeIn;
 }
 
-.hb-w-body .hb-w-body-item .main {
+.hb-w-body .hb-w-body-item .hb-main {
     width:  100%;
 }
 
-.hb-w-body .hb-w-body-item .main .info {
+.hb-w-body .hb-w-body-item .hb-main .info {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -111,6 +111,7 @@
     font-size: 14px;
     border: 1px solid #afb2c1;
     padding-left: 10px;
+    box-sizing: border-box;
 }
 .hb-w-body .hb-comment-help {
     position: relative;
@@ -167,7 +168,9 @@
 
 .hb-w-body .hb-comment-help .emoji-panel li img {
     position: absolute;
-    top: 4px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     max-width: 30px;
     max-height: 30px;
 }
@@ -211,32 +214,31 @@
     padding-bottom: 2rem;
 }
 
-.hb-r-body .hb-r-body-item .main {
+.hb-r-body .hb-r-body-item .hb-main {
     width: 100%;
     margin-left: 2rem;
 }
 
-.hb-r-body .hb-r-body-item .main .info {
+.hb-r-body .hb-r-body-item .hb-main .info {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
 }
 
-.hb-r-body .hb-r-body-item .main .info .action-reply {
+.hb-r-body .hb-r-body-item .hb-main .info .action-reply {
     color: #b4bbbd;
 }
-.hb-r-body .hb-r-body-item .main .info .action-reply:hover {
+.hb-r-body .hb-r-body-item .hb-main .info .action-reply:hover {
     color: #8fabbb;
 }
-.hb-r-body .hb-r-body-item .main .info .nickname {
+.hb-r-body .hb-r-body-item .hb-main .info .nickname {
     font-weight: bold;
     font-size: 15px;
     margin-bottom: 1rem;
 }
-.hb-r-body .hb-r-body-item .main .info .blogger {
+.hb-r-body .hb-r-body-item .hb-main .info .blogger {
     padding: 2px 4px;
     font-size: 12px;
-
     background-color: #67c23a20;
     border: 1px solid #67c23a80;
     border-radius: 2px;

@@ -40,7 +40,7 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-md-3 col-form-label" for="link">链接</label>
+                                <label class="col-md-3 col-form-label" for="link">链接 <i class="fa fa-info-circle" title="默认类型的导航链接禁止修改"></i></label>
                                 <div class="col-md-9">
                                     <input type="text" class="form-control" id="link" name="link" placeholder="链接 *" th:field="*{link}" th:readonly="${vo.navType == 1 ? 'readonly':'false'}">
                                 </div>
@@ -60,13 +60,13 @@
                             <div class="form-group row">
                                 <label class="col-md-3 col-form-label" for="cover">封面</label>
                                 <div class="col-md-9">
-                                    <input type="text" class="form-control" id="cover" name="cover" placeholder="封面" th:field="*{cover}">
+                                    <input type="text" class="form-control" id="cover" name="cover" placeholder="封面地址" th:field="*{cover}">
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label class="col-md-3 col-form-label" for="sort">排序</label>
                                 <div class="col-md-9">
-                                    <input type="text" class="form-control" id="sort" name="sort" placeholder="排序 *" data-bv-notempty="true" data-bv-notempty-message="排序不能为空" th:field="*{sort}">
+                                    <input type="number" class="form-control" id="sort" name="sort" placeholder="排序 *" data-bv-notempty="true" data-bv-notempty-message="排序不能为空" th:field="*{sort}">
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -93,11 +93,6 @@
                                     <div class="form-group">
                                         <button type="submit" class="btn btn-primary" id="submitBtn">保存</button>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    注意：默认类型的导航链接禁止修改
                                 </div>
                             </div>
                         </div>

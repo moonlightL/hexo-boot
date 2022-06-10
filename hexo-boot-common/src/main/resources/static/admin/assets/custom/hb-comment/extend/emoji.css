@@ -11,7 +11,7 @@
 
 .emoji-container .emoji_btn {
     cursor: pointer;
-    font-size: 18px;
+    font-size: 24px;
 }
 
 .emoji-container .emoji_btn:hover {
@@ -58,7 +58,9 @@
 
 .emoji-container .emoji-panel li img {
     position: absolute;
-    top: 4px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     max-width: 30px;
     max-height: 30px;
 }

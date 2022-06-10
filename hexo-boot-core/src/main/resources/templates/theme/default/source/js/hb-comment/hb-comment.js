@@ -173,7 +173,6 @@
             {'title':'q_激动','url':'qq/jidong.gif'},
             {'title':'q_街舞','url':'qq/jiewu.gif'},
         ];
-
         self.emojiManager.emojiArr[1] = [
             {'title':'微笑','url':'weibo/weixiao.gif'},
             {'title':'嘻嘻','url':'weibo/xixi.gif'},
@@ -331,7 +330,7 @@
             htmlArr.push("<a href='javascript:void(0)' class='change_avatar'>换一张</a>")
         }
         htmlArr.push('</div>');
-        htmlArr.push('<div class="main">');
+        htmlArr.push('<div class="hb-main">');
         htmlArr.push('<div class="hb-comment-info">');
         if (self.visitor) {
             htmlArr.push('<span class="label-item"><span class="label">邮箱</span><input type="text" name="email" value="' + self.visitor.email + '" class="hb_email" readonly="readonly" placeholder="必填,qq邮箱可自动获取头像和昵称"></span>');
@@ -439,7 +438,7 @@
             htmlArr.push('<div class="avatar">');
             htmlArr.push('<img id="'+ comment.id +'" src="'+ comment.avatar +'" width="48" height="48">');
             htmlArr.push('</div>');
-            htmlArr.push('<div class="main">');
+            htmlArr.push('<div class="hb-main">');
             htmlArr.push('<div class="info">');
             let bloggerHtml = comment.blogger ? ' <span class="blogger">博主</span>' : '';
             bloggerHtml += '<span> ' + comment.date + '</span>';
@@ -478,7 +477,7 @@
                         htmlArr.push('<div class="avatar">');
                         htmlArr.push('<img id="'+ replyComment.id +'" src="'+ replyComment.avatar +'" width="48" height="48">');
                         htmlArr.push('</div>');
-                        htmlArr.push('<div class="main">');
+                        htmlArr.push('<div class="hb-main">');
                         htmlArr.push('<div class="info">');
                         let bloggerHtml = replyComment.blogger ? ' <span class="blogger">博主</span>' : '';
                         bloggerHtml += '<span> ' + comment.date + '</span>';
@@ -596,7 +595,7 @@
 
                 sendRequest({
                     type: "GET",
-                    url: "https://api.mou.ge/api/qq?qq=" + qq,
+                    url: "/getQQInfo/" + qq,
                     success: function(resp) {
                         getElementByClassName(commentBody, "hb_avatar").setAttribute("src", resp.data.avatar);
                         getElementByClassName(commentBody, "hb_nickname").value = resp.data.name;
@@ -623,7 +622,7 @@
                 return;
             }
 
-            let htmlArr = ['<div class="emoji-panel emoji"><div class="emoji" style="min-height: 2rem;background-color: #8fabbb"></div>'];
+            let htmlArr = ['<div class="emoji-panel emoji"><div class="emoji" style="min-height: 1rem;"></div>'];
             let emojiManager = self.emojiManager;
             let emojiArr = emojiManager.emojiArr;
             for (let i = 0; i < emojiArr.length; i++) {
@@ -786,7 +785,7 @@
                 let index = infoNode.className.indexOf("reply");
                 if (index == -1) {
                     infoNode.setAttribute("class", "info reply");
-                    let mainArr = getElementsByClassName(commentEL, "main");
+                    let mainArr = getElementsByClassName(commentEL, "hb-main");
                     for (let i = 0; i < mainArr.length; i++) {
                         let mainElement = mainArr[i];
                         let commentBody = getElementByClassName(mainElement, "hb-w-body");
