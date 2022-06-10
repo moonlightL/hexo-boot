@@ -68,6 +68,7 @@ public class IndexController extends CommonController {
         HexoPageInfo pageInfo = this.postService.pagePostsByIndex(pageNum, Integer.parseInt(pageSizeStr), false);
         resultMap.put("pageInfo", pageInfo);
         resultMap.put("menu", "blogs");
+        resultMap.put("currentNav", this.navService.findByLink("/"));
         return render("blogs", false, resultMap);
     }
 
