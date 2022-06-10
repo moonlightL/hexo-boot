@@ -4,18 +4,18 @@ import com.github.pagehelper.PageInfo;
 import com.light.hexo.common.exception.GlobalException;
 import com.light.hexo.common.request.CommentRequest;
 import com.light.hexo.common.util.BrowserUtil;
+import com.light.hexo.common.util.HttpClientUtil;
+import com.light.hexo.common.util.JsonUtil;
 import com.light.hexo.common.util.RequestUtil;
 import com.light.hexo.common.vo.Result;
 import com.light.hexo.core.portal.common.CommonController;
 import com.light.hexo.core.portal.component.RequestLimit;
+import com.light.hexo.core.portal.model.BasicInfo;
 import com.light.hexo.mapper.model.Comment;
 import com.light.hexo.mapper.model.Theme;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -81,6 +81,20 @@ public class IndexCommentController extends CommonController {
         comment.setBrowser(BrowserUtil.getBrowserName(httpServletRequest));
         this.commentService.saveCommentByIndex(comment);
         return Result.success();
+    }
+
+
+    private static final String QQ_INFO_URL = "https://api.usuuu.com/qq/%s";
+
+    @GetMapping("/getQQInfo/{qq}")
+    @ResponseBody
+    public Result getQQInfo(@PathVariable("qq") String qq) {
+        String url = String.format(QQ_INFO_URL, qq);
+        String content = HttpClientUtil.sendGet(url);
+        Map<String, Object> map = JsonUtil.string2Obj(content, Map.class);
+        Map<String, Object> dataMap = (Map<String, Object>) map.get("data");
+        BasicInfo basicInfo = new BasicInfo(dataMap.get("name").toString(), dataMap.get("avatar").toString());
+        return Result.success(basicInfo);
     }
 
 }

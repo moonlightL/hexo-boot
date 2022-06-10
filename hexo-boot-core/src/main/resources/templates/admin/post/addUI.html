@@ -6,8 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, initial-scale=1, shrink-to-fit=no">
     <div th:replace="~{admin/common :: common-link}"></div>
     <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/bootstrap/css/bootstrap.min.css'}">
-    <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css'}">
-    <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/flatpickr/flatpickr.min.css'}">
     <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/editor.md/css/editormd.min.css'}">
     <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/jquery-tags-input/jquery.tagsinput.min.css'}">
     <link th:href="@{'/admin/assets/js/plugins/dropzonejs/dist/min/dropzone.min.css'}" rel="stylesheet">
@@ -64,19 +62,19 @@
                 <div class="editorArea" id="editorArea">
                     <div class="form-group row">&nbsp;&nbsp;
                         <label class="col-form-label" for="title">标题</label>
-                        <div class="col-md-5">
+                        <div class="col-md-5 col-sm-12">
                             <input type="text" id="title" class="form-control" placeholder="标题 *" name="title" data-bv-notempty="true" data-bv-notempty-message="标题不能为空">
                         </div>
                         <label class="col-form-label" for="title">分类</label>
-                        <div class="col-md-3">
+                        <div class="col-md-3 col-sm-12">
                             <select class="custom-select" id="categoryId" name="categoryId" style="height: 36px;border: 1px solid #ccc" data-bv-notempty="true" data-bv-notempty-message="分类不能为空">
                                 <option value="" disabled selected>分类 *</option>
                                 <option th:each="category:${categoryList}" th:value="${category.id}" th:text="${category.name}"></option>
                             </select>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-3 col-sm-12">
                             <button type="submit" class="btn btn-success" id="submitBtn"><i class="fa fa-send-o"></i><span class="hidden-sm"> 保存</span></button>
-                            <button id="moreBtn" type="button" class="btn btn-default" title="更多设置"><i class="fa fa-bars"></i><span class="hidden-sm hidden-md"> 更多设置</span></button>
+                            <button id="moreBtn" type="button" class="btn btn-default" title="更多设置"><i class="fa fa-bars"></i><span class="hidden-sm hidden-md"> 更多</span></button>
                         </div>
                     </div>
                     <div id="postEditor"></div>
@@ -125,8 +123,8 @@
             <div class="form-group row">
                 <label class="col-md-4 col-form-label" for="jobTime">定时发布</label>
                 <div class="col-md-8">
-                    <input type="text" class="js-flatpickr form-control bg-white" id="jobTime" name="jobTime" placeholder="发布时间"
-                           data-enable-time="true" data-date-format="Y-m-d H:i:ss" data-time_24hr="true">
+                    <input type="text" class="form-control bg-white" id="jobTime" name="jobTime" placeholder="发布时间"
+                           onClick="WdatePicker({el:this,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
                 </div>
             </div>
             <div class="form-group row">
@@ -191,8 +189,7 @@
 </div>
 <div th:replace="~{admin/common :: common-script}"></div>
 <script th:src="@{'/admin/assets/js/plugins/bootstrap/js/bootstrap.min.js'}"></script>
-<script th:src="@{'/admin/assets/js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js'}"></script>
-<script th:src="@{'/admin/assets/js/plugins/flatpickr/flatpickr.min.js'}"></script>
+<script th:src="@{'/admin/assets/js/plugins/My97DatePicker/WdatePicker.js'}"></script>
 <script th:src="@{'/admin/assets/js/plugins/dropzonejs/dist/min/dropzone.min.js'}"></script>
 <script th:src="@{'/admin/assets/js/plugins/editor.md/editormd.min.js'}"></script>
 <script th:src="@{'/admin/assets/js/plugins/summernote/summernote.min.js'}"></script>
@@ -227,7 +224,7 @@
             }
         });
 
-        Codebase.helpers(['tags-inputs','flatpickr','datepicker']);
+        Codebase.helpers(['tags-inputs']);
         $("#submitBtn").on("click", function () {
             if (editorType === "markdown") {
                 $("#content").val(MyEditor.getMarkdown());

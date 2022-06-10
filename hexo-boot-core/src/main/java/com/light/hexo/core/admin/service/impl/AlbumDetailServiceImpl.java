@@ -3,9 +3,11 @@ package com.light.hexo.core.admin.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.light.hexo.common.base.BaseRequest;
 import com.light.hexo.common.base.BaseServiceImpl;
+import com.light.hexo.common.component.event.EventPublisher;
 import com.light.hexo.common.config.BlogConfig;
 import com.light.hexo.common.constant.ConfigEnum;
 import com.light.hexo.common.constant.HexoExceptionEnum;
+import com.light.hexo.common.event.AlbumEvent;
 import com.light.hexo.common.exception.GlobalException;
 import com.light.hexo.common.util.ExceptionUtil;
 import com.light.hexo.common.util.RequestUtil;
@@ -23,6 +25,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
@@ -58,6 +61,10 @@ public class AlbumDetailServiceImpl extends BaseServiceImpl<AlbumDetail> impleme
     @Autowired
     private Environment environment;
 
+    @Autowired
+    @Lazy
+    private EventPublisher eventPublisher;
+
     @Override
     public BaseMapper<AlbumDetail> getBaseMapper() {
         return this.albumDetailMapper;
@@ -89,6 +96,8 @@ public class AlbumDetailServiceImpl extends BaseServiceImpl<AlbumDetail> impleme
                    .setCreateTime(LocalDateTime.now())
                    .setUpdateTime(albumDetail.getCreateTime());
         super.saveModel(albumDetail);
+        // 清除缓存
+        this.eventPublisher.emit(new AlbumEvent(this));
     }
 
     @SneakyThrows
@@ -137,6 +146,8 @@ public class AlbumDetailServiceImpl extends BaseServiceImpl<AlbumDetail> impleme
 
         albumDetail.setCoverUrl(coverUrl);
         super.saveModel(albumDetail);
+        // 清除缓存
+        this.eventPublisher.emit(new AlbumEvent(this));
     }
 
     @Override
@@ -154,6 +165,8 @@ public class AlbumDetailServiceImpl extends BaseServiceImpl<AlbumDetail> impleme
         Example example = new Example(AlbumDetail.class);
         example.createCriteria().andEqualTo("albumId", albumId);
         this.albumDetailMapper.deleteByExample(example);
+        // 清除缓存
+        this.eventPublisher.emit(new AlbumEvent(this));
     }
 
     @Override
@@ -163,6 +176,8 @@ public class AlbumDetailServiceImpl extends BaseServiceImpl<AlbumDetail> impleme
             ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_ALBUM_DETAIL_NOT_EXIST);
         }
         super.removeModel(detailId);
+        // 清除缓存
+        this.eventPublisher.emit(new AlbumEvent(this));
     }
 
     @Override

@@ -264,7 +264,7 @@
 
             $target.addClass("emoji_btn emoji");
 
-            let htmlArr = ['<div class="emoji-panel emoji"><div class="emoji" style="height: 2rem;background-color: #8fabbb"></div>'];
+            let htmlArr = ['<div class="emoji-panel emoji"><div class="emoji" style="height: 1rem;"></div>'];
             let emojiArr = emojiManager.emojiArr;
             for (let i = 0; i < emojiArr.length; i++) {
                 let emojiArrElements = emojiArr[i];

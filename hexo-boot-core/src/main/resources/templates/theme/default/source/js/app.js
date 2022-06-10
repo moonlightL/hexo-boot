@@ -291,7 +291,7 @@
         contentWayPoint();
         dynamicEvent();
         postEvent();
-        if (openPjax === "true") {
+        if (openPJAX === "true") {
             pjaxEvent();
         }
         loadResource();
