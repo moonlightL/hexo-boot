@@ -1,5 +1,5 @@
 <h2>注意： Hexo Boot 4.0 版本项目代码结构大调整</h2>
-<h3>调整内容看下文第七点</h3>
+<h3>调整内容看下文第八点</h3>
 
 ## 一、Hexo Boot
 
@@ -317,7 +317,7 @@ curl -L -o ~/.hexo-boot/application.yml --create-dirs https://gitee.com/moonligh
 
 2020-10-22 上传开源
 
-## 七、Hexo-Boot 4.0 版本调整
+## 八、Hexo-Boot 4.0 版本调整
 
 * 代码结构分层
 * 新增插件功能
