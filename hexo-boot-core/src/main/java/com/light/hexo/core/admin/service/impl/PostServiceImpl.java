@@ -746,6 +746,10 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
                 post.setCategoryName(StringUtils.isNotBlank(category.getName()) ? category.getName() : "默认");
             }
 
+            if (StringUtils.isNotBlank(post.getCustomLink())) {
+                post.setLink(post.getCustomLink() + ".html");
+            }
+
             Integer postId = post.getId();
 
             Post prevPost = this.getPreviousInfo(postId);
