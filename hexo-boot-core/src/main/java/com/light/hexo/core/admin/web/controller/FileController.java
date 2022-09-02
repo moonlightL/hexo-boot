@@ -144,6 +144,10 @@ public class FileController {
     public FileResult randomPic(Integer type) throws GlobalException, IOException {
 
         String result = HttpClientUtil.sendPost(RANDOM_PIC_URL[type], "");
+        if (StringUtils.isBlank(result)) {
+            return FileResult.fail("第三方图库出现异常，获取图片失败，请稍后再试");
+        }
+
         // 处理 json 串包含 UTF-8 的 bom 不可见字符
         InputStream bis = new BOMInputStream(new ByteArrayInputStream(result.getBytes()));
         String finalResult = IOUtils.toString(bis, "UTF-8");

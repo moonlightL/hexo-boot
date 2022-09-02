@@ -901,7 +901,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
 
         Post post;
         if (link.endsWith(".html")) {
-            builder.where(Sqls.custom().andEqualTo("customLink", link).andEqualTo("delete", false));
+            builder.where(Sqls.custom().andEqualTo("customLink", link.split("\\.")[0]).andEqualTo("delete", false));
         } else {
             builder.where(Sqls.custom().andEqualTo("link", link).andEqualTo("delete", false));
         }
