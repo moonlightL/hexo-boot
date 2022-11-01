@@ -45,7 +45,7 @@
         .btn.focus, .btn:focus {
             outline: none;
         }
-        .panel {
+        .optionArea {
             display: none;
             width: 400px;
             padding: 20px;
@@ -253,7 +253,7 @@
                 imageUpload : true,
                 watch : false,
                 imageFormats : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
-                imageUploadURL : "/admin/file/upload.json",
+                imageUploadURL : "/admin/file/mdUploadFile.json",
                 onload: function () {
                     $("#postEditor").height($(window.parent).height() - 200);
                     MyEditor.setMarkdown(vo.content);

@@ -45,16 +45,8 @@ public class IndexCommentController extends CommonController {
 
         Theme activeTheme = this.themeService.getActiveTheme(true);
         String commentShowType = activeTheme.getConfigMap().get("commentShowType");
-        List<Comment> commentList;
         Map<String, Object> map = new HashMap<>();
-        if ("singleRow".equals(commentShowType)) {
-            // 单行
-            commentList = this.commentService.listCommentByPage(page, pageNum, PAGE_SIZE, true);
-        } else {
-            // 多行（父子级评论一起展示）
-            commentList = this.commentService.listCommentByPage(page, pageNum, PAGE_SIZE, false);
-        }
-
+        List<Comment> commentList = this.commentService.listCommentByPage(page, pageNum, PAGE_SIZE, "singleRow".equals(commentShowType));
         PageInfo<Comment> pageInfo = new PageInfo<>(commentList);
         map.put("totalNum", "singleRow".equals(commentShowType) ? pageInfo.getTotal() : this.commentService.getCommentNumByBannerId(page));
         map.put("commentList", pageInfo.getList());

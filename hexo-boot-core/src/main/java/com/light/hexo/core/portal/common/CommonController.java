@@ -37,7 +37,7 @@ import java.util.Optional;
  * @DateTime 2020/9/18 17:40
  */
 @Slf4j
-@Component
+//@Component
 public class CommonController {
 
     protected static final int PAGE_SIZE = 10;
