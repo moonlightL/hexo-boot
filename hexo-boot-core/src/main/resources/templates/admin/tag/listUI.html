@@ -9,9 +9,6 @@
         .table {
             margin-bottom: 0;
         }
-        .grid-content {
-            padding: 1rem;
-        }
         .tag-item {
             position: relative;
             display: inline-block;
@@ -91,7 +88,7 @@
                 </div>
             </div>
             <div id="data-view-grid" class="data-view hide">
-                <div class="grid-content" id="gridContent"></div>
+                <div class="grid-content" id="gridContent" style="padding: 1rem"></div>
             </div>
         </div>
     </div>
@@ -109,78 +106,37 @@
     }
 
     $(function() {
-        let key = "view";
-        let value = $.hexo.storage.get(key) || "view-list";
-        $("#" + value).addClass("active");
-        if (value == "view-list") {
-            initTable(value);
-        } else {
-            initGrid(value);
-        }
 
-        $(".btn-view").off("click").on("click", function() {
-            let that = $(this);
-            if (that.hasClass("active")) {
-                return;
-            }
+        $.ToggleView({
+            key: "tag-view",
+            baseUrl: BASE_URL,
+            initGrid: function(id) {
+                $("#data-" + id).show();
+                $("#toolbar").hide();
 
-            let id = that.attr("id");
+                $.hexo.action.sendRequest({
+                    url: BASE_URL + "/getAll.json",
+                    callback: function (resp) {
+                        let list = resp.data;
+                        let htmlArr = [];
+                        for (let i = 0; i < list.length; i ++) {
+                            let obj = list[i];
+                            htmlArr.push('<div class="tag-item">');
+                            htmlArr.push('<div class="tag-item-content">');
+                            htmlArr.push(obj.name);
+                            htmlArr.push('</div>');
+                            htmlArr.push('<div class="tag-item-option">');
+                            htmlArr.push('<button type="button" class="btn btn-sm btn-alt-warning tag-close" data-id="'+obj.id+'"><i class="fa fa-close"></i></button>');
+                            htmlArr.push('</div>');
+                            htmlArr.push('</div>');
+                        }
+                        $("#gridContent").html(htmlArr.join(""));
 
-            // 切换样式
-            $(".btn-view").removeClass("active");
-            that.addClass("active");
-            $.hexo.storage.set(key, id);
-
-            // 视图数据
-            $(".data-view").hide();
-
-            if (id == "view-list") {
-                initTable(id);
-            } else {
-                initGrid(id);
+                        bindClose(id);
+                    }
+                });
             }
         });
-
-        function initTable(id) {
-            $("#data-" + id).show();
-            $("#toolbar").show();
-            let tableContainer = $(".hexo-table-container");
-            if (tableContainer.length == 0) {
-                $.hexo.table.init({
-                    baseUrl: BASE_URL,
-                    height: $(window.parent).height() - 283
-                });
-            } else {
-                $.hexo.table.refreshData();
-            }
-        }
-
-        function initGrid(id) {
-            $("#data-" + id).show();
-            $("#toolbar").hide();
-
-            $.hexo.action.sendRequest({
-                url: BASE_URL + "/getAll.json",
-                callback: function (resp) {
-                    let list = resp.data;
-                    let htmlArr = [];
-                    for (let i = 0; i < list.length; i ++) {
-                        let obj = list[i];
-                        htmlArr.push('<div class="tag-item">');
-                        htmlArr.push('<div class="tag-item-content">');
-                        htmlArr.push(obj.name);
-                        htmlArr.push('</div>');
-                        htmlArr.push('<div class="tag-item-option">');
-                        htmlArr.push('<button type="button" class="btn btn-sm btn-alt-warning tag-close" data-id="'+obj.id+'"><i class="fa fa-close"></i></button>');
-                        htmlArr.push('</div>');
-                        htmlArr.push('</div>');
-                    }
-                    $("#gridContent").html(htmlArr.join(""));
-
-                    bindClose(id);
-                }
-            });
-        }
 
         function bindClose(id) {
             $(".tag-close").off("click").on("click", function() {

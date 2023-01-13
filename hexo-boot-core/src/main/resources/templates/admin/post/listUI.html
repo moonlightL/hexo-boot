@@ -58,39 +58,55 @@
             <h3 class="block-title"><i class="fa fa-edit"></i> 文章列表</h3>
             <div class="block-options">
                 <div class="block-options-item" id="toolbar">
-                    <button type="button" class="btn btn-sm btn-secondary float-right hexo-query" data-query-area="queryArea"><i class="fa fa-search text-success mr-5"></i> 查询</button>
-                    <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-refresh"><i class="fa fa-refresh mr-5"></i> 刷新</button>
-                    <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-remove"><i class="fa fa-trash text-danger mr-5"></i> 删除</button>
-                    <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-edit" title="编辑文章" data-full="true"><i class="fa fa-edit text-warning mr-5"></i> 编辑</button>
-                    <button type="button" class="btn btn-sm btn-secondary float-right mr-5 hexo-add" title="新增文章" data-full="true"><i class="fa fa-plus-square text-primary mr-5"></i> 新增</button>
-                    <button type="button" id="importBtn" class="btn btn-sm btn-secondary float-right mr-5" title="导入文章" data-width="720" data-height="320" data-full="true"><i class="fa fa-info text-info mr-5"></i> 导入</button>
+                    <button type="button" class="btn btn-secondary float-right hexo-query" data-query-area="queryArea"><i class="fa fa-search text-success mr-5"></i> 查询</button>
+                    <button type="button" class="btn btn-secondary float-right mr-5 hexo-refresh"><i class="fa fa-refresh mr-5"></i> 刷新</button>
+                    <button type="button" class="btn btn-secondary float-right mr-5 hexo-remove"><i class="fa fa-trash text-danger mr-5"></i> 删除</button>
+                    <button type="button" class="btn btn-secondary float-right mr-5 hexo-edit" title="编辑文章" data-full="true"><i class="fa fa-edit text-warning mr-5"></i> 编辑</button>
+                    <button type="button" class="btn btn-secondary float-right mr-5 hexo-add" title="新增文章" data-full="true"><i class="fa fa-plus-square text-primary mr-5"></i> 新增</button>
+                    <button type="button" id="importBtn" class="btn btn-secondary float-right mr-5" title="导入文章" data-width="720" data-height="320" data-full="true"><i class="fa fa-info text-info mr-5"></i> 导入</button>
+                </div>
+                <div class="btn-view-item" style="display: inline-block;padding: 6px 5px; line-height: 1.2;">
+                    <div class="btn-group mr-5 float-right" role="group" aria-label="Second group" style="margin-left: 10px">
+                        <button type="button" class="btn btn-secondary btn-view" id="view-list" title="表格">
+                            <i class="fa fa-th-list"></i>
+                        </button>
+                        <button type="button" class="btn btn-secondary btn-view" id="view-grid" title="方格">
+                            <i class="fa fa-th"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="block-content">
-            <div class="table-responsive">
-                <table id="listTable" class="table table-striped table-vcenter">
-                    <thead>
-                    <tr>
-                        <th class='text-center' width="5%" data-checkbox="true">
-                            <label class="css-control css-control-primary css-checkbox" for="check-all" >
-                                <input type="checkbox" class="css-control-input" id="check-all">
-                                <span class="css-control-indicator"></span>
-                            </label>
-                        </th>
-                        <th width="8%" data-field="coverUrl" data-formatter="urlFormatter">封面</th>
-                        <th data-field="title" data-formatter="titleFormatter">文章名</th>
-                        <th width="12%" data-field="categoryName">分类</th>
-                        <th width="6%" data-field="readNum">浏览数</th>
-                        <th width="6%" data-field="commentNum">评论数</th>
-                        <th width="6%" data-field="praiseNum">点赞数</th>
-                        <th width="10%" data-field="publishDate">发布日期</th>
-                        <th width="10%" data-field="comment" data-formatter="commentFormatter">是否评论</th>
-                        <th width="10%" data-field="top" data-formatter="topFormatter">是否置顶</th>
-                        <th width="10%" align="center" data-formatter="actionFormatter">操作</th>
-                    </tr>
-                    </thead>
-                </table>
+            <div id="data-view-list" class="data-view hide">
+                <div class="table-responsive">
+                    <table id="listTable" class="table table-striped table-vcenter">
+                        <thead>
+                        <tr>
+                            <th class='text-center' width="5%" data-checkbox="true">
+                                <label class="css-control css-control-primary css-checkbox" for="check-all" >
+                                    <input type="checkbox" class="css-control-input" id="check-all">
+                                    <span class="css-control-indicator"></span>
+                                </label>
+                            </th>
+                            <th width="8%" data-field="coverUrl" data-formatter="urlFormatter">封面</th>
+                            <th data-field="title" data-formatter="titleFormatter">文章名</th>
+                            <th width="12%" data-field="categoryName">分类</th>
+                            <th width="6%" data-field="readNum">浏览数</th>
+                            <th width="6%" data-field="commentNum">评论数</th>
+                            <th width="6%" data-field="praiseNum">点赞数</th>
+                            <th width="10%" data-field="publishDate">发布日期</th>
+                            <th width="10%" data-field="comment" data-formatter="commentFormatter">是否评论</th>
+                            <th width="10%" data-field="top" data-formatter="topFormatter">是否置顶</th>
+                            <th width="10%" align="center" data-formatter="actionFormatter">操作</th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <div id="data-view-grid" class="data-view hide" style="height: 650px">
+                <div class="grid-content" id="gridContent" style="padding: 1rem;height: 580px;overflow:auto;overflow-x: hidden;"></div>
+                <nav aria-label="Page navigation" id="pageBar" style="margin-top: 1rem"></nav>
             </div>
         </div>
     </div>
@@ -98,6 +114,7 @@
 </body>
 <div th:replace="~{admin/common :: common-script}"></div>
 <script th:inline="javascript">
+    let homePage = [[${#servletContext.getAttribute('configMap')['home_page']}]];
 
     function urlFormatter(val, row) {
         return "<img src='" + val + "' width='32' height='32' alt='' />";
@@ -194,16 +211,141 @@
         return btnArr.join("");
     }
 
-    $(function() {
-        $.hexo.table.init({
-            baseUrl: BASE_URL,
-            height: $(window.parent).height() - 283
-        });
+    window.ToggleViewManager = {
+        init: function() {
+            $.ToggleView({
+                key: "post-view",
+                baseUrl: BASE_URL,
+                initGrid: function(id) {
+                    ToggleViewManager.query(id);
+                }
+            });
+        },
+        query: function(id) {
+            if (id) {
+                $("#data-" + id).show();
+            }
+            $("#toolbar").hide();
+            $.hexo.action.sendRequest({
+                url: BASE_URL + "/list.json",
+                params: ToggleViewManager.params,
+                callback: function (resp) {
+                    ToggleViewManager.renderGrid(resp.data);
+                    $("#totalNum").html("(" + resp.data.total + ")");
+                }
+            });
+        },
+        remove: function(id) {
+            $.hexo.action.remove(id, function(resp) {
+                ToggleViewManager.query();
+            });
+        },
+        renderGrid: function(data) {
+            ToggleViewManager.renderBody(data);
+            ToggleViewManager.renderPageBar(data);
+        },
+        renderBody: function(data) {
+            let list = data.list;
+            let htmlArr = ['<div class="row row-deck">'];
+            if (list && list.length > 0) {
+                for (let i = 0; i < list.length; i ++) {
+                    let obj = list[i];
+                    htmlArr.push('<div class="col-md-3 col-sm-4">');
+                    htmlArr.push('<div class="block d-flex flex-column" style="border:1px solid #eee">');
+                    htmlArr.push('<div class="block-content block-content-full bg-image min-height-175 flex-grow-0 options-container" style="background-image: url('+obj.coverUrl+');">');
+                    htmlArr.push('<a class="badge badge-secondary font-w700 p-2 text-uppercase" href="javascript:void(0)">'+obj.categoryName+'</a>');
+                    htmlArr.push('<div class="options-overlay bg-black-op-75">');
+                    htmlArr.push('<div class="options-overlay-content">');
+                    htmlArr.push('<a class="btn btn-sm btn-rounded btn-alt-primary min-width-75" href="javascript:void(0)" data-full="true" onclick="$.hexo.action.showEditUI(\'' + obj.id + '\', $(this))"><i class="fa fa-pencil"></i> 编辑</a>');
+                    htmlArr.push(' <a class="btn btn-sm btn-rounded btn-alt-danger min-width-75" href="javascript:void(0)" onclick="window.ToggleViewManager.remove(\'' + obj.id + '\')"><i class="fa fa-times"></i> 删除</a>');
+                    htmlArr.push('</div>');
+                    htmlArr.push('</div>');
+                    htmlArr.push('</div>');
+                    htmlArr.push('<div class="block-content flex-grow-1">');
+                    htmlArr.push('<h5 class="mb-5">');
+                    htmlArr.push('<a class="text-dark" href="'+ homePage + '/' + obj.link+'" target="_blank">'+ obj.title+'</a>');
+                    htmlArr.push('</h5>');
+                    htmlArr.push('<p class="text-muted">'+obj.publishDate+'</p>');
+                    htmlArr.push('</div>');
+                    htmlArr.push('<div class="block-content py-15 bg-body-light flex-grow-0">');
+                    htmlArr.push('<div class="row no-gutters font-size-sm text-center">');
+                    htmlArr.push('<div class="col-4">');
+                    htmlArr.push('<a class="text-muted font-w600" href="javascript:void(0)"><i class="fa fa-fw fa-eye mr-5"></i>'+obj.readNum+'</a>');
+                    htmlArr.push('</div>');
+                    htmlArr.push('<div class="col-4">');
+                    htmlArr.push('<a class="text-muted font-w600" href="javascript:void(0)"><i class="fa fa-fw fa-heart mr-5"></i>'+obj.praiseNum+'</a>');
+                    htmlArr.push('</div>');
+                    htmlArr.push('<div class="col-4">');
+                    htmlArr.push('<a class="text-muted font-w600" href="javascript:void(0)"><i class="fa fa-fw fa-comments mr-5"></i>'+obj.commentNum+'</a>');
+                    htmlArr.push('</div>');
+                    htmlArr.push('</div>');
+                    htmlArr.push('</div>');
+                    htmlArr.push('</div>');
+                    htmlArr.push('</div>');
+                }
+            } else {
+                htmlArr.push('<div class="col-md-12 col-lg-12 col-xl-12 animated fadeIn text-center"><h5>暂无主题</h5></div>');
+            }
 
-        $("#importBtn").on("click", function () {
-            let $target = $(this);
-            $.hexo.modal.window("导入", BASE_URL + "/importUI.html", $target);
-        });
+            htmlArr.push('</div>');
+
+            $("#gridContent").html(htmlArr.join(""));
+        },
+        renderPageBar: function(data) {
+            let $pageBar = $("#pageBar");
+            if (!data.list || data.list.length === 0) {
+                $pageBar.html("");
+                return;
+            }
+            let pageArr = [];
+            pageArr.push('<div class="left page-info-record" style="position: absolute"><span>当前页：'+data.pageNum+'，总共 '+data.total+' 条记录，每页显示 '+data.pageSize+' 条记录</span></div>');
+            pageArr.push('<ul class="pagination justify-content-end mr-20">');
+            pageArr.push('<li class="page-item">');
+            pageArr.push('<a class="page-link" href="javascript:void(0)" aria-label="Previous" data-num="'+ data.prePage +'">');
+            pageArr.push('<span aria-hidden="true">');
+            pageArr.push('<i class="fa fa-angle-left"></i>');
+            pageArr.push('</span>');
+            pageArr.push('<span class="sr-only">Previous</span>');
+            pageArr.push('</a>');
+            pageArr.push('</li>');
+            let currentNum = data.pageNum;
+            let pageNumArr = data.navigatepageNums;
+            for (let i = 0; i < pageNumArr.length; i ++) {
+                let pageNum = pageNumArr[i];
+                let activeClass = (currentNum === pageNum ? 'active' : '');
+                pageArr.push('<li class="page-item ' + activeClass + '">');
+                pageArr.push('<a class="page-link" href="javascript:void(0)" data-num="' + pageNum + '">' + pageNum + '</a>');
+                pageArr.push('</li>');
+            }
+            pageArr.push('<li class="page-item">');
+            pageArr.push('<a class="page-link" href="javascript:void(0)" aria-label="Next" data-num="'+ data.nextPage +'">');
+            pageArr.push('<span aria-hidden="true">');
+            pageArr.push('<i class="fa fa-angle-right"></i>');
+            pageArr.push('</span>');
+            pageArr.push('<span class="sr-only">Next</span>');
+            pageArr.push('</a>');
+            pageArr.push('</li>');
+            pageArr.push('</ul>');
+
+            $pageBar.html(pageArr.join("")).find("a").off("click").on("click", function (e) {
+                let num = $(e.target).data("num");
+                if (!num || num < 1 ) {
+                    console.warn("=====当前列表不能翻页====");
+                    return;
+                }
+
+                ToggleViewManager.params = $.extend({}, ToggleViewManager.params, {"pageNum": num});
+                ToggleViewManager.query();
+            });
+        }
+    };
+
+    ToggleViewManager.init();
+
+    $("#importBtn").off("click").on("click", function () {
+        let $target = $(this);
+        $.hexo.modal.window("导入", BASE_URL + "/importUI.html", $target);
     });
+
 </script>
 </html>

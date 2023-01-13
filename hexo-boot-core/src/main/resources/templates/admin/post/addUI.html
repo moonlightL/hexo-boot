@@ -234,7 +234,19 @@
             } else if (editorType === "html") {
                 $("#content").val(MyEditor.summernote('code'));
             }
-            $.hexo.action.save("saveForm");
+
+            let viewType = $.hexo.storage.get("post-view") || "view-list";
+            if (viewType == "view-list") {
+                $.hexo.action.save("saveForm");
+            } else {
+                $.hexo.action.save("saveForm", null, function() {
+                    $.hexo.modal.tip("操作成功", "success", function () {
+                        window.parent.$.hexo.modal.close();
+                        window.parent.ToggleViewManager.query();
+                    });
+                });
+            }
+
         });
 
         if (editorType === "markdown") {
