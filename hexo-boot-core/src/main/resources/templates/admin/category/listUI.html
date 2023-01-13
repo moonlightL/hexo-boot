@@ -175,10 +175,26 @@
             if (list && list.length > 0) {
                 for (let i = 0; i < list.length; i ++) {
                     let obj = list[i];
-                    // TODO
+                    htmlArr.push('<div class="col-md-3 col-sm-4">');
+                    htmlArr.push('<div class="block text-center" style="border: 1px solid #eee">');
+                    htmlArr.push('<div class="block-content block-content-full block-content-sm">');
+                    htmlArr.push('<div class="font-w600">'+obj.name+'</div>');
+                    htmlArr.push('</div>');
+                    htmlArr.push('<div class="block-content block-content-full bg-image" style="background-image: url('+obj.coverUrl+');height: 160px">');
+                    htmlArr.push('</div>');
+                    htmlArr.push('<div class="block-content block-content-full">');
+                    htmlArr.push('<button type="button" class="btn btn-circle btn-alt-success mr-5 mb-5 js-tooltip-enabled" data-full="true" onclick="$.hexo.action.showEditUI(\'' + obj.id + '\', $(this))">');
+                    htmlArr.push('<i class="fa fa-pencil"></i>');
+                    htmlArr.push('</button>');
+                    htmlArr.push('<button type="button" class="btn btn-circle btn-alt-danger mr-5 mb-5 js-tooltip-enabled" onclick="window.ToggleViewManager.remove(\'' + obj.id + '\')">');
+                    htmlArr.push('<i class="fa fa-times"></i>');
+                    htmlArr.push('</button>');
+                    htmlArr.push('</div>');
+                    htmlArr.push('</div>');
+                    htmlArr.push('</div>');
                 }
             } else {
-                htmlArr.push('<div class="col-md-12 col-lg-12 col-xl-12 animated fadeIn text-center"><h5>暂无主题</h5></div>');
+                htmlArr.push('<div class="col-md-12 col-lg-12 col-xl-12 animated fadeIn text-center"><h5>暂无分类</h5></div>');
             }
 
             htmlArr.push('</div>');

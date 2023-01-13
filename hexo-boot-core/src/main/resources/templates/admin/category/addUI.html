@@ -81,7 +81,17 @@
             });
 
             $("#submitBtn").on("click", function () {
-                $.hexo.action.save("saveForm");
+                let viewType = $.hexo.storage.get("category-view") || "view-list";
+                if (viewType == "view-list") {
+                    $.hexo.action.save("saveForm");
+                } else {
+                    $.hexo.action.save("saveForm", null, function() {
+                        $.hexo.modal.tip("操作成功", "success", function () {
+                            window.parent.$.hexo.modal.close();
+                            window.parent.ToggleViewManager.query();
+                        });
+                    });
+                }
             });
         },
         initUploadEvent: function () {
