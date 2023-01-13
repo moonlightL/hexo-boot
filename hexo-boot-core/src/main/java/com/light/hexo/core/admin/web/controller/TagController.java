@@ -90,4 +90,15 @@ public class TagController extends BaseController {
         PageInfo<Tag> pageInfo = this.tagService.findPage(request);
         return Result.success(pageInfo);
     }
+
+    /**
+     * 获取全部列表
+     * @param request
+     * @return
+     */
+    @RequestMapping("getAll.json")
+    @ResponseBody
+    public Result getAll(TagRequest request) {
+        return Result.success(this.tagService.findAll(request));
+    }
 }

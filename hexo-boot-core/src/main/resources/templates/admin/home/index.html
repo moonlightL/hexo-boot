@@ -474,56 +474,104 @@
                 <div class='tab-container-content' id='tab-container-content'>
                     <div id='iframe_tab__admin_home_dashboard_html' class='iframe active'>
                         <div style="margin-top: 20px;">
+<!--                            <div class="row invisible" data-toggle="appear">-->
+<!--                                &lt;!&ndash; Row #1 &ndash;&gt;-->
+<!--                                <div class="col-6 col-xl-3">-->
+<!--                                    <a class="block block-link-shadow text-right" href="javascript:void(0)" data-url="/admin/post/listUI.html" data-name="博客列表">-->
+<!--                                        <div class="block-content block-content-full clearfix">-->
+<!--                                            <div class="float-left mt-10 d-none d-sm-block">-->
+<!--                                                <i class="fa fa-edit fa-3x text-muted"></i>-->
+<!--                                            </div>-->
+<!--                                            <div class="font-size-h3 font-w600" data-toggle="countTo" data-speed="1000" th:data-to="${postNum}">0</div>-->
+<!--                                            <div class="font-size-sm font-w600 text-uppercase text-muted">文章数</div>-->
+<!--                                        </div>-->
+<!--                                    </a>-->
+<!--                                </div>-->
+<!--                                <div class="col-6 col-xl-3">-->
+<!--                                    <a class="block block-link-shadow text-right" href="javascript:void(0)" data-url="/admin/category/listUI.html" data-name="分类列表">-->
+<!--                                        <div class="block-content block-content-full clearfix">-->
+<!--                                            <div class="float-left mt-10 d-none d-sm-block">-->
+<!--                                                <i class="fa fa-bars fa-3x text-muted"></i>-->
+<!--                                            </div>-->
+<!--                                            <div class="font-size-h3 font-w600" data-toggle="countTo" data-speed="1000" th:data-to="${categoryNum}">0</div>-->
+<!--                                            <div class="font-size-sm font-w600 text-uppercase text-muted">分类数</div>-->
+<!--                                        </div>-->
+<!--                                    </a>-->
+<!--                                </div>-->
+<!--                                <div class="col-6 col-xl-3">-->
+<!--                                    <a class="block block-link-shadow text-right" href="javascript:void(0)" data-url="/admin/comment/listUI.html" data-name="评论列表" data-scroll="yes">-->
+<!--                                        <div class="block-content block-content-full clearfix">-->
+<!--                                            <div class="float-left mt-10 d-none d-sm-block">-->
+<!--                                                <i class="fa fa-comments-o fa-3x text-muted"></i>-->
+<!--                                            </div>-->
+<!--                                            <div class="font-size-h3 font-w600" data-toggle="countTo" data-speed="1000" th:data-to="${postCommentNum}">0</div>-->
+<!--                                            <div class="font-size-sm font-w600 text-uppercase text-muted">评论数</div>-->
+<!--                                        </div>-->
+<!--                                    </a>-->
+<!--                                </div>-->
+<!--                                <div class="col-6 col-xl-3">-->
+<!--                                    <a class="block block-link-shadow text-right" href="javascript:void(0)" data-url="/admin/comment/listUI.html" data-name="留言列表" data-scroll="yes">-->
+<!--                                        <div class="block-content block-content-full clearfix">-->
+<!--                                            <div class="float-left mt-10 d-none d-sm-block">-->
+<!--                                                <i class="fa fa-comment-o fa-3x text-muted"></i>-->
+<!--                                            </div>-->
+<!--                                            <div class="font-size-h3 font-w600" data-toggle="countTo" data-speed="1000" th:data-to="${guestBookNum}">0</div>-->
+<!--                                            <div class="font-size-sm font-w600 text-uppercase text-muted">留言数</div>-->
+<!--                                        </div>-->
+<!--                                    </a>-->
+<!--                                </div>-->
+<!--                                &lt;!&ndash; END Row #1 &ndash;&gt;-->
+<!--                            </div>-->
+
                             <div class="row invisible" data-toggle="appear">
-                                <!-- Row #1 -->
-                                <div class="col-6 col-xl-3">
-                                    <a class="block block-link-shadow text-right" href="javascript:void(0)" data-url="/admin/post/listUI.html" data-name="博客列表">
-                                        <div class="block-content block-content-full clearfix">
-                                            <div class="float-left mt-10 d-none d-sm-block">
-                                                <i class="fa fa-edit fa-3x text-muted"></i>
-                                            </div>
-                                            <div class="font-size-h3 font-w600" data-toggle="countTo" data-speed="1000" th:data-to="${postNum}">0</div>
-                                            <div class="font-size-sm font-w600 text-uppercase text-muted">文章数</div>
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <a class="block block-link-shadow" href="javascript:void(0)" data-url="/admin/post/listUI.html" data-name="博客列表">
+                                                <div class="block-content block-content-full text-center">
+                                                    <div class="p-20 mb-5">
+                                                        <i class="fa fa-3x fa-edit text-primary"></i>
+                                                    </div>
+                                                    <p class="font-size-lg font-w600 mb-0" data-toggle="countTo" data-speed="1000" th:data-to="${postNum}">0</p>
+                                                    <p class="font-size-sm text-uppercase font-w600 text-muted mb-0">文章数</p>
+                                                </div>
+                                            </a>
                                         </div>
-                                    </a>
-                                </div>
-                                <div class="col-6 col-xl-3">
-                                    <a class="block block-link-shadow text-right" href="javascript:void(0)" data-url="/admin/category/listUI.html" data-name="分类列表">
-                                        <div class="block-content block-content-full clearfix">
-                                            <div class="float-left mt-10 d-none d-sm-block">
-                                                <i class="fa fa-bars fa-3x text-muted"></i>
-                                            </div>
-                                            <div class="font-size-h3 font-w600" data-toggle="countTo" data-speed="1000" th:data-to="${categoryNum}">0</div>
-                                            <div class="font-size-sm font-w600 text-uppercase text-muted">分类数</div>
+                                        <div class="col-md-6">
+                                            <a class="block block-link-shadow" href="javascript:void(0)" data-url="/admin/category/listUI.html" data-name="分类列表">
+                                                <div class="block-content block-content-full text-center">
+                                                    <div class="p-20 mb-5">
+                                                        <i class="fa fa-3x fa-bars text-gray-dark"></i>
+                                                    </div>
+                                                    <p class="font-size-lg font-w600 mb-0"data-toggle="countTo" data-speed="1000" th:data-to="${categoryNum}">0</p>
+                                                    <p class="font-size-sm text-uppercase font-w600 text-muted mb-0">分类数</p>
+                                                </div>
+                                            </a>
                                         </div>
-                                    </a>
-                                </div>
-                                <div class="col-6 col-xl-3">
-                                    <a class="block block-link-shadow text-right" href="javascript:void(0)" data-url="/admin/comment/listUI.html" data-name="评论列表">
-                                        <div class="block-content block-content-full clearfix">
-                                            <div class="float-left mt-10 d-none d-sm-block">
-                                                <i class="fa fa-comments-o fa-3x text-muted"></i>
-                                            </div>
-                                            <div class="font-size-h3 font-w600" data-toggle="countTo" data-speed="1000" th:data-to="${postCommentNum}">0</div>
-                                            <div class="font-size-sm font-w600 text-uppercase text-muted">评论数</div>
+                                        <div class="col-md-6">
+                                            <a class="block block-link-shadow" href="javascript:void(0)" data-url="/admin/comment/listUI.html" data-name="评论列表" data-scroll="yes">
+                                                <div class="block-content block-content-full text-center">
+                                                    <div class="p-20 mb-5">
+                                                        <i class="fa fa-3x fa-comments-o text-earth"></i>
+                                                    </div>
+                                                    <p class="font-size-lg font-w600 mb-0" data-toggle="countTo" data-speed="1000" th:data-to="${postCommentNum}">0</p>
+                                                    <p class="font-size-sm text-uppercase font-w600 text-muted mb-0">评论数</p>
+                                                </div>
+                                            </a>
                                         </div>
-                                    </a>
-                                </div>
-                                <div class="col-6 col-xl-3">
-                                    <a class="block block-link-shadow text-right" href="javascript:void(0)" data-url="/admin/comment/listUI.html" data-name="留言列表">
-                                        <div class="block-content block-content-full clearfix">
-                                            <div class="float-left mt-10 d-none d-sm-block">
-                                                <i class="fa fa-comment-o fa-3x text-muted"></i>
-                                            </div>
-                                            <div class="font-size-h3 font-w600" data-toggle="countTo" data-speed="1000" th:data-to="${guestBookNum}">0</div>
-                                            <div class="font-size-sm font-w600 text-uppercase text-muted">留言数</div>
+                                        <div class="col-md-6">
+                                            <a class="block block-link-shadow" href="javascript:void(0)" data-url="/admin/comment/listUI.html" data-name="留言列表" data-scroll="yes">
+                                                <div class="block-content block-content-full text-center">
+                                                    <div class="p-20 mb-5">
+                                                        <i class="fa fa-3x fa-comment-o text-corporate"></i>
+                                                    </div>
+                                                    <p class="font-size-lg font-w600 mb-0"data-toggle="countTo" data-speed="1000" th:data-to="${guestBookNum}">0</p>
+                                                    <p class="font-size-sm text-uppercase font-w600 text-muted mb-0">留言数</p>
+                                                </div>
+                                            </a>
                                         </div>
-                                    </a>
+                                    </div>
                                 </div>
-                                <!-- END Row #1 -->
-                            </div>
-                            <div class="row invisible" data-toggle="appear">
-                                <!-- Row #2 -->
                                 <div class="col-md-6">
                                     <div class="block">
                                         <div class="block-header block-header-default border-b">
@@ -539,11 +587,14 @@
                                         </div>
                                         <div class="block-content block-content-full">
                                             <div class="pull-all">
-                                                <div id="visitLine" style="height:355px;"></div>
+                                                <div id="visitLine" style="height:319px;"></div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+
+                            <div class="row invisible" data-toggle="appear">
                                 <div class="col-md-6">
                                     <div class="block">
                                         <div class="block-header block-header-default border-b">
@@ -554,7 +605,7 @@
                                                 </button>
                                             </div>
                                         </div>
-                                        <div class="block-content block-content-full" style="height: 355px">
+                                        <div class="block-content block-content-full" style="height: 309px">
                                             <table class="table table-hover table-vcenter" id="postTable">
                                                 <thead>
                                                 <tr>
@@ -568,10 +619,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <!-- END Row #2 -->
-                            </div>
-                            <div class="row invisible" data-toggle="appear">
-                                <div class="col-md-12">
+                                <div class="col-md-6">
                                     <div class="block">
                                         <div class="block-header block-header-default border-b">
                                             <h3 class="block-title">快捷菜单</h3>
@@ -579,7 +627,7 @@
                                         <div class="block-content-full">
                                             <div class="row">
                                                 <!-- Row #5 -->
-                                                <div class="col-6 col-md-4 col-xl-2">
+                                                <div class="col-md-4">
                                                     <a class="block text-center" href="javascript:void(0)" data-url="/admin/theme/listUI.html" data-name="更换主题">
                                                         <div class="block-content">
                                                             <p class="mt-5">
@@ -589,7 +637,7 @@
                                                         </div>
                                                     </a>
                                                 </div>
-                                                <div class="col-6 col-md-4 col-xl-2">
+                                                <div class="col-md-4">
                                                     <a class="block text-center" href="javascript:void(0)" data-url="/admin/user/profileUI.html" data-name="个人详情">
                                                         <div class="block-content">
                                                             <p class="mt-5">
@@ -599,7 +647,7 @@
                                                         </div>
                                                     </a>
                                                 </div>
-                                                <div class="col-6 col-md-4 col-xl-2">
+                                                <div class="col-md-4">
                                                     <a class="block text-center" href="javascript:void(0)" data-url="/admin/friendLink/listUI.html" data-name="友链列表">
                                                         <div class="block-content">
                                                             <p class="mt-5">
@@ -609,7 +657,7 @@
                                                         </div>
                                                     </a>
                                                 </div>
-                                                <div class="col-6 col-md-4 col-xl-2">
+                                                <div class="col-md-4">
                                                     <a class="block text-center" href="javascript:void(0)" data-url="/admin/blacklist/listUI.html" data-name="黑名单列表">
                                                         <div class="block-content">
                                                             <p class="mt-5">
@@ -619,7 +667,7 @@
                                                         </div>
                                                     </a>
                                                 </div>
-                                                <div class="col-6 col-md-4 col-xl-2">
+                                                <div class="col-md-4">
                                                     <a class="block text-center" href="javascript:void(0)" data-url="/admin/attachment/listUI.html" data-name="附件列表">
                                                         <div class="block-content">
                                                             <p class="mt-5">
@@ -629,7 +677,7 @@
                                                         </div>
                                                     </a>
                                                 </div>
-                                                <div class="col-6 col-md-4 col-xl-2">
+                                                <div class="col-md-4">
                                                     <a class="block text-center" href="javascript:void(0)" data-url="/admin/backup/listUI.html" data-name="备份列表">
                                                         <div class="block-content">
                                                             <p class="mt-5">
