@@ -474,55 +474,6 @@
                 <div class='tab-container-content' id='tab-container-content'>
                     <div id='iframe_tab__admin_home_dashboard_html' class='iframe active'>
                         <div style="margin-top: 20px;">
-<!--                            <div class="row invisible" data-toggle="appear">-->
-<!--                                &lt;!&ndash; Row #1 &ndash;&gt;-->
-<!--                                <div class="col-6 col-xl-3">-->
-<!--                                    <a class="block block-link-shadow text-right" href="javascript:void(0)" data-url="/admin/post/listUI.html" data-name="博客列表">-->
-<!--                                        <div class="block-content block-content-full clearfix">-->
-<!--                                            <div class="float-left mt-10 d-none d-sm-block">-->
-<!--                                                <i class="fa fa-edit fa-3x text-muted"></i>-->
-<!--                                            </div>-->
-<!--                                            <div class="font-size-h3 font-w600" data-toggle="countTo" data-speed="1000" th:data-to="${postNum}">0</div>-->
-<!--                                            <div class="font-size-sm font-w600 text-uppercase text-muted">文章数</div>-->
-<!--                                        </div>-->
-<!--                                    </a>-->
-<!--                                </div>-->
-<!--                                <div class="col-6 col-xl-3">-->
-<!--                                    <a class="block block-link-shadow text-right" href="javascript:void(0)" data-url="/admin/category/listUI.html" data-name="分类列表">-->
-<!--                                        <div class="block-content block-content-full clearfix">-->
-<!--                                            <div class="float-left mt-10 d-none d-sm-block">-->
-<!--                                                <i class="fa fa-bars fa-3x text-muted"></i>-->
-<!--                                            </div>-->
-<!--                                            <div class="font-size-h3 font-w600" data-toggle="countTo" data-speed="1000" th:data-to="${categoryNum}">0</div>-->
-<!--                                            <div class="font-size-sm font-w600 text-uppercase text-muted">分类数</div>-->
-<!--                                        </div>-->
-<!--                                    </a>-->
-<!--                                </div>-->
-<!--                                <div class="col-6 col-xl-3">-->
-<!--                                    <a class="block block-link-shadow text-right" href="javascript:void(0)" data-url="/admin/comment/listUI.html" data-name="评论列表" data-scroll="yes">-->
-<!--                                        <div class="block-content block-content-full clearfix">-->
-<!--                                            <div class="float-left mt-10 d-none d-sm-block">-->
-<!--                                                <i class="fa fa-comments-o fa-3x text-muted"></i>-->
-<!--                                            </div>-->
-<!--                                            <div class="font-size-h3 font-w600" data-toggle="countTo" data-speed="1000" th:data-to="${postCommentNum}">0</div>-->
-<!--                                            <div class="font-size-sm font-w600 text-uppercase text-muted">评论数</div>-->
-<!--                                        </div>-->
-<!--                                    </a>-->
-<!--                                </div>-->
-<!--                                <div class="col-6 col-xl-3">-->
-<!--                                    <a class="block block-link-shadow text-right" href="javascript:void(0)" data-url="/admin/comment/listUI.html" data-name="留言列表" data-scroll="yes">-->
-<!--                                        <div class="block-content block-content-full clearfix">-->
-<!--                                            <div class="float-left mt-10 d-none d-sm-block">-->
-<!--                                                <i class="fa fa-comment-o fa-3x text-muted"></i>-->
-<!--                                            </div>-->
-<!--                                            <div class="font-size-h3 font-w600" data-toggle="countTo" data-speed="1000" th:data-to="${guestBookNum}">0</div>-->
-<!--                                            <div class="font-size-sm font-w600 text-uppercase text-muted">留言数</div>-->
-<!--                                        </div>-->
-<!--                                    </a>-->
-<!--                                </div>-->
-<!--                                &lt;!&ndash; END Row #1 &ndash;&gt;-->
-<!--                            </div>-->
-
                             <div class="row invisible" data-toggle="appear">
                                 <div class="col-md-6">
                                     <div class="row">
@@ -745,6 +696,7 @@
     $(function() {
 
         window.DashboardManager = {
+            visitLine: null,
             init: function () {
                 DashboardManager.bindEvent();
                 DashboardManager.createVisitLine();
@@ -753,10 +705,14 @@
                 DashboardManager.checkRunDay();
                 DashboardManager.connectServer();
                 DashboardManager.showLastLoginTime();
+
+                window.onresize = function() {
+                    DashboardManager.visitLine.resize();
+                }
             },
             createVisitLine: function () {
-                let myChart = echarts.init(document.getElementById("visitLine"));
-                myChart.setOption({
+                DashboardManager.visitLine = echarts.init(document.getElementById("visitLine"));
+                DashboardManager.visitLine.setOption({
                     title: {
                         text: '近七天访问人数',
                         show: false
@@ -783,12 +739,12 @@
                         data: []
                     }]
                 });
-                myChart.showLoading();
+                DashboardManager.visitLine.showLoading();
 
                 $.getJSON("/admin/home/visitData.json", function (resp) {
-                    myChart.hideLoading();
+                    DashboardManager.visitLine.hideLoading();
                     if (resp.success) {
-                        myChart.setOption({
+                        DashboardManager.visitLine.setOption({
                             xAxis: {
                                 data: resp.data.dates
                             },
@@ -804,10 +760,6 @@
                        $("#todayVisitNum").html(resp.data);
                     }
                 });
-
-                window.onresize = function() {
-                    myChart.resize();
-                };
 
             },
             queryPostList: function () {

@@ -19,7 +19,7 @@
         }
         .tag-item .tag-item-content {
             display: inline-block;
-            padding: 10px 40px 10px 10px;
+            padding: 10px 80px 10px 10px;
         }
         .tag-item .tag-item-option {
             position: absolute;
@@ -99,63 +99,57 @@
     function actionFormatter(val, row) {
         let btnArr = [];
         btnArr.push('<div class="btn-group">');
-        btnArr.push('<button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="编辑标签" data-width="550" data-height="220" onclick="$.hexo.action.showEditUI(\'' + row.id + '\', $(this))"><i class="fa fa-pencil"></i></button>');
+        btnArr.push('<button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="编辑标签" data-width="600" data-height="300" onclick="$.hexo.action.showEditUI(\'' + row.id + '\', $(this))"><i class="fa fa-pencil"></i></button>');
         btnArr.push('<button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="删除" onclick="$.hexo.action.remove(\'' + row.id + '\')"><i class="fa fa-times"></i></button>');
         btnArr.push("</div>");
         return btnArr.join("");
     }
 
-    $(function() {
-
-        $.ToggleView({
-            key: "tag-view",
-            baseUrl: BASE_URL,
-            initGrid: function(id) {
+    window.ToggleViewManager = {
+        init: function() {
+            $.ToggleView({
+                key: "tag-view",
+                baseUrl: BASE_URL,
+                initGrid: function(id) {
+                    ToggleViewManager.query(id);
+                }
+            });
+        },
+        query: function(id) {
+            if (id) {
                 $("#data-" + id).show();
-                $("#toolbar").hide();
-
-                $.hexo.action.sendRequest({
-                    url: BASE_URL + "/getAll.json",
-                    callback: function (resp) {
-                        let list = resp.data;
-                        let htmlArr = [];
-                        for (let i = 0; i < list.length; i ++) {
-                            let obj = list[i];
-                            htmlArr.push('<div class="tag-item">');
-                            htmlArr.push('<div class="tag-item-content">');
-                            htmlArr.push(obj.name);
-                            htmlArr.push('</div>');
-                            htmlArr.push('<div class="tag-item-option">');
-                            htmlArr.push('<button type="button" class="btn btn-sm btn-alt-warning tag-close" data-id="'+obj.id+'"><i class="fa fa-close"></i></button>');
-                            htmlArr.push('</div>');
-                            htmlArr.push('</div>');
-                        }
-                        $("#gridContent").html(htmlArr.join(""));
-
-                        bindClose(id);
-                    }
-                });
             }
-        });
+            $("#toolbar").hide();
+            $.hexo.action.sendRequest({
+                url: BASE_URL + "/getAll.json",
+                callback: function (resp) {
+                    let list = resp.data;
+                    let htmlArr = [];
+                    for (let i = 0; i < list.length; i ++) {
+                        let obj = list[i];
+                        htmlArr.push('<div class="tag-item">');
+                        htmlArr.push('<div class="tag-item-content">');
+                        htmlArr.push(obj.name);
+                        htmlArr.push('</div>');
+                        htmlArr.push('<div class="tag-item-option">');
+                        htmlArr.push('<button type="button" class="btn btn-sm btn-alt-warning tag-edit" data-width="600" data-height="300" onclick="$.hexo.action.showEditUI(\'' + obj.id + '\', $(this))"><i class="fa fa-pencil"></i></button>');
+                        htmlArr.push('<button type="button" class="btn btn-sm btn-alt-warning tag-close" onclick="window.ToggleViewManager.remove(\'' + obj.id + '\')"><i class="fa fa-close"></i></button>');
+                        htmlArr.push('</div>');
+                        htmlArr.push('</div>');
+                    }
+                    $("#gridContent").html(htmlArr.join(""));
+                }
+            });
 
-        function bindClose(id) {
-            $(".tag-close").off("click").on("click", function() {
-                let that = $(this);
-                $.hexo.modal.confirm("确定要删除该记录吗？", function() {
-                    let idArr = [that.data("id")];
-                    $.hexo.action.sendRequest({
-                        url: BASE_URL + "/remove.json",
-                        params: {idStr: idArr.join(",")},
-                        callback: function() {
-                            $.hexo.modal.tip("刪除成功", "success", function() {
-                                initGrid(id);
-                            });
-                        }
-                    });
-                });
+        },
+        remove: function(id) {
+            $.hexo.action.remove(id, function(resp) {
+                ToggleViewManager.query();
             });
         }
-    });
+    };
+
+    ToggleViewManager.init();
 </script>
 </body>
 </html>
