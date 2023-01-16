@@ -23,6 +23,7 @@ target/
 *.ipr
 !**/src/main/resources/templates/theme/Grace/
 !**/src/main/resources/templates/theme/Pure/
+!**/src/main/resources/templates/theme/Social/
 !**/src/main/resources/public/ads.txt
 
 ### NetBeans ###
