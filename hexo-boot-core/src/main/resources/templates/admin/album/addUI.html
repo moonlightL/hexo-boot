@@ -8,7 +8,7 @@
     <link th:href="@{'/admin/assets/js/plugins/dropzonejs/dist/min/dropzone.min.css'}" rel="stylesheet">
     <link rel="stylesheet" th:href="@{'/admin/assets/js/plugins/dropzonejs/dist/min/basic.min.css'}">
     <style>
-        #visitCodeRow {
+        #visitCodeLabel, #visitCode {
             display: none;
         }
     </style>
@@ -47,8 +47,8 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="form-group row" id="visitCodeRow">
-                            <label class="col-lg-2 col-form-label" for="visitCode">访问密码 <span class="text-danger">*</span></label>
+                        <div class="form-group row">
+                            <label class="col-lg-2 col-form-label" for="visitCode" id="visitCodeLabel">访问密码 <span class="text-danger">*</span></label>
                             <div class="col-lg-10">
                                 <input type="text" class="form-control" id="visitCode" name="visitCode" placeholder="访问密码">
                             </div>
@@ -143,9 +143,11 @@
     $("#visitType").on("change", function() {
        let val = $(this).val();
        if (val == 0) {
-           $("#visitCodeRow").show();
+           $("#visitCodeLabel").show();
+           $("#visitCode").show();
        } else {
-           $("#visitCodeRow").hide();
+           $("#visitCodeLabel").hide();
+           $("#visitCode").hide();
        }
     });
 </script>

@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @Author MoonlightL
@@ -38,6 +40,15 @@ public class IndexAlbumController extends CommonController {
         List<Album> albumList = this.albumService.listAlbumsByIndex();
         resultMap.put("albumList", albumList);
         resultMap.put("albumNum", albumList.size());
+
+        List<Album> pictureAlbumList = albumList.stream().filter(i -> i.getDetailType().equals(1))
+                .sorted(Comparator.comparing(Album::getId)).collect(Collectors.toList());
+        resultMap.put("pictureAlbumList", pictureAlbumList);
+
+        List<Album> videoAlbumList = albumList.stream().filter(i -> i.getDetailType().equals(2))
+                .sorted(Comparator.comparing(Album::getId)).collect(Collectors.toList());
+        resultMap.put("videoAlbumList", videoAlbumList);
+
         resultMap.put("currentNav", this.navService.findByLink("/albums/"));
         return render("albums", false, resultMap);
     }

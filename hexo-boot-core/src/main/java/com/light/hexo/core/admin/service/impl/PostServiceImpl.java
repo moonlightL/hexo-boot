@@ -587,7 +587,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
     public HexoPageInfo pagePostsByIndex(int pageNum, int pageSize, boolean filterTop) throws GlobalException {
         Example.Builder builder = Example.builder(Post.class)
                 .select("id", "title", "summary", "summaryHtml", "author", "publishDate", "year", "month", "day", "top", "reprint", "authCode",
-                        "coverUrl", "coverType", "link", "customLink", "categoryId", "tags", "readNum", "praiseNum", "commentNum", "topTime", "createTime")
+                        "coverUrl", "coverType", "link", "customLink", "categoryId", "tags", "readNum", "praiseNum", "commentNum", "topTime", "layout", "createTime")
                 .where(Sqls.custom().andEqualTo("publish", true).andEqualTo("delete", false));
         if (filterTop) {
             builder.andWhere(Sqls.custom().andEqualTo("top", false));
@@ -700,6 +700,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
         // key 降序排序
         Map<String, List<Post>> sortMap = new TreeMap<>(Comparator.reverseOrder());
         sortMap.putAll(map);
+
         return new HexoPageInfo(pageNum, pageSize, postList.size(), sortMap);
     }
 
@@ -932,18 +933,18 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
     public void dealWithEvent(BaseEvent event) {
         PostEvent postEvent = (PostEvent) event;
 
+        WebApplicationContext webApplicationContext = (WebApplicationContext) SpringContextUtil.applicationContext;
+        ServletContext servletContext = webApplicationContext.getServletContext();
+        if (servletContext == null) {
+            log.info("===========PostService dealWithEvent 获取 servletContext 为空============");
+            return;
+        }
+
         if (postEvent.getType().getCode().equals(PostEvent.Type.POST_NUM.getCode())) {
 
             EhcacheUtil.clearByCacheName("postCache");
             EhcacheUtil.clearByCacheName("categoryCache");
             EhcacheUtil.clearByCacheName("tagCache");
-
-            WebApplicationContext webApplicationContext = (WebApplicationContext) SpringContextUtil.applicationContext;
-            ServletContext servletContext = webApplicationContext.getServletContext();
-            if (servletContext == null) {
-                log.info("===========PostService dealWithEvent 获取 servletContext 为空============");
-                return;
-            }
 
             servletContext.setAttribute("postNum", this.getPostNum());
             servletContext.setAttribute("tagNum", this.tagService.getTagNum());
@@ -971,6 +972,12 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
 
             String cacheKey = PageConstant.POST_DETAIL_INFO + ":" + (StringUtils.isNotBlank(post.getCustomLink()) ? post.getCustomLink() : post.getLink());
             CacheUtil.remove(cacheKey);
+
+            if (postEvent.getType().getCode().equals(PostEvent.Type.PRAISE.getCode())) {
+                // 刷新推荐文章
+                List<Post> recommendPostList = this.listTop5ByPraiseNum();
+                servletContext.setAttribute("recommendPostList", recommendPostList);
+            }
         }
 
     }
