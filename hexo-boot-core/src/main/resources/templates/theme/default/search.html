@@ -15,8 +15,11 @@
     <link rel="stylesheet" th:href="@{${baseLink} + '/source/css/animate.css'}">
     <link rel="stylesheet" th:href="@{${prefix} + '/source/css/app.css'}">
     <style>
-        a:hover {
+        a {
             color: var(--text-color);
+        }
+        a:hover {
+            color: var(--theme-color);
         }
     </style>
 </head>
@@ -28,7 +31,7 @@
             <input type="text" id="keyword-input" class="input" placeholder="输入关键字" data-list=".highlight_list" autocomplete="off">
             <ul class="highlight_list" >
                 <li th:each="post,iterStat: ${postList}">
-                    <a class="post-item" href="javascript:void(0)" th:data-url="${post.link}">📚 [[${post.title}]]</a>
+                    <a class="post-item" href="javascript:void(0)" th:data-url="${post.link}"><i class="fa fa-book"></i> [[${post.title}]]</a>
                 </li>
             </ul>
         </div>

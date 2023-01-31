@@ -587,7 +587,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
     public HexoPageInfo pagePostsByIndex(int pageNum, int pageSize, boolean filterTop) throws GlobalException {
         Example.Builder builder = Example.builder(Post.class)
                 .select("id", "title", "summary", "summaryHtml", "author", "publishDate", "year", "month", "day", "top", "reprint", "authCode",
-                        "coverUrl", "coverType", "link", "customLink", "categoryId", "tags", "readNum", "praiseNum", "commentNum", "topTime", "layout", "createTime")
+                        "coverUrl", "coverType", "link", "customLink", "categoryId", "tags", "readNum", "praiseNum", "commentNum", "topTime", "createTime")
                 .where(Sqls.custom().andEqualTo("publish", true).andEqualTo("delete", false));
         if (filterTop) {
             builder.andWhere(Sqls.custom().andEqualTo("top", false));
@@ -913,6 +913,27 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
         post = this.getBaseMapper().selectOneByExample(builder.build());
 
         return post;
+    }
+
+    @Override
+    public List<Post> listPostByKeyword(String keyword) {
+        Example example = Example.builder(Post.class)
+                .select("id", "title", "author", "publishDate", "year", "month", "day", "reprint",
+                        "coverUrl", "coverType", "link", "customLink", "readNum", "commentNum", "praiseNum", "createTime")
+                .where(Sqls.custom().andLike("title", "%" + keyword + "%"))
+                .build();
+        List<Post> postList = this.getBaseMapper().selectByExample(example);
+        if (CollectionUtils.isEmpty(postList)) {
+            return postList;
+        }
+
+        for (Post post : postList) {
+            if (StringUtils.isNotBlank(post.getCustomLink())) {
+                post.setLink(post.getCustomLink() + ".html");
+            }
+        }
+
+        return postList;
     }
 
     @Override

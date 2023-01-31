@@ -65,7 +65,7 @@
                 <div class="editorArea" id="editorArea">
                     <div class="form-group row">&nbsp;&nbsp;
                         <label class="col-form-label" for="title">标题</label>
-                        <div class="col-md-4 col-sm-12">
+                        <div class="col-md-5 col-sm-12">
                             <input type="text" id="title" class="form-control" placeholder="标题 *" name="title" data-bv-notempty="true" data-bv-notempty-message="标题不能为空">
                         </div>
                         <label class="col-form-label" for="title">分类</label>
@@ -73,15 +73,6 @@
                             <select class="custom-select" id="categoryId" name="categoryId" style="height: 36px;border: 1px solid #ccc" data-bv-notempty="true" data-bv-notempty-message="分类不能为空">
                                 <option value="" disabled selected>分类 *</option>
                                 <option th:each="category:${categoryList}" th:value="${category.id}" th:text="${category.name}"></option>
-                            </select>
-                        </div>
-                        <label class="col-form-label" for="title">布局</label>
-                        <div class="col-md-1 col-sm-12">
-                            <select class="custom-select" id="layout" name="layout" style="height: 36px;border: 1px solid #ccc">
-                                <option value="1">混合</option>
-                                <option value="2">文字</option>
-                                <option value="3">图片</option>
-                                <option value="4">视频</option>
                             </select>
                         </div>
                         <div class="col-md-3 col-sm-12">

@@ -103,7 +103,7 @@ public class NavServiceImpl extends BaseServiceImpl<Nav> implements NavService {
         List<Nav> navList = CacheUtil.get(CacheKey.NAV_LIST);
         if (CollectionUtils.isEmpty(navList)) {
             Example example = Example.builder(Nav.class)
-                    .select("id", "name", "link", "code", "icon", "cover", "parentId")
+                    .select("id", "name", "link", "code", "icon", "cover", "parentId", "navType")
                     .where(Sqls.custom().andEqualTo("state", 1))
                     .orderByAsc("sort").build();
             navList = this.getBaseMapper().selectByExample(example);
@@ -200,8 +200,12 @@ public class NavServiceImpl extends BaseServiceImpl<Nav> implements NavService {
             parent.setChildren(childrenMap.get(parent.getId()));
         }
 
-        // 用于前端导航显示
+        // 用于前端导航显示（一级 menuItem）
         servletContext.setAttribute("firstNav", firstNav);
+
+        // 自定义导航
+        List<Nav> customNavList = navList.stream().filter(i -> i.getNavType().equals(2)).collect(Collectors.toList());
+        servletContext.setAttribute("customNavList", customNavList);
     }
 
     @Cacheable(key = "'" + PageConstant.NAV_PAGE + ":' + #link")

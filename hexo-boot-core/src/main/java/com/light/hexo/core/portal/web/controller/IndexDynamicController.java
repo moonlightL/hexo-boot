@@ -52,4 +52,17 @@ public class IndexDynamicController extends CommonController {
         int prizeNum = this.dynamicService.praiseDynamic(ipAddr, dynamicId);
         return Result.success(prizeNum);
     }
+
+    /**
+     * 加载动态
+     * @param pageNum
+     * @return
+     */
+    @PostMapping("loadDynamic/{pageNum}")
+    @ResponseBody
+    public Result loadDynamic(@PathVariable Integer pageNum) {
+        List<Dynamic> dynamicList = this.dynamicService.listDynamicByIndex(pageNum, PAGE_SIZE);
+        PageInfo<Dynamic> pageInfo = new PageInfo<>(dynamicList, PAGE_SIZE);
+        return Result.success(pageInfo);
+    }
 }

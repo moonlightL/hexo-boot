@@ -120,6 +120,7 @@
                 $("#data-" + id).show();
             }
             $("#toolbar").hide();
+            $("#queryArea").slideUp("slow");
             $.hexo.action.sendRequest({
                 url: BASE_URL + "/getAll.json",
                 callback: function (resp) {

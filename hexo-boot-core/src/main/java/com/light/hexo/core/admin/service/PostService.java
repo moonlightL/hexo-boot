@@ -214,4 +214,11 @@ public interface PostService extends BaseService<Post>, EventService {
      * @return
      */
     Post getSimpleInfo(String link) throws GlobalException;
+
+    /**
+     * 关键字搜索
+     * @param keyword
+     * @return
+     */
+    List<Post> listPostByKeyword(String keyword);
 }

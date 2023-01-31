@@ -9,9 +9,6 @@
             highlight: {
                 js: baseLink + "/source/js/highlightjs/highlight.pack.js"
             },
-            lazyLoad: {
-                js: baseLink + "/source/js/jquery.lazyload.min.js"
-            },
             share: {
                 js: baseLink + "/source/js/overshare/js/social-share.min.js"
             },
@@ -72,7 +69,7 @@
 
         $("#modal-iframe").iziModal({
             iframe: true,
-            headerColor: "rgb(76, 175, 80)",
+            headerColor: "rgb(143,171,187)",
             title: '<i class="fa fa-search"></i> 站内搜索' ,
             width: 620,
             iframeHeight: 360,
@@ -142,12 +139,10 @@
     };
 
     const loadLazy = function() {
-        $.getScript(APP.plugins.lazyLoad.js, function(e) {
-            $("img.lazyload").lazyload({
-                placeholder : baseLink + "/source/images/loading.jpg",
-                effect: "fadeIn"
-            });
-        })
+        $("img.lazyload").lazyload({
+            placeholder : baseLink + "/source/images/loading.jpg",
+            effect: "fadeIn"
+        });
     };
 
     const contentWayPoint = function () {

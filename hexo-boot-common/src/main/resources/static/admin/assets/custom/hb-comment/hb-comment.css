@@ -17,11 +17,13 @@
 .hb-comment a:active,
 .hb-comment a:visited {
     text-decoration: none;
-    color:  #8fabbb;
+    color:  #67c23a;
 }
 
-.hb-comment h2 {
+.hb-comment h2.h2 {
     display: inline-block;
+    font-size: 2.2rem;
+    font-weight: bold;
 }
 
 .hb-comment ul li {
@@ -55,18 +57,23 @@
 }
 
 .hb-w-body .hb-w-body-item .avatar {
-    width: 76px;
+    width: 76px !important;
 }
 
 .hb-w-body .hb-w-body-item .avatar img,
 .hb-r-body .hb-r-body-item .avatar img {
     border: 1px solid #afb2c1;
-    width: 48px;
-    height: 48px;
 }
 
 .hb-w-body .hb-w-body-item .change_avatar {
-    display: inline-block;
+    display: block;
+    width: 48px;
+    margin: 0 auto;
+    color: #afb2c1;
+}
+
+.hb-w-body .hb-w-body-item .change_avatar:hover {
+    color: #67c23a;
 }
 
 .hb-w-body .hb-comment-info {
@@ -124,11 +131,20 @@
 }
 
 .hb-w-body .hb-comment-help .emoji_btn {
-    cursor: pointer;
+    border: 1px solid #afb2c1;
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    padding: 0 0.3rem;
+    text-align: center;
+    line-height: 32px;
+    border-radius: 3px;
+    color: #afb2c1;
 }
 
-.hb-w-body .hb-comment-help .emoji_btn:hover {
-    color: #8fabbb;
+.hb-w-body .hb-comment-help .emoji_btn:hover,
+.hb-w-body .hb-comment-help .emoji_btn:active{
+    color: #67c23a;
 }
 
 .hb-w-body .hb-comment-help .emoji-panel {
@@ -190,7 +206,7 @@
 
 .hb-w-body .hb-comment-help a.emoji-btn,
 .hb-w-body .hb-comment-help a.emoji-btn:visited {
-    color:  #8fabbb;
+    color:  #67c23a;
 }
 
 .hb-w-body .hb-comment-help button {
@@ -228,10 +244,10 @@
 }
 
 .hb-r-body .hb-r-body-item .hb-main .info .action-reply {
-    color: #b4bbbd;
+    color: #afb2c1;
 }
 .hb-r-body .hb-r-body-item .hb-main .info .action-reply:hover {
-    color: #8fabbb;
+    color: #67c23a;
 }
 .hb-r-body .hb-r-body-item .hb-main .info .nickname {
     font-weight: bold;
@@ -303,7 +319,6 @@
 
 .hb-r-body .hb-r-pagination ul li {
     float: left;
-    background-color: #f5f8f9;
     margin: 0 5px;
     border-radius: 2px;
 }
@@ -315,11 +330,12 @@
     height: 32px;
     padding: 5px;
     border-radius: 2px;
+    border: 1px solid #67c23a80;
 }
 
 .hb-r-body .hb-r-pagination ul li.active a,
 .hb-r-body .hb-r-pagination ul li a:hover {
-    background-color: #7794a5;
+    background-color: #67c23a;
     color: #fff;
 }
 

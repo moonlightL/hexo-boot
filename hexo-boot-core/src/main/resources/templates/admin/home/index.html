@@ -32,13 +32,6 @@
             background-color: #e1e1e1;
         }
 
-        .message-btn {
-            padding: 10px;
-            width: 49%;
-            display: inline-block;
-            color: #3a3939;
-        }
-
         /*#tab-container {*/
         /*    box-shadow: rgb(216 221 229) 0px 10px 14px;*/
         /*}*/
@@ -395,12 +388,12 @@
             <div class="content-header-section">
                 <!-- User Dropdown -->
                 <div class="btn-group" role="group">
-                    <button type="button" class="btn btn-rounded btn-dual-secondary admin-info-container" id="adminBtn" title="个人信息">
+                    <button type="button" class="btn btn-rounded btn-dual-secondary admin-info-container" id="adminBtn" title="个人信息" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fa fa-user d-sm-none"></i>
                         <span class="d-none d-sm-inline-block" th:text="${#httpSession.getAttribute('currentUser')['username']}">管理员</span>
                         <i class="fa fa-angle-down ml-5"></i>
                     </button>
-                    <div class="dropdown-menu dropdown-menu-right min-width-200 animated fadeIn admin-info-content" id="adminItem">
+                    <div class="dropdown-menu dropdown-menu-right min-width-200 animated fadeIn admin-info-content" id="adminItem" aria-labelledby="adminBtn">
                         <h5 class="h6 text-center py-10 mb-5 border-b text-uppercase">用户</h5>
                         <a class="dropdown-item" href="javascript:;" data-url="/admin/user/profileUI.html">
                             <i class="si si-user mr-5"></i> 个人详情
@@ -415,18 +408,16 @@
 
                 <!-- Notifications -->
                 <div class="btn-group" role="group">
-                    <button type="button" class="btn btn-rounded btn-dual-secondary message-container" id="messageBtn" title="消息">
-                        <i class="fa fa-comments-o"></i>
+                    <button type="button" class="btn btn-rounded btn-dual-secondary" id="messageBtn" title="消息" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-flag"></i>
                         <span class="badge badge-primary badge-pill" id="messageNum"></span>
                     </button>
-                    <div class="dropdown-menu dropdown-menu-right min-width-300 animated fadeIn message-content" id="messageContent">
-                        <h5 class="h6 text-center py-10 mb-0 border-b text-uppercase">消息</h5>
+                    <div class="dropdown-menu dropdown-menu-right min-width-300" id="messageContent" aria-labelledby="messageBtn">
+                        <h5 class="h6 text-center py-10 mb-0 border-b text-uppercase">评论消息</h5>
                         <ul class="list-unstyled my-20" id="messageList"></ul>
-                        <a class="text-center message-btn" href="javascript:void(0)" data-url="/admin/comment/listUI.html" data-name="评论列表">
-                            <i class="fa fa-comments-o mr-5"></i> 查看评论
-                        </a>
-                        <a class="text-center message-btn" href="javascript:void(0)" data-url="/admin/comment/listUI.html" data-name="留言列表">
-                            <i class="fa fa-comment-o mr-5"></i> 查看留言
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item text-center" href="javascript:void(0)" data-url="/admin/comment/listUI.html" data-name="评论列表" data-scroll="yes">
+                            <i class="fa fa-flag mr-5"></i> 查看全部
                         </a>
                     </div>
                 </div>
@@ -579,7 +570,7 @@
                                             <div class="row">
                                                 <!-- Row #5 -->
                                                 <div class="col-md-4">
-                                                    <a class="block text-center" href="javascript:void(0)" data-url="/admin/theme/listUI.html" data-name="更换主题">
+                                                    <a class="block text-center" href="javascript:void(0)" data-url="/admin/theme/listUI.html" data-name="更换主题" data-scroll="yes">
                                                         <div class="block-content">
                                                             <p class="mt-5">
                                                                 <i class="fa fa-coffee fa-3x"></i>
@@ -881,7 +872,7 @@
                             }
                             $("#messageList").prepend(arr.join(""));
                         } else {
-                            $("#messageList").html("<p class='text-center'></p>");
+                            $("#messageList").html("<li><p class='text-center'>暂无数据</p></li>");
                             $messageNum.html("");
                         }
                     }

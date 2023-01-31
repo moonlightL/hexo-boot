@@ -107,9 +107,4 @@ public class PostRequest extends BaseRequest<Post> {
      */
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime jobTime;
-
-    /**
-     * 文章布局 1：混合 2：文字 3：图片 4：视频
-     */
-    private Integer layout;
 }

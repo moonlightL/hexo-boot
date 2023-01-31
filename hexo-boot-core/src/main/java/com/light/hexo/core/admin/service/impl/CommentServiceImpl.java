@@ -20,10 +20,7 @@ import com.light.hexo.core.admin.component.EmailService;
 import com.light.hexo.core.admin.service.*;
 import com.light.hexo.mapper.base.BaseMapper;
 import com.light.hexo.mapper.mapper.CommentMapper;
-import com.light.hexo.mapper.model.Blacklist;
-import com.light.hexo.mapper.model.Comment;
-import com.light.hexo.mapper.model.Nav;
-import com.light.hexo.mapper.model.Post;
+import com.light.hexo.mapper.model.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,10 +30,7 @@ import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.util.Sqls;
 
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -71,6 +65,9 @@ public class CommentServiceImpl extends BaseServiceImpl<Comment> implements Comm
 
     @Autowired
     private NavService navService;
+
+    @Autowired
+    private ThemeService themeService;
 
     @Override
     public BaseMapper<Comment> getBaseMapper() {
@@ -174,6 +171,8 @@ public class CommentServiceImpl extends BaseServiceImpl<Comment> implements Comm
             // 检测 ip 是否进入黑名单
             comment.setBlacklist(ipList.contains(comment.getIpAddress()));
         }
+
+        this.checkAvatarList(list);
 
         return pageInfo;
     }
@@ -306,7 +305,46 @@ public class CommentServiceImpl extends BaseServiceImpl<Comment> implements Comm
             }
         }
 
+        // 检测图片
+        this.checkAvatarList(commentList);
+
         return commentList;
+    }
+
+    private void checkAvatarList(List<Comment> commentList) {
+        if (CollectionUtils.isEmpty(commentList)) {
+            return;
+        }
+
+        Theme activeTheme = this.themeService.getActiveTheme(true);
+        String themeName = activeTheme.getName();
+
+        for (Comment comment : commentList) {
+            this.checkAvatar(comment, themeName);
+            this.checkAvatar(comment.getParent(), themeName);
+            List<Comment> replyList = comment.getReplyList();
+            if (!CollectionUtils.isEmpty(replyList)) {
+                for (Comment reply : replyList) {
+                    this.checkAvatar(reply, themeName);
+                }
+            }
+        }
+    }
+
+    private void checkAvatar(Comment comment, String themeName) {
+        if (comment == null) {
+            return;
+        }
+
+        String avatar = comment.getAvatar();
+        if (avatar.startsWith("/source")) {
+            comment.setAvatar("/theme/" + themeName + avatar);
+        } else {
+            if (avatar.startsWith("/theme")) {
+                // 此处处理历史数据遗留问题
+                comment.setAvatar("/theme/" + themeName + avatar.substring(avatar.indexOf("/source")));
+            }
+        }
     }
 
     @Override
@@ -359,6 +397,11 @@ public class CommentServiceImpl extends BaseServiceImpl<Comment> implements Comm
                     subject = comment.getNickname() + "回复你的评论";
                 }
             }
+        }
+
+        String avatar = comment.getAvatar();
+        if (avatar.startsWith("/theme")) {
+            comment.setAvatar(avatar.substring(avatar.indexOf("/source")));
         }
 
         this.saveModel(comment);

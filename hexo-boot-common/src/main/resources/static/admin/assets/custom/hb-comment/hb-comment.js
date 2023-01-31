@@ -317,7 +317,7 @@
         }
         htmlArr.push('<div class="hb-w">');
         htmlArr.push('<div class="hb-w-head">');
-        htmlArr.push('<h2>' + self.options.title + '</h2> <span class="glyphicon glyphicon-info-sign" title="评论信息使用cookie技术存储,用户根据情况自行处理"></span>' + (self.visitor ? '（欢迎归来）' : '') + ' <span></span>');
+        htmlArr.push('<h2 class="h2">' + self.options.title + '</h2> <span class="glyphicon glyphicon-info-sign" title="评论信息使用cookie技术存储,用户根据情况自行处理"></span>' + (self.visitor ? '（欢迎归来）' : '') + ' <span></span>');
         htmlArr.push('</div>');
 
         htmlArr.push('<div class="hb-w-body">');
@@ -327,7 +327,7 @@
             htmlArr.push('<img src="'+ self.visitor.avatar + '" class="hb_avatar" width="48" height="48">');
         } else {
             htmlArr.push('<img src="'+ baseUrl + '/hb-comment/image/avatar/default_avatar.jpg" class="hb_avatar" width="48" height="48">');
-            htmlArr.push("<a href='javascript:void(0)' class='change_avatar'>换一张</a>")
+            htmlArr.push("<a href='javascript:void(0)' class='change_avatar'>切换</a>")
         }
         htmlArr.push('</div>');
         htmlArr.push('<div class="hb-main">');
@@ -337,9 +337,9 @@
             htmlArr.push('<span class="label-item"><span class="label">昵称</span><input type="text" name="nickname" value="' + self.visitor.nickname + '" class="hb_nickname" readonly="readonly" placeholder="必填"></span>');
             htmlArr.push('<span class="label-item"><span class="label">主页</span><input type="text" name="homePage" value="' + self.visitor.homePage + '" class="hb_home_page" placeholder="选填"></span>');
         } else {
-            htmlArr.push('<span class="label-item"><span class="label">邮箱</span><input type="text" name="email" class="hb_email" placeholder="必填,qq邮箱可自动获取头像和昵称"></span>');
-            htmlArr.push('<span class="label-item"><span class="label">昵称</span><input type="text" name="nickname" class="hb_nickname" placeholder="必填"></span>');
-            htmlArr.push('<span class="label-item"><span class="label">主页</span><input type="text" name="homePage" class="hb_home_page" placeholder="选填"></span>');
+            htmlArr.push('<span class="label-item"><span class="label">*邮箱</span><input type="text" name="email" class="hb_email" placeholder="qq邮箱可获取头像和昵称"></span>');
+            htmlArr.push('<span class="label-item"><span class="label">*昵称</span><input type="text" name="nickname" class="hb_nickname" placeholder="昵称"></span>');
+            htmlArr.push('<span class="label-item"><span class="label">&nbsp;主页</span><input type="text" name="homePage" class="hb_home_page" placeholder="主页"></span>');
         }
         htmlArr.push('</div>');
         htmlArr.push('<div class="hb-comment-content">');
@@ -350,7 +350,7 @@
         }
         htmlArr.push('</div>');
         htmlArr.push('<div class="hb-comment-help">');
-        htmlArr.push('<span title="表情" class="emoji_btn">☺</span>');
+        htmlArr.push('<a title="表情" class="emoji_btn" href="javascript:void(0)">☺</a>');
         if (self.options.canComment) {
             htmlArr.push('<button type="button" class="send_btn"><span class="glyphicon glyphicon-send"></span> 发送</button>');
         } else {
@@ -381,7 +381,7 @@
         }
         htmlArr.push('<div class="hb-r">');
         htmlArr.push('<div class="hb-r-head">');
-        htmlArr.push('<h2>'+ self.options.subTitle +' <span id="commentNum"></span></h2>');
+        htmlArr.push('<h2 class="h2">'+ self.options.subTitle +' <span id="commentNum"></span></h2>');
         htmlArr.push('</div>');
         htmlArr.push('<div class="hb-r-body" id="hbRBody">');
         htmlArr.push('</div>');
@@ -448,7 +448,7 @@
                 htmlArr.push('<div class="nickname">'+ comment.nickname + bloggerHtml + '</div>');
             }
             if (self.options.canComment) {
-                htmlArr.push('<div class="action"><a href="javascript:void(0)" title="回复" class="action-reply" data-comment-id="'+ comment.id +'" data-nickname="'+ comment.nickname +'"><span class="glyphicon glyphicon-comment"></span></a></div>');
+                htmlArr.push('<div class="action"><a href="javascript:void(0)" title="回复" class="action-reply" data-comment-id="'+ comment.id +'" data-nickname="'+ comment.nickname +'">回复</a></div>');
             }
             htmlArr.push('</div>');
             htmlArr.push('<div class="content">');
@@ -634,7 +634,7 @@
                 });
                 htmlArr.push('</ul>');
             }
-            htmlArr.push('<div style="clear: both;border-top: 1px solid #f1f1f1;height: 1.8rem;" class="emoji">');
+            htmlArr.push('<div style="clear: both;border-top: 1px solid #f1f1f1;height: 2.5rem;" class="emoji">');
             for (let i = 0; i < emojiArr.length; i++) {
                 let active = (i == 0 ? ' active' : '');
                 htmlArr.push('<span id="emoji_tab_' + i + '" class="emoji emoji-tab ' + active + '">' + emojiManager.typeArr[i] + '</span>');

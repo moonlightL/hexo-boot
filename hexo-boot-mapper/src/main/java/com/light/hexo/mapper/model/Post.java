@@ -177,11 +177,6 @@ public class Post implements Serializable {
      */
     private LocalDateTime topTime;
 
-    /**
-     * 文章布局 1：混合 2：文字 3：图片 4：视频
-     */
-    private Integer layout;
-
     @Transient
     private Post prevPost;
 

@@ -86,18 +86,6 @@ public class IndexController extends CommonController {
     }
 
     /**
-     * 搜索框
-     * @param resultMap
-     * @return
-     */
-    @GetMapping(value = "search/")
-    public String search(Map<String, Object> resultMap) {
-        List<Post> postList = this.postService.listPostByIdList(null);
-        resultMap.put("postList", postList);
-        return render("search", false, resultMap);
-    }
-
-    /**
      * 自定义页面导航
      * @param link
      * @param resultMap
