@@ -8,13 +8,11 @@ import com.light.hexo.mapper.model.Nav;
 import com.light.hexo.mapper.model.Post;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -95,8 +93,8 @@ public class IndexPostController extends CommonController {
         resultMap.put("post", post);
         resultMap.put("previousPost", post.getPrevPost());
         resultMap.put("nextPost", post.getNextPost());
-        resultMap.put("currentNav", new Nav(post.getTitle(), post.getLink(), post.getCoverUrl(), "detail"));
         this.eventPublisher.emit(new PostEvent(this, post.getId(), PostEvent.Type.READ));
+
         return render("detail", true, resultMap);
     }
 
@@ -111,5 +109,16 @@ public class IndexPostController extends CommonController {
         String ipAddr = RequestUtil.getIpAddr(request);
         int prizeNum = this.postService.praisePost(ipAddr, postId);
         return Result.success(prizeNum);
+    }
+
+    /**
+     * 文章列表
+     * @return
+     */
+    @GetMapping("postList.json")
+    @ResponseBody
+    public Result getPostList() {
+        List<Post> list = this.postService.listPostByIdList(null);
+        return Result.success(list);
     }
 }

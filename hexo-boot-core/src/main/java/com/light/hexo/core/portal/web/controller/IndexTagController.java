@@ -1,6 +1,7 @@
 package com.light.hexo.core.portal.web.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.light.hexo.core.portal.model.MorePageInfo;
 import com.light.hexo.mapper.model.Post;
 import com.light.hexo.mapper.model.Tag;
 import com.light.hexo.core.portal.common.CommonController;
@@ -33,7 +34,6 @@ public class IndexTagController extends CommonController {
         // 兼容
         resultMap.put("count", tagList.size());
         resultMap.put("tagNum", tagList.size());
-        resultMap.put("currentNav", this.navService.findByLink("/tags/"));
         return render("tags", false, resultMap);
     }
 
@@ -41,11 +41,15 @@ public class IndexTagController extends CommonController {
     public String tagsByName(@PathVariable String tagName, @PathVariable(value="pageNum", required = false) Integer pageNum, Map<String, Object> resultMap) {
         pageNum = pageNum == null ? 1 : pageNum;
         List<Post> postList = this.postService.listPostsByTagName(tagName, pageNum, PAGE_SIZE);
+        // 此数据用于兼容老版本主题
         resultMap.put("pageInfo", new PageInfo<>(postList, PAGE_SIZE));
         resultMap.put("name", tagName);
         resultMap.put("type", "标签");
         resultMap.put("link", "tags");
-        resultMap.put("currentNav", this.navService.findByLink("/tags/"));
+
+        // 新分页数据
+        resultMap.put("newPageInfo", new MorePageInfo(postList, PAGE_SIZE));
+
         return render("postList", false, resultMap);
     }
 

@@ -97,9 +97,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
         // 获取查询参数
         PostRequest postRequest = (PostRequest) request;
         Example example = Example.builder(Post.class)
-                .select("id", "title", "link", "customLink", "customLink", "coverUrl", "categoryId",
-                        "readNum", "commentNum", "praiseNum", "authCode",
-                        "publishDate","publish", "comment", "top").orderByDesc("createTime").build();
+                .notSelect("content", "contentHtml").orderByDesc("createTime").build();
         Example.Criteria criteria = example.createCriteria();
 
         Boolean publish = postRequest.getPublish();
@@ -379,8 +377,6 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
         }
 
         this.eventPublisher.emit(new PostEvent(this, null, PostEvent.Type.POST_NUM));
-        CacheUtil.remove(PageConstant.MARKDOWN_KEY + ":" + post.getId() + ":1");
-        CacheUtil.remove(PageConstant.MARKDOWN_KEY + ":" + post.getId() + ":2");
     }
 
     @Override
@@ -585,27 +581,22 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
     @Cacheable(key = "'"+ PageConstant.POST_PAGE + ":' + #pageNum")
     @Override
     public HexoPageInfo pagePostsByIndex(int pageNum, int pageSize, boolean filterTop) throws GlobalException {
-        Example.Builder builder = Example.builder(Post.class)
-                .select("id", "title", "summary", "summaryHtml", "author", "publishDate", "year", "month", "day", "top", "reprint", "authCode",
-                        "coverUrl", "coverType", "link", "customLink", "categoryId", "tags", "readNum", "praiseNum", "commentNum", "topTime", "createTime")
-                .where(Sqls.custom().andEqualTo("publish", true).andEqualTo("delete", false));
-        if (filterTop) {
-            builder.andWhere(Sqls.custom().andEqualTo("top", false));
+
+        List<Post> postList = this.listPostsAll(filterTop);
+        if (CollectionUtils.isEmpty(postList)) {
+            return new HexoPageInfo(pageNum, pageSize, 0, null);
         }
 
-        Example example = builder.orderByDesc("createTime").build();
-        List<Post> postList = this.getBaseMapper().selectByExample(example);
-        if (postList.isEmpty()) {
-            return new HexoPageInfo(pageNum, pageSize, postList.size(), null);
-        }
+        int total = postList.size();
 
-        List<Post> list = new ArrayList<>(pageSize);
+        List<Post> sortedList = new ArrayList<>(pageSize);
+
         // 置顶文章
         if (!filterTop) {
             List<Post> topList = postList.stream().filter(Post::getTop)
                     .sorted(Comparator.comparing(Post::getTopTime).reversed())
                     .collect(Collectors.toList());
-            list.addAll(topList);
+            sortedList.addAll(topList);
         }
 
         // 非置顶文章
@@ -613,78 +604,62 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
                 .sorted(Comparator.comparing(Post::getPublishDate).reversed().thenComparing(
                         Comparator.comparing(Post::getCreateTime).reversed()))
                 .collect(Collectors.toList());
-        list.addAll(remainList);
+        sortedList.addAll(remainList);
 
         // 逻辑分页
         int start = (pageNum - 1) * pageSize;
-        if (start > list.size()) {
-            return new HexoPageInfo(pageNum, pageSize, list.size(), null);
+        if (start > sortedList.size()) {
+            return new HexoPageInfo(pageNum, pageSize, total, null);
         }
 
-        List<Post> subList = this.paging(start, pageSize, list);
+        List<Post> currentPageList = this.paging(start, pageSize, sortedList);
+
         // 查询分类
-        List<Integer> categoryIdList = subList.stream().map(Post::getCategoryId).collect(Collectors.toList());
+        List<Integer> categoryIdList = currentPageList.stream().map(Post::getCategoryId).collect(Collectors.toList());
         List<Category> categoryList = this.categoryService.listCategory(categoryIdList);
         Map<Integer, Category> categoryMap = categoryList.stream().collect(Collectors.toMap(Category::getId, Function.identity(), (k1, k2)->k1));
 
-        for (Post post : subList) {
+        for (Post post : currentPageList) {
             Category category = categoryMap.get(post.getCategoryId());
             if (category != null) {
                 post.setCategoryName(category.getName());
             }
-
-            if (StringUtils.isNotBlank(post.getCustomLink())) {
-                post.setLink(post.getCustomLink() + ".html");
-            }
         }
 
-        return new HexoPageInfo(pageNum, pageSize, list.size(), subList);
+        return new HexoPageInfo(pageNum, pageSize, total, currentPageList);
     }
 
-    @Cacheable(key = "'" + PageConstant.POST_ARCHIVE_ALL + "'")
     @Override
     public HexoPageInfo archivePostsByIndex() throws GlobalException {
-        Example example = Example.builder(Post.class)
-                .select("id", "title", "author", "publishDate", "year", "month", "day", "top", "reprint",
-                        "coverUrl", "coverType", "link", "customLink", "categoryId", "tags", "readNum", "createTime")
-                .where(Sqls.custom().andEqualTo("publish", true).andEqualTo("delete", false))
-                .orderByDesc("createTime")
-                .build();
-        List<Post> postList = this.getBaseMapper().selectByExample(example);
-        if (postList.isEmpty()) {
-            return new HexoPageInfo(0, 10, postList.size(), null);
-        }
-
-        for (Post post : postList) {
-            if (StringUtils.isNotBlank(post.getCustomLink())) {
-                post.setLink(post.getCustomLink() + ".html");
-            }
+        List<Post> postList = this.listPostsAll(false);
+        if (CollectionUtils.isEmpty(postList)) {
+            return new HexoPageInfo(1, 10, 0, null);
         }
 
         Map<String, List<Post>> map = postList.stream().collect(Collectors.groupingBy(Post::getYear));
         // key 降序排序
         Map<String, List<Post>> sortMap = new TreeMap<>(Comparator.reverseOrder());
         sortMap.putAll(map);
-        return new HexoPageInfo(0, 10, postList.size(), sortMap);
+        return new HexoPageInfo(1, 10, postList.size(), sortMap);
     }
 
     @Cacheable(key = "'" + PageConstant.POST_ARCHIVE + ":' + #pageNum")
     @Override
     public HexoPageInfo archivePostsByIndex(Integer pageNum, Integer pageSize) throws GlobalException {
-        Example example = Example.builder(Post.class)
-                .select("id", "title", "author", "publishDate", "year", "month", "day", "top", "reprint",
-                        "coverUrl", "coverType", "link", "customLink", "categoryId", "tags", "readNum", "praiseNum", "createTime")
-                .where(Sqls.custom().andEqualTo("publish", true).andEqualTo("delete", false))
-                .orderByDesc("createTime")
-                .build();
-        List<Post> postList = this.getBaseMapper().selectByExample(example);
-        if (postList.isEmpty()) {
-            return new HexoPageInfo(pageNum, pageSize, postList.size(), null);
+        List<Post> postList = this.listPostsAll(false);
+        if (CollectionUtils.isEmpty(postList)) {
+            return new HexoPageInfo(pageNum, pageSize, 0, null);
         }
 
+        // 查询分类
+        List<Integer> categoryIdList = postList.stream().map(Post::getCategoryId).collect(Collectors.toList());
+        List<Category> categoryList = this.categoryService.listCategory(categoryIdList);
+        Map<Integer, Category> categoryMap = categoryList.stream().collect(Collectors.toMap(Category::getId, Function.identity(), (k1, k2)->k1));
+
         for (Post post : postList) {
-            if (StringUtils.isNotBlank(post.getCustomLink())) {
-                post.setLink(post.getCustomLink() + ".html");
+            Category category = categoryMap.get(post.getCategoryId());
+            if (category != null) {
+                post.setCategoryName(category.getName());
             }
         }
 
@@ -702,6 +677,29 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
         sortMap.putAll(map);
 
         return new HexoPageInfo(pageNum, pageSize, postList.size(), sortMap);
+    }
+
+    @Override
+    public List<Post> listPostsAll(boolean filterTop) {
+        String key = PageConstant.POST_LIST_ALL;
+        List<Post> postList = CacheUtil.get(key);
+        if (CollectionUtils.isEmpty(postList)) {
+            Example.Builder builder = Example.builder(Post.class)
+                    .notSelect("content", "contentHtml")
+                    .where(Sqls.custom().andEqualTo("publish", true).andEqualTo("delete", false));
+            if (filterTop) {
+                builder.andWhere(Sqls.custom().andEqualTo("top", false));
+            }
+            Example example = builder.orderByDesc("createTime").build();
+            postList = this.getBaseMapper().selectByExample(example);
+            for (Post post : postList) {
+                if (StringUtils.isNotBlank(post.getCustomLink())) {
+                    post.setLink(post.getCustomLink() + ".html");
+                }
+            }
+            CacheUtil.put(key, postList, 5 * 60 * 1000);
+        }
+        return postList;
     }
 
     private List<Post> paging(int start, int pageSize, List<Post> postList) {
@@ -728,9 +726,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
         Post post = CacheUtil.get(cacheKey);
         if (post == null) {
             Example.Builder builder = Example.builder(Post.class)
-                    .select("id", "title", "author", "contentHtml", "publishDate", "year", "month", "day", "top", "reprint", "reprintLink", "comment",
-                            "coverUrl", "coverType", "link", "customLink", "categoryId", "tags", "readNum", "praiseNum", "commentNum", "authCode",
-                            "topTime", "createTime");
+                    .notSelect("summary", "summaryHtml", "content");
             if (linkType.equals(1)) {
                 builder.where(Sqls.custom().andEqualTo("link", link).andEqualTo("delete", false));
             } else {
@@ -821,8 +817,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
 
         PageHelper.startPage(pageNum, pageSize);
         Example example = Example.builder(Post.class)
-                .select("id", "title", "summary", "author", "publishDate", "year", "month", "day", "top", "reprint",
-                        "coverUrl", "coverType", "link", "customLink", "categoryId", "tags", "readNum", "praiseNum", "createTime")
+                .notSelect("content", "contentHtml")
                 .where(Sqls.custom()
                         .andEqualTo("categoryId", category.getId())
                         .andEqualTo("publish", true)
@@ -860,8 +855,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
     @Override
     public List<Post> findTopList() throws GlobalException {
         Example example = Example.builder(Post.class)
-                .select("id", "title", "author", "publishDate", "year", "month", "day", "top", "reprint",
-                        "coverUrl", "coverType", "link", "customLink", "categoryId", "tags", "readNum", "createTime")
+                .notSelect("summary", "summaryHtml", "content", "contentHtml")
                 .where(Sqls.custom()
                         .andEqualTo("top", true)
                         .andEqualTo("delete", false))
@@ -900,9 +894,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
         }
 
         Example.Builder builder = Example.builder(Post.class)
-                .select("id", "title", "author", "publishDate", "year", "month", "day", "top", "reprint", "reprintLink", "comment",
-                        "coverUrl", "coverType", "link", "customLink", "categoryId", "tags", "readNum", "praiseNum", "commentNum", "authCode",
-                        "topTime", "createTime");
+                .notSelect("summary", "summaryHtml", "content", "contentHtml");
 
         Post post;
         if (link.endsWith(".html")) {
@@ -918,9 +910,8 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
     @Override
     public List<Post> listPostByKeyword(String keyword) {
         Example example = Example.builder(Post.class)
-                .select("id", "title", "author", "publishDate", "year", "month", "day", "reprint",
-                        "coverUrl", "coverType", "link", "customLink", "readNum", "commentNum", "praiseNum", "createTime")
-                .where(Sqls.custom().andLike("title", "%" + keyword + "%"))
+                .notSelect("content", "contentHtml")
+                .where(Sqls.custom().andLike("title", "%" + keyword + "%").andEqualTo("delete", false))
                 .build();
         List<Post> postList = this.getBaseMapper().selectByExample(example);
         if (CollectionUtils.isEmpty(postList)) {
@@ -963,6 +954,7 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
 
         if (postEvent.getType().getCode().equals(PostEvent.Type.POST_NUM.getCode())) {
 
+            CacheUtil.remove(PageConstant.POST_LIST_ALL);
             EhcacheUtil.clearByCacheName("postCache");
             EhcacheUtil.clearByCacheName("categoryCache");
             EhcacheUtil.clearByCacheName("tagCache");

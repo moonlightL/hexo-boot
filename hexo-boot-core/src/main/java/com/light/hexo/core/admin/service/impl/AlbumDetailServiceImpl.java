@@ -9,6 +9,7 @@ import com.light.hexo.common.constant.ConfigEnum;
 import com.light.hexo.common.constant.HexoExceptionEnum;
 import com.light.hexo.common.event.AlbumEvent;
 import com.light.hexo.common.exception.GlobalException;
+import com.light.hexo.common.util.DateUtil;
 import com.light.hexo.common.util.ExceptionUtil;
 import com.light.hexo.common.util.RequestUtil;
 import com.light.hexo.core.admin.service.AlbumDetailService;
@@ -188,9 +189,12 @@ public class AlbumDetailServiceImpl extends BaseServiceImpl<AlbumDetail> impleme
     }
 
     @Override
-    public HexoPageInfo pageAlbumDetailByIndex(Integer albumId, Integer pageNum, Integer pageSize) {
-        List<AlbumDetail> albumDetailList = this.findListByAlbumId(albumId, pageNum, pageSize);
-        Integer totalNum = this.getAlbumDetailNum(albumId);
-        return new HexoPageInfo(pageNum, pageSize, totalNum, albumDetailList);
+    public List<AlbumDetail> pageAlbumDetailByIndex(Integer albumId, Integer pageNum, Integer pageSize) {
+        List<AlbumDetail> list = this.findListByAlbumId(albumId, pageNum, pageSize);
+        for (AlbumDetail albumDetail : list) {
+            albumDetail.setTimeDesc(DateUtil.timeDesc(albumDetail.getCreateTime()));
+        }
+
+        return list;
     }
 }

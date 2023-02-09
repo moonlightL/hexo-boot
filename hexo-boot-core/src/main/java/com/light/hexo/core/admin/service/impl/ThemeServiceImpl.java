@@ -403,6 +403,10 @@ public class ThemeServiceImpl extends BaseServiceImpl<Theme> implements ThemeSer
 
             // 读取内容
             String content = FileUtils.readFileToString(jsonFile, "UTF-8");
+            if (StringUtils.isBlank(content)) {
+                continue;
+            }
+
             ThemeFile themeFile = JsonUtil.string2Obj(content, ThemeFile.class);
 
             String themeName = themeFile.getName();

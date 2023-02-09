@@ -1,6 +1,8 @@
 package com.light.hexo.core.portal.web.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.light.hexo.core.portal.model.HexoPageInfo;
+import com.light.hexo.core.portal.model.MorePageInfo;
 import com.light.hexo.mapper.model.Category;
 import com.light.hexo.mapper.model.Post;
 import com.light.hexo.core.portal.common.CommonController;
@@ -30,7 +32,6 @@ public class IndexCategoryController extends CommonController {
         List<Category> categoryList = this.categoryService.listCategoriesByIndex();
         resultMap.put("categoryList", categoryList);
         resultMap.put("categoryNum", categoryList.size());
-        resultMap.put("currentNav", this.navService.findByLink("/categories/"));
         return render("categories", false, resultMap);
     }
 
@@ -38,11 +39,15 @@ public class IndexCategoryController extends CommonController {
     public String categoriesByName(@PathVariable String categoryName, @PathVariable(value="pageNum", required = false) Integer pageNum, Map<String, Object> resultMap) {
         pageNum = pageNum == null ? 1 : pageNum;
         List<Post> postList = this.postService.listPostsByCategoryName(categoryName, pageNum, PAGE_SIZE);
+        // 此数据用于兼容老版本主题
         resultMap.put("pageInfo", new PageInfo<>(postList, PAGE_SIZE));
         resultMap.put("name", categoryName);
         resultMap.put("type", "分类");
         resultMap.put("link", "categories");
-        resultMap.put("currentNav", this.navService.findByLink("/categories/"));
+
+        // 新分页数据
+        resultMap.put("newPageInfo", new MorePageInfo(postList, PAGE_SIZE));
+
         return render("postList", false, resultMap);
     }
 }

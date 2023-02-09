@@ -155,13 +155,23 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
     public void updateInfo(User user) throws GlobalException {
         super.updateModel(user);
 
-        String nickname = user.getNickname();
-        String email = user.getEmail();
-
         Map<String, String> configMap = new HashMap<>();
-        configMap.put(ConfigEnum.EMAIL.getName(), email);
-        configMap.put(ConfigEnum.BLOG_AUTHOR.getName(), nickname);
-        this.configService.saveConfig(configMap);
+
+        if (StringUtils.isNotBlank(user.getEmail())) {
+            configMap.put(ConfigEnum.EMAIL.getName(), user.getEmail());
+        }
+
+        if (StringUtils.isNotBlank(user.getNickname())) {
+            configMap.put(ConfigEnum.BLOG_AUTHOR.getName(), user.getNickname());
+        }
+
+        if (StringUtils.isNotBlank(user.getAvatar())) {
+            configMap.put(ConfigEnum.BLOG_AVATAR.getName(), user.getAvatar());
+        }
+
+        if (!configMap.isEmpty()) {
+            this.configService.saveConfig(configMap);
+        }
 
     }
 }

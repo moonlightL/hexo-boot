@@ -86,6 +86,22 @@ public class CommonController {
     @Autowired
     protected EventPublisher eventPublisher;
 
+    private static final Map<String, String> NAV_MAP;
+
+    static {
+        NAV_MAP = new HashMap<>();
+        NAV_MAP.put("index", "/");
+        NAV_MAP.put("blogs", "/");
+        NAV_MAP.put("about", "/about/");
+        NAV_MAP.put("albums", "/albums/");
+        NAV_MAP.put("albumDetail", "/albums/");
+        NAV_MAP.put("archives", "/archives/");
+        NAV_MAP.put("categories", "/categories/");
+        NAV_MAP.put("dynamics", "/dynamics/");
+        NAV_MAP.put("friendLinks", "/friendLinks/");
+        NAV_MAP.put("tags", "/tags/");
+    }
+
     protected String render(String pageName, boolean isDetail, Map<String, Object> resultMap) {
 
         // 主题
@@ -98,12 +114,8 @@ public class CommonController {
         resultMap.put("md", MarkdownUtil.class);
 
         this.settingBaseLink(activeTheme, resultMap);
-
+        this.setCurrentNav(pageName, resultMap);
         this.setVisitCookie();
-
-        // 数量，兼容老版本主题
-        Map<String, Integer> countInfo = this.getCountInfo();
-        resultMap.put("countInfo", countInfo);
 
         return String.format("theme/%s/%s", themeName, pageName);
     }
@@ -128,6 +140,15 @@ public class CommonController {
         } else {
             resultMap.put("baseLink", "/theme/" + themeName);
         }
+    }
+
+    private void setCurrentNav(String pageName, Map<String, Object> resultMap) {
+
+        if (resultMap.containsKey("currentNav")) {
+            return;
+        }
+
+        resultMap.put("currentNav", this.navService.findByLink(NAV_MAP.get(pageName)));
     }
 
     private void setVisitCookie() {
@@ -158,26 +179,4 @@ public class CommonController {
         response.addCookie(cookie);
     }
 
-    private Map<String, Integer> getCountInfo() {
-
-        String key = CacheKey.INDEX_COUNT_INFO;
-        Map<String, Integer> result = CacheUtil.get(key);
-        if (result == null) {
-            result = new HashMap<>(4);
-            WebApplicationContext webApplicationContext = (WebApplicationContext) SpringContextUtil.applicationContext;
-            ServletContext servletContext = webApplicationContext.getServletContext();
-            // 文章数
-            result.put("postNum", (Integer) servletContext.getAttribute("postNum"));
-            // 分类数
-            result.put("categoryNum", (Integer) servletContext.getAttribute("categoryNum"));
-            // 标签数
-            result.put("tagNum", (Integer) servletContext.getAttribute("tagNum"));
-            // 友链数
-            result.put("friendLinkNum", (Integer) servletContext.getAttribute("friendLinkNum"));
-            // 缓存1分钟
-            CacheUtil.put(key, result,  60 * 1000);
-        }
-
-        return result;
-    }
 }

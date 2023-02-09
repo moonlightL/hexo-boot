@@ -1,10 +1,12 @@
 package com.light.hexo.core.portal.web.controller;
 
+import com.github.pagehelper.PageInfo;
 import com.light.hexo.common.constant.HexoExceptionEnum;
+import com.light.hexo.core.portal.model.MorePageInfo;
 import com.light.hexo.mapper.model.Album;
 import com.light.hexo.core.portal.common.CommonController;
-import com.light.hexo.core.portal.model.HexoPageInfo;
 import com.light.hexo.common.util.ExceptionUtil;
+import com.light.hexo.mapper.model.AlbumDetail;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,7 +51,6 @@ public class IndexAlbumController extends CommonController {
                 .sorted(Comparator.comparing(Album::getId)).collect(Collectors.toList());
         resultMap.put("videoAlbumList", videoAlbumList);
 
-        resultMap.put("currentNav", this.navService.findByLink("/albums/"));
         return render("albums", false, resultMap);
     }
 
@@ -89,9 +90,10 @@ public class IndexAlbumController extends CommonController {
         }
 
         resultMap.put("album", album);
-        HexoPageInfo pageInfo = this.albumDetailService.pageAlbumDetailByIndex(albumId, pageNum, PAGE_SIZE);
-        resultMap.put("pageInfo", pageInfo);
-        resultMap.put("currentNav", this.navService.findByLink("/albums/"));
+        List<AlbumDetail> albumDetailList = this.albumDetailService.pageAlbumDetailByIndex(albumId, pageNum, PAGE_SIZE);
+        resultMap.put("pageInfo", new PageInfo<>(albumDetailList));
+        resultMap.put("newPageInfo", new MorePageInfo(albumDetailList, PAGE_SIZE));
+
         return render("albumDetail", false, resultMap);
     }
 }

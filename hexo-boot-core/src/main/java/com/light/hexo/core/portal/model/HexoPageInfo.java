@@ -1,14 +1,13 @@
 package com.light.hexo.core.portal.model;
 
 import lombok.ToString;
-
 import java.io.Serializable;
 
 /**
  * @Author MoonlightL
  * @ClassName: HexoPageInfo
  * @ProjectName hexo-boot
- * @Description: 归档信息
+ * @Description: 封装逻辑分页数据
  * @DateTime 2020/9/21 11:13
  */
 @ToString
@@ -16,29 +15,38 @@ public class HexoPageInfo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private int pageNum;
+    protected int pageNum;
 
-    private int pageSize;
+    protected int pageSize;
 
-    private int total;
+    protected int total;
 
-    private int pages;
+    protected int pages;
 
-    private Object data;
+    protected Object data;
 
-    private int[] navigatepageNums;
+    protected int[] navigatepageNums;
 
-    private int navigatePages = 10;
+    protected int navigatePages = 10;
 
-    private boolean hasPreviousPage;
+    protected boolean hasPreviousPage;
 
-    private boolean hasNextPage;
+    protected boolean hasNextPage;
 
+    public HexoPageInfo() {}
+
+    /**
+     * 常规分页
+     * @param pageNum
+     * @param pageSize
+     * @param total
+     * @param data
+     */
     public HexoPageInfo(int pageNum, int pageSize, int total, Object data) {
+        this.data = data;
         this.pageNum = pageNum;
         this.pageSize = pageSize;
         this.total = total;
-        this.data = data;
 
         this.setTotalPage();
         this.setNavigatepageNums();
@@ -64,7 +72,7 @@ public class HexoPageInfo implements Serializable {
         return data;
     }
 
-    private void setTotalPage() {
+    protected void setTotalPage() {
         if (this.total % this.pageSize == 0) {
             this.pages = this.total / this.pageSize;
         } else {
@@ -72,27 +80,27 @@ public class HexoPageInfo implements Serializable {
         }
     }
 
-    private void setNavigatepageNums() {
+    protected void setNavigatepageNums() {
         int startPage;
         int endPage;
         int[] pageBar;
-        if (this.pages <= navigatePages) {
+        if (this.pages <= this.navigatePages) {
             pageBar = new int[this.pages];
             startPage = 1;
             endPage = pages;
         } else {
-            pageBar = new int[10];
+            pageBar = new int[this.navigatePages];
             startPage = this.pageNum - 4;
             endPage = this.pageNum + 5;
 
             if (startPage < 1) {
                 startPage = 1;
-                endPage = 10;
+                endPage = this.navigatePages;
             }
 
             if (endPage > this.pages) {
                 endPage = this.pages;
-                startPage = this.pages - 9;
+                startPage = this.pages - this.navigatePages - 1;
             }
         }
 
@@ -116,4 +124,5 @@ public class HexoPageInfo implements Serializable {
     public boolean isHasNextPage() {
         return this.pageNum < this.pages;
     }
+
 }

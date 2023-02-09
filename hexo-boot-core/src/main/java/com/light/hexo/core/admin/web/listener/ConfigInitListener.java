@@ -4,6 +4,7 @@ import com.light.hexo.common.plugin.HexoBootPluginManager;
 import com.light.hexo.mapper.model.*;
 import com.light.hexo.core.admin.service.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -47,6 +48,9 @@ public class ConfigInitListener implements ApplicationListener<ContextRefreshedE
     protected FriendLinkService friendLinkService;
 
     @Autowired
+    private UserExtendService userExtendService;
+
+    @Autowired
     private SysPluginService pluginService;
 
     @Autowired
@@ -77,6 +81,10 @@ public class ConfigInitListener implements ApplicationListener<ContextRefreshedE
         // 导航
         this.navService.loadNav(servletContext);
 
+        // 文章
+        List<Post> allPostList = this.postService.listPostsAll(false);
+        servletContext.setAttribute("allPostList", allPostList);
+
         // 分类
         List<Category> categoryList = this.categoryService.listCategoriesByIndex();
         servletContext.setAttribute("categoryList", categoryList);
@@ -98,6 +106,14 @@ public class ConfigInitListener implements ApplicationListener<ContextRefreshedE
         // 推荐文章（点赞数排名）
         List<Post> recommendPostList = this.postService.listTop5ByPraiseNum();
         servletContext.setAttribute("recommendPostList", recommendPostList);
+
+        // 置顶文章
+        List<Post> topPostList = this.postService.findTopList();
+        servletContext.setAttribute("topPostList", topPostList);
+
+        // 关于
+        UserExtend bloggerInfo = this.userExtendService.getBloggerInfo();
+        servletContext.setAttribute("aboutContent", StringUtils.isBlank(bloggerInfo.getDescr()) ? "" : bloggerInfo.getDescr());
     }
 
     private void loadPlugins() {

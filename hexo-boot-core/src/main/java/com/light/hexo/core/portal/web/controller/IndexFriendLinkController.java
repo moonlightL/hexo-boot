@@ -40,7 +40,6 @@ public class IndexFriendLinkController extends CommonController {
                 .sorted(Comparator.comparing(FriendLink::getSort)).collect(Collectors.toList());
         resultMap.put("webSiteList", webSiteList);
 
-        resultMap.put("currentNav", this.navService.findByLink("/friendLinks/"));
         return render("friendLinks", false, resultMap);
     }
 }

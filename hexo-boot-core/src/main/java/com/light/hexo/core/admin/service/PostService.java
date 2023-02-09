@@ -221,4 +221,12 @@ public interface PostService extends BaseService<Post>, EventService {
      * @return
      */
     List<Post> listPostByKeyword(String keyword);
+
+    /**
+     * 查询所有文章
+     * @param filterTop
+     * @return
+     */
+    List<Post> listPostsAll(boolean filterTop);
+
 }

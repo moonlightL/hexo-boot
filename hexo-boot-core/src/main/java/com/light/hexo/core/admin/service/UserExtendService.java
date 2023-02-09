@@ -24,9 +24,9 @@ public interface UserExtendService extends BaseService<UserExtend> {
     /**
      * 保存用户扩展信息
      * @param uid
-     * @param descr
+     * @param desc
      */
-    void saveUserExtend(Integer uid, String descr) throws GlobalException;
+    void saveUserExtend(Integer uid, String desc) throws GlobalException;
 
     // ================================= 以下为前端页面请求 ===============================
 

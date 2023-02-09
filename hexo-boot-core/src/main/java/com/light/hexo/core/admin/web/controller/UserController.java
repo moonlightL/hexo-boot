@@ -101,12 +101,7 @@ public class UserController extends BaseController {
         tmp.setEmail(userRequest.getEmail());
         this.userService.updateInfo(tmp);
 
-        Map<String, String> paramMap = new HashMap<>();
-        paramMap.put(ConfigEnum.BLOG_AUTHOR.getName(), tmp.getNickname());
-        paramMap.put(ConfigEnum.BLOG_AVATAR.getName(), tmp.getAvatar());
-        paramMap.put(ConfigEnum.EMAIL.getName(), tmp.getEmail());
-        this.configService.saveConfig(paramMap);
-
+        // 更新 session 中的数据
         user.setAvatar(userRequest.getAvatar());
         user.setNickname(userRequest.getNickname());
         user.setEmail(userRequest.getEmail());

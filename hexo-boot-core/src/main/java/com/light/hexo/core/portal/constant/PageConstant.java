@@ -25,11 +25,14 @@ public class PageConstant {
     public static final String POST_TOP_PAGE = "hexo:top:page";
 
     /**
+     * 首页所有文章列表
+     */
+    public static final String POST_LIST_ALL = "hexo:post:list:all";
+
+    /**
      * 首页归档缓存 key（格式：PageConstant.POST_ARCHIVE + #pageNum）
      */
     public static final String POST_ARCHIVE = "hexo:archive";
-
-    public static final String POST_ARCHIVE_ALL = "hexo:archive:all";
 
     /**
      * 文章详情页缓存 key（格式：PageConstant.POST_DETAIL_INFO + #link）
@@ -70,16 +73,6 @@ public class PageConstant {
      * 导航页面
      */
     public static final String NAV_PAGE = "nav:page";
-
-    /**
-     * 文章评论列表缓存 key（格式：PageConstant.POST_COMMENT + #postId + #pageNum）
-     */
-    public static final String POST_COMMENT = "hexo:comment";
-
-    /**
-     * 留言板缓存 key（格式：PageConstant.GUEST_BOOK + #pageNum）
-     */
-    public static final String GUEST_BOOK = "hexo:guestBook";
 
     /**
      * 首页动态缓存 key（格式：PageConstant.DYNAMIC_LIST + #pageNum）

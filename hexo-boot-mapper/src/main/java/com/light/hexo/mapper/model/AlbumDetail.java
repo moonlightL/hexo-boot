@@ -10,6 +10,7 @@ import lombok.experimental.Accessors;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -77,4 +78,11 @@ public class AlbumDetail implements Serializable {
      */
     @UpdateTime
     private LocalDateTime updateTime;
+
+
+    /**
+     * 时间描述
+     */
+    @Transient
+    private String timeDesc;
 }

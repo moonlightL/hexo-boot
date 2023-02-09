@@ -2,7 +2,6 @@ package com.light.hexo.core.admin.service;
 
 import com.light.hexo.common.base.BaseService;
 import com.light.hexo.mapper.model.AlbumDetail;
-import com.light.hexo.core.portal.model.HexoPageInfo;
 import com.light.hexo.common.exception.GlobalException;
 
 import java.util.List;
@@ -73,6 +72,6 @@ public interface AlbumDetailService extends BaseService<AlbumDetail> {
 
     // ================================= 以下为前端页面请求 ===============================
 
-    HexoPageInfo pageAlbumDetailByIndex(Integer albumId, Integer pageNum, Integer pageSize);
+    List<AlbumDetail> pageAlbumDetailByIndex(Integer albumId, Integer pageNum, Integer pageSize);
 
 }

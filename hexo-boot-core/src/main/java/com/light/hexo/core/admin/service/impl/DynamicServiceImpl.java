@@ -174,6 +174,7 @@ public class DynamicServiceImpl extends BaseServiceImpl<Dynamic> implements Dyna
             .setPraiseNum(dynamic.getPraiseNum() + 1)
             .setUpdateTime(LocalDateTime.now());
         this.updateModel(data);
+
         EhcacheUtil.clearByCacheName("dynamicCache");
     }
 }

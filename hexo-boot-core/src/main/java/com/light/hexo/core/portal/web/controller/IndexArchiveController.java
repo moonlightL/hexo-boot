@@ -33,7 +33,6 @@ public class IndexArchiveController extends CommonController {
         pageNum = pageNum == null ? 1 : pageNum;
         HexoPageInfo pageInfo =  this.postService.archivePostsByIndex(pageNum, PAGE_SIZE);
         resultMap.put("pageInfo", pageInfo);
-        resultMap.put("currentNav", this.navService.findByLink("/archives/"));
         return render("archives", false, resultMap);
     }
 

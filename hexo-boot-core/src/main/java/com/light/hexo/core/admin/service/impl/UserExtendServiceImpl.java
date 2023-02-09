@@ -44,14 +44,14 @@ public class UserExtendServiceImpl extends BaseServiceImpl<UserExtend> implement
     }
 
     @Override
-    public void saveUserExtend(Integer uid, String descr) throws GlobalException {
+    public void saveUserExtend(Integer uid, String desc) throws GlobalException {
         UserExtend userExtend = this.getUserExtendByUid(uid);
         if (userExtend == null) {
             userExtend = new UserExtend();
-            userExtend.setUid(uid).setDescr(descr);
+            userExtend.setUid(uid).setDescr(desc);
             super.saveModel(userExtend);
         } else {
-            userExtend.setDescr(descr);
+            userExtend.setDescr(desc);
             super.updateModel(userExtend);
         }
     }

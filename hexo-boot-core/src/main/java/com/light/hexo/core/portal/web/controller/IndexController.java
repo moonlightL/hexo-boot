@@ -2,6 +2,7 @@ package com.light.hexo.core.portal.web.controller;
 
 import com.light.hexo.common.vo.Result;
 import com.light.hexo.common.constant.ConfigEnum;
+import com.light.hexo.core.portal.model.MorePageInfo;
 import com.light.hexo.mapper.model.*;
 import com.light.hexo.common.event.NavEvent;
 import com.light.hexo.core.portal.common.CommonController;
@@ -41,14 +42,14 @@ public class IndexController extends CommonController {
         String filterTopStr = activeTheme.getConfigMap().get("filterTop");
         boolean filterTop = !StringUtils.isBlank(filterTopStr) && (filterTopStr.equals("Yes"));
         pageNum = pageNum == null ? 1 : pageNum;
-        HexoPageInfo pageInfo = this.postService.pagePostsByIndex(pageNum, Integer.parseInt(pageSizeStr), filterTop);
-        resultMap.put("pageInfo", pageInfo);
-        if (filterTop) {
-            List<Post> topList = this.postService.findTopList();
-            resultMap.put("topList", topList.stream().limit(3).collect(Collectors.toList()));
-        }
 
-        resultMap.put("currentNav", this.navService.findByLink("/"));
+        HexoPageInfo pageInfo = this.postService.pagePostsByIndex(pageNum, Integer.parseInt(pageSizeStr), filterTop);
+        // 此数据用于兼容老版本主题
+        resultMap.put("pageInfo", pageInfo);
+
+        // 新分页数据
+        resultMap.put("newPageInfo", new MorePageInfo(pageInfo, PAGE_SIZE));
+
         return render("index", false, resultMap);
     }
 
@@ -67,22 +68,10 @@ public class IndexController extends CommonController {
         pageNum = pageNum == null ? 1 : pageNum;
         HexoPageInfo pageInfo = this.postService.pagePostsByIndex(pageNum, Integer.parseInt(pageSizeStr), false);
         resultMap.put("pageInfo", pageInfo);
+        // 新分页数据
+        resultMap.put("newPageInfo", new MorePageInfo(pageInfo, PAGE_SIZE));
         resultMap.put("menu", "blogs");
-        resultMap.put("currentNav", this.navService.findByLink("/"));
         return render("blogs", false, resultMap);
-    }
-
-    /**
-     * 关于
-     * @param resultMap
-     * @return
-     */
-    @GetMapping(value = "about/")
-    public String about(Map<String, Object> resultMap) {
-        UserExtend extend = this.userExtendService.getBloggerInfo();
-        resultMap.put("about", extend);
-        resultMap.put("currentNav", this.navService.findByLink("/about/"));
-        return render("about", false, resultMap);
     }
 
     /**
@@ -97,17 +86,6 @@ public class IndexController extends CommonController {
         resultMap.put("currentNav", nav);
         this.eventPublisher.emit(new NavEvent(this, nav.getId(), NavEvent.Type.READ));
         return render("custom", true, resultMap);
-    }
-
-    /**
-     * 文章列表
-     * @return
-     */
-    @GetMapping("postList.json")
-    @ResponseBody
-    public Result getPostList() {
-        List<Post> list = this.postService.listPostByIdList(null);
-        return Result.success(list);
     }
 
     /**

@@ -4,6 +4,7 @@ import com.github.pagehelper.PageInfo;
 import com.light.hexo.common.util.RequestUtil;
 import com.light.hexo.common.vo.Result;
 import com.light.hexo.core.portal.common.CommonController;
+import com.light.hexo.core.portal.model.MorePageInfo;
 import com.light.hexo.mapper.model.Dynamic;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,8 +36,10 @@ public class IndexDynamicController extends CommonController {
     public String dynamics(@PathVariable(value="pageNum", required = false) Integer pageNum, Map<String, Object> resultMap) {
         pageNum = pageNum == null ? 1 : pageNum;
         List<Dynamic> dynamicList = this.dynamicService.listDynamicByIndex(pageNum, PAGE_SIZE);
+        // 此数据用于兼容老版本主题
         resultMap.put("pageInfo", new PageInfo<>(dynamicList, PAGE_SIZE));
-        resultMap.put("currentNav", this.navService.findByLink("/dynamics/"));
+        // 新分页数据
+        resultMap.put("newPageInfo", new MorePageInfo(dynamicList, PAGE_SIZE));
         return render("dynamics", false, resultMap);
     }
 
