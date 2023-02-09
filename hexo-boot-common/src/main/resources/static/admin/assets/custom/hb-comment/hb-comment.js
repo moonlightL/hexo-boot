@@ -480,7 +480,7 @@
                         htmlArr.push('<div class="hb-main">');
                         htmlArr.push('<div class="info">');
                         let bloggerHtml = replyComment.blogger ? ' <span class="blogger">博主</span>' : '';
-                        bloggerHtml += '<span> • ' + comment.timeDesc + '</span>';
+                        bloggerHtml += '<span> • ' + replyComment.timeDesc + '</span>';
                         htmlArr.push('<div class="nickname">'+ replyComment.nickname + bloggerHtml + '</div>');
                         if (self.options.canComment) {
                             htmlArr.push('<div class="action"><a href="javascript:void(0)" title="回复" class="action-reply" data-comment-id="'+ replyComment.id +'" data-nickname="'+ replyComment.nickname +'"><span class="glyphicon glyphicon-comment"></span></a></div>');
