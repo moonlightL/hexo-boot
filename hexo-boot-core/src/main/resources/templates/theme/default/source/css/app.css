@@ -2344,11 +2344,6 @@ html[mode=dark] .hb-w-body .hb-comment-info input {
     border: 1px solid #4a4a4a;
 }
 
-html[mode=dark] .hb-w-body .hb-w-body-item,
-html[mode=dark] .hb-r-body .hb-r-body-item {
-    border-bottom: 1px solid #4a4a4a;
-}
-
 html[mode=dark] .hb-w-body .hb-comment-help .emoji-panel .emoji-tab:hover,
 html[mode=dark] .hb-w-body .hb-comment-help .emoji-panel .emoji-tab.active {
     background: #4a4a4a;

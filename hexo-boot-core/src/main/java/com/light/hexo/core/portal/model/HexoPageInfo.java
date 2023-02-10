@@ -100,7 +100,7 @@ public class HexoPageInfo implements Serializable {
 
             if (endPage > this.pages) {
                 endPage = this.pages;
-                startPage = this.pages - this.navigatePages - 1;
+                startPage = this.pages - (this.navigatePages - 1);
             }
         }
 

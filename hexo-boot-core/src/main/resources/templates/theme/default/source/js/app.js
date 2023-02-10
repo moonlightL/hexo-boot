@@ -9,6 +9,9 @@
             highlight: {
                 js: baseLink + "/source/js/highlightjs/highlight.pack.js"
             },
+            lazyLoad: {
+                js: baseLink + "/source/js/jquery.lazyload.min.js"
+            },
             share: {
                 js: baseLink + "/source/js/overshare/js/social-share.min.js"
             },
@@ -139,10 +142,12 @@
     };
 
     const loadLazy = function() {
-        $("img.lazyload").lazyload({
-            placeholder : baseLink + "/source/images/loading.jpg",
-            effect: "fadeIn"
-        });
+        $.getScript(APP.plugins.lazyLoad.js, function(e) {
+            $("img.lazyload").lazyload({
+                placeholder : baseLink + "/source/images/loading.jpg",
+                effect: "fadeIn"
+            });
+        })
     };
 
     const contentWayPoint = function () {
