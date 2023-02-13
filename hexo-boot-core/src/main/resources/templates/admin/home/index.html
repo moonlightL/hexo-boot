@@ -83,7 +83,7 @@
                     <a class="img-link mr-5" href="javascript:void(0)">
                         <img class="img-avatar img-avatar32" th:src="@{${#httpSession.getAttribute('currentUser')['avatar']}}" alt="">
                     </a>
-                    <a class="align-middle link-effect text-primary-dark font-w600" href="javascript:void(0)" data-url="/admin/user/profileUI.html" data-name="个人详情" th:text="${#httpSession.getAttribute('currentUser')['username']+ '(' + #httpSession.getAttribute('currentUser')['nickname']}+ ')'"></a>
+                    <a class="align-middle link-effect text-primary-dark font-w600" href="javascript:void(0)" data-url="/admin/user/profileUI.html" data-name="个人详情" data-scroll="yes" th:text="${#httpSession.getAttribute('currentUser')['username']+ '(' + #httpSession.getAttribute('currentUser')['nickname']}+ ')'"></a>
                 </div>
                 <!-- END User Info -->
             </div>
