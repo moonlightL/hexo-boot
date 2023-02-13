@@ -4,7 +4,7 @@
   "extension": [
     {
       "key": "version",
-      "value": "3.4",
+      "value": "3.5",
       "type": "input",
       "label": "版本号",
       "update": true
@@ -26,7 +26,7 @@
     },
     {
       "key": "CDNAddress",
-      "value": "https://cdn.jsdelivr.net/gh/moonlightL/default@3.4",
+      "value": "https://cdn.jsdelivr.net/gh/moonlightL/default@3.5",
       "type": "input",
       "label": "CDN地址",
       "update": true

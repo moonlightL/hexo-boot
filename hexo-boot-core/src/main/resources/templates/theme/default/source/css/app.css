@@ -958,7 +958,7 @@ ul li {
         width: 36px;
         height: 36px;
         line-height: 22px;
-        margin: 0 .25rem
+        margin: .25rem
     }
 }
 
@@ -969,12 +969,9 @@ ul li {
     height: 100%;
 }
 
-.pagination .page:hover, .pagination span.current  {
+.pagination .page:hover,
+.pagination .page.current {
     background: var(--theme-color);
-    color: var(--hover-color);
-}
-
-.pagination .page:hover a {
     color: var(--hover-color);
 }
 
@@ -1804,6 +1801,11 @@ h3.friend-link-title {
     opacity: 1;
     top:-3px;
     left: 140px;
+}
+
+.reward-img-area {
+    display: block;
+    animation: slowDown 1s;
 }
 
 .alert-info {

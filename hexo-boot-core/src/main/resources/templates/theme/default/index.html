@@ -19,7 +19,7 @@
 
         <div class="ml-content">
             <div class="row" >
-                <div class="post col-md-4 col-sm-6 col-xs-12" th:if="${activeTheme.configMap['layout'] == 'grid'}" th:each="post,iterStat : ${pageInfo.data}">
+                <div class="post col-md-4 col-sm-6 col-xs-12" th:if="${activeTheme.configMap['layout'] == 'grid'}" th:each="post,iterStat : ${newPageInfo.data}">
                     <div class="post-info animate-box" data-animate-effect="zoomIn">
                         <div class="post-bg">
                             <span class="reprint" th:if="${post.reprint}">转载</span>
@@ -61,7 +61,7 @@
                     </div>
                 </div>
 
-                <div class="post col-md-12" th:if="${activeTheme.configMap['layout'] == 'full'}" th:each="post,iterStat : ${pageInfo.data}">
+                <div class="post col-md-12" th:if="${activeTheme.configMap['layout'] == 'full'}" th:each="post,iterStat : ${newPageInfo.data}">
                     <div class="post-info full animate-box" data-animate-effect="fadeIn">
                         <div class="cover">
                             <span class="top" th:if="${post.top}"><img src="/theme/default/source/images/article-top.png" alt="" width="38" height="38"></span>
@@ -91,28 +91,14 @@
                     </div>
                 </div>
             </div>
-            <div class="pagination">
-                        <span th:if="${pageInfo.hasPreviousPage}" class="page">
-                            <a data-pjax class="prev page-numbers" th:href="@{${pageInfo.pageNum - 1} == 1 ? '/' : '/page/' + ${pageInfo.pageNum-1}+'/'}" ><i class="fa fa-angle-left"></i></a>
-                        </span>
-                <span th:each="pageNum : ${pageInfo.navigatepageNums}" th:if="${pageInfo.navigatepageNums.length} le '4' ">
-                            <span th:if="${pageNum == pageInfo.pageNum}"  class="page current" th:text="${pageNum}"></span>
-                            <span class="page" th:if="${pageNum != pageInfo.pageNum}">
-                                <a data-pjax th:href="@{'/page/' + ${pageNum}+'/'}" th:text="${pageNum}"></a>
-                            </span>
-                       </span>
-                <span th:each="pageNum, iterStat : ${pageInfo.navigatepageNums}" th:if="${pageInfo.navigatepageNums.length} gt '4' ">
-                           <span class="page" th:if="${pageNum == pageInfo.pageNum and iterStat.count gt 2 and iterStat.count le iterStat.size}">...</span>
-                           <span th:if="${pageNum == pageInfo.pageNum}" class="page current" th:text="${pageNum}"></span>
-                           <span class="page" th:if="${pageNum == pageInfo.pageNum and iterStat.count le (iterStat.size - 2)}">...</span>
-                           <span th:if="${pageNum != pageInfo.pageNum}">
-                               <span class="page" th:if="${iterStat.count == 1}" ><a data-pjax th:href="@{'/page/1/'}" th:text="1"></a></span>
-                               <span class="page" th:if="${iterStat.count == (iterStat.size)}"><a data-pjax th:href="@{'/page/' + ${pageNum}+'/'}" th:text="${pageNum}"></a></span>
-                            </span>
-                       </span>
-                <span th:if="${pageInfo.hasNextPage}" class="page">
-                            <a data-pjax class="next page-numbers" th:href="@{'/page/' + ${pageInfo.pageNum + 1}+'/'}" ><i class="fa fa-angle-right"></i></a>
-                        </span>
+            <div class="pagination animate-box">
+                <a data-pjax class="prev page-numbers page" th:if="${pageInfo.hasPreviousPage}" th:href="@{${pageInfo.pageNum - 1} == 1 ? '/' : '/page/' + ${pageInfo.pageNum - 1}+'/'}" ><i class="fa fa-angle-left"></i></a>
+                <a data-pjax
+                   th:each="pageNum : ${newPageInfo.navigatepageNums}"
+                   th:class="${pageNum == pageInfo.pageNum ? 'page current' : 'page'}"
+                   th:href="@{${pageNum == pageInfo.pageNum ? 'javascript:void(0)' :
+                   (pageNum == -1 ? 'javascript:void(0)' : '/page/' + pageNum+'/')}}" th:text="${pageNum == -1 ? '...' : pageNum}"></a>
+                <a data-pjax class="next page-numbers page" th:if="${pageInfo.hasNextPage}" th:href="@{'/page/' + ${pageInfo.pageNum + 1} + '/'}" ><i class="fa fa-angle-right"></i></a>
             </div>
         </div>
     </div>

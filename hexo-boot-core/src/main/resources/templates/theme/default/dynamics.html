@@ -21,7 +21,7 @@
 
     <div class="ml-content">
         <div class="dynamic-content" id="dynamic-content">
-            <div class="dynamic-item animate-box" th:each="dynamic : ${pageInfo.list}" th:data-color="${dynamic.color}">
+            <div class="dynamic-item animate-box" th:each="dynamic : ${newPageInfo.data}" th:data-color="${dynamic.color}">
                 <div class="info">
                     <div class="row">
                         <div class="col-md-1">
@@ -43,28 +43,14 @@
                 </div>
             </div>
         </div>
-        <div class="pagination">
-                    <span th:if="${pageInfo.hasPreviousPage}" class="page">
-                        <a data-pjax class="prev page-numbers" th:href="@{${pageInfo.pageNum-1} == 1 ? '/dynamics/' : '/dynamics/page/' + ${pageInfo.pageNum-1}+'/'}" ><i class="fa fa-angle-left"></i></a>
-                    </span>
-            <span th:each="pageNum : ${pageInfo.navigatepageNums}" th:if="${pageInfo.navigatepageNums.length} le '4' ">
-                        <span th:if="${pageNum == pageInfo.pageNum}"  class="page current" th:text="${pageNum}"></span>
-                        <span class="page" th:if="${pageNum != pageInfo.pageNum}">
-                            <a data-pjax th:href="@{'/dynamics/page/' + ${pageNum}+'/'}" th:text="${pageNum}"></a>
-                        </span>
-                    </span>
-            <span th:each="pageNum, iterStat : ${pageInfo.navigatepageNums}" th:if="${pageInfo.navigatepageNums.length} gt '4' ">
-                       <span class="page" th:if="${pageNum == pageInfo.pageNum and iterStat.count gt 2 and iterStat.count le iterStat.size}">...</span>
-                       <span th:if="${pageNum == pageInfo.pageNum}" class="page current" th:text="${pageNum}"></span>
-                       <span class="page" th:if="${pageNum == pageInfo.pageNum and iterStat.count le (iterStat.size - 2)}">...</span>
-                       <span th:if="${pageNum != pageInfo.pageNum}">
-                           <span class="page" th:if="${iterStat.count == 1}" ><a data-pjax th:href="@{'/dynamics/page/1/'}" th:text="1"></a></span>
-                           <span class="page" th:if="${iterStat.count == (iterStat.size)}"><a data-pjax th:href="@{'/dynamics/page/' + ${pageNum}+'/'}" th:text="${pageNum}"></a></span>
-                        </span>
-                   </span>
-            <span th:if="${pageInfo.hasNextPage}" class="page">
-                        <a data-pjax class="next page-numbers" th:href="@{'/dynamics/page/' + ${pageInfo.pageNum+1}+'/'}" ><i class="fa fa-angle-right"></i></a>
-                    </span>
+        <div class="pagination animate-box">
+            <a data-pjax class="prev page-numbers page" th:if="${pageInfo.hasPreviousPage}" th:href="@{${pageInfo.pageNum-1} == 1 ? '/dynamics/' : '/dynamics/page/' + ${pageInfo.pageNum-1}+'/'}"><i class="fa fa-angle-left"></i></a>
+            <a data-pjax
+               th:each="pageNum : ${newPageInfo.navigatepageNums}"
+               th:class="${pageNum == pageInfo.pageNum ? 'page current' : 'page'}"
+               th:href="@{${pageNum == pageInfo.pageNum ? 'javascript:void(0)' :
+                   (pageNum == -1 ? 'javascript:void(0)' : '/dynamics/page/' + pageNum + '/')}}" th:text="${pageNum == -1 ? '...' : pageNum}"></a>
+            <a data-pjax class="next page-numbers page" th:if="${pageInfo.hasNextPage}" th:href="@{'/dynamics/page/' + ${pageInfo.pageNum + 1}+'/'}"><i class="fa fa-angle-right"></i></a>
         </div>
         <script>
             let elements = document.getElementsByClassName("dynamic-item");

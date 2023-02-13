@@ -217,13 +217,7 @@
             // 打赏
             $("#showRewardImg").on("click", function () {
                 let rewardImgArea = $("#rewardImgArea");
-                if (rewardImgArea.hasClass("hide")) {
-                    rewardImgArea.removeClass("hide");
-                    rewardImgArea.slideDown("slow");
-                } else {
-                    rewardImgArea.addClass("hide");
-                    rewardImgArea.slideUp("slow");
-                }
+                rewardImgArea.toggleClass("hide");
             });
 
             // 分享

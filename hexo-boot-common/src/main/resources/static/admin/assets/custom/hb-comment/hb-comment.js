@@ -702,8 +702,13 @@
 
             let content = getElementByClassName(commentBody, "hb_content").value;
 
-            if (!nickname || !email || !content) {
+            if (!nickname || !email) {
                 showTip("邮箱地址和昵称不能为空");
+                return;
+            }
+
+            if (!content) {
+                showTip("评论内容不能为空");
                 return;
             }
 
@@ -719,7 +724,7 @@
             };
 
             if (!self.options.sendUrl) {
-                console.error("请求地址为空!")
+                console.error("请求地址为空!");
                 return;
             }
 

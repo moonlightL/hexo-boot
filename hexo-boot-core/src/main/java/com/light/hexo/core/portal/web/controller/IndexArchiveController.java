@@ -3,6 +3,7 @@ package com.light.hexo.core.portal.web.controller;
 import com.light.hexo.common.vo.Result;
 import com.light.hexo.core.portal.common.CommonController;
 import com.light.hexo.core.portal.model.HexoPageInfo;
+import com.light.hexo.core.portal.model.MorePageInfo;
 import com.light.hexo.mapper.model.Dynamic;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +34,10 @@ public class IndexArchiveController extends CommonController {
         pageNum = pageNum == null ? 1 : pageNum;
         HexoPageInfo pageInfo =  this.postService.archivePostsByIndex(pageNum, PAGE_SIZE);
         resultMap.put("pageInfo", pageInfo);
+
+        // 新分页数据
+        resultMap.put("newPageInfo", new MorePageInfo(pageInfo, PAGE_SIZE));
+
         return render("archives", false, resultMap);
     }
 

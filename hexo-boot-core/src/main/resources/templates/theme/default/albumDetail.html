@@ -23,8 +23,8 @@
     <div class="ml-content">
         <div class="ml-content-body">
             <div class="row" th:if="${album.detailType == 1}">
-                <div class="col-sm-6 col-md-3" th:each="detail,iterStat: ${pageInfo.data}">
-                    <div class="album-detail-item animate-box" data-animate-effect="fadeIn">
+                <div class="col-sm-6 col-md-3" th:each="detail,iterStat: ${newPageInfo.data}">
+                    <div class="album-detail-item animate-box">
                         <a class="fancybox" th:href="@{${detail.url}}" data-fancybox="gallery">
                             <img th:data-original="@{${detail.url}}" class="lazyload">
                             <div class="mask"><i class="fa fa-search-plus"></i></div>
@@ -34,7 +34,7 @@
                 </div>
             </div>
             <div class="row" th:if="${album.detailType == 2}">
-                <div class="col-sm-12 col-md-4" th:each="detail,iterStat: ${pageInfo.data}">
+                <div class="col-sm-12 col-md-4" th:each="detail,iterStat: ${newPageInfo.data}">
                     <div class="album-detail-item animate-box">
                         <a href="javascript:void(0)" th:data-url="${detail.url}" class="play-btn">
                             <img th:data-original="@{${detail.coverUrl}}" class="lazyload">
@@ -51,28 +51,14 @@
             </div>
         </div>
 
-        <div class="pagination">
-                    <span th:if="${pageInfo.hasPreviousPage}" class="page">
-                        <a data-pjax class="prev page-numbers" th:href="@{${pageInfo.pageNum-1} == 1 ? '/albumDetail/' + ${album.id} + '/': '/albumDetail/' + ${album.id} + '/' + ${pageInfo.pageNum-1}+'/'}" ><i class="fa fa-angle-left"></i></a>
-                    </span>
-            <span th:each="pageNum : ${pageInfo.navigatepageNums}" th:if="${pageInfo.navigatepageNums.length} le '4' ">
-                        <span th:if="${pageNum == pageInfo.pageNum}"  class="page current" th:text="${pageNum}"></span>
-                        <span class="page" th:if="${pageNum != pageInfo.pageNum}">
-                            <a data-pjax th:href="@{${pageNum} == 1 ? '/albumDetail/' + ${album.id} + '/': '/albumDetail/' + ${album.id} + '/' + ${pageNum}+'/'}" th:text="${pageNum}"></a>
-                        </span>
-                    </span>
-            <span th:each="pageNum, iterStat : ${pageInfo.navigatepageNums}" th:if="${pageInfo.navigatepageNums.length} gt '4' ">
-                           <span class="page" th:if="${pageNum == pageInfo.pageNum and iterStat.count gt 2 and iterStat.count le iterStat.size}">...</span>
-                           <span th:if="${pageNum == pageInfo.pageNum}" class="page current" th:text="${pageNum}"></span>
-                           <span class="page" th:if="${pageNum == pageInfo.pageNum and iterStat.count le (iterStat.size - 2)}">...</span>
-                           <span th:if="${pageNum != pageInfo.pageNum}">
-                               <span class="page" th:if="${iterStat.count == 1}" ><a data-pjax th:href="@{'/albumDetail/' + ${album.id} + '/1/'}" th:text="1"></a></span>
-                               <span class="page" th:if="${iterStat.count == (iterStat.size)}"><a data-pjax th:href="@{'/albumDetail/' + ${album.id} + '/' +  ${pageNum} +'/'}" th:text="${pageNum}"></a></span>
-                            </span>
-                       </span>
-            <span th:if="${pageInfo.hasNextPage}" class="page">
-                        <a data-pjax class="next page-numbers" th:href="@{'/albumDetail/' + ${album.id} + '/' +  ${pageInfo.pageNum + 1}+'/'}" ><i class="fa fa-angle-right"></i></a>
-                    </span>
+        <div class="pagination animate-box">
+            <a data-pjax class="prev page-numbers page" th:if="${pageInfo.hasPreviousPage}" th:href="@{${pageInfo.pageNum - 1} == 1 ? '/albumDetail/' + ${album.id} + '/': '/albumDetail/' + ${album.id} + '/' + ${pageInfo.pageNum-1} + '/'}"><i class="fa fa-angle-left"></i></a>
+            <a data-pjax
+               th:each="pageNum : ${newPageInfo.navigatepageNums}"
+               th:class="${pageNum == pageInfo.pageNum ? 'page current' : 'page'}"
+               th:href="@{${pageNum == pageInfo.pageNum ? 'javascript:void(0)' :
+                   (pageNum == -1 ? 'javascript:void(0)' : '/albumDetail/' + album.id + '/' +  pageNum +'/')}}" th:text="${pageNum == -1 ? '...' : pageNum}"></a>
+            <a data-pjax class="next page-numbers page" th:if="${pageInfo.hasNextPage}" th:href="@{'/albumDetail/' + ${album.id} + '/' +  ${pageInfo.pageNum + 1}+'/'}"><i class="fa fa-angle-right"></i></a>
         </div>
     </div>
 
