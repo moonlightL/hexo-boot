@@ -64,7 +64,7 @@ public class PluginController extends BaseController {
     @RequestMapping("/installPlugin.json")
     @ResponseBody
     @OperateLog(value = "安装插件", actionType = ActionEnum.ADMIN_ADD)
-    public Result unzipTheme(MultipartFile file) {
+    public Result unzipPlugin(MultipartFile file) {
 
         if (file == null) {
             ExceptionUtil.throwEx(GlobalExceptionEnum.ERROR_PARAM);

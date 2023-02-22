@@ -21,7 +21,7 @@
 
     <div class="ml-content">
         <div class="archive-body" id="archives">
-            <div th:if="${pageInfo.total > 0}">
+            <div th:if="${newPageInfo.total > 0}">
                 <div class='archive-content' th:each="map,iterStat : ${newPageInfo.data}">
                     <h3 class="animate-box" data-animate-effect="fadeInUp">[[${map.key}]] 年</h3>
                     <div class='archives'>
@@ -36,7 +36,7 @@
                 </div>
 
             </div>
-            <div class='archive-title' th:if="${pageInfo.total == 0}">
+            <div class='archive-title' th:if="${newPageInfo.total == 0}">
                 <div style="text-align:center;">
                     ~~暂无数据~~
                 </div>
@@ -44,13 +44,13 @@
         </div>
 
         <div class="pagination animate-box">
-            <a data-pjax class="prev page-numbers page" th:if="${pageInfo.hasPreviousPage}" th:href="@{${pageInfo.pageNum-1} == 1 ? '/archives/' : '/archives/page/' + ${pageInfo.pageNum-1}+'/'}"><i class="fa fa-angle-left"></i></a>
+            <a data-pjax class="prev page-numbers page" th:if="${newPageInfo.hasPreviousPage}" th:href="@{${newPageInfo.pageNum-1} == 1 ? '/archives/' : '/archives/page/' + ${newPageInfo.pageNum-1}+'/'}"><i class="fa fa-angle-left"></i></a>
             <a data-pjax
                th:each="pageNum : ${newPageInfo.navigatepageNums}"
-               th:class="${pageNum == pageInfo.pageNum ? 'page current' : 'page'}"
-               th:href="@{${pageNum == pageInfo.pageNum ? 'javascript:void(0)' :
+               th:class="${pageNum == newPageInfo.pageNum ? 'page current' : 'page'}"
+               th:href="@{${pageNum == newPageInfo.pageNum ? 'javascript:void(0)' :
                    (pageNum == -1 ? 'javascript:void(0)' : '/archives/page/' + pageNum + '/')}}" th:text="${pageNum == -1 ? '...' : pageNum}"></a>
-            <a data-pjax class="next page-numbers page" th:if="${pageInfo.hasNextPage}" th:href="@{'/archives/page/' + ${pageInfo.pageNum + 1}+'/'}"><i class="fa fa-angle-right"></i></a>
+            <a data-pjax class="next page-numbers page" th:if="${newPageInfo.hasNextPage}" th:href="@{'/archives/page/' + ${newPageInfo.pageNum + 1}+'/'}"><i class="fa fa-angle-right"></i></a>
         </div>
 
     </div>

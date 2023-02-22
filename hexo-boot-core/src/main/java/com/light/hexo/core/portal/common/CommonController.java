@@ -42,8 +42,6 @@ public class CommonController {
 
     protected static final int PAGE_SIZE = 10;
 
-    protected static final String DEFAULT_CDN_ADDRESS = "https://cdn.jsdelivr.net/gh/moonlightL/CDN@%s/%s";
-
     @Autowired
     protected PostService postService;
 
@@ -104,6 +102,10 @@ public class CommonController {
 
     protected String render(String pageName, boolean isDetail, Map<String, Object> resultMap) {
 
+        // 数量（兼容数据）
+        Map<String, Integer> countInfo = this.getCountInfo();
+        resultMap.put("countInfo", countInfo);
+
         // 主题
         Theme activeTheme = this.themeService.getActiveTheme(true);
         String themeName = (activeTheme == null ? "default" : activeTheme.getName());
@@ -131,9 +133,8 @@ public class CommonController {
         String CDNAddress = activeTheme.getConfigMap().get("CDNAddress");
         String version = activeTheme.getConfigMap().get("version");
         if (StringUtils.isNotBlank(useCDNStr) && StringUtils.isNotBlank(version)) {
-            boolean useCDN = useCDNStr.equals("true");
-            if (useCDN) {
-                resultMap.put("baseLink", StringUtils.isBlank(CDNAddress) ? String.format(DEFAULT_CDN_ADDRESS, version, themeName) : CDNAddress);
+            if (useCDNStr.equals("true")) {
+                resultMap.put("baseLink", StringUtils.isBlank(CDNAddress) ? "/theme/" + themeName : CDNAddress);
             } else {
                 resultMap.put("baseLink", "/theme/" + themeName);
             }
@@ -177,6 +178,27 @@ public class CommonController {
         cookie.setPath("/");
         cookie.setMaxAge(90 * 24 * 3600);
         response.addCookie(cookie);
+    }
+
+    private Map<String, Integer> getCountInfo() {
+
+        String key = CacheKey.INDEX_COUNT_INFO;
+        Map<String, Integer> result = CacheUtil.get(key);
+        if (result == null) {
+            result = new HashMap<>(4);
+            // 文章数
+            result.put("postNum", this.postService.getPostNum());
+            // 分类数
+            result.put("categoryNum", this.categoryService.getCategoryNum());
+            // 标签数
+            result.put("tagNum", this.tagService.getTagNum());
+            // 友链数
+            result.put("friendLinkNum", this.friendLinkService.getFriendLinkNum());
+            // 缓存一天
+            CacheUtil.put(key, result, 24 * 60 * 60 * 1000);
+        }
+
+        return result;
     }
 
 }

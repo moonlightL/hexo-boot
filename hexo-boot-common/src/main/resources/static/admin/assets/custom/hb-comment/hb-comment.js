@@ -317,7 +317,7 @@
         }
         htmlArr.push('<div class="hb-w">');
         htmlArr.push('<div class="hb-w-head">');
-        htmlArr.push('<h2 class="h2">' + self.options.title + '</h2> <span class="glyphicon glyphicon-info-sign" title="评论信息使用cookie技术存储,用户根据情况自行处理"></span>' + (self.visitor ? '（欢迎归来）' : '') + ' <span></span>');
+        htmlArr.push('<h2 class="h2">' + self.options.title + '</h2> ' + (self.visitor ? '（欢迎归来）' : '') + ' <span title="评论信息使用cookie技术存储,用户根据情况自行处理">🛎️</span>');
         htmlArr.push('</div>');
 
         htmlArr.push('<div class="hb-w-body">');
@@ -483,7 +483,7 @@
                         bloggerHtml += '<span> • ' + replyComment.timeDesc + '</span>';
                         htmlArr.push('<div class="nickname">'+ replyComment.nickname + bloggerHtml + '</div>');
                         if (self.options.canComment) {
-                            htmlArr.push('<div class="action"><a href="javascript:void(0)" title="回复" class="action-reply" data-comment-id="'+ replyComment.id +'" data-nickname="'+ replyComment.nickname +'"><span class="glyphicon glyphicon-comment"></span></a></div>');
+                            htmlArr.push('<div class="action"><a href="javascript:void(0)" title="回复" class="action-reply" data-comment-id="'+ replyComment.id +'" data-nickname="'+ replyComment.nickname +'">回复</a></div>');
                         }
                         htmlArr.push('</div>');
                         htmlArr.push('<div class="content">');
@@ -775,7 +775,6 @@
 
     HbComment.prototype.registerREvent = function() {
         let self = this;
-        let commentEL = document.querySelector(self.options.el);
         let replyArr = document.querySelectorAll(".action-reply");
         let hbW = document.querySelector(".hb-w");
         for (let i = 0; i < replyArr.length; i++) {
@@ -783,35 +782,36 @@
             let commentId = replyBtn.dataset.commentId;
             let sourceNickname = replyBtn.dataset.nickname;
             replyBtn.addEventListener("click", function() {
+
+                let openEle = document.querySelector(".action-reply.open");
+                if (openEle && openEle != replyBtn) {
+                    openEle.setAttribute("class", "action-reply");
+                }
+
                 let infoNode = replyBtn.parentNode.parentNode;
-                let index = infoNode.className.indexOf("reply");
+                let cloneEle = document.querySelector(".hb-w-body.clone");
+                let index = replyBtn.className.indexOf("open");
                 if (index == -1) {
-                    infoNode.setAttribute("class", "info reply");
-                    let boxArr = getElementsByClassName(commentEL, "hb-r-body-box");
-                    for (let i = 0; i < boxArr.length; i++) {
-                        let boxElement = boxArr[i];
-                        let commentBody = getElementByClassName(boxElement, "hb-w-body");
-                        if (commentBody) {
-                            if (boxElement.lastChild == commentBody) {
-                                getElementByClassName(boxElement, "info").setAttribute("class", "info");
-                                boxElement.removeChild(commentBody);
-                            }
-                        }
+                    replyBtn.setAttribute("class", "action-reply open");
+                    if (cloneEle) {
+                        cloneEle.remove();
                     }
+
                     let wBody = getElementByClassName(hbW,"hb-w-body");
                     let cloneCommentBody = wBody.cloneNode(true);
                     cloneCommentBody.setAttribute("class", "hb-w-body clone");
                     let sendBtn = getElementByClassName(cloneCommentBody, "send-btn");
                     sendBtn.dataset.commentPid = commentId;
                     sendBtn.dataset.sourceNickname = sourceNickname;
-                    infoNode.parentNode.parentNode.parentNode.appendChild(cloneCommentBody);
+                    infoNode.parentNode.parentNode.insertAdjacentElement('afterend', cloneCommentBody);
 
                     getElementByClassName(cloneCommentBody, "hb_content").setAttribute("placeholder", "@" + sourceNickname);
                     self.registerWEvent(cloneCommentBody);
                 } else {
-                    infoNode.setAttribute("class", "info");
-                    let boxNode = infoNode.parentNode.parentNode.parentNode;
-                    boxNode.removeChild(boxNode.lastChild);
+                    replyBtn.setAttribute("class", "action-reply");
+                    if (cloneEle) {
+                        cloneEle.remove();
+                    }
                 }
             });
         }

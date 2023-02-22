@@ -1,17 +1,29 @@
 ;(function($) {
     "use strict";
 
-    $.fn.affixToc = function(params) {
-        let options = $.extend(AffixToc.DEFAULT_OPTIONS, params || {});
-        return new AffixToc(this, options);
-    };
+    // AFFIXTOC CLASS DEFINITION
+    // ==========================
 
-    let AffixToc = function(el, options) {
-        this.options = options;
+    function AffixToc(el, options) {
+        this.options = $.extend({}, AffixToc.DEFAULTS, options);
         this.$el = $(el);
         this.$affix = $(options.affixEle);
         this.$scope = $(options.scopeEle);
+        this.affixEleWidth = this.$affix.width();
+        this.affixEleLeft = this.$affix[0].offsetLeft;
+
         this.init();
+    }
+
+    AffixToc.VERSION = "1.0.1";
+
+    AffixToc.DEFAULTS = {
+        affixEle: "",  // 需固定的容器
+        scopeEle: "",  // 搜索范围容器
+        offset: 600,  // 滚动到当前值就固定
+        affixTop: 70, // 容器固定后的 top 值
+        activeColor: "#000", // 激活字体颜色
+        headArr: ['h2', 'h3', 'h4', 'h5', 'h6']
     };
 
     AffixToc.prototype.init = function() {
@@ -22,9 +34,10 @@
 
     AffixToc.prototype.addStyle = function() {
         let self = this;
+        let affixPostTocClass = self.$el.selector;
         let affixEleClass = self.options.affixEle;
         let activeColor = self.options.activeColor;
-        let defaultStyle = affixEleClass + ' {position: static; margin-top: 1rem; padding-bottom: 1rem;} ' + affixEleClass + '.affix {position: fixed !important; top: 64px; margin-top: 0; width: 276px; } ' + affixEleClass + ' .post-toc {height: 480px; overflow: auto; } ' + affixEleClass + ' .post-toc::-webkit-scrollbar {width: 8px; height: 0; background: #ccc; border-radius: 10px } ' + affixEleClass + ' .post-toc::-webkit-scrollbar-thumb {display: block; width: 8px; margin: 0 auto; border-radius: 10px; background: #aaa } ' + affixEleClass + ' .nav {padding-left: 0; list-style: none;} ' + affixEleClass + ' .nav-item {position: relative; width: 100%; } ' + affixEleClass + ' .nav-item .nav-child {padding-left: 1rem; display: none} ' + affixEleClass + ' .nav-item .nav-child.active {display: block;}' + affixEleClass + ' .nav-item li {list-style-type: none; } ' + affixEleClass + ' .nav-item .nav-link.active {color: ' + activeColor + '}' + affixEleClass + ' .nav-item .nav-link.active ~ .nav-child {display: block;}';
+        let defaultStyle = affixEleClass + ' {position: static; margin-top: 1rem; padding-bottom: 1rem;} ' + affixEleClass + '.affix {position: fixed;} ' + affixPostTocClass + ' {height: 480px; overflow: auto; } ' + affixPostTocClass + '::-webkit-scrollbar {width: 8px; height: 0; background: #ccc; border-radius: 10px } ' + affixPostTocClass + '::-webkit-scrollbar-thumb {display: block; width: 8px; margin: 0 auto; border-radius: 10px; background: #aaa } ' + affixEleClass + ' .affix-nav {padding-left: 0; list-style: none;} ' + affixEleClass + ' .affix-nav-item {position: relative; width: 100%; } ' + affixEleClass + ' .affix-nav-item .affix-nav-child {padding-left: 1rem; display: none} ' + affixEleClass + ' .affix-nav-item .affix-nav-child.active {display: block;}' + affixEleClass + ' .affix-nav-item li {list-style-type: none; } ' + affixEleClass + ' .affix-nav-item .affix-nav-link {display: block; color: #676a79; padding: 0.25rem 0.75rem;}' + affixEleClass + ' .affix-nav-item .affix-nav-link.active {color: ' + activeColor + '; font-weight: bold;}' + affixEleClass + ' .affix-nav-item .affix-nav-link.active ~ .affix-nav-child {display: block;}';
         let $head = $("head");
         let style = $("<style></style>").text(defaultStyle);
         $head.append(style);
@@ -39,7 +52,7 @@
         self.headings = headings;
         if (!headings.length) return '';
         let listNumber = false;
-        let html = "<ul class='nav'>";
+        let html = "<ul class='affix-nav'>";
         let lastNumber = [0, 0, 0, 0, 0, 0];
         let firstLevel = 0;
         let lastLevel = 0;
@@ -64,23 +77,23 @@
                     html += '</li></ul>'
                 }
                 if (level > lastLevel) {
-                    html += '<ul class="nav-child">'
+                    html += '<ul class="affix-nav-child">'
                 } else {
                     html += '</li>'
                 }
             } else {
                 firstLevel = level
             }
-            html += '<li class="nav-item nav-level-' + level + '">';
-            html += '<a class="nav-link" href="#' + id + '">';
+            html += '<li class="affix-nav-item affix-nav-level-' + level + '">';
+            html += '<a class="affix-nav-link" href="#' + id + '">';
             if (listNumber) {
-                html += '<span class="nav-number">';
+                html += '<span class="affix-nav-number">';
                 for (i = firstLevel - 1; i < level; i++) {
                     html += lastNumber[i]
                 }
                 html += '</span> '
             }
-            html += '<span class="nav-text">' + text + '</span></a>';
+            html += '<span class="affix-nav-text">' + text + '</span></a>';
             lastLevel = level
         });
         for (i = firstLevel - 1; i < lastLevel; i++) {
@@ -93,20 +106,26 @@
     AffixToc.prototype.affixAndCheck = function() {
         let self = this;
         let allLink = self.$el.find("a");
-        let allNavChild = self.$el.find("ul.nav-child");
+        let allNavChild = self.$el.find("ul.affix-nav-child");
         let affix = false;
         let oldIndex = -1;
+
+        let $affixEle = self.$affix;
+
         $(window).scroll(function(e) {
+
             let scrollTop = $(this).scrollTop();
             if (scrollTop >= self.options.offset) {
                 if (!affix) {
                     affix = true;
                     self.$affix.addClass("affix");
+                    $affixEle.css({top: self.options.affixTop, left: self.affixEleLeft, width: self.affixEleWidth});
                 }
             } else {
                 if (affix) {
                     affix = false;
                     self.$affix.removeClass("affix");
+                    $affixEle.css({top: 0, left: 0});
                 }
             }
 
@@ -125,17 +144,36 @@
             oldIndex = newIndex;
             allLink.removeClass("active");
             allNavChild.removeClass("active");
-            allLink.eq(newIndex).addClass("active").parents("ul.nav-child").addClass("active");
+            allLink.eq(newIndex).addClass("active").parents("ul.affix-nav-child").addClass("active");
         });
+
     };
 
-    AffixToc.DEFAULT_OPTIONS = {
-        affixEle: "",  // 需固定的容器
-        scopeEle: "",  // 搜索范围容器
-        offset: 600,  // 滚动到当前值就固定
-        activeColor: "#0f6fec", // 激活字体颜色
-        headArr: ['h2', 'h3', 'h4', 'h5', 'h6']
-    };
+    // AFFIXTOC PLUGIN DEFINITION
+    // ===========================
 
+    function Plugin(option) {
+        return this.each(function () {
+            let $this   = $(this);
+            let data    = $this.data('hb.affixtoc');
+            let options = typeof option == 'object' && option;
+
+            if (!data) $this.data('hb.affixtoc', (data = new AffixToc(this, options)));
+            if (typeof option == 'string') data[option]();
+        });
+    }
+
+    let old = $.fn.affixToc;
+
+    $.fn.affixToc             = Plugin;
+    $.fn.affixToc.Constructor = AffixToc;
+
+    // AFFIXTOC NO CONFLICT
+    // =====================
+
+    $.fn.affixToc.noConflict = function () {
+        $.fn.affixToc = old;
+        return this;
+    };
 
 })(jQuery);

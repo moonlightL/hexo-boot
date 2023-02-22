@@ -3,6 +3,7 @@ package com.light.hexo.core.admin.service.impl;
 import cn.hutool.core.util.ZipUtil;
 import com.light.hexo.common.base.BaseRequest;
 import com.light.hexo.common.base.BaseServiceImpl;
+import com.light.hexo.common.config.BlogConfig;
 import com.light.hexo.common.constant.HexoExceptionEnum;
 import com.light.hexo.common.exception.GlobalException;
 import com.light.hexo.common.plugin.BasePlugin;
@@ -53,6 +54,9 @@ public class SysPluginServiceImpl extends BaseServiceImpl<SysPlugin> implements 
 
     @Autowired
     private HexoBootPluginManager pluginManager;
+
+    @Autowired
+    private BlogConfig blogConfig;
 
     @Override
     public BaseMapper<SysPlugin> getBaseMapper() {
@@ -111,27 +115,62 @@ public class SysPluginServiceImpl extends BaseServiceImpl<SysPlugin> implements 
             e.printStackTrace();
         }
 
-        String filePath = newPluginFile.getAbsolutePath();
-        String pluginId = this.pluginManager.loadPlugin(Paths.get(filePath));
-        PluginWrapper pluginWrapper = this.pluginManager.getPlugin(pluginId);
-        PluginDescriptor descriptor = pluginWrapper.getDescriptor();
+        String pluginId = null;
+        try {
+            String filePath = newPluginFile.getAbsolutePath();
+            pluginId = this.pluginManager.loadPlugin(Paths.get(filePath));
+            PluginWrapper pluginWrapper = this.pluginManager.getPlugin(pluginId);
+            PluginDescriptor descriptor = pluginWrapper.getDescriptor();
 
-        PluginState pluginState = this.pluginManager.startPlugin(pluginId, filePath);
-        String configUrl = ((BasePlugin) pluginWrapper.getPlugin()).getConfigUrl();
-        SysPlugin plugin = new SysPlugin();
-        plugin.setPluginId(pluginId)
-              .setOriginName(originName)
-              .setState(pluginState.toString().equals(PluginState.STARTED.toString()))
-              .setRemark(descriptor.getPluginDescription())
-              .setVersion(descriptor.getVersion())
-              .setAuthor(descriptor.getProvider())
-              .setFilePath(filePath)
-              .setConfigUrl(StringUtils.isBlank(configUrl) ? "" : configUrl)
-              .setCreateTime(LocalDateTime.now())
-              .setUpdateTime(plugin.getCreateTime());
-        this.pluginMapper.insert(plugin);
+            // 检测版本要求
+            boolean check = this.checkVersion(descriptor);
+            if (!check) {
+                ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_PLUGIN_CHECK_VERSION);
+            }
+
+            PluginState pluginState = this.pluginManager.startPlugin(pluginId, filePath);
+            String configUrl = ((BasePlugin) pluginWrapper.getPlugin()).getConfigUrl();
+            SysPlugin plugin = new SysPlugin();
+            plugin.setPluginId(pluginId)
+                  .setOriginName(originName)
+                  .setState(pluginState.toString().equals(PluginState.STARTED.toString()))
+                  .setRemark(descriptor.getPluginDescription())
+                  .setVersion(descriptor.getVersion())
+                  .setAuthor(descriptor.getProvider())
+                  .setFilePath(filePath)
+                  .setConfigUrl(StringUtils.isBlank(configUrl) ? "" : configUrl)
+                  .setCreateTime(LocalDateTime.now())
+                  .setUpdateTime(plugin.getCreateTime());
+            this.pluginMapper.insert(plugin);
+
+        } catch (Exception e) {
+            this.pluginManager.deletePlugin(pluginId);
+            File pluginFile = new File(newPluginFile.getAbsolutePath());
+            if (pluginFile.exists()) {
+                boolean deleteQuietly = false;
+                int tryCount = 0;
+                while (!deleteQuietly && tryCount++ < 10) {
+                    System.gc();
+                    deleteQuietly = FileUtils.deleteQuietly(pluginFile);
+                }
+            }
+
+            throw e;
+        }
 
         return pluginId;
+    }
+
+    private boolean checkVersion(PluginDescriptor descriptor) {
+        String requires = descriptor.getRequires();
+        if (StringUtils.isNotBlank(requires)) {
+            Integer requireVersion = Integer.valueOf(requires.replaceAll("\\.", ""));
+            Integer sysVersion = Integer.valueOf(this.blogConfig.getVersion().replaceAll("\\.", ""));
+            if (sysVersion < requireVersion) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override

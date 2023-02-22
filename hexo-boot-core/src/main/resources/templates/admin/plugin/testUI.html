@@ -5,161 +5,62 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, initial-scale=1, shrink-to-fit=no">
     <div th:replace="~{admin/common :: common-link}"></div>
-    <link th:href="@{'https://cdn.jsdelivr.net/gh/moonlightL/xterm@1.0/xterm.css'}" rel="stylesheet">
 </head>
 <body>
 <div class="content">
 
     <div class="block">
-        <div class="block-content block-content-full">
-            <form action="" class="form-inline" method="post">
-                <label class="sr-only" for="hostname">ip 地址</label>
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <button type="button" class="btn btn-secondary">ip 地址</button>
-                    </div>
-                    <input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="hostname" placeholder="ip 地址">
+        <div class="content content-full">
+            <div class="block">
+                <div class="block-header block-header-default">
+                    <h3 class="block-title">RSS 信息</h3>
                 </div>
-
-                <label class="sr-only" for="username">用户名</label>
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <button type="button" class="btn btn-secondary">用户名</button>
-                    </div>
-                    <input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="username" placeholder="用户名">
+                <div class="block-content">
+                    <table class="table table-bordered table-vcenter">
+                        <thead>
+                        <tr>
+                            <th class="text-center" style="width: 50px;">#</th>
+                            <th>链接</th>
+                            <th class="d-none d-sm-table-cell" style="width: 15%;">类型</th>
+                            <th class="text-center" style="width: 100px;">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <th class="text-center" scope="row">1</th>
+                            <td>[[${#servletContext.getAttribute('configMap')['home_page'] + '/rss/list'}]]</td>
+                            <td class="d-none d-sm-table-cell">
+                                <span class="badge badge-info">RSS</span>
+                            </td>
+                            <td class="text-center">
+                                <div class="btn-group">
+                                    <a class="btn btn-sm btn-secondary" th:href="@{${#servletContext.getAttribute('configMap')['home_page'] + '/rss/list'}}" target="_blank" data-toggle="tooltip" title="访问">
+                                        <i class="fa fa-pencil"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="text-center" scope="row">2</th>
+                            <td>[[${#servletContext.getAttribute('configMap')['home_page'] + '/atom/list'}]]</td>
+                            <td class="d-none d-sm-table-cell">
+                                <span class="badge badge-warning">Atom</span>
+                            </td>
+                            <td class="text-center">
+                                <div class="btn-group">
+                                    <a class="btn btn-sm btn-secondary" th:href="@{${#servletContext.getAttribute('configMap')['home_page'] + '/atom/list'}}" target="_blank" data-toggle="tooltip" title="访问">
+                                        <i class="fa fa-pencil"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
-
-                <label class="sr-only" for="password">密码</label>
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <button type="button" class="btn btn-secondary">密码</button>
-                    </div>
-                    <input type="password" class="form-control mb-2 mr-sm-2 mb-sm-0" id="password" placeholder="密码">
-                </div>
-
-                <button id="connect-btn" type="button" class="btn btn-alt-primary mr-5" >连接</button>
-                <button id="disconnect-btn" type="button" class="btn btn-alt-warning" disabled>断开</button>
-            </form>
+            </div>
         </div>
     </div>
 
-    <div class="block">
-        <div class="block-header block-header-default">
-            <h3 class="block-title">终端控制台</h3>
-        </div>
-        <div class="block-content block-content-full">
-            <div id="terminal"></div>
-        </div>
-    </div>
-
-    <div class="block">
-        <div class="block-header block-header-default">
-            <h3 class="block-title">操作结果</h3>
-        </div>
-        <div class="block-content block-content-full">
-            <div id="result"></div>
-        </div>
-    </div>
 </div>
 <div th:replace="~{admin/common :: common-script}"></div>
-<script type="text/javascript" th:src="@{'https://cdn.jsdelivr.net/gh/moonlightL/xterm@1.0/xterm.js'}"></script>
-<script type="text/javascript" th:src="@{'https://cdn.jsdelivr.net/gh/moonlightL/xterm@1.0/addons/fit/fit.js'}"></script>
-<script>
-    $(function() {
-
-        Terminal.applyAddon(fit);
-
-        TerminalManager.term = new Terminal({
-            cols: 120,
-            rows: 24,
-            cursorBlink: true
-        });
-
-        TerminalManager.term.open(document.getElementById('terminal'));
-
-        $("#connect-btn").on("click", function () {
-
-            let $hostname = $("#hostname").val();
-            let $username = $("#username").val();
-            let $password = $("#password").val();
-
-            if ($hostname == "" || $username == "" || $password == "") {
-                $.hexo.modal.msg("连接信息不能为空", 2);
-                return;
-            }
-
-            TerminalManager.connect($hostname, $username, $password);
-        });
-
-        $("#disconnect-btn").on("click", function () {
-            TerminalManager.disconnect();
-        });
-
-        window.onresize = function() {
-            TerminalManager.term.fit();
-            TerminalManager.term.scrollToBottom();
-        };
-
-    });
-
-    let TerminalManager = {
-        webSocket: null,
-        term: null,
-        bindStatus: false,
-        connect: function(hostname, username, password) {
-            if (TerminalManager.webSocket != null) {
-                $.hexo.modal.msg("webSocket 已连接", 1);
-                return false;
-            }
-
-            let host = window.location.host;
-            let url = "ws://" + host + "/terminalServer?hostname=" + hostname + "&username=" + username + "&password=" +  password;
-            if ('WebSocket' in window) {
-                TerminalManager.webSocket = new WebSocket(url);
-            } else if ('MozWebSocket' in window) {
-                TerminalManager.webSocket = new MozWebSocket(url);
-            }
-
-            TerminalManager.webSocket.onopen = function(evnt) {
-                $("#result").html("连接服务器成功!<br/>")
-
-                if (!TerminalManager.bindStatus) {
-                    TerminalManager.term.on('data', function(data) {
-                        TerminalManager.webSocket.send(data);
-                    });
-                    TerminalManager.bindStatus = !TerminalManager.bindStatus;
-                }
-            };
-
-            TerminalManager.webSocket.onmessage = function(evnt) {
-                TerminalManager.term.write(evnt.data);
-            };
-
-            TerminalManager.webSocket.onerror = function(evnt) {
-                $("#result").html($("#result").html() + "报错!<br/>")
-                TerminalManager.disconnect();
-            };
-
-            TerminalManager.webSocket.onclose = function(evnt) {
-                $("#result").html($("#result").html() + "与服务器断开连接!<br/>");
-            }
-
-            $("#connect-btn").prop("disabled", true);
-            $("#disconnect-btn").prop("disabled", false);
-        },
-        disconnect: function () {
-            if (TerminalManager.webSocket == null) {
-                $.hexo.modal.msg("webSocket 连接已断开");
-                return;
-            }
-
-            $("#connect-btn").prop("disabled", false);
-            $("#disconnect-btn").prop("disabled", true);
-
-            TerminalManager.webSocket.close();
-            TerminalManager.term.reset();
-            TerminalManager.webSocket = null;
-        }
-    }
-</script>
 </body>

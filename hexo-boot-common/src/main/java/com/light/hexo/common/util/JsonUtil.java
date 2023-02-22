@@ -5,7 +5,13 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * @Author MoonlightL
@@ -44,6 +50,15 @@ public class JsonUtil {
 
         // 允许使用单引号
         objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+
+        // java 8 时间
+        JavaTimeModule javaTimeModule = new JavaTimeModule();
+        LocalDateTimeDeserializer dateTimeDeserializer = new LocalDateTimeDeserializer(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        LocalDateTimeSerializer dateTimeSerializer = new LocalDateTimeSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        javaTimeModule.addDeserializer(LocalDateTime.class, dateTimeDeserializer);
+        javaTimeModule.addSerializer(LocalDateTime.class, dateTimeSerializer);
+        objectMapper.registerModule(javaTimeModule);
+
     }
 
     /**
