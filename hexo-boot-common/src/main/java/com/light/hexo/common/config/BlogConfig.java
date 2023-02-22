@@ -2,6 +2,7 @@ package com.light.hexo.common.config;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Component;
@@ -49,4 +50,11 @@ public class BlogConfig {
      * 版本
      */
     private String version;
+
+    public Integer getVersionCode() {
+        if (StringUtils.isNotBlank(version)) {
+            return Integer.valueOf(version.replaceAll("\\.", ""));
+        }
+        return 0;
+    }
 }

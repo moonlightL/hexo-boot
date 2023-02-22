@@ -98,7 +98,7 @@ public enum HexoExceptionEnum implements GlobalExceptionMap {
     ERROR_PLUGIN_INVALID(16003, "插件格式非法"),
     ERROR_PLUGIN_START(16004, "系统异常，插件启动失败"),
     ERROR_PLUGIN_CANNOT_DELETE(16005, "资源未释放，删除失败，请稍后再试"),
-    ERROR_PLUGIN_CHECK_VERSION(16006, "博客系统版本过低，请升级至最新版本"),
+    ERROR_PLUGIN_CHECK_VERSION(16006, "博客系统版本过低，请升级至%s及以上再安装该插件"),
 
     // 50xxx --> 前端
     ERROR_REPEAT_PRAISE_POST(50001, "已点赞，请勿重复操作")

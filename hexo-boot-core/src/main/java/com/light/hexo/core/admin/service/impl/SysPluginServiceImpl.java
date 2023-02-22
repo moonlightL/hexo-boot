@@ -123,10 +123,7 @@ public class SysPluginServiceImpl extends BaseServiceImpl<SysPlugin> implements 
             PluginDescriptor descriptor = pluginWrapper.getDescriptor();
 
             // 检测版本要求
-            boolean check = this.checkVersion(descriptor);
-            if (!check) {
-                ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_PLUGIN_CHECK_VERSION);
-            }
+            this.checkVersion(descriptor);
 
             PluginState pluginState = this.pluginManager.startPlugin(pluginId, filePath);
             String configUrl = ((BasePlugin) pluginWrapper.getPlugin()).getConfigUrl();
@@ -161,16 +158,17 @@ public class SysPluginServiceImpl extends BaseServiceImpl<SysPlugin> implements 
         return pluginId;
     }
 
-    private boolean checkVersion(PluginDescriptor descriptor) {
+    private void checkVersion(PluginDescriptor descriptor) {
         String requires = descriptor.getRequires();
         if (StringUtils.isNotBlank(requires)) {
             Integer requireVersion = Integer.valueOf(requires.replaceAll("\\.", ""));
-            Integer sysVersion = Integer.valueOf(this.blogConfig.getVersion().replaceAll("\\.", ""));
+            Integer sysVersion = this.blogConfig.getVersionCode();
             if (sysVersion < requireVersion) {
-                return false;
+                ExceptionUtil.throwEx(
+                        HexoExceptionEnum.ERROR_PLUGIN_CHECK_VERSION.getCode(),
+                        String.format(HexoExceptionEnum.ERROR_PLUGIN_CHECK_VERSION.getMessage(), requires));
             }
         }
-        return true;
     }
 
     @Override
