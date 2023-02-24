@@ -51,6 +51,9 @@ public class CoreSpringMvcConfig extends SpringMvcConfig {
         registry.addResourceHandler("/cover/**")
                 .addResourceLocations("file:" +  localFilePath + "cover/");
 
+        registry.addResourceHandler("/info/**")
+                .addResourceLocations("file:" +  this.blogConfig.getAttachmentDir() + "info/");
+
         registry.addResourceHandler("/theme/**")
                 .addResourceLocations(
                         "file:" + this.blogConfig.getThemeDir(),
@@ -58,10 +61,7 @@ public class CoreSpringMvcConfig extends SpringMvcConfig {
                 );
 
         registry.addResourceHandler("/ext/**")
-                .addResourceLocations(
-                        "classpath:/static/ext/",
-                        "classpath:/static/ext/terminal"
-                );
+                .addResourceLocations("classpath:/static/ext/");
     }
 
     @Override
