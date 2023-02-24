@@ -160,7 +160,7 @@ public class SysPluginServiceImpl extends BaseServiceImpl<SysPlugin> implements 
 
     private void checkVersion(PluginDescriptor descriptor) {
         String requires = descriptor.getRequires();
-        if (StringUtils.isNotBlank(requires)) {
+        if (StringUtils.isNotBlank(requires) && !"*".equals(requires)) {
             Integer requireVersion = Integer.valueOf(requires.replaceAll("\\.", ""));
             Integer sysVersion = this.blogConfig.getVersionCode();
             if (sysVersion < requireVersion) {
