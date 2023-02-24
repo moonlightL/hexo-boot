@@ -236,7 +236,7 @@
             <dependency>
                 <groupId>eu.bitwalker</groupId>
                 <artifactId>UserAgentUtils</artifactId>
-                <version>1.20</version>
+                <version>1.21</version>
             </dependency>
 
             <!-- common markdown -->
@@ -262,25 +262,6 @@
                 <groupId>fr.brouillard.oss</groupId>
                 <artifactId>commonmark-ext-notifications</artifactId>
                 <version>1.0.0</version>
-            </dependency>
-
-            <!-- 存储对象相关 -->
-            <dependency>
-                <groupId>com.qiniu</groupId>
-                <artifactId>qiniu-java-sdk</artifactId>
-                <version>7.2.20</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.aliyun.oss</groupId>
-                <artifactId>aliyun-sdk-oss</artifactId>
-                <version>3.8.0</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.qcloud</groupId>
-                <artifactId>cos_api</artifactId>
-                <version>5.6.70</version>
             </dependency>
 
             <!-- 查询 ip 对应国家、城市 -->

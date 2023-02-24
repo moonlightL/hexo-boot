@@ -47,9 +47,9 @@ public class BlogConfig {
     private String pluginDir;
 
     /**
-     * 版本
+     * 版本号，此处硬编码避免项目启动引用外部文件（application.yml），导致版本数据无法更新
      */
-    private String version;
+    private String version = "4.1.0";
 
     public Integer getVersionCode() {
         if (StringUtils.isNotBlank(version)) {

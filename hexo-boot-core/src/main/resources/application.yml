@@ -81,4 +81,3 @@ blog:
   attachment-dir: ${blog.home-dir}attachments/
   log-dir: ${blog.home-dir}logs/
   plugin-dir: ${blog.home-dir}plugins/
-  version: 4.1.0
