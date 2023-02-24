@@ -233,9 +233,9 @@ curl -L -o ~/.hexo-boot/application.yml --create-dirs https://gitee.com/moonligh
 
 ### 5.1 方式一
 
-下载主题源码，修改名称（比如 hexo-boot-theme-abc 改成 abc），然后将整个文件夹复制到项目的 resources/templates/theme 下（与 default 目录同级），启动项目即可。
+开发阶段：下载主题源码，修改名称（比如 hexo-boot-theme-abc 改成 abc），然后将整个文件夹复制到项目的 resources/templates/theme 下（与 default 目录同级），启动项目即可。
 
-如若项目已经启动运行，也可复制到 classes/templates/theme 下即可
+运行阶段：复制主题文件夹到 classes/templates/theme 下即可
 
 ### 5.2 方式二
 
