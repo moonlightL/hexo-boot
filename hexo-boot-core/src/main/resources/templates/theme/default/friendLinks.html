@@ -23,7 +23,7 @@
         <div class="ml-content-body">
             <h3 class="friend-link-title tool">常用网址</h3>
             <div class="row">
-                <div class="col-md-4 animate-box" data-animate-effect="zoomIn" th:each="link,iterStat: ${webSiteList}">
+                <div class="col-md-4 animate-box" data-animate-effect="pulse" th:each="link,iterStat: ${webSiteList}">
                     <div class="friend-link-item">
                         <img class="lazyload image" th:if="${#strings.isEmpty(link.logo) == false}" th:data-original="@{${link.logo}}">
                         <span th:if="${#strings.isEmpty(link.logo)}">

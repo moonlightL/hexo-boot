@@ -21,7 +21,7 @@
 
     <div class="ml-content">
         <div class="dynamic-content" id="dynamic-content">
-            <div class="dynamic-item animate-box" th:each="dynamic : ${newPageInfo.data}" th:data-color="${dynamic.color}">
+            <div class="dynamic-item animate-box" data-animate-effect="pulse" th:each="dynamic : ${newPageInfo.data}" th:data-color="${dynamic.color}">
                 <div class="info">
                     <div class="row">
                         <div class="col-md-1">

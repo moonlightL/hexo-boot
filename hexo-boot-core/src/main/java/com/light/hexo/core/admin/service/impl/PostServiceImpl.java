@@ -962,6 +962,12 @@ public class PostServiceImpl extends BaseServiceImpl<Post> implements PostServic
             servletContext.setAttribute("postNum", this.getPostNum());
             servletContext.setAttribute("tagNum", this.tagService.getTagNum());
 
+            List<Post> allPostList = this.listPostsAll(false);
+            servletContext.setAttribute("allPostList", allPostList);
+
+            List<Post> topPostList = this.findTopList();
+            servletContext.setAttribute("topPostList", topPostList);
+
         } else {
 
             Post post = this.findById(postEvent.getId());

@@ -49,7 +49,7 @@ public class BlogConfig {
     /**
      * 版本号，此处硬编码避免项目启动引用外部文件（application.yml），导致版本数据无法更新
      */
-    private String version = "4.1.1";
+    private String version = "4.3.0";
 
     public Integer getVersionCode() {
         if (StringUtils.isNotBlank(version)) {

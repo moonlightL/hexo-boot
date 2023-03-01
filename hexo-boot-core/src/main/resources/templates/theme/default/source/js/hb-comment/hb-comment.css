@@ -47,6 +47,8 @@
 
 .hb-w-body {
     margin-top: 2rem;
+    padding: 2rem;
+    background: #FFF;
     animation-duration: .5s;
     animation-name: fadeIn;
 }
@@ -240,7 +242,9 @@
 
 .hb-r-body .hb-r-body-box {
     border-bottom: 1px solid #f0f1f5;
-    padding-bottom: 2rem;
+    margin-top: 2rem;
+    background: #FFF;
+    padding: 2rem;
 }
 
 .hb-w-body .hb-w-body-item,

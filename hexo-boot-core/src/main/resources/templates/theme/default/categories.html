@@ -23,7 +23,7 @@
         <div class="ml-content-body">
             <div class="row">
                 <div class="col-sm-6 col-md-3" th:each="category,iterStat: ${categoryList}">
-                    <div class="category-item animate-box">
+                    <div class="category-item animate-box" data-animate-effect="pulse">
                         <a data-pjax th:href="@{'/categories/'+${category.name}+'/'}">
                             <img th:data-original="@{${category.coverUrl}}" class="lazyload">
                             <div class="mask"><span>[[${category.remark}]]</span></div>

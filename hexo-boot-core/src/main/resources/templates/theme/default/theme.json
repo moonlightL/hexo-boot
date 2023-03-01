@@ -41,7 +41,7 @@
     },
     {
       "key": "animated",
-      "value": "false",
+      "value": "true",
       "type": "select",
       "option": "true,false",
       "label": "背景动画",

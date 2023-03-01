@@ -20,7 +20,7 @@
         <div class="ml-content">
             <div class="row" >
                 <div class="post col-md-4 col-sm-6 col-xs-12" th:if="${activeTheme.configMap['layout'] == 'grid'}" th:each="post,iterStat : ${newPageInfo.data}">
-                    <div class="post-info animate-box" data-animate-effect="zoomIn">
+                    <div class="post-info animate-box" data-animate-effect="pulse">
                         <div class="post-bg">
                             <span class="reprint" th:if="${post.reprint}">转载</span>
                             <span class="top" th:if="${post.top}"><img src="/theme/default/source/images/article-top.png" alt="" width="38" height="38"></span>
@@ -62,7 +62,7 @@
                 </div>
 
                 <div class="post col-md-12" th:if="${activeTheme.configMap['layout'] == 'full'}" th:each="post,iterStat : ${newPageInfo.data}">
-                    <div class="post-info full animate-box" data-animate-effect="fadeIn">
+                    <div class="post-info full animate-box" data-animate-effect="zoomIn">
                         <div class="cover">
                             <span class="top" th:if="${post.top}"><img src="/theme/default/source/images/article-top.png" alt="" width="38" height="38"></span>
                             <a data-pjax th:href="@{'/' + ${post.link}}"><img class="lazyload" th:data-original="@{${post.coverUrl}}" alt="阅读全文"></a>

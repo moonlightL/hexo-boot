@@ -175,6 +175,20 @@
         });
     };
 
+    const runCodeEvent = function() {
+        $(".run-code").off("click").on("click", function() {
+            let $btn = $(this);
+            let html = $btn.prev("figure").find("td.code pre").html();
+            html = html.replace(/<br>/g, "\r\n");
+            let codeContent = $(html).text();
+            let childWin = window.open("", "_blank", "");
+            childWin.document.open("text/html", "replace");
+            childWin.opener = null;
+            childWin.document.write(codeContent);
+            childWin.document.close()
+        });
+    };
+
     const postEvent = function() {
         let $detail = $("#post-content");
         if ($detail.length > 0) {
@@ -231,6 +245,8 @@
                     }
                 });
             });
+
+            runCodeEvent();
         }
     };
 

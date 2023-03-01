@@ -1,10 +1,10 @@
-/*@font-face{*/
-/*    font-family:'Play';*/
-/*    font-style:normal;*/
-/*    font-weight:400;*/
-/*    src:url('../fonts/Play.woff2') format('woff2');*/
-/*    unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2212,U+2215*/
-/*}*/
+@font-face{
+    font-family:HarmonyOS_Sans_SC_Medium;
+    font-style:normal;
+    font-display:swap;
+    src:url(https://cdn.jsdelivr.net/gh/irozhi/HarmonyOS-Sans/HarmonyOS_Sans_SC/HarmonyOS_Sans_SC_Medium.subset.woff2) format('woff2');
+    unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2212,U+2215;
+}
 
 @keyframes slowUp {
     0% {
@@ -108,7 +108,7 @@ body {
     background-color: var(--blog-bg-color);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    font-family: "Play", "Open sans", "Microsoft YaHei", sans-serif;
+    font-family: "HarmonyOS_Sans_SC_Medium", "Open sans", "Microsoft YaHei", sans-serif;
     font-size: 14px;
     line-height: 21px;
 }
@@ -128,15 +128,13 @@ body::-webkit-scrollbar {
     width:8px;
     height:0;
     background:#ccc;
-    border-radius:10px;
 }
 
 body::-webkit-scrollbar-thumb {
     display: block;
     width: 8px;
     margin: 0 auto;
-    border-radius: 10px;
-    background: #aaa;
+    background: var(--theme-color);
 }
 
 ::selection {
@@ -318,11 +316,9 @@ ul li {
 
 .navbar {
     background-color: var(--content-color);
-    border: 2px solid var(--content-color);
     border-radius: 0;
     font-weight: bold;
-    box-shadow: 0 0 5px var(--shadow-color);
-    padding: 0 1rem;
+    box-shadow: 0 2px 2px 0 rgb(0 0 0 / 5%), 0 3px 1px -2px rgb(0 0 0 / 8%), 0 1px 5px 0 rgb(0 0 0 / 8%);
     font-size: 14px;
 }
 
@@ -406,7 +402,7 @@ ul li {
 
 .image-banner {
     position: relative;
-    box-shadow: 0 0 36px var(--shadow-color);
+    box-shadow: 0 2px 2px 0 rgb(0 0 0 / 5%), 0 3px 1px -2px rgb(0 0 0 / 8%), 0 1px 5px 0 rgb(0 0 0 / 8%);
     margin-bottom: 22px;
 }
 
@@ -479,10 +475,11 @@ ul li {
 
 .ml-content {
     position: relative;
-    background-color: var(--content-color);
-    padding: 2em;
+    /*background-color: var(--content-color);*/
+    /*padding: 2em;*/
     margin-bottom: 1em;
-    box-shadow: 0 1px 14px 1px var(--shadow-color);
+    /*box-shadow: 0 1px 14px 1px var(--shadow-color);*/
+    /*box-shadow: 0 2px 2px 0 rgb(0 0 0 / 5%), 0 3px 1px -2px rgb(0 0 0 / 8%), 0 1px 5px 0 rgb(0 0 0 / 8%);*/
 }
 
 .ml-content-title {
@@ -498,7 +495,8 @@ ul li {
     max-height: 400px;
     background: var(--content-color);
     margin-bottom: 22px;
-    box-shadow: 0 1px 14px 1px var(--shadow-color);
+    /*box-shadow: 0 1px 14px 1px var(--shadow-color);*/
+    box-shadow: 0 2px 2px 0 rgb(0 0 0 / 5%), 0 3px 1px -2px rgb(0 0 0 / 8%), 0 1px 5px 0 rgb(0 0 0 / 8%);
 }
 
 .post-info .post-bg {
@@ -843,9 +841,9 @@ ul li {
 .post-info.full {
     display: flex;
     margin-bottom: 0;
-    padding-bottom: 2rem;
+    padding: 2rem;
     box-shadow: none;
-    border-bottom: 1px solid var(--table-border-color);
+    box-shadow: 0 2px 2px 0 rgb(0 0 0 / 5%), 0 3px 1px -2px rgb(0 0 0 / 8%), 0 1px 5px 0 rgb(0 0 0 / 8%);
 }
 
 .post-info.full .cover {
@@ -949,8 +947,10 @@ ul li {
     padding: .75rem;
     position: relative;
     transition: all .5s;
-    box-shadow: 0 1px 6px 1px var(--shadow-color);
+    background: var(--content-color);
     color: var(--text-color);
+    box-shadow: 0 2px 2px 0 rgb(0 0 0 / 5%), 0 3px 1px -2px rgb(0 0 0 / 8%), 0 1px 5px 0 rgb(0 0 0 / 8%);
+    border-radius: 50%;
 }
 
 @media (max-width: 767px) {
@@ -986,7 +986,7 @@ ul li {
     background-color: var(--content-color);
     cursor: pointer;
     transition: all .3s;
-    box-shadow: 0 0 10px 1px var(--shadow-color);
+    box-shadow: 0 2px 2px 0 rgb(0 0 0 / 5%), 0 3px 1px -2px rgb(0 0 0 / 8%), 0 1px 5px 0 rgb(0 0 0 / 8%);
     color: var(--text-color);
     z-index: 999;
     filter: var(--brightness-value);
@@ -1024,7 +1024,7 @@ span.effect {
     letter-spacing: 0;
     background-color: var(--content-color);
     border: 2px solid var(--content-color);
-    box-shadow: 0 0 5px var(--shadow-color);
+    box-shadow: 0 2px 2px 0 rgb(0 0 0 / 5%), 0 3px 1px -2px rgb(0 0 0 / 8%), 0 1px 5px 0 rgb(0 0 0 / 8%);
     color: var(--text-color);
 }
 
@@ -1067,12 +1067,16 @@ span.effect {
 
 .archives .archives-item {
     padding: 1rem 0;
-    background: var(--archive-bg-color);
     margin-bottom: 1rem;
 }
 
 .archives .archives-item:hover {
-    background: var(--text-shadow-color);
+    background: var(--theme-color);
+    box-shadow: 0 2px 2px 0 rgb(0 0 0 / 5%), 0 3px 1px -2px rgb(0 0 0 / 8%), 0 1px 5px 0 rgb(0 0 0 / 8%);
+}
+
+.archives .archives-item:hover a {
+    color: #FFF;
 }
 
 .archives a {
@@ -1084,7 +1088,6 @@ span.effect {
     font-style: normal;
     text-decoration:none;
     font-size: 15px;
-    transition: all .3s;
 }
 
 .archives span.title {
@@ -1100,7 +1103,8 @@ span.effect {
     background-size: cover;
     margin-bottom: 2em;
     transition: all .3s;
-    box-shadow: 0 0 5px var(--shadow-color);
+    background: var(--content-color);
+    box-shadow: 0 2px 2px 0 rgb(0 0 0 / 5%), 0 3px 1px -2px rgb(0 0 0 / 8%), 0 1px 5px 0 rgb(0 0 0 / 8%);
     border-radius: 4px;
 }
 
@@ -1152,7 +1156,7 @@ span.effect {
 /** 标签 start **/
 
 .tags-content {
-    margin-top: 2rem;
+    margin: 2rem 0;
     animation: slowUp 1s;
 }
 
@@ -1196,7 +1200,8 @@ h3.friend-link-title {
     padding: 1.4rem 1rem;
     transition: all .3s;
     border-radius: 4px;
-    box-shadow: 0 1px 7px 1px var(--shadow-color);
+    background: var(--content-color);
+    box-shadow: 0 2px 2px 0 rgb(0 0 0 / 5%), 0 3px 1px -2px rgb(0 0 0 / 8%), 0 1px 5px 0 rgb(0 0 0 / 8%);
 }
 
 .friend-link-item:hover {
@@ -1249,7 +1254,8 @@ h3.friend-link-title {
 
 .dynamic-item {
     color: var(--text-color);
-    box-shadow: 0 0 5px var(--shadow-color);
+    background: var(--content-color);
+    box-shadow: 0 2px 2px 0 rgb(0 0 0 / 5%), 0 3px 1px -2px rgb(0 0 0 / 8%), 0 1px 5px 0 rgb(0 0 0 / 8%);
     margin-bottom: 2rem;
     border-radius: 4px;
     box-sizing: border-box;
@@ -1303,7 +1309,8 @@ h3.friend-link-title {
     background-size: cover;
     margin-bottom: 2em;
     transition: all .3s;
-    box-shadow: 0 0 5px var(--shadow-color);
+    background: var(--content-color);
+    box-shadow: 0 2px 2px 0 rgb(0 0 0 / 5%), 0 3px 1px -2px rgb(0 0 0 / 8%), 0 1px 5px 0 rgb(0 0 0 / 8%);
     border-radius: 4px;
     padding: 1rem;
 }
@@ -1330,7 +1337,8 @@ h3.friend-link-title {
     position: relative;
     margin: 1.5rem auto;
     height: 100%;
-    box-shadow: 0 1px 3px 1px var(--shadow-color);
+    background: var(--content-color);
+    box-shadow: 0 2px 2px 0 rgb(0 0 0 / 5%), 0 3px 1px -2px rgb(0 0 0 / 8%), 0 1px 5px 0 rgb(0 0 0 / 8%);
 }
 
 .album-detail-item a .mask {
@@ -1401,6 +1409,12 @@ h3.friend-link-title {
 
 /** 文章页 start */
 
+.postContainer {
+    background-color: var(--content-color);
+    padding: 2rem;
+    box-shadow: 0 2px 2px 0 rgb(0 0 0 / 5%), 0 3px 1px -2px rgb(0 0 0 / 8%), 0 1px 5px 0 rgb(0 0 0 / 8%);
+}
+
 .tocContainer {
     position: absolute;
     top:180px;
@@ -1420,7 +1434,6 @@ h3.friend-link-title {
     text-align: left;
     font-size: 14px;
     width: 100%;
-    background-color: var(--content-color);
     color: var(--text-color);
     margin-bottom: 2rem;
     animation: slowUp 1s;
@@ -1515,7 +1528,7 @@ h3.friend-link-title {
 .post-content p code {
     margin-left: 5px;
     margin-right: 4px;
-    font-family: "Play", "Open sans", sans-serif;
+    font-family: "HarmonyOS_Sans_SC_Medium", "Open sans", sans-serif;
     font-size: 15px;
 }
 
@@ -1542,7 +1555,7 @@ h3.friend-link-title {
 }
 .post-content .sequence-diagram text, .post-content .flowchart text {
     font-size: 15px !important;
-    font-family: Play, "Microsoft YaHei", sans-serif;
+    font-family: HarmonyOS_Sans_SC_Medium, "Microsoft YaHei", sans-serif;
 }
 
 .postContainer h1.post-title {
@@ -2108,7 +2121,7 @@ h3.friend-link-title {
     }
 
     .post-content pre, .post-content code, .post-content kbd {
-        font-family: Play, "Microsoft YaHei", serif;
+        font-family: HarmonyOS_Sans_SC_Medium, "Microsoft YaHei", serif;
     }
 
     .post-content .sequence-diagram, .post-content .flowchart{
@@ -2122,7 +2135,7 @@ h3.friend-link-title {
 
     .post-content .sequence-diagram text, .post-content .flowchart text {
         font-size: 14px !important;
-        font-family: Play,"Microsoft YaHei", serif;
+        font-family: HarmonyOS_Sans_SC_Medium,"Microsoft YaHei", serif;
     }
 
     .highlight {
@@ -2322,6 +2335,11 @@ h3.friend-link-title {
 }
 
 /** 评论区 start **/
+
+.hb-w-body,
+.hb-r-body .hb-r-body-box{
+    box-shadow: 0 2px 2px 0 rgb(0 0 0 / 5%), 0 3px 1px -2px rgb(0 0 0 / 8%), 0 1px 5px 0 rgb(0 0 0 / 8%);
+}
 
 html[mode=dark] .hb-comment {
     color: #aaa;
