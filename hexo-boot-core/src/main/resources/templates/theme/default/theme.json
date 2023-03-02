@@ -11,6 +11,22 @@
       "update": true
     },
     {
+      "key": "author",
+      "value": "MoonlightL",
+      "type": "input",
+      "label": "作者",
+      "tab": 1,
+      "update": true
+    },
+    {
+      "key": "cdn",
+      "value": "true",
+      "type": "input",
+      "label": "是否已提供CDN",
+      "tab": 1,
+      "update": true
+    },
+    {
       "key": "pageSize",
       "value": "9",
       "type": "input",

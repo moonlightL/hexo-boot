@@ -5,6 +5,32 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, initial-scale=1, shrink-to-fit=no">
     <div th:replace="~{admin/common :: common-link}"></div>
+    <style>
+        @keyframes rotate {
+            0%{
+                transform: rotate(0);
+            }
+            25%{
+                transform: rotate(90deg);
+            }
+            50%{
+                transform: rotate(180deg);
+            }
+            75%{
+                transform: rotate(270deg);
+            }
+            100%{
+                transform: rotate(360deg);
+            }
+        }
+        .animate  {
+            animation-name: rotate;
+            animation-timing-function: linear;
+            animation-delay: 0s;
+            animation-iteration-count: infinite;
+            animation-duration: 3s;
+        }
+    </style>
 </head>
 <body>
 <!-- Page Content -->
@@ -149,7 +175,7 @@
                     contentArr.push('<img src="'+ obj.coverUrl +'" width="80%" height="230">');
                     contentArr.push('<div class="block-options">');
                     contentArr.push('<div class="dropdown">');
-                    contentArr.push('<button type="button" class="btn-block-option" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-cog"></i></button>');
+                    contentArr.push('<button type="button" class="btn-block-option" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-cog animate"></i></button>');
                     contentArr.push('<div class="dropdown-menu dropdown-menu-right" style="">');
                     contentArr.push('<a class="dropdown-item config-btn" href="javascript:void(0)" data-id="'+ obj.id +'"><i class="fa fa-fw fa-edit mr-5"></i>配置参数</a>');
                     contentArr.push('<a class="dropdown-item code-btn" href="javascript:void(0)" data-id="'+ obj.id +'"><i class="fa fa-fw fa-pencil mr-5"></i>修改源码</a>');
