@@ -40,7 +40,7 @@ public class IndexController extends CommonController {
         }
 
         String filterTopStr = activeTheme.getConfigMap().get("filterTop");
-        boolean filterTop = !StringUtils.isBlank(filterTopStr) && (filterTopStr.equals("Yes"));
+        boolean filterTop = !StringUtils.isBlank(filterTopStr) && ((filterTopStr.equals("Yes") || filterTopStr.equals("true")));
         pageNum = pageNum == null ? 1 : pageNum;
 
         HexoPageInfo pageInfo = this.postService.pagePostsByIndex(pageNum, Integer.parseInt(pageSizeStr), filterTop);

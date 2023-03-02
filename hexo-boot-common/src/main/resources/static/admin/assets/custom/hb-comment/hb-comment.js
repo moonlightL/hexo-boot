@@ -804,6 +804,7 @@
                     sendBtn.dataset.commentPid = commentId;
                     sendBtn.dataset.sourceNickname = sourceNickname;
                     infoNode.parentNode.parentNode.insertAdjacentElement('afterend', cloneCommentBody);
+                    cloneCommentBody.scrollIntoView({behavior: "smooth",block: "center",inline: "nearest"});
 
                     getElementByClassName(cloneCommentBody, "hb_content").setAttribute("placeholder", "@" + sourceNickname);
                     self.registerWEvent(cloneCommentBody);
