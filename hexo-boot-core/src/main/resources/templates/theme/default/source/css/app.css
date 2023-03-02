@@ -1183,25 +1183,16 @@ span.effect {
 /** 友链 start  */
 
 h3.friend-link-title {
-    /*padding: 1.5rem;*/
     font-size: 18px;
     border-radius: 4px;
     text-shadow: none;
+    color: var(--text-color);
 }
-
-/*h3.friend-link-title.tool {*/
-/*    border-left: 3px solid #428bca;*/
-/*    background: #eef7fa;*/
-/*}*/
-
-/*h3.friend-link-title.blogger {*/
-/*    border-left: 3px solid #f0ad4e;*/
-/*    background: #fdf8ea;*/
-/*}*/
 
 .friend-link-item {
     position: relative;
     width: 100%;
+    height: 86px;
     margin: 1rem 0;
     padding: 1.4rem 1rem;
     transition: all .3s;
@@ -2340,9 +2331,16 @@ h3.friend-link-title {
 
 /** 评论区 start **/
 
-.hb-w-body,
-.hb-r-body .hb-r-body-box{
+.hb-comment .hb-w,
+.hb-r-body .hb-r-body-box,
+.hb-comment .hb-r .hb-r-head {
     box-shadow: 0 2px 2px 0 rgb(0 0 0 / 5%), 0 3px 1px -2px rgb(0 0 0 / 8%), 0 1px 5px 0 rgb(0 0 0 / 8%);
+}
+
+html[mode=dark] .hb-comment .hb-w,
+html[mode=dark] .hb-r-body .hb-r-body-box,
+html[mode=dark] .hb-comment .hb-r .hb-r-head {
+    background-color: #000;
 }
 
 html[mode=dark] .hb-comment {

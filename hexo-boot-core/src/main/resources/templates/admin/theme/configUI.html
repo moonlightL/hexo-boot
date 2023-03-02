@@ -37,42 +37,166 @@
                         </div>
                     </div>
                     <div class="col-md-7 offset-1">
-                        <p><b>主题参数</b></p>
-                        <div class="form-group row">
-                            <div class="col-md-3">主题名</div>
-                            <div class="col-md-9">
-                                <span id="filename" th:text="*{name}"></span>
+                        <div class="block block-fx-shadow">
+                            <ul class="nav nav-tabs nav-tabs-block" data-toggle="tabs" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" href="#baseArea">基础信息</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#pageArea">页面配置</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#layoutArea">布局设置</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#commentArea">评论设置</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#resourceArea">资源设置</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#otherArea">其他设置</a>
+                                </li>
+                            </ul>
+                            <div class="block-content tab-content overflow-hidden">
+                                <div class="tab-pane fade fade-left show active" id="baseArea" role="tabpanel">
+                                    <form class="js-validation-be-contact" id="baseForm" method="post">
+                                        <div class="row justify-content-center" th:each="config : ${baseList}">
+                                            <div class="col-lg-12 col-xl-12">
+                                                <div class="form-group row">
+                                                    <label class="col-lg-3 col-form-label" th:text="${config.configLabel}"></label>
+                                                    <div class="col-lg-7" th:if="${config.configType eq 'input'}">
+                                                        <input type="text" name="configValue" class="form-control theme-config" style="width: 300px;" th:value="${config.configValue}" th:data-id="${config.id}">
+                                                    </div>
+                                                    <div class="col-lg-7" th:if="${config.configType eq 'select'}">
+                                                        <span th:if="${#strings.isEmpty(config.configOption) == false}">
+                                                            <select name="configValue" class="form-control theme-config" style="width: 300px;" th:data-id="${config.id}">
+                                                                <option th:each="op : ${#strings.arraySplit(config.configOption, ',')}" th:text="${op}" th:value="${op}" th:attr="selected=${op eq config.configValue}"></option>
+                                                            </select>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="tab-pane fade fade-left show" id="pageArea" role="tabpanel">
+                                    <form class="js-validation-be-contact" id="pageForm" method="post">
+                                        <div class="row justify-content-center" th:each="config : ${pageList}">
+                                            <div class="col-lg-12 col-xl-12">
+                                                <div class="form-group row">
+                                                    <label class="col-lg-3 col-form-label" th:text="${config.configLabel}"></label>
+                                                    <div class="col-lg-7" th:if="${config.configType eq 'input'}">
+                                                        <input type="text" name="configValue" class="form-control theme-config" style="width: 300px;" th:value="${config.configValue}" th:data-id="${config.id}">
+                                                    </div>
+                                                    <div class="col-lg-7" th:if="${config.configType eq 'select'}">
+                                                        <span th:if="${#strings.isEmpty(config.configOption) == false}">
+                                                            <select name="configValue" class="form-control theme-config" style="width: 300px;" th:data-id="${config.id}">
+                                                                <option th:each="op : ${#strings.arraySplit(config.configOption, ',')}" th:text="${op}" th:value="${op}" th:attr="selected=${op eq config.configValue}"></option>
+                                                            </select>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="tab-pane fade fade-left show" id="layoutArea" role="tabpanel">
+                                    <form class="js-validation-be-contact" id="layoutForm" method="post">
+                                        <div class="row justify-content-center" th:each="config : ${layoutList}">
+                                            <div class="col-lg-12 col-xl-12">
+                                                <div class="form-group row">
+                                                    <label class="col-lg-3 col-form-label" th:text="${config.configLabel}"></label>
+                                                    <div class="col-lg-7" th:if="${config.configType eq 'input'}">
+                                                        <input type="text" name="configValue" class="form-control theme-config" style="width: 300px;" th:value="${config.configValue}" th:data-id="${config.id}">
+                                                    </div>
+                                                    <div class="col-lg-7" th:if="${config.configType eq 'select'}">
+                                                        <span th:if="${#strings.isEmpty(config.configOption) == false}">
+                                                            <select name="configValue" class="form-control theme-config" style="width: 300px;" th:data-id="${config.id}">
+                                                                <option th:each="op : ${#strings.arraySplit(config.configOption, ',')}" th:text="${op}" th:value="${op}" th:attr="selected=${op eq config.configValue}"></option>
+                                                            </select>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="tab-pane fade fade-left show" id="commentArea" role="tabpanel">
+                                    <form class="js-validation-be-contact" id="commentForm" method="post">
+                                        <div class="row justify-content-center" th:each="config : ${commentList}">
+                                            <div class="col-lg-12 col-xl-12">
+                                                <div class="form-group row">
+                                                    <label class="col-lg-3 col-form-label" th:text="${config.configLabel}"></label>
+                                                    <div class="col-lg-7" th:if="${config.configType eq 'input'}">
+                                                        <input type="text" name="configValue" class="form-control theme-config" style="width: 300px;" th:value="${config.configValue}" th:data-id="${config.id}">
+                                                    </div>
+                                                    <div class="col-lg-7" th:if="${config.configType eq 'select'}">
+                                                        <span th:if="${#strings.isEmpty(config.configOption) == false}">
+                                                            <select name="configValue" class="form-control theme-config" style="width: 300px;" th:data-id="${config.id}">
+                                                                <option th:each="op : ${#strings.arraySplit(config.configOption, ',')}" th:text="${op}" th:value="${op}" th:attr="selected=${op eq config.configValue}"></option>
+                                                            </select>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="tab-pane fade fade-left show" id="resourceArea" role="tabpanel">
+                                    <form class="js-validation-be-contact" id="resourceForm" method="post">
+                                        <div class="row justify-content-center" th:each="config : ${resourceList}">
+                                            <div class="col-lg-12 col-xl-12">
+                                                <div class="form-group row">
+                                                    <label class="col-lg-3 col-form-label" th:text="${config.configLabel}"></label>
+                                                    <div class="col-lg-7" th:if="${config.configType eq 'input'}">
+                                                        <input type="text" name="configValue" class="form-control theme-config" style="width: 300px;" th:value="${config.configValue}" th:data-id="${config.id}">
+                                                    </div>
+                                                    <div class="col-lg-7" th:if="${config.configType eq 'select'}">
+                                                        <span th:if="${#strings.isEmpty(config.configOption) == false}">
+                                                            <select name="configValue" class="form-control theme-config" style="width: 300px;" th:data-id="${config.id}">
+                                                                <option th:each="op : ${#strings.arraySplit(config.configOption, ',')}" th:text="${op}" th:value="${op}" th:attr="selected=${op eq config.configValue}"></option>
+                                                            </select>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-lg-12 col-xl-12">
+                                                <b>友情提示：</b>
+                                                <b>
+                                                    ① 配置中无 CDN 选项，则该主题不支持 CDN<br>
+                                                    ② 开启 CDN，但不填写 CDN 地址，则系统使用默认的 CDN 地址<br>
+                                                    ③ 可浏览 <a href="https://www.extlight.com/2021/01/20/%E8%BD%BB%E6%9D%BE%E6%90%AD%E5%BB%BA%E4%B8%93%E5%B1%9E-CDN/" target="_blank">《轻松搭建专属 CDN》</a> 自行搭建 CDN <br>
+                                                    ④ 如要自行搭建 CDN ，目录结构可参照 <a href="https://github.com/moonlightL/vCard" target="_blank">vCard 仓库</a>，其 CDN 访问地址为 https://cdn.jsdelivr.net/gh/moonlightL/vCard@2.0
+                                                </b>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="tab-pane fade fade-left show" id="otherArea" role="tabpanel">
+                                    <form class="js-validation-be-contact" id="otherForm" method="post">
+                                        <div class="row justify-content-center" th:each="config : ${otherList}">
+                                            <div class="col-lg-12 col-xl-12">
+                                                <div class="form-group row">
+                                                    <label class="col-lg-3 col-form-label" th:text="${config.configLabel}"></label>
+                                                    <div class="col-lg-7" th:if="${config.configType eq 'input'}">
+                                                        <input type="text" name="configValue" class="form-control theme-config" style="width: 300px;" th:value="${config.configValue}" th:data-id="${config.id}">
+                                                    </div>
+                                                    <div class="col-lg-7" th:if="${config.configType eq 'select'}">
+                                                        <span th:if="${#strings.isEmpty(config.configOption) == false}">
+                                                            <select name="configValue" class="form-control theme-config" style="width: 300px;" th:data-id="${config.id}">
+                                                                <option th:each="op : ${#strings.arraySplit(config.configOption, ',')}" th:text="${op}" th:value="${op}" th:attr="selected=${op eq config.configValue}"></option>
+                                                            </select>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group row">
-                            <div class="col-md-3">备注</div>
-                            <div class="col-md-9">
-                                <span id="filePath" th:text="*{remark}"></span>
-                            </div>
-                        </div>
-                        <div class="form-group row" th:each="config : ${extendList}">
-                            <div class="col-md-3" th:text="${config.configLabel}"></div>
-                            <div class="col-md-9">
-                                <span th:if="${config.configType eq 'input'}">
-                                    <input type="text" name="configValue" class="form-control theme-config" style="width: 300px;" th:value="${config.configValue}" th:data-id="${config.id}">
-                                </span>
-                                <span th:if="${config.configType eq 'select'}">
-                                    <span th:if="${#strings.isEmpty(config.configOption) == false}">
-                                        <select name="configValue" class="form-control theme-config" style="width: 300px;" th:data-id="${config.id}">
-                                            <option th:each="op : ${#strings.arraySplit(config.configOption, ',')}" th:text="${op}" th:value="${op}" th:attr="selected=${op eq config.configValue}"></option>
-                                        </select>
-                                    </span>
-                                </span>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <b>友情提示：</b>
-                            <b>
-                                ① 配置中无 CDN 选项，则该主题不支持 CDN<br>
-                                ② 开启 CDN，但不填写 CDN 地址，则系统使用默认的 CDN 地址<br>
-                                ③ 可浏览 <a href="https://www.extlight.com/2021/01/20/%E8%BD%BB%E6%9D%BE%E6%90%AD%E5%BB%BA%E4%B8%93%E5%B1%9E-CDN/" target="_blank">《轻松搭建专属 CDN》</a> 自行搭建 CDN <br>
-                                ④ 如要自行搭建 CDN ，目录结构可参照 <a href="https://github.com/moonlightL/vCard" target="_blank">vCard 仓库</a>，其 CDN 访问地址为 https://cdn.jsdelivr.net/gh/moonlightL/vCard@2.0
-                            </b>
                         </div>
                     </div>
                     <div class="col-md-12">
@@ -88,7 +212,6 @@
     </div>
 </div>
 <div th:replace="~{admin/common :: common-script}"></div>
-<script th:src="@{'/admin/assets/js/plugins/clipboard/clipboard.min.js'}"></script>
 <script type="text/javascript" th:inline="javascript">
     $(function () {
         $("#submitBtn").on("click", function () {

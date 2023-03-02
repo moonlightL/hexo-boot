@@ -46,6 +46,11 @@ public class ThemeFileExtension implements Serializable {
     private String label;
 
     /**
+     * 归类 1：基础信息 2：页面配置 3：布局设置 4：评论设置 5：资源设置 6：其他设置
+     */
+    private Integer tab = 1;
+
+    /**
      * 启动项目后是否同步到数据库
      */
     private boolean update;

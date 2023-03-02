@@ -49,7 +49,7 @@ public class ThemeExtend implements Serializable {
     private String configValue;
 
     /**
-     * 标签
+     * 配置标签
      */
     private String configLabel;
 
@@ -62,6 +62,11 @@ public class ThemeExtend implements Serializable {
      * 选项
      */
     private String configOption;
+
+    /**
+     * 归类 1：基础信息 2：页面配置 3：布局设置 4：评论设置 5：资源设置
+     */
+    private Integer tab;
 
     @CreateTime
     private LocalDateTime createTime;

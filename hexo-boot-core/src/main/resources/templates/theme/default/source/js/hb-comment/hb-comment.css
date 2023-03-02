@@ -15,6 +15,7 @@
 
 .hb-comment {
     position: relative;
+    margin-top: 2rem;
 }
 
 .hb-comment a,
@@ -40,15 +41,15 @@
     cursor: pointer;
 }
 
-.hb-w, .hb-r {
+.hb-comment .hb-w {
+    background: #FFF;
+    padding: 2rem;
     animation-duration: 1s;
     animation-name: fadeIn;
 }
 
 .hb-w-body {
     margin-top: 2rem;
-    padding: 2rem;
-    background: #FFF;
     animation-duration: .5s;
     animation-name: fadeIn;
 }
@@ -240,13 +241,6 @@
     color: #fff;
 }
 
-.hb-r-body .hb-r-body-box {
-    border-bottom: 1px solid #f0f1f5;
-    margin-top: 2rem;
-    background: #FFF;
-    padding: 2rem;
-}
-
 .hb-w-body .hb-w-body-item,
 .hb-r-body .hb-r-body-item {
     display: flex;
@@ -262,6 +256,23 @@
 
 .hb-w-body .hb-w-body-item {
     padding-bottom: 2rem;
+}
+
+.hb-comment .hb-r {
+    margin: 2rem 0;
+    animation-duration: 1s;
+    animation-name: fadeIn;
+}
+
+.hb-comment .hb-r .hb-r-head {
+    background: #FFF;
+    padding: 2rem 2rem 1rem 2rem;
+}
+
+.hb-r-body .hb-r-body-box {
+    padding: 1rem 2rem 2rem 2rem;
+    background: #FFF;
+    margin-bottom: 2rem;
 }
 
 .hb-r-body .hb-r-body-item .hb-main {
@@ -371,30 +382,10 @@
     color: #fff;
 }
 
-.comment_send_fail {
+.hb-comment .comment-send-info {
     border-radius: .25rem;
     padding: 15px;
-    margin-bottom: 20px;
-    border: 1px solid #f5c6cb;
-    color: #721c24;
-    background-color: #f8d7da;
-    text-align: center;
-}
-
-.comment_send_success {
-    border-radius: .25rem;
-    padding: 15px;
-    margin-bottom: 20px;
-    border: 1px solid #c3e6cb;
-    color: #155724;
-    background-color: #d4edda;
-    text-align: center;
-}
-
-.comment-send-info {
-    border-radius: .25rem;
-    padding: 15px;
-    margin-bottom: 20px;
+    margin-top: 2rem;
     border: 1px solid #b8daff;
     color: #004085;
     background-color: #cce5ff;

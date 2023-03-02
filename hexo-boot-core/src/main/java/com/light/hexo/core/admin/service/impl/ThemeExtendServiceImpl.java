@@ -71,6 +71,7 @@ public class ThemeExtendServiceImpl extends BaseServiceImpl<ThemeExtend> impleme
                        .setConfigLabel(extension.getLabel())
                        .setConfigOption(StringUtils.isNotBlank(extension.getOption()) ? extension.getOption() : "")
                        .setThemeId(themeId)
+                       .setTab(extension.getTab())
                        .setCreateTime(LocalDateTime.now())
                        .setUpdateTime(themeExtend.getCreateTime());
 

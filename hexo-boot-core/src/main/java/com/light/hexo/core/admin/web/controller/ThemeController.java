@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @Author MoonlightL
@@ -80,7 +81,14 @@ public class ThemeController extends BaseController {
         List<ThemeExtend> extendList = this.themeExtendService.listThemeExtends(theme.getId());
 
         resultMap.put("vo", theme);
-        resultMap.put("extendList", extendList);
+
+        resultMap.put("baseList", extendList.stream().filter(i -> i.getTab().equals(1)).collect(Collectors.toList()));
+        resultMap.put("pageList", extendList.stream().filter(i -> i.getTab().equals(2)).collect(Collectors.toList()));
+        resultMap.put("layoutList", extendList.stream().filter(i -> i.getTab().equals(3)).collect(Collectors.toList()));
+        resultMap.put("commentList", extendList.stream().filter(i -> i.getTab().equals(4)).collect(Collectors.toList()));
+        resultMap.put("resourceList", extendList.stream().filter(i -> i.getTab().equals(5)).collect(Collectors.toList()));
+        resultMap.put("otherList", extendList.stream().filter(i -> i.getTab().equals(6)).collect(Collectors.toList()));
+
         return render("configUI", resultMap);
     }
 
