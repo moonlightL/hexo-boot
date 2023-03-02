@@ -239,10 +239,7 @@ h6 {
 
 ul {
     margin: 0;
-    padding: 0;
-}
-ul li {
-    list-style-type: none;
+    padding: 0 2rem;
 }
 
 .btn-primary {
@@ -1065,6 +1062,12 @@ span.effect {
 
 /** 归档 start **/
 
+.archive-content {
+    background: var(--content-color);
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
 .archive-content h3 {
     padding-bottom: 10px;
     position: relative;
@@ -1163,14 +1166,14 @@ span.effect {
 
 .tags-content {
     margin: 2rem 0;
-    animation: slowUp 1s;
+    padding: 2rem;
+    background: var(--content-color);
 }
 
 .tags-content a {
     display: inline-block;
     margin: .625rem;
-    padding: .5rem .625rem;
-    border-radius: 4px;
+    padding: .5rem 1rem;
 }
 
 .tags-content a:hover {
@@ -1435,50 +1438,6 @@ h3.friend-link-title {
 
 .post-content div {
     margin: 2rem 0;
-}
-
-.post-content ol {
-    padding: 0;
-    list-style-type: none;
-}
-
-.post-content ol li::before {
-    content: counter(list-item);
-    width: 20px;
-    height: 20px;
-    line-height: 20px;
-    float: left;
-    margin: 5px 12px 0 0;
-    color: #fff;
-    font-size: 12px;
-    font-style: normal;
-    background-color: #5aaefd;
-    border-radius: 50%;
-    text-align: center;
-    transition: all .5s;
-}
-
-.post-content ol li:hover::before {
-    transform: scale(1.1);
-}
-
-.post-content ul li::before {
-    content: "";
-    width: 16px;
-    height: 16px;
-    float: left;
-    margin: 8px 12px 0 0;
-    color: #fff;
-    font-size: 12px;
-    font-style: normal;
-    border: 2px solid #5aaefd;
-    border-radius: 50%;
-    text-align: center;
-    transition: all .5s;
-}
-
-.post-content ul li:hover::before {
-    background-color: #5aaefd;
 }
 
 .post-content img {

@@ -18,7 +18,7 @@ import java.util.Map;
 public interface ThemeExtendService extends BaseService<ThemeExtend> {
 
     /**
-     * 保存主题配置
+     * 保存主题配置（项目启动检测更新）
      * @param themeId
      * @param extension
      * @throws GlobalException

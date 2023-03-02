@@ -21,7 +21,8 @@
 
     <div class="ml-content">
         <div class="tags-content">
-            <a data-pjax class="tag" th:href="@{'/tags/'+${tag.name}+'/'}" th:each="tag,status : ${tagList}">[[${tag.name}]]&nbsp;</a>
+            <h3>共 [[${tagNum}]] 个标签</h3>
+            <a data-pjax class="tag animate-box" data-animate-effect="fadeInUp" th:href="@{'/tags/'+${tag.name}+'/'}" th:each="tag,status : ${tagList}">[[${tag.name}]]&nbsp;</a>
         </div>
         <div th:if="${count == 0}" th:style="'text-align:center;'" th:text="'~~暂无标签~~'"></div>
         <script>

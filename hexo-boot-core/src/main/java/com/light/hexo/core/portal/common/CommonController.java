@@ -29,7 +29,6 @@ import java.util.Optional;
  * @DateTime 2020/9/18 17:40
  */
 @Slf4j
-//@Component
 public class CommonController {
 
     protected static final int PAGE_SIZE = 10;
@@ -122,21 +121,18 @@ public class CommonController {
 
         String themeName = activeTheme.getName();
         String useCDNStr = activeTheme.getConfigMap().get("useCDN");
-        String CDNAddress = activeTheme.getConfigMap().get("CDNAddress");
-        String version = activeTheme.getConfigMap().get("version");
-        if (StringUtils.isNotBlank(useCDNStr) && StringUtils.isNotBlank(version)) {
-            if (useCDNStr.equals("true")) {
-                resultMap.put("baseLink", StringUtils.isBlank(CDNAddress) ? "/theme/" + themeName : CDNAddress);
-            } else {
-                resultMap.put("baseLink", "/theme/" + themeName);
-            }
-        } else {
+        if (!useCDNStr.equals("true")) {
             resultMap.put("baseLink", "/theme/" + themeName);
+            return;
         }
+
+        String CDNAddress = activeTheme.getConfigMap().get("CDNAddress");
+        resultMap.put("baseLink", StringUtils.isBlank(CDNAddress) ? "/theme/" + themeName : CDNAddress);
     }
 
     private void setCurrentNav(String pageName, Map<String, Object> resultMap) {
 
+        // 自定义页面直接返回
         if (resultMap.containsKey("currentNav")) {
             return;
         }

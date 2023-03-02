@@ -210,7 +210,7 @@
             });
 
             // 点赞
-            $("#priseBtn").on("click",function () {
+            $("#priseBtn").off("click").on("click",function () {
                 let postId = $(this).data("id");
                 let key = "post-hasPrize" + postId;
                 if (sessionStorage.getItem(key)) {

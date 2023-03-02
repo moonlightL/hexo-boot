@@ -21,7 +21,7 @@
 
     <div class="ml-content">
         <div class="dynamic-content" id="dynamic-content">
-            <div class="dynamic-item animate-box" data-animate-effect="pulse" th:each="dynamic : ${newPageInfo.data}" th:data-color="${dynamic.color}">
+            <div class="dynamic-item animate-box" data-animate-effect="pulse" th:each="dynamic : ${newPageInfo.data}">
                 <div class="info">
                     <div class="row">
                         <div class="col-md-1">
@@ -52,19 +52,6 @@
                    (pageNum == -1 ? 'javascript:void(0)' : '/dynamics/page/' + pageNum + '/')}}" th:text="${pageNum == -1 ? '...' : pageNum}"></a>
             <a data-pjax class="next page-numbers page" th:if="${newPageInfo.hasNextPage}" th:href="@{'/dynamics/page/' + ${newPageInfo.pageNum + 1}+'/'}"><i class="fa fa-angle-right"></i></a>
         </div>
-        <script>
-            let elements = document.getElementsByClassName("dynamic-item");
-            for (let i = 0; i < elements.length; i++) {
-                let element = elements[i];
-                element.addEventListener("mouseenter", function() {
-                    element.style.border = "2px solid " + element.dataset.color;
-                });
-
-                element.addEventListener("mouseleave", function() {
-                    element.style.border = "2px solid transparent";
-                });
-            }
-        </script>
     </div>
 </div>
 
