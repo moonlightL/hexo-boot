@@ -18,7 +18,7 @@ import java.util.List;
  * @DateTime 2020/7/30 11:04
  */
 @Configuration
-@DependsOn("flywayConfig")
+//@DependsOn("flywayConfig")
 public class SpringMvcConfig implements WebMvcConfigurer {
 
     @Bean
