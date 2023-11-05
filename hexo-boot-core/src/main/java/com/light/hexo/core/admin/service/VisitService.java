@@ -5,6 +5,7 @@ import com.light.hexo.common.component.event.EventService;
 import com.light.hexo.common.exception.GlobalException;
 import com.light.hexo.mapper.model.Visit;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -32,4 +33,8 @@ public interface VisitService extends BaseService<Visit>, EventService {
      * @throws GlobalException
      */
     Integer getTodayVisitNum() throws GlobalException;
+
+    Visit findFirstExpireRecord(LocalDateTime dateTime);
+
+    List<Visit> findExpireList(Integer lastId, LocalDateTime dateTime);
 }

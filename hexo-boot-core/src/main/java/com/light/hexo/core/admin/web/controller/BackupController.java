@@ -62,12 +62,12 @@ public class BackupController extends BaseController {
     @ResponseBody
     @OperateLog(value = "立即备份", actionType = ActionEnum.ADMIN_ADD)
     public Result backupData() {
-        String sqlData = this.dumpService.getSqlData();
-        if (StringUtils.isBlank(sqlData)) {
+        String backupName = this.dumpService.dumpData();
+        if (StringUtils.isBlank(backupName)) {
             return Result.fail();
         }
 
-        this.backupService.saveBackup(sqlData);
+        this.backupService.saveBackup(backupName);
         return Result.success();
     }
 

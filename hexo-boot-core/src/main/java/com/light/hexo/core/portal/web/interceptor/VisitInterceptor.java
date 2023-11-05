@@ -48,21 +48,16 @@ public class VisitInterceptor extends HandlerInterceptorAdapter {
             return false;
         }
 
+        request.setAttribute("time", System.currentTimeMillis());
+
         String browserName = BrowserUtil.getBrowserName(request);
-//        if (RequestFilterConstant.ROBOT_SOURCE.equals(browserName) ||
-//            RequestFilterConstant.UNKNOWN_SOURCE.equals(browserName)) {
-//            if (RequestUtil.isAjax(request)) {
-//                this.print(response, JsonUtil.obj2String(Result.fail(GlobalExceptionEnum.ERROR_INVALID_VISIT)));
-//            } else {
-//                ExceptionUtil.throwExToPage(GlobalExceptionEnum.ERROR_INVALID_VISIT);
-//            }
-//            log.info("==============VisitInterceptor 爬虫/未知来源, url: {}, ip: {}=====================", URLDecoder.decode(request.getRequestURI(), "UTF-8"), ipAddr);
-//            return false;
-//        }
+
+        if (RequestFilterConstant.ROBOT_SOURCE.equals(browserName) ||
+                RequestFilterConstant.UNKNOWN_SOURCE.equalsIgnoreCase(browserName)) {
+            return true;
+        }
 
         this.eventPublisher.emit(new VisitEvent(this, ipAddr, browserName));
-
-        request.setAttribute("time", System.currentTimeMillis());
 
         return true;
     }
@@ -71,7 +66,8 @@ public class VisitInterceptor extends HandlerInterceptorAdapter {
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
         super.afterCompletion(request, response, handler, ex);
         long start = (long) request.getAttribute("time");
-        log.info("=========VisitInterceptor afterCompletion 请求 {}, 耗时 {} ms========", URLDecoder.decode(request.getRequestURI(), "UTF-8"), (System.currentTimeMillis() - start));
+        String ipAddr = RequestUtil.getIpAddr(request);
+        log.info("=========VisitInterceptor afterCompletion ip:{}, 请求 uri {}, 耗时 {} ms========", ipAddr, URLDecoder.decode(request.getRequestURI(), "UTF-8"), (System.currentTimeMillis() - start));
     }
 
     private void print(HttpServletResponse response, String result) throws IOException {

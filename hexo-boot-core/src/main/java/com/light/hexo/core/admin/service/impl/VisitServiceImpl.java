@@ -59,6 +59,16 @@ public class VisitServiceImpl extends BaseServiceImpl<Visit> implements VisitSer
     }
 
     @Override
+    public Visit findFirstExpireRecord(LocalDateTime dateTime) {
+        return this.visitMapper.selectFirstExpireRecord(dateTime);
+    }
+
+    @Override
+    public List<Visit> findExpireList(Integer lastId, LocalDateTime dateTime) {
+        return this.visitMapper.selectExpireRecords(lastId, dateTime);
+    }
+
+    @Override
     public String getCode() {
         return EventEnum.VISIT.getType();
     }

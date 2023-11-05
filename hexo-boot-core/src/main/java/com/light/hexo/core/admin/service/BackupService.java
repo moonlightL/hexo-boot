@@ -17,11 +17,11 @@ public interface BackupService extends BaseService<Backup> {
 
     /**
      * 保存备份
-     * @param sqlData
+     * @param backupName
      * @return
      * @throws GlobalException
      */
-    Backup saveBackup(String sqlData) throws GlobalException;
+    Backup saveBackup(String backupName) throws GlobalException;
 
     /**
      * 批量删除

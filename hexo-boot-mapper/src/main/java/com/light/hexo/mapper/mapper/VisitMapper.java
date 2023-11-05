@@ -5,6 +5,7 @@ import com.light.hexo.mapper.base.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -24,4 +25,8 @@ public interface VisitMapper extends BaseMapper<Visit> {
      * @return
      */
     List<Map<String, Object>> selectVisitNumByDateList(@Param("start") LocalDate start, @Param("end") LocalDate end);
+
+    Visit selectFirstExpireRecord(@Param("dateTime") LocalDateTime dateTime);
+
+    List<Visit> selectExpireRecords(@Param("lastId") Integer lastId, @Param("dateTime") LocalDateTime dateTime);
 }

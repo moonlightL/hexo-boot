@@ -54,6 +54,7 @@
                         </th>
                         <th data-field="name">备份名称</th>
                         <th width="45%" data-field="filePath">备份路径</th>
+                        <th width="15%" data-field="fileSize" data-formatter="fileSizeFormatter">文件大小</th>
                         <th width="15%" data-field="createTime">创建时间</th>
                         <th width="12%" align="center" data-formatter="actionFormatter">操作</th>
                     </tr>
@@ -65,6 +66,33 @@
 </div>
 <div th:replace="~{admin/common :: common-script}"></div>
 <script th:inline="javascript">
+
+    const SIZE = 1024
+
+    function fileSizeFormatter(val, row) {
+        let rest = 0;
+
+        if (val < SIZE) {
+            return val + "B";
+        } else {
+            val /= SIZE;
+        }
+
+        if (val < SIZE) {
+            return Math.floor(val) + "KB";
+        } else {
+            rest = val % SIZE;
+            val /= SIZE;
+        }
+
+        if (val < SIZE) {
+            val = val * 100;
+            return Math.floor((val / 100)) + "." + Math.floor(rest * 100 / SIZE % 100) + "MB";
+        } else {
+            val = val * 100 / SIZE;
+            return Math.floor(val / 100) + "." + Math.floor(val % 100) + "GB";
+        }
+    }
 
     function actionFormatter(val, row) {
         let btnArr = [];

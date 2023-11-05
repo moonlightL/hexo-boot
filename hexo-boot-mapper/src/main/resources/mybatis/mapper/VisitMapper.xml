@@ -16,4 +16,32 @@
         ORDER BY NULL
     </select>
 
+    <select id="selectFirstExpireRecord" resultType="com.light.hexo.mapper.model.Visit">
+        SELECT
+            v.id,
+            v.ip_address,
+            v.browser,
+            v.visit_date
+        FROM
+            t_visit v
+        WHERE
+            v.create_time &lt; #{dateTime}
+        ORDER BY v.id ASC LIMIT 1
+    </select>
+
+    <select id="selectExpireRecords" resultType="com.light.hexo.mapper.model.Visit">
+        SELECT
+            v.id,
+            v.ip_address,
+            v.browser,
+            v.visit_date
+        FROM
+            t_visit v
+        WHERE
+            v.id > #{lastId}
+        AND
+            v.create_time &lt; #{dateTime}
+        ORDER BY v.id ASC LIMIT 1000
+    </select>
+
 </mapper>

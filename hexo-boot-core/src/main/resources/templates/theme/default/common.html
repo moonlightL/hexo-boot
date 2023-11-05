@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <meta name="author" th:content="${#servletContext.getAttribute('configMap')['blog_author']}">
     <meta name="referrer" content="no-referrer" />
-    [[${#servletContext.getAttribute('configMap')['meta_code']}]]
+    [(${#servletContext.getAttribute('configMap')['meta_code']})]
     <meta name="keywords" th:content="${#servletContext.getAttribute('configMap')['keywords']}" />
     <meta name="description" th:content="${#servletContext.getAttribute('configMap')['description']}" />
     <meta property="og:description" th:content="${#servletContext.getAttribute('configMap')['description']}" />

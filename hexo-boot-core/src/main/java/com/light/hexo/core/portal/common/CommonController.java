@@ -121,7 +121,7 @@ public class CommonController {
 
         String themeName = activeTheme.getName();
         String useCDNStr = activeTheme.getConfigMap().get("useCDN");
-        if (!useCDNStr.equals("true")) {
+        if (!"true".equals(useCDNStr)) {
             resultMap.put("baseLink", "/theme/" + themeName);
             return;
         }

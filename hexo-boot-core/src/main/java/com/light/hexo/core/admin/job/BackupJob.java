@@ -49,12 +49,12 @@ public class BackupJob {
 
         log.info("=======自动备份任务开始=========");
 
-        String sqlData = this.dumpService.getSqlData();
-        if (StringUtils.isBlank(sqlData)) {
+        String backupName = this.dumpService.dumpData();
+        if (StringUtils.isBlank(backupName)) {
             return;
         }
 
-        Backup backup = this.backupService.saveBackup(sqlData);
+        Backup backup = this.backupService.saveBackup(backupName);
 
         log.info("=======自动备份任务结束 filePath: {}=========", backup.getFilePath());
     }

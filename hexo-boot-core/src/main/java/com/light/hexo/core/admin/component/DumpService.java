@@ -1,8 +1,11 @@
 package com.light.hexo.core.admin.component;
 
+import com.light.hexo.common.constant.ConfigEnum;
 import com.light.hexo.common.constant.HexoExceptionEnum;
 import com.light.hexo.common.exception.GlobalException;
+import com.light.hexo.common.util.DateUtil;
 import com.light.hexo.common.util.ExceptionUtil;
+import com.light.hexo.core.admin.service.ConfigService;
 import com.light.hexo.mapper.config.HikariProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
@@ -10,9 +13,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Author MoonlightL
@@ -28,9 +35,26 @@ public class DumpService {
     @Autowired
     private HikariProperties hikariProperties;
 
-    public String getSqlData() throws GlobalException  {
+    @Autowired
+    private ConfigService configService;
+
+    public String dumpData() throws GlobalException  {
+
+        String dirPath = this.configService.getConfigValue(ConfigEnum.BACKUP_DIR.getName());
+        if (StringUtils.isBlank(dirPath)) {
+            ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_BACKUP_DIR_NOT_EXIST);
+        }
+
+        File dir = new File(dirPath);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+
+        String backupName = String.format("backup_%s.sql", DateUtil.ldtToStr(LocalDateTime.now(), DateTimeFormatter.ofPattern("yyyyMMddHHmm")));
 
         String url = hikariProperties.getJdbcUrl();
+        String username = hikariProperties.getUsername();
+        String password = hikariProperties.getPassword();
 
         // 获取数据库名称
         String tmp = url.substring(0,url.indexOf("?"));
@@ -38,41 +62,31 @@ public class DumpService {
 
         // 判断系统
         String systemName = System.getProperty("os.name");
-        String dumpCmd;
-        if (systemName.toUpperCase().contains("WINDOWS")) {
-            dumpCmd = "mysqldump.exe";
-        } else {
-            dumpCmd = "mysqldump";
-        }
+        String dumpCmd = systemName.toUpperCase().contains("WINDOWS") ? "mysqldump.exe" : "mysqldump";
 
-        String username = hikariProperties.getUsername();
-        String password = hikariProperties.getPassword();
+        // 执行命令
+        boolean backupResult = this.executeCommand(dumpCmd +
+                " -u" + username +
+                (StringUtils.isNotBlank(password) ? (" -p" + password) : "") +
+                " --ignore-table=" + dbName + ".t_message " +
+                " --ignore-table=" + dbName + ".t_ext_visit_info " +
+                " --ignore-table=" + dbName + ".t_ext_visit_detail " +
+                " --result-file=" + dir.getAbsolutePath() + File.separator + backupName +
+                " --databases " + dbName
+        );
 
-        // 执行命令获取 sql 内容
-        String sqlStr;
-        if (StringUtils.isBlank(password)) {
-            sqlStr = this.execCommand(dumpCmd + " -u" + username + " --databases " + dbName);
-        } else {
-            sqlStr = this.execCommand(dumpCmd + " -u" + username + " -p" + password + " --databases " + dbName);
-        }
+        log.info("============= dumpData 备份结果:{} ===============", backupResult);
 
-        if (StringUtils.isBlank(sqlStr)) {
-            log.info("导出 SQL 文件失败【sql 内容为空】");
-            return sqlStr;
-        }
-
-        return sqlStr;
+        return backupName;
     }
 
-    private String execCommand(String command) throws GlobalException {
-        InputStream in = null;
+    private boolean executeCommand(String command) throws GlobalException {
         Process process = null;
-        String result = null;
         try {
             process = Runtime.getRuntime().exec(command);
-            in = process.getInputStream();
-            result = IOUtils.toString(in, StandardCharsets.UTF_8);
-        } catch (IOException e) {
+            int exitCode = process.waitFor();
+            return exitCode == 0;
+        } catch (Exception e) {
             if (e.getMessage().contains("mysqldump")) {
                 ExceptionUtil.throwEx(HexoExceptionEnum.ERROR_BACKUP_COMMAND_NOT_EXIST);
             }
@@ -80,16 +94,8 @@ public class DumpService {
             if (process != null) {
                 process.destroy();
             }
-
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
         }
-
-        return result;
+        return false;
     }
+
 }

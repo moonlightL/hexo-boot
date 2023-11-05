@@ -12,16 +12,12 @@ import com.light.hexo.core.admin.service.ConfigService;
 import com.light.hexo.common.base.BaseRequest;
 import com.light.hexo.common.exception.GlobalException;
 import com.light.hexo.common.request.BackupRequest;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import tk.mybatis.mapper.entity.Example;
-
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -63,7 +59,7 @@ public class BackupServiceImpl extends BaseServiceImpl<Backup> implements Backup
     }
 
     @Override
-    public Backup saveBackup(String sqlData) throws GlobalException {
+    public Backup saveBackup(String backupName) throws GlobalException {
 
         String dirPath = this.configService.getConfigValue(ConfigEnum.BACKUP_DIR.getName());
         if (StringUtils.isBlank(dirPath)) {
@@ -75,21 +71,17 @@ public class BackupServiceImpl extends BaseServiceImpl<Backup> implements Backup
             dir.mkdirs();
         }
 
-        String filename = String.format("backup_%d.sql", System.currentTimeMillis());
-        File file = new File(dirPath, filename);
-
         Backup backup = new Backup();
-        backup.setName(file.getName())
-              .setFilePath(file.getAbsolutePath())
-              .setFileSize((long) sqlData.length());
 
-        try (OutputStream output = new FileOutputStream(file)) {
-            // 将 SQL 内容保存到本地
-            IOUtils.write(sqlData.getBytes(), output);
-            super.saveModel(backup);
-        } catch (Exception e) {
-            e.printStackTrace();
+        File file = new File(dirPath, backupName);
+        if (!file.exists()) {
+            return backup;
         }
+
+        backup.setName(file.getName())
+                .setFilePath(file.getAbsolutePath())
+                .setFileSize(file.length());
+        super.saveModel(backup);
 
         return backup;
     }
