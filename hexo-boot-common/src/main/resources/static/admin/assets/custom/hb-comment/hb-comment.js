@@ -392,7 +392,7 @@
 
         self.$container.insertAdjacentHTML('beforeend', htmlArr.join(""));
 
-        self.getCommentList(self.options.ajaxParams);
+        // self.getCommentList(self.options.ajaxParams);
     }
 
     HbComment.prototype.getCommentList = function(ajaxParams) {

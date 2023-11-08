@@ -4,7 +4,7 @@ server:
   compression:
     enabled: true
     mime-types: application/javascript,text/css,application/json,application/xml,text/html,text/xml,text/plain
-  port: 8080
+  port: 8090
   servlet:
     context-path: /
   tomcat:
@@ -37,7 +37,7 @@ spring:
       hikari:
         jdbc-url: jdbc:mysql://127.0.0.1:3306/hexo-boot?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&rewriteBatchedStatements=true&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
         username: root
-        password: tiger
+        password: 123456
         minimum-idle: 5
         maximum-pool-size: 20
         max-lifetime: 1800000

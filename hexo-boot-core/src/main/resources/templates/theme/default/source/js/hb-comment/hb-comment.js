@@ -31,7 +31,7 @@
 
     HbComment.prototype.init = function(options, isRefresh) {
         if (isRefresh) {
-            this.initW();
+            // this.initW();
             this.initR();
             return;
         }
@@ -53,7 +53,7 @@
 
         this.loadResource();
         this.initEmoji();
-        this.initW();
+        // this.initW();
         this.initR();
     };
 
@@ -375,24 +375,24 @@
 
     HbComment.prototype.initR = function () {
         let self = this;
-        let htmlArr = [];
-        if (self.options.wrapClass) {
-            htmlArr.push('<div class="'+ self.options.wrapClass +'">');
-        }
-        htmlArr.push('<div class="hb-r">');
-        htmlArr.push('<div class="hb-r-head">');
-        htmlArr.push('<h2 class="h2">'+ self.options.subTitle +' <span id="commentNum"></span></h2>');
-        htmlArr.push('</div>');
-        htmlArr.push('<div class="hb-r-body" id="hbRBody">');
-        htmlArr.push('</div>');
-        htmlArr.push('</div>');
-        if (self.options.wrapClass) {
-            htmlArr.push('</div>');
-        }
+        // let htmlArr = [];
+        // if (self.options.wrapClass) {
+        //     htmlArr.push('<div class="'+ self.options.wrapClass +'">');
+        // }
+        // htmlArr.push('<div class="hb-r">');
+        // htmlArr.push('<div class="hb-r-head">');
+        // htmlArr.push('<h2 class="h2">'+ self.options.subTitle +' <span id="commentNum"></span></h2>');
+        // htmlArr.push('</div>');
+        // htmlArr.push('<div class="hb-r-body" id="hbRBody">');
+        // htmlArr.push('</div>');
+        // htmlArr.push('</div>');
+        // if (self.options.wrapClass) {
+        //     htmlArr.push('</div>');
+        // }
 
         self.$container.insertAdjacentHTML('beforeend', htmlArr.join(""));
 
-        self.getCommentList(self.options.ajaxParams);
+        // self.getCommentList(self.options.ajaxParams);
     }
 
     HbComment.prototype.getCommentList = function(ajaxParams) {
