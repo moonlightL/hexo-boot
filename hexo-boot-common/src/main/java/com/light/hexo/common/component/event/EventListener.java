@@ -31,12 +31,10 @@ public class EventListener implements ApplicationListener<BaseEvent> {
 
     @Override
     public void onApplicationEvent(BaseEvent event) {
-        if (event != null) {
-            int index = Math.abs(event.getEventType().hashCode()) % serviceArray.length;
-            serviceArray[index].execute(() -> {
-                EventService eventService = this.eventServiceFactory.getService(event.getEventType());
-                eventService.dealWithEvent(event);
-            });
-        }
+        int index = Math.abs(event.getEventType().hashCode()) % serviceArray.length;
+        serviceArray[index].execute(() -> {
+            EventService eventService = this.eventServiceFactory.getService(event.getEventType());
+            eventService.dealWithEvent(event);
+        });
     }
 }

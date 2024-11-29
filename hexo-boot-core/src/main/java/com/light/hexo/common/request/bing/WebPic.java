@@ -1,5 +1,6 @@
 package com.light.hexo.common.request.bing;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -18,6 +19,7 @@ public class WebPic {
 
     private String code;
 
+    @JsonProperty("url")
     private String imgurl;
 
     private String width;

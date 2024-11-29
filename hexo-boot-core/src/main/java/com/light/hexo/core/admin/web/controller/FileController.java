@@ -7,14 +7,9 @@ import com.light.hexo.common.component.log.OperateLog;
 import com.light.hexo.common.exception.GlobalException;
 import com.light.hexo.common.exception.GlobalExceptionEnum;
 import com.light.hexo.common.request.FileResult;
-import com.light.hexo.common.request.bing.WebPic;
 import com.light.hexo.common.util.ExceptionUtil;
-import com.light.hexo.common.util.HttpClientUtil;
-import com.light.hexo.common.util.JsonUtil;
 import com.light.hexo.common.vo.Result;
 import com.light.hexo.core.admin.component.CommonFileService;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.input.BOMInputStream;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,10 +18,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -137,26 +128,4 @@ public class FileController {
         return FileResult.success(fileResponse.getUrl());
     }
 
-    private static final String[] RANDOM_PIC_URL = {"https://api.ixiaowai.cn/gqapi/gqapi.php?return=json", "https://api.ixiaowai.cn/api/api.php?return=json"};
-
-    @RequestMapping(value = "/randomPic.json", method = RequestMethod.POST)
-    @ResponseBody
-    public FileResult randomPic(Integer type) throws GlobalException, IOException {
-
-        String result = HttpClientUtil.sendPost(RANDOM_PIC_URL[type], "");
-        if (StringUtils.isBlank(result)) {
-            return FileResult.fail("第三方图库出现异常，获取图片失败，请稍后再试");
-        }
-
-        // 处理 json 串包含 UTF-8 的 bom 不可见字符
-        InputStream bis = new BOMInputStream(new ByteArrayInputStream(result.getBytes()));
-        String finalResult = IOUtils.toString(bis, "UTF-8");
-
-        WebPic webPic = JsonUtil.string2Obj(finalResult, WebPic.class);
-        if (webPic == null || !"200".equals(webPic.getCode())) {
-            return FileResult.fail("第三方图库出现异常，获取图片失败，请联系博客作者修复");
-        }
-
-        return FileResult.success(webPic.getImgurl());
-    }
 }
