@@ -1,5 +1,6 @@
 package com.light.hexo.core.third;
 
+import cn.hutool.core.codec.Base64Encoder;
 import com.light.hexo.common.exception.GlobalException;
 import com.light.hexo.common.request.FileResult;
 import com.light.hexo.common.request.bing.WebPic;
@@ -14,10 +15,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import sun.misc.BASE64Encoder;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,13 +46,16 @@ public class ThirdController {
         return Result.success(map);
     }
 
-    private static final String[] RANDOM_PIC_URL = {"https://api.likepoems.com/img/nature/?timestamp=%s&json", "https://api.likepoems.com/img/pc/?timestamp=%s&json"};
+    private static final String[] RANDOM_PIC_URL = {
+            "https://api.r10086.com/%E6%A8%B1%E9%81%93%E9%9A%8F%E6%9C%BA%E5%9B%BE%E7%89%87api%E6%8E%A5%E5%8F%A3.php?%E5%9B%BE%E7%89%87%E7%B3%BB%E5%88%97=%E9%A3%8E%E6%99%AF%E7%B3%BB%E5%88%978&%E5%8F%82%E6%95%B0=json",
+            "https://api.r10086.com/%E6%A8%B1%E9%81%93%E9%9A%8F%E6%9C%BA%E5%9B%BE%E7%89%87api%E6%8E%A5%E5%8F%A3.php?%E5%9B%BE%E7%89%87%E7%B3%BB%E5%88%97=%E5%8A%A8%E6%BC%AB%E7%BB%BC%E5%90%8815&%E5%8F%82%E6%95%B0=json"
+    };
 
     @RequestMapping(value = "/admin/file/randomPic.json", method = RequestMethod.POST)
     @ResponseBody
     public FileResult randomPic(Integer type) throws GlobalException, IOException {
 
-        String result = HttpClientUtil.sendPost(String.format(RANDOM_PIC_URL[type], System.currentTimeMillis()), "");
+        String result = HttpClientUtil.sendGet(RANDOM_PIC_URL[type] + "&timestamp=" + System.currentTimeMillis());
         if (StringUtils.isBlank(result)) {
             return FileResult.fail("第三方图库出现异常，获取图片失败，请稍后再试");
         }

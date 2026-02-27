@@ -17,9 +17,10 @@ import lombok.ToString;
 @ToString
 public class WebPic {
 
+    @JsonProperty("result")
     private String code;
 
-    @JsonProperty("url")
+    @JsonProperty("img")
     private String imgurl;
 
     private String width;

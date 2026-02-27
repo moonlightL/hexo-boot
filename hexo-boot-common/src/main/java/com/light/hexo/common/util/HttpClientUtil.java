@@ -104,7 +104,7 @@ public class HttpClientUtil { private HttpClientUtil() { }
                 .build();
         // 创建 http 请求
         HttpGet httpGet = new HttpGet(url);
-        httpGet.setHeader("User-Agent","Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36");
+        httpGet.setHeader("User-Agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36");
 
         return sendRequest(httpclient,httpGet);
     }
