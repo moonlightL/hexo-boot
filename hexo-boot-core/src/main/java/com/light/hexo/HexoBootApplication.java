@@ -2,7 +2,6 @@ package com.light.hexo;
 
 import com.light.hexo.common.util.RequestUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.rocketmq.common.message.Message;
 import org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
